@@ -61,20 +61,25 @@
     <header class="topbar" role="banner">
       <div class="topbar-title">
         <h1 class="brand-title">GlobalFlows</h1>
-        <p class="brand-sub" id="genAt" title="Last ingest time (when public data was last pulled)">loading…</p>
       </div>
       <div class="topbar-chrome">
         <nav class="topbar-nav" aria-label="Primary">
+          <a
+            href="https://oilprice.com/oil-price-charts/#prices"
+            class="nav-link nav-link-icon"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Oil price charts (oilprice.com)"
+            aria-label="Oil price charts on oilprice.com"
+          ><img src="oilprice-32.png" width="16" height="16" alt="" /></a>
           <button type="button" class="nav-link nav-link-sm" id="btnAbout">About</button>
         </nav>
       </div>
     </header>
 
-    <section class="sentence" id="sentence" aria-live="polite"></section>
+    <section class="sentence" id="sentence" aria-live="polite" role="button" tabindex="0" title="Tap for explanation"></section>
 
     <section class="lights" id="lights" aria-label="Regime lights"></section>
-
-    <section class="conflicts" id="conflicts" hidden></section>
 
     <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
 
@@ -86,12 +91,15 @@
             <p class="muted" id="layerBlurb"></p>
           </div>
           <div class="heat-controls" role="toolbar" aria-label="Series view">
-            <div class="dur-group" id="durGroup" title="Chart duration (all series)">
-              <button type="button" class="btn tiny-btn" data-dur="1y">1Y</button>
-              <button type="button" class="btn tiny-btn" data-dur="2y" aria-pressed="true">2Y</button>
-              <button type="button" class="btn tiny-btn" data-dur="5y">5Y</button>
-              <button type="button" class="btn tiny-btn" data-dur="10y">10Y</button>
-              <button type="button" class="btn tiny-btn" data-dur="max">Max</button>
+            <div
+              class="dur-group"
+              id="horizonGroup"
+              title="Today vs this many years (table + charts). Lights stay on 2y."
+              aria-label="Comparison horizon"
+            >
+              <button type="button" class="btn tiny-btn" data-horizon="1">1</button>
+              <button type="button" class="btn tiny-btn" data-horizon="2" aria-pressed="true">2</button>
+              <button type="button" class="btn tiny-btn" data-horizon="5">5</button>
             </div>
             <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
           </div>
@@ -103,22 +111,13 @@
                 <th>Series</th>
                 <th>Latest</th>
                 <th>2y z</th>
-                <th>5y %ile</th>
-                <th>10y %ile</th>
-                <th>1y Δ</th>
-                <th>As-of</th>
+                <th>2y %ile</th>
               </tr>
             </thead>
             <tbody id="heatBody"></tbody>
           </table>
         </div>
       </section>
-
-      <aside class="assets-panel" id="assetsPanel">
-        <h2>Assets <span class="pill">outputs</span></h2>
-        <p class="muted tiny">Not inputs. Disagreement with liquidity is the story.</p>
-        <div id="assets" class="asset-grid"></div>
-      </aside>
     </main>
 
   </div>
@@ -137,7 +136,10 @@
           <li><strong>Conditions</strong> — vol, credit, financial conditions</li>
           <li><strong>Markets</strong> — equities, commodities, crypto</li>
         </ol>
-        <p>Lights score the causal regime (liquidity → transmission → growth/inflation → risk). Assets are outputs. No news feed. No invented numbers.</p>
+        <p>Lights score the causal regime (liquidity → transmission → growth/inflation → risk). Equities, commodities, and crypto live under <strong>Markets</strong> (dollar under <strong>FX</strong>) — read them as outputs, not inputs. No news feed. No invented numbers.</p>
+        <h4>Data</h4>
+        <p id="aboutIngest" class="muted">ingest —</p>
+        <p id="aboutCoverage" class="muted"></p>
         <h4>Light formula</h4>
         <div id="formulaBody"></div>
         <p class="muted">Mark Maga · curiosity portal · local until far along</p>
@@ -151,6 +153,27 @@
       <h3 id="seriesTitle">Series</h3>
       <div id="seriesBody" class="dlg-body"></div>
       <button class="btn" value="ok">Close</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlgLight" class="dlg">
+    <form method="dialog" id="formLight">
+      <h3 id="lightTitle">Light</h3>
+      <div id="lightBody" class="dlg-body"></div>
+      <div class="dlg-actions">
+        <button type="submit" class="btn ghost" id="btnLightSeries" value="series">Show series</button>
+        <button type="submit" class="btn" value="ok">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgSentence" class="dlg dlg-topsheet">
+    <form method="dialog">
+      <header class="dlg-head">
+        <h3>Regime readout</h3>
+        <button type="submit" class="dlg-x" value="ok" aria-label="Close">✕</button>
+      </header>
+      <div id="sentenceBody" class="dlg-body"></div>
     </form>
   </dialog>
 

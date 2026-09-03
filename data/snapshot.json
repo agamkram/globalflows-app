@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T04:54:16.874Z",
+  "generatedAt": "2026-09-03T19:05:41.420Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -157,9 +157,9 @@
       "id": "liquidity",
       "label": "Liquidity",
       "state": "tight",
-      "score": -0.7452693995186437,
-      "z2y": -0.6514583392671722,
-      "pct5y": 0.22030651340996169,
+      "score": -1.2892279108135227,
+      "z2y": -1.1530852394583304,
+      "pct5y": 0.038314176245210725,
       "n": 5,
       "words": {
         "easing": "Easing",
@@ -178,84 +178,65 @@
       "id": "transmission",
       "label": "Transmission",
       "state": "neutral",
-      "score": -0.4350249059579565,
-      "z2y": -0.6287246429775107,
-      "pct5y": 0.41955827702053256,
-      "n": 12,
+      "score": 0.3468455886069765,
+      "z2y": 0.08834424906902762,
+      "pct5y": 0.7017823093816418,
+      "n": 6,
       "words": {
         "easing": "Easy",
         "neutral": "Neutral",
         "tight": "Tight"
       },
       "members": [
-        "DGS3MO",
         "DGS2",
-        "DGS10",
         "T10Y2Y",
-        "DFII5",
-        "DFII10",
         "DTWEXBGS",
         "MOVE",
-        "DXY",
         "DFEDTARU",
-        "MORTGAGE30US",
-        "THREEFFTP10"
+        "MORTGAGE30US"
       ]
     },
     "growth": {
       "id": "growth",
       "label": "Growth",
       "state": "easing",
-      "score": 0.7796167239036644,
-      "z2y": 1.069164366405906,
-      "pct5y": 0.663356360467141,
-      "n": 12,
+      "score": 0.9695853775077942,
+      "z2y": 1.2322742032914504,
+      "pct5y": 0.735632183908046,
+      "n": 7,
       "words": {
         "easing": "Strong",
         "neutral": "Mid",
         "tight": "Soft"
       },
       "members": [
-        "INDPRO",
         "PAYEMS",
         "UNRATE",
         "ICSA",
-        "JTSJOL",
         "RSAFS",
         "COPPER",
-        "EMPIRE_MFG",
-        "PHILLY_MFG",
         "CFNAI",
-        "WEI",
-        "UMCSENT"
+        "WEI"
       ]
     },
     "inflation": {
       "id": "inflation",
       "label": "Inflation",
-      "state": "neutral",
-      "score": -0.2520489401205534,
-      "z2y": 0.05504461660630821,
-      "pct5y": 0.31361916771752835,
-      "n": 13,
+      "state": "tight",
+      "score": -1.4224429085763428,
+      "z2y": -1.4924268007592427,
+      "pct5y": 0.04918032786885246,
+      "n": 5,
       "words": {
         "easing": "Hot",
         "neutral": "Mid",
         "tight": "Cold"
       },
       "members": [
-        "STICKY_CPI",
-        "CPIAUCSL",
         "CPILFESL",
-        "PCEPI",
         "PCEPILFE",
         "MICH",
-        "PPIACO",
-        "PPIFIS",
         "MEDIAN_CPI",
-        "TRIMMED_CPI",
-        "SHELTER_CPI",
-        "SUPERCORE",
         "CORESTICK"
       ]
     },
@@ -263,10 +244,10 @@
       "id": "risk",
       "label": "Risk",
       "state": "easing",
-      "score": 1.0011383110707006,
-      "z2y": 1.0071150838963934,
-      "pct5y": 0.8317205127483359,
-      "n": 6,
+      "score": 0.9871001705253362,
+      "z2y": 0.8670974548854097,
+      "pct5y": 0.8751718288438478,
+      "n": 4,
       "words": {
         "easing": "Risk-on",
         "neutral": "Neutral",
@@ -275,10 +256,8 @@
       "members": [
         "VIX",
         "BAMLH0A0HYM2",
-        "BAMLC0A0CM",
         "NFCI",
-        "BBB_OAS",
-        "SAHM"
+        "BBB_OAS"
       ]
     }
   },
@@ -286,6 +265,18 @@
     {
       "kind": "liquidity_vs_gold",
       "text": "Liquidity tightening, gold firm anyway"
+    },
+    {
+      "kind": "liquidity_vs_risk",
+      "text": "Liquidity tightening, risk still on"
+    },
+    {
+      "kind": "inflation_headline_vs_core",
+      "text": "Headline CPI hot, core cold"
+    },
+    {
+      "kind": "growth_vs_inflation",
+      "text": "Growth strong, inflation cold"
     }
   ],
   "series": {
@@ -299,7 +290,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": "liquidity",
-      "weight": 1,
       "note": null,
       "sub": "WALCL",
       "search": "WALCL",
@@ -315,7 +305,10 @@
       "change1y": 1.9312522185594538,
       "n": 1237,
       "status": "ok",
-      "staleDays": 8
+      "staleDays": 8,
+      "z1y": 1.197571553332419,
+      "pct1y": 0.8113207547169812,
+      "pct2y": 0.6095238095238096
     },
     "WRESBAL": {
       "id": "WRESBAL",
@@ -327,7 +320,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": "liquidity",
-      "weight": 1,
       "note": null,
       "sub": "WRESBAL",
       "search": "WRESBAL",
@@ -343,7 +335,10 @@
       "change1y": -9.30338201910283,
       "n": 1237,
       "status": "ok",
-      "staleDays": 8
+      "staleDays": 8,
+      "z1y": -0.8330129547157715,
+      "pct1y": 0.16981132075471697,
+      "pct2y": 0.08571428571428572
     },
     "RRPONTSYD": {
       "id": "RRPONTSYD",
@@ -355,7 +350,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "liquidity",
-      "weight": 1,
       "note": "Rise parks cash → drains market liquidity",
       "sub": "RRPONTSYD",
       "search": "RRPONTSYD",
@@ -371,7 +365,10 @@
       "change1y": -97.50783252634577,
       "n": 3318,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.5028885621320376,
+      "pct1y": 0.17131474103585656,
+      "pct2y": 0.08617234468937876
     },
     "WTREGEN": {
       "id": "WTREGEN",
@@ -383,7 +380,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": "liquidity",
-      "weight": 1,
       "note": "Rise drains bank reserves",
       "sub": "WTREGEN",
       "search": "WTREGEN",
@@ -399,11 +395,14 @@
       "change1y": 61.14224116013952,
       "n": 1237,
       "status": "ok",
-      "staleDays": 8
+      "staleDays": 8,
+      "z1y": 1.131654380473152,
+      "pct1y": 0.8679245283018868,
+      "pct2y": 0.9333333333333333
     },
     "WSHOSHO": {
       "id": "WSHOSHO",
-      "name": "Fed SOMA",
+      "name": "Fed securities held outright",
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
@@ -411,7 +410,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "WSHOSHO",
       "search": "WSHOSHO",
@@ -427,7 +425,10 @@
       "change1y": 2.450351515581976,
       "n": 1237,
       "status": "ok",
-      "staleDays": 8
+      "staleDays": 8,
+      "z1y": 1.3754440111217203,
+      "pct1y": 0.9056603773584906,
+      "pct2y": 0.7047619047619048
     },
     "M2SL": {
       "id": "M2SL",
@@ -439,7 +440,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "M2SL",
       "search": "M2SL",
@@ -455,11 +455,14 @@
       "change1y": 5.414179019772536,
       "n": 811,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.802620001804029,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "TOTLL": {
       "id": "TOTLL",
-      "name": "Bank loans",
+      "name": "US bank loans & leases",
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
@@ -467,7 +470,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "TOTLL",
       "search": "TOTLL",
@@ -483,11 +485,14 @@
       "change1y": 7.485305340505517,
       "n": 2799,
       "status": "ok",
-      "staleDays": 15
+      "staleDays": 15,
+      "z1y": 1.6643596411942834,
+      "pct1y": 0.9811320754716981,
+      "pct2y": 0.9904761904761905
     },
     "BUSLOANS": {
       "id": "BUSLOANS",
-      "name": "C&I loans",
+      "name": "Commercial & industrial loans",
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
@@ -495,7 +500,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "BUSLOANS",
       "search": "BUSLOANS",
@@ -511,7 +515,10 @@
       "change1y": 8.661302999852637,
       "n": 955,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.4474127035726874,
+      "pct1y": 0.8461538461538461,
+      "pct2y": 0.92
     },
     "GFDEBTN": {
       "id": "GFDEBTN",
@@ -523,7 +530,6 @@
       "freq": "quarterly",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "GFDEBTN",
       "search": "GFDEBTN",
@@ -539,7 +545,10 @@
       "change1y": null,
       "n": 241,
       "status": "ok",
-      "staleDays": 245
+      "staleDays": 245,
+      "z1y": null,
+      "pct1y": null,
+      "pct2y": null
     },
     "TRESEGCNM052N": {
       "id": "TRESEGCNM052N",
@@ -551,7 +560,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "TRESEGCNM052N",
       "search": "TRESEGCNM052N",
@@ -567,7 +575,10 @@
       "change1y": 2.887984174637129,
       "n": 563,
       "status": "ok",
-      "staleDays": 94
+      "staleDays": 94,
+      "z1y": 1.0818974711826153,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.88
     },
     "ECBASSETS": {
       "id": "ECBASSETS",
@@ -579,7 +590,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "ECBASSETSW",
       "search": "ECBASSETSW",
@@ -595,7 +605,10 @@
       "change1y": -2.8582487614118515,
       "n": 1444,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": -2.1065027218802768,
+      "pct1y": 0.018867924528301886,
+      "pct2y": 0.009523809523809525
     },
     "JPNASSETS": {
       "id": "JPNASSETS",
@@ -607,7 +620,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "JPNASSETS",
       "search": "JPNASSETS",
@@ -623,7 +635,10 @@
       "change1y": -10.962001308785187,
       "n": 341,
       "status": "ok",
-      "staleDays": 33
+      "staleDays": 33,
+      "z1y": -1.2734569037502137,
+      "pct1y": 0.15384615384615385,
+      "pct2y": 0.08
     },
     "SOFR": {
       "id": "SOFR",
@@ -635,7 +650,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "NY Fed SOFR",
       "search": "NY Fed SOFR",
@@ -651,7 +665,10 @@
       "change1y": -16.62870159453302,
       "n": 2103,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": -0.4941192354978061,
+      "pct1y": 0.504,
+      "pct2y": 0.25301204819277107
     },
     "EFFR": {
       "id": "EFFR",
@@ -663,7 +680,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "DFF",
       "search": "DFF",
@@ -679,7 +695,10 @@
       "change1y": -16.16628175519631,
       "n": 26361,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": -0.5810448941746162,
+      "pct1y": 0.09016393442622951,
+      "pct2y": 0.04514363885088919
     },
     "DGS3MO": {
       "id": "DGS3MO",
@@ -690,8 +709,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "DGS3MO",
       "search": "DGS3MO",
@@ -707,7 +725,10 @@
       "change1y": -6.666666666666672,
       "n": 11250,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 0.8415257203617377,
+      "pct1y": 0.7689243027888446,
+      "pct2y": 0.3867735470941884
     },
     "DGS2": {
       "id": "DGS2",
@@ -719,7 +740,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "transmission",
-      "weight": 1,
       "note": null,
       "sub": "DGS2",
       "search": "DGS2",
@@ -735,7 +755,10 @@
       "change1y": 19.945355191256816,
       "n": 12560,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.1161514018517846,
+      "pct1y": 0.9960159362549801,
+      "pct2y": 0.9939879759519038
     },
     "DGS5": {
       "id": "DGS5",
@@ -747,7 +770,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "DGS5",
       "search": "DGS5",
@@ -763,7 +785,10 @@
       "change1y": 21.657754010695175,
       "n": 16152,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.2501444549520753,
+      "pct1y": 0.9960159362549801,
+      "pct2y": 0.9919839679358717
     },
     "DGS10": {
       "id": "DGS10",
@@ -774,8 +799,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "DGS10",
       "search": "DGS10",
@@ -791,7 +815,10 @@
       "change1y": 11.915887850467284,
       "n": 16152,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.2557089259661987,
+      "pct1y": 0.9960159362549801,
+      "pct2y": 0.9959919839679359
     },
     "DGS30": {
       "id": "DGS30",
@@ -803,7 +830,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "DGS30",
       "search": "DGS30",
@@ -819,7 +845,10 @@
       "change1y": 6.0362173038229345,
       "n": 12382,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.1876297746801545,
+      "pct1y": 0.9800796812749004,
+      "pct2y": 0.9899799599198397
     },
     "T10Y2Y": {
       "id": "T10Y2Y",
@@ -831,7 +860,6 @@
       "freq": "daily",
       "sign": 1,
       "light": "transmission",
-      "weight": 1,
       "note": "Steeper = easier long-end conditions (context-dependent)",
       "sub": "T10Y2Y",
       "search": "T10Y2Y",
@@ -847,7 +875,10 @@
       "change1y": -35.48387096774193,
       "n": 12561,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -1.231169924253168,
+      "pct1y": 0.11507936507936507,
+      "pct2y": 0.346
     },
     "T10Y3M": {
       "id": "T10Y3M",
@@ -859,7 +890,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "T10Y3M",
       "search": "T10Y3M",
@@ -875,7 +905,10 @@
       "change1y": 987.5,
       "n": 11170,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.4121104753080371,
+      "pct1y": 0.9642857142857143,
+      "pct2y": 0.982
     },
     "DFII5": {
       "id": "DFII5",
@@ -886,8 +919,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "DFII5",
       "search": "DFII5",
@@ -903,7 +935,10 @@
       "change1y": 73.01587301587303,
       "n": 5921,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.079313613312035,
+      "pct1y": 0.9721115537848606,
+      "pct2y": 0.9859719438877755
     },
     "DFII10": {
       "id": "DFII10",
@@ -914,8 +949,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "DFII10",
       "search": "DFII10",
@@ -931,7 +965,10 @@
       "change1y": 30.48128342245988,
       "n": 5921,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.0591318052315275,
+      "pct1y": 0.9800796812749004,
+      "pct2y": 0.9899799599198397
     },
     "T5YIE": {
       "id": "T5YIE",
@@ -943,7 +980,6 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "T5YIE",
       "search": "T5YIE",
@@ -959,7 +995,10 @@
       "change1y": -5.2419354838709635,
       "n": 5922,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.4518366845748518,
+      "pct1y": 0.36904761904761907,
+      "pct2y": 0.356
     },
     "T10YIE": {
       "id": "T10YIE",
@@ -971,7 +1010,6 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "T10YIE",
       "search": "T10YIE",
@@ -987,11 +1025,14 @@
       "change1y": -2.9045643153527085,
       "n": 5922,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 0.36870699490077774,
+      "pct1y": 0.6071428571428571,
+      "pct2y": 0.582
     },
     "T5YIFR": {
       "id": "T5YIFR",
-      "name": "5y5y infl",
+      "name": "5y5y forward inflation",
       "layer": "rates",
       "street": "rates",
       "causal": "transmission",
@@ -999,7 +1040,6 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "T5YIFR",
       "search": "T5YIFR",
@@ -1015,11 +1055,14 @@
       "change1y": -0.4273504273504183,
       "n": 5922,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.629437145052832,
+      "pct1y": 0.9325396825396826,
+      "pct2y": 0.886
     },
     "DTWEXBGS": {
       "id": "DTWEXBGS",
-      "name": "Broad USD",
+      "name": "Fed broad dollar TWI",
       "layer": "fx",
       "street": "fx",
       "causal": "transmission",
@@ -1027,7 +1070,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "transmission",
-      "weight": 1,
       "note": "Stronger dollar = tighter USD liquidity abroad",
       "sub": "DTWEXBGS",
       "search": "DTWEXBGS",
@@ -1043,11 +1085,14 @@
       "change1y": -1.256948515501895,
       "n": 5179,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": -0.9245776356166506,
+      "pct1y": 0.21115537848605578,
+      "pct2y": 0.10578842315369262
     },
     "RBUSBIS": {
       "id": "RBUSBIS",
-      "name": "USD REER",
+      "name": "BIS USD REER",
       "layer": "fx",
       "street": "fx",
       "causal": "transmission",
@@ -1055,7 +1100,6 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "RBUSBIS",
       "search": "RBUSBIS",
@@ -1071,7 +1115,10 @@
       "change1y": 0.9041759880686044,
       "n": 391,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.2051802310130433,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.52
     },
     "IRLTLT01DEM156N": {
       "id": "IRLTLT01DEM156N",
@@ -1083,7 +1130,6 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "IRLTLT01DEM156N",
       "search": "IRLTLT01DEM156N",
@@ -1099,7 +1145,10 @@
       "change1y": 17.901701325480182,
       "n": 842,
       "status": "ok",
-      "staleDays": 94
+      "staleDays": 94,
+      "z1y": 1.2259407034315073,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.88
     },
     "IRLTLT01GBM156N": {
       "id": "IRLTLT01GBM156N",
@@ -1111,7 +1160,6 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "IRLTLT01GBM156N",
       "search": "IRLTLT01GBM156N",
@@ -1127,7 +1175,10 @@
       "change1y": 5.993635077793501,
       "n": 798,
       "status": "ok",
-      "staleDays": 94
+      "staleDays": 94,
+      "z1y": 1.128002061114334,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.88
     },
     "IRLTLT01JPM156N": {
       "id": "IRLTLT01JPM156N",
@@ -1139,7 +1190,6 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "IRLTLT01JPM156N",
       "search": "IRLTLT01JPM156N",
@@ -1155,7 +1205,10 @@
       "change1y": 88.02816901408451,
       "n": 450,
       "status": "ok",
-      "staleDays": 94
+      "staleDays": 94,
+      "z1y": 1.5418976386592653,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "MOVE": {
       "id": "MOVE",
@@ -1167,7 +1220,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "transmission",
-      "weight": 1,
       "note": null,
       "sub": "^MOVE",
       "search": "^MOVE",
@@ -1183,7 +1235,10 @@
       "change1y": -6.531425626821688,
       "n": 2475,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 0.7241679869155202,
+      "pct1y": 0.832,
+      "pct2y": 0.44064386317907445
     },
     "DXY": {
       "id": "DXY",
@@ -1194,8 +1249,7 @@
       "units": "index",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "DX-Y.NYB",
       "search": "DX-Y.NYB",
@@ -1211,7 +1265,10 @@
       "change1y": 1.2553518096218064,
       "n": 2512,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.3009760476538809,
+      "pct1y": 0.623015873015873,
+      "pct2y": 0.45436507936507936
     },
     "EURUSD": {
       "id": "EURUSD",
@@ -1223,7 +1280,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "EURUSD=X",
       "search": "EURUSD=X",
@@ -1239,7 +1295,10 @@
       "change1y": -0.5219857541174951,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": -0.2884623202734889,
+      "pct1y": 0.3474903474903475,
+      "pct2y": 0.586073500967118
     },
     "USDJPY": {
       "id": "USDJPY",
@@ -1251,7 +1310,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": "Higher = stronger USD vs JPY",
       "sub": "JPY=X",
       "search": "JPY=X",
@@ -1267,7 +1325,10 @@
       "change1y": 6.560351461541056,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.22043263827185233,
+      "pct1y": 0.5096525096525096,
+      "pct2y": 0.7369439071566731
     },
     "USDCNH": {
       "id": "USDCNH",
@@ -1279,7 +1340,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "USDCNY=X",
       "search": "USDCNY=X",
@@ -1295,7 +1355,10 @@
       "change1y": -5.938610503144204,
       "n": 2600,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": -1.4497534669574799,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "GBPUSD": {
       "id": "GBPUSD",
@@ -1307,7 +1370,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "GBPUSD=X",
       "search": "GBPUSD=X",
@@ -1323,7 +1385,10 @@
       "change1y": 0.3913311351387689,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.5227560175605027,
+      "pct1y": 0.6911196911196911,
+      "pct2y": 0.7640232108317214
     },
     "AUDUSD": {
       "id": "AUDUSD",
@@ -1335,7 +1400,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "AUDUSD=X",
       "search": "AUDUSD=X",
@@ -1351,7 +1415,10 @@
       "change1y": 9.582901361159763,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 1.1981961730841655,
+      "pct1y": 0.918918918918919,
+      "pct2y": 0.9593810444874274
     },
     "USDMXN": {
       "id": "USDMXN",
@@ -1363,7 +1430,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "MXN=X",
       "search": "MXN=X",
@@ -1379,35 +1445,10 @@
       "change1y": -9.310083173882907,
       "n": 2603,
       "status": "ok",
-      "staleDays": 0
-    },
-    "USSLIND": {
-      "id": "USSLIND",
-      "name": "US leading idx",
-      "layer": "economy",
-      "street": "economy",
-      "causal": "labels",
-      "units": "index",
-      "freq": "monthly",
-      "sign": 1,
-      "light": null,
-      "weight": 1,
-      "note": "Discontinued/stale on FRED",
-      "sub": "USSLIND",
-      "search": "USSLIND",
-      "freshness": "stale",
-      "source": "FRED",
-      "sourceUrl": "https://fred.stlouisfed.org/series/USSLIND",
-      "latest": 1.72,
-      "asOf": "2020-02-01",
-      "z2y": 1.6422403906863674,
-      "z5y": 1.1130325814097526,
-      "pct5y": 0.8688524590163934,
-      "pct10y": 0.7603305785123967,
-      "change1y": 56.363636363636346,
-      "n": 458,
-      "status": "stale",
-      "staleDays": 2406
+      "staleDays": 0,
+      "z1y": -1.5019795723321578,
+      "pct1y": 0.02702702702702703,
+      "pct2y": 0.013539651837524178
     },
     "STICKY_CPI": {
       "id": "STICKY_CPI",
@@ -1418,8 +1459,7 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "STICKCPIM157SFRBATL",
       "search": "STICKCPIM157SFRBATL",
@@ -1435,19 +1475,21 @@
       "change1y": -21.362923347043505,
       "n": 714,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.5052719680472653,
+      "pct1y": 0.6923076923076923,
+      "pct2y": 0.64
     },
     "INDPRO": {
       "id": "INDPRO",
-      "name": "IP",
+      "name": "Industrial production",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "INDPRO",
       "search": "INDPRO",
@@ -1463,7 +1505,10 @@
       "change1y": 1.0794551200266855,
       "n": 1291,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.794998877363654,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "PAYEMS": {
       "id": "PAYEMS",
@@ -1475,7 +1520,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "PAYEMS",
       "search": "PAYEMS",
@@ -1491,7 +1535,10 @@
       "change1y": -135.9375,
       "n": 1050,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -0.48990000999589806,
+      "pct1y": 0.23076923076923078,
+      "pct2y": 0.16
     },
     "UNRATE": {
       "id": "UNRATE",
@@ -1503,7 +1550,6 @@
       "freq": "monthly",
       "sign": -1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "UNRATE",
       "search": "UNRATE",
@@ -1519,7 +1565,10 @@
       "change1y": -4.651162790697678,
       "n": 942,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -2.1974010622941416,
+      "pct1y": 0,
+      "pct2y": 0.041666666666666664
     },
     "ICSA": {
       "id": "ICSA",
@@ -1531,7 +1580,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "ICSA",
       "search": "ICSA",
@@ -1547,11 +1595,14 @@
       "change1y": -11.353711790393014,
       "n": 3112,
       "status": "ok",
-      "staleDays": 12
+      "staleDays": 12,
+      "z1y": -1.0462394141647453,
+      "pct1y": 0.11320754716981132,
+      "pct2y": 0.05714285714285714
     },
     "CCSA": {
       "id": "CCSA",
-      "name": "Cont. claims",
+      "name": "Continuing claims",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
@@ -1559,7 +1610,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CCSA",
       "search": "CCSA",
@@ -1575,7 +1625,10 @@
       "change1y": -8.444902162718847,
       "n": 3111,
       "status": "ok",
-      "staleDays": 19
+      "staleDays": 19,
+      "z1y": -1.2057702100554069,
+      "pct1y": 0.11320754716981132,
+      "pct2y": 0.05714285714285714
     },
     "JTSJOL": {
       "id": "JTSJOL",
@@ -1586,8 +1639,7 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "JTSJOL",
       "search": "JTSJOL",
@@ -1603,11 +1655,14 @@
       "change1y": 2.56735787840316,
       "n": 308,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.6077621340387025,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.6
     },
     "JTSQUR": {
       "id": "JTSQUR",
-      "name": "JOLTS quits",
+      "name": "JOLTS quit rate",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
@@ -1615,7 +1670,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "JTSQUR",
       "search": "JTSQUR",
@@ -1631,11 +1685,14 @@
       "change1y": -5.000000000000004,
       "n": 308,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.2649110640673507,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "CES0500000003": {
       "id": "CES0500000003",
-      "name": "AHE",
+      "name": "Avg hourly earnings",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
@@ -1643,7 +1700,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CES0500000003",
       "search": "CES0500000003",
@@ -1659,7 +1715,10 @@
       "change1y": 3.15327666575267,
       "n": 245,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.3751632146152002,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "RSAFS": {
       "id": "RSAFS",
@@ -1671,7 +1730,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "RSAFS",
       "search": "RSAFS",
@@ -1687,11 +1745,14 @@
       "change1y": 5.009241229083468,
       "n": 415,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.3042797792358338,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.88
     },
     "DGORDER": {
       "id": "DGORDER",
-      "name": "Durables",
+      "name": "Durable goods orders",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
@@ -1699,7 +1760,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "DGORDER",
       "search": "DGORDER",
@@ -1715,7 +1775,10 @@
       "change1y": 11.998732807096282,
       "n": 414,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.3200982316488867,
+      "pct1y": 0.8461538461538461,
+      "pct2y": 0.88
     },
     "HOUST": {
       "id": "HOUST",
@@ -1727,7 +1790,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "HOUST",
       "search": "HOUST",
@@ -1743,11 +1805,14 @@
       "change1y": -13.477653631284916,
       "n": 811,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.2446645001920982,
+      "pct1y": 0.07692307692307693,
+      "pct2y": 0.04
     },
     "PERMIT": {
       "id": "PERMIT",
-      "name": "Permits",
+      "name": "Building permits",
       "layer": "economy",
       "street": "economy",
       "causal": "labels",
@@ -1755,7 +1820,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "PERMIT",
       "search": "PERMIT",
@@ -1771,7 +1835,10 @@
       "change1y": 2.357142857142857,
       "n": 799,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.29646507062707755,
+      "pct1y": 0.6923076923076923,
+      "pct2y": 0.48
     },
     "CPIAUCSL": {
       "id": "CPIAUCSL",
@@ -1782,8 +1849,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "CPIAUCSL",
       "search": "CPIAUCSL",
@@ -1799,7 +1865,10 @@
       "change1y": 20.463585809759532,
       "n": 942,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.4421466346018744,
+      "pct1y": 0.6666666666666666,
+      "pct2y": 0.8333333333333334
     },
     "CPILFESL": {
       "id": "CPILFESL",
@@ -1811,7 +1880,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
-      "weight": 1,
       "note": null,
       "sub": "CPILFESL",
       "search": "CPILFESL",
@@ -1827,7 +1895,10 @@
       "change1y": -19.24951922630793,
       "n": 822,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.1317017758681989,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "PCEPI": {
       "id": "PCEPI",
@@ -1838,8 +1909,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "PCEPI",
       "search": "PCEPI",
@@ -1855,7 +1925,10 @@
       "change1y": 42.04945462590805,
       "n": 799,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.069337835114975,
+      "pct1y": 0.6923076923076923,
+      "pct2y": 0.84
     },
     "PCEPILFE": {
       "id": "PCEPILFE",
@@ -1867,7 +1940,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
-      "weight": 1,
       "note": null,
       "sub": "PCEPILFE",
       "search": "PCEPILFE",
@@ -1883,7 +1955,10 @@
       "change1y": 16.80362624859352,
       "n": 799,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 1.1356061859626032,
+      "pct1y": 0.8461538461538461,
+      "pct2y": 0.92
     },
     "MICH": {
       "id": "MICH",
@@ -1895,7 +1970,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
-      "weight": 1,
       "note": null,
       "sub": "MICH",
       "search": "MICH",
@@ -1911,7 +1985,10 @@
       "change1y": -6.6666666666666625,
       "n": 583,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -0.41253223033954284,
+      "pct1y": 0.23076923076923078,
+      "pct2y": 0.4
     },
     "GDPC1": {
       "id": "GDPC1",
@@ -1922,8 +1999,7 @@
       "units": "% YoY",
       "freq": "quarterly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "GDPC1",
       "search": "GDPC1",
@@ -1939,7 +2015,10 @@
       "change1y": null,
       "n": 314,
       "status": "ok",
-      "staleDays": 155
+      "staleDays": 155,
+      "z1y": null,
+      "pct1y": null,
+      "pct2y": null
     },
     "COPPER": {
       "id": "COPPER",
@@ -1951,7 +2030,6 @@
       "freq": "daily",
       "sign": 1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "HG=F",
       "search": "HG=F",
@@ -1967,7 +2045,10 @@
       "change1y": 45.080627167721055,
       "n": 2513,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 1.4405832539394758,
+      "pct1y": 0.9723320158102767,
+      "pct2y": 0.9861386138613861
     },
     "VIX": {
       "id": "VIX",
@@ -1979,7 +2060,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
-      "weight": 1,
       "note": null,
       "sub": "^VIX",
       "search": "^VIX",
@@ -1995,7 +2075,10 @@
       "change1y": -11.47350179542936,
       "n": 2513,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.8927929264492462,
+      "pct1y": 0.11857707509881422,
+      "pct2y": 0.14143426294820718
     },
     "BAMLH0A0HYM2": {
       "id": "BAMLH0A0HYM2",
@@ -2007,7 +2090,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
-      "weight": 1,
       "note": null,
       "sub": "BAMLH0A0HYM2",
       "search": "BAMLH0A0HYM2",
@@ -2023,7 +2105,10 @@
       "change1y": -6.69014084507042,
       "n": 786,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": -1.3120996035559573,
+      "pct1y": 0.01893939393939394,
+      "pct2y": 0.04389312977099236
     },
     "BAMLC0A0CM": {
       "id": "BAMLC0A0CM",
@@ -2034,8 +2119,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "risk",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "BAMLC0A0CM",
       "search": "BAMLC0A0CM",
@@ -2051,7 +2135,10 @@
       "change1y": 0,
       "n": 785,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 0.42860279290828623,
+      "pct1y": 0.6704545454545454,
+      "pct2y": 0.4474187380497132
     },
     "NFCI": {
       "id": "NFCI",
@@ -2063,7 +2150,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": "risk",
-      "weight": 1,
       "note": "Higher = tighter financial conditions",
       "sub": "NFCI",
       "search": "NFCI",
@@ -2079,7 +2165,10 @@
       "change1y": -5.681818181818186,
       "n": 2904,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": -1.4005591663315065,
+      "pct1y": 0.09433962264150944,
+      "pct2y": 0.047619047619047616
     },
     "ANFCI": {
       "id": "ANFCI",
@@ -2091,7 +2180,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "ANFCI",
       "search": "ANFCI",
@@ -2107,7 +2195,10 @@
       "change1y": -0.17211703958691926,
       "n": 2904,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": -0.6504441822118163,
+      "pct1y": 0.3018867924528302,
+      "pct2y": 0.1523809523809524
     },
     "SPX": {
       "id": "SPX",
@@ -2119,7 +2210,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "^GSPC",
       "search": "^GSPC",
@@ -2135,7 +2225,10 @@
       "change1y": 19.50046373300426,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.67239411750044,
+      "pct1y": 0.9285714285714286,
+      "pct2y": 0.9640718562874252
     },
     "NDX": {
       "id": "NDX",
@@ -2147,7 +2240,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "^NDX",
       "search": "^NDX",
@@ -2163,7 +2255,10 @@
       "change1y": 25.44958403703009,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.2276351693877356,
+      "pct1y": 0.7698412698412699,
+      "pct2y": 0.8842315369261478
     },
     "RTY": {
       "id": "RTY",
@@ -2175,7 +2270,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "^RUT",
       "search": "^RUT",
@@ -2191,7 +2285,10 @@
       "change1y": 25.548738034336893,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.2846068633828578,
+      "pct1y": 0.8214285714285714,
+      "pct2y": 0.9101796407185628
     },
     "GOLD": {
       "id": "GOLD",
@@ -2203,7 +2300,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "GC=F",
       "search": "GC=F",
@@ -2219,7 +2315,10 @@
       "change1y": 24.777358925928,
       "n": 2512,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.22728082894882948,
+      "pct1y": 0.5928853754940712,
+      "pct2y": 0.7960396039603961
     },
     "BTC": {
       "id": "BTC",
@@ -2231,7 +2330,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "BTC-USD",
       "search": "BTC-USD",
@@ -2247,7 +2345,10 @@
       "change1y": -30.43266594040196,
       "n": 3652,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": -0.2609063884523403,
+      "pct1y": 0.5041095890410959,
+      "pct2y": 0.34657534246575344
     },
     "WTI": {
       "id": "WTI",
@@ -2259,7 +2360,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CL=F",
       "search": "CL=F",
@@ -2275,7 +2375,10 @@
       "change1y": 41.73830926800272,
       "n": 2513,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.9890612430069715,
+      "pct1y": 0.7707509881422925,
+      "pct2y": 0.8851485148514852
     },
     "BRENT": {
       "id": "BRENT",
@@ -2287,7 +2390,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "BZ=F",
       "search": "BZ=F",
@@ -2303,35 +2405,10 @@
       "change1y": 40.68047429102777,
       "n": 2514,
       "status": "ok",
-      "staleDays": 0
-    },
-    "UKASSETS": {
-      "id": "UKASSETS",
-      "name": "BoE assets",
-      "layer": "liquidity",
-      "street": "liquidity",
-      "causal": "liquidity",
-      "units": "GBP mn",
-      "freq": "monthly",
-      "sign": 1,
-      "light": null,
-      "weight": 1,
-      "note": null,
-      "sub": "UKASSETS",
-      "search": "UKASSETS",
-      "freshness": "stale",
-      "source": "FRED",
-      "sourceUrl": "https://fred.stlouisfed.org/series/UKASSETS",
-      "latest": 405132,
-      "asOf": "2014-09-01",
-      "z2y": 0.11052890845424902,
-      "z5y": 1.0684201537228626,
-      "pct5y": 0.9180327868852459,
-      "pct10y": 0.9504950495049505,
-      "change1y": 0.5315268368942158,
-      "n": 101,
-      "status": "stale",
-      "staleDays": 4385
+      "staleDays": 0,
+      "z1y": 0.9158917393543189,
+      "pct1y": 0.782608695652174,
+      "pct2y": 0.8910891089108911
     },
     "MTSDS133FMS": {
       "id": "MTSDS133FMS",
@@ -2343,7 +2420,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": "Surplus(+)/deficit(−) — issuance pulse proxy",
       "sub": "MTSDS133FMS",
       "search": "MTSDS133FMS",
@@ -2359,7 +2435,10 @@
       "change1y": -48.48661278093997,
       "n": 550,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.393414684293383,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "ROW_UST": {
       "id": "ROW_UST",
@@ -2371,7 +2450,6 @@
       "freq": "quarterly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": "Rest-of-world Treasury securities (TIC-like)",
       "sub": "BOGZ1FL263061110Q",
       "search": "BOGZ1FL263061110Q",
@@ -2387,7 +2465,10 @@
       "change1y": null,
       "n": 304,
       "status": "ok",
-      "staleDays": 245
+      "staleDays": 245,
+      "z1y": null,
+      "pct1y": null,
+      "pct2y": null
     },
     "TREAST": {
       "id": "TREAST",
@@ -2399,7 +2480,6 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "TREAST",
       "search": "TREAST",
@@ -2415,7 +2495,10 @@
       "change1y": 8.1815631297814,
       "n": 1237,
       "status": "ok",
-      "staleDays": 8
+      "staleDays": 8,
+      "z1y": 1.6245756460399021,
+      "pct1y": 0.9811320754716981,
+      "pct2y": 0.9904761904761905
     },
     "FYGFDPUN": {
       "id": "FYGFDPUN",
@@ -2427,7 +2510,6 @@
       "freq": "quarterly",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "FYGFDPUN",
       "search": "FYGFDPUN",
@@ -2443,7 +2525,10 @@
       "change1y": null,
       "n": 225,
       "status": "ok",
-      "staleDays": 245
+      "staleDays": 245,
+      "z1y": null,
+      "pct1y": null,
+      "pct2y": null
     },
     "DFEDTARU": {
       "id": "DFEDTARU",
@@ -2455,7 +2540,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "transmission",
-      "weight": 1,
       "note": null,
       "sub": "DFEDTARU",
       "search": "DFEDTARU",
@@ -2471,7 +2555,10 @@
       "change1y": -16.666666666666664,
       "n": 6470,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.5522056768085941,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "DFEDTARL": {
       "id": "DFEDTARL",
@@ -2483,7 +2570,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "DFEDTARL",
       "search": "DFEDTARL",
@@ -2499,7 +2585,10 @@
       "change1y": -17.647058823529413,
       "n": 6470,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.5522056768085941,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "MORTGAGE30US": {
       "id": "MORTGAGE30US",
@@ -2511,7 +2600,6 @@
       "freq": "weekly",
       "sign": -1,
       "light": "transmission",
-      "weight": 1,
       "note": null,
       "sub": "MORTGAGE30US",
       "search": "MORTGAGE30US",
@@ -2527,7 +2615,10 @@
       "change1y": 1.5243902439024473,
       "n": 2892,
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 7,
+      "z1y": 1.7658595308436518,
+      "pct1y": 0.9245283018867925,
+      "pct2y": 0.638095238095238
     },
     "THREEFFTP10": {
       "id": "THREEFFTP10",
@@ -2538,8 +2629,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
-      "weight": 1,
+      "light": null,
       "note": "NY Fed ACM instantaneous forward term premium 10y",
       "sub": "THREEFFTP10",
       "search": "THREEFFTP10",
@@ -2555,7 +2645,10 @@
       "change1y": 21.759294457538207,
       "n": 9151,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": 2.055783515394224,
+      "pct1y": 0.9760956175298805,
+      "pct2y": 0.986
     },
     "THREEFFTP2": {
       "id": "THREEFFTP2",
@@ -2567,7 +2660,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "THREEFFTP2",
       "search": "THREEFFTP2",
@@ -2583,7 +2675,10 @@
       "change1y": 2497.2222222222226,
       "n": 9151,
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 6,
+      "z1y": 1.7092859076805649,
+      "pct1y": 0.9960159362549801,
+      "pct2y": 0.998
     },
     "T10YFF": {
       "id": "T10YFF",
@@ -2595,7 +2690,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "T10YFF",
       "search": "T10YFF",
@@ -2611,7 +2705,10 @@
       "change1y": 2420,
       "n": 16150,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 1.6343509222310395,
+      "pct1y": 0.9960159362549801,
+      "pct2y": 0.9979959919839679
     },
     "USDCHF": {
       "id": "USDCHF",
@@ -2623,7 +2720,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CHF=X",
       "search": "CHF=X",
@@ -2639,7 +2735,10 @@
       "change1y": 0.9977586339605885,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 1.4193119978439055,
+      "pct1y": 0.9420849420849421,
+      "pct2y": 0.5705996131528046
     },
     "USDCAD": {
       "id": "USDCAD",
@@ -2651,7 +2750,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CAD=X",
       "search": "CAD=X",
@@ -2667,7 +2765,10 @@
       "change1y": 0.279123850491738,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": -0.20540162360435363,
+      "pct1y": 0.4247104247104247,
+      "pct2y": 0.4197292069632495
     },
     "USDBRL": {
       "id": "USDBRL",
@@ -2679,7 +2780,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": "EM FX stress proxy",
       "sub": "BRL=X",
       "search": "BRL=X",
@@ -2695,7 +2795,10 @@
       "change1y": -6.5141953599555515,
       "n": 2601,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": -0.9071757453169749,
+      "pct1y": 0.19305019305019305,
+      "pct2y": 0.09671179883945841
     },
     "EURJPY": {
       "id": "EURJPY",
@@ -2707,7 +2810,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": "Risk cross",
       "sub": "EURJPY=X",
       "search": "EURJPY=X",
@@ -2723,7 +2825,10 @@
       "change1y": 5.974607447444473,
       "n": 2602,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.10958073688311142,
+      "pct1y": 0.3667953667953668,
+      "pct2y": 0.6827852998065764
     },
     "EMPIRE_MFG": {
       "id": "EMPIRE_MFG",
@@ -2734,8 +2839,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": "PMI-like (NY Fed)",
       "sub": "GACDISA066MSFRBNY",
       "search": "GACDISA066MSFRBNY",
@@ -2751,7 +2855,10 @@
       "change1y": 126.3736263736264,
       "n": 302,
       "status": "ok",
-      "staleDays": 33
+      "staleDays": 33,
+      "z1y": 1.5534101270642233,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "PHILLY_MFG": {
       "id": "PHILLY_MFG",
@@ -2762,8 +2869,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": "PMI-like (Philly Fed)",
       "sub": "GACDFSA066MSFRBPHI",
       "search": "GACDFSA066MSFRBPHI",
@@ -2779,7 +2885,10 @@
       "change1y": 6671.428571428571,
       "n": 700,
       "status": "ok",
-      "staleDays": 33
+      "staleDays": 33,
+      "z1y": 1.9999443374100185,
+      "pct1y": 0.9230769230769231,
+      "pct2y": 0.96
     },
     "CFNAI": {
       "id": "CFNAI",
@@ -2791,7 +2900,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": "growth",
-      "weight": 1,
       "note": null,
       "sub": "CFNAI",
       "search": "CFNAI",
@@ -2807,7 +2915,10 @@
       "change1y": -500,
       "n": 713,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.18882424658999317,
+      "pct1y": 0.46153846153846156,
+      "pct2y": 0.52
     },
     "WEI": {
       "id": "WEI",
@@ -2819,7 +2930,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": "growth",
-      "weight": 1,
+      "weight": 2,
       "note": "High-freq growth (NY Fed)",
       "sub": "WEI",
       "search": "WEI",
@@ -2835,7 +2946,10 @@
       "change1y": 8.778625954198473,
       "n": 973,
       "status": "ok",
-      "staleDays": 12
+      "staleDays": 12,
+      "z1y": 0.9977741021907929,
+      "pct1y": 0.7924528301886793,
+      "pct2y": 0.8761904761904762
     },
     "CSUSHPISA": {
       "id": "CSUSHPISA",
@@ -2847,7 +2961,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "CSUSHPISA",
       "search": "CSUSHPISA",
@@ -2863,7 +2976,10 @@
       "change1y": -20.85968401356538,
       "n": 462,
       "status": "ok",
-      "staleDays": 94
+      "staleDays": 94,
+      "z1y": 0.8029169133828765,
+      "pct1y": 0.7692307692307693,
+      "pct2y": 0.4
     },
     "EXHOSLUSM495S": {
       "id": "EXHOSLUSM495S",
@@ -2875,7 +2991,6 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "EXHOSLUSM495S",
       "search": "EXHOSLUSM495S",
@@ -2891,7 +3006,10 @@
       "change1y": 0.7444168734491315,
       "n": 13,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -0.4361702127659569,
+      "pct1y": 0.38461538461538464,
+      "pct2y": null
     },
     "UMCSENT": {
       "id": "UMCSENT",
@@ -2902,8 +3020,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "UMCSENT",
       "search": "UMCSENT",
@@ -2919,7 +3036,10 @@
       "change1y": -10.53484602917342,
       "n": 675,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.36110120449242095,
+      "pct1y": 0.6153846153846154,
+      "pct2y": 0.4
     },
     "PPIACO": {
       "id": "PPIACO",
@@ -2930,8 +3050,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "PPIACO",
       "search": "PPIACO",
@@ -2947,7 +3066,10 @@
       "change1y": 322.521378375998,
       "n": 1351,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.8515253680601584,
+      "pct1y": 0.6923076923076923,
+      "pct2y": 0.84
     },
     "PPIFIS": {
       "id": "PPIFIS",
@@ -2958,8 +3080,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "PPIFIS",
       "search": "PPIFIS",
@@ -2975,7 +3096,10 @@
       "change1y": 44.34883710206191,
       "n": 189,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.6926339804008704,
+      "pct1y": 0.6923076923076923,
+      "pct2y": 0.84
     },
     "MEDIAN_CPI": {
       "id": "MEDIAN_CPI",
@@ -2987,7 +3111,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
-      "weight": 1,
       "note": null,
       "sub": "MEDCPIM159SFRBCLE",
       "search": "MEDCPIM159SFRBCLE",
@@ -3003,7 +3126,10 @@
       "change1y": -26.266777754251564,
       "n": 512,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.1111725348961146,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "TRIMMED_CPI": {
       "id": "TRIMMED_CPI",
@@ -3014,8 +3140,7 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "TRMMEANCPIM158SFRBCLE",
       "search": "TRMMEANCPIM158SFRBCLE",
@@ -3031,7 +3156,10 @@
       "change1y": -9.513489845060393,
       "n": 523,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": 0.0588611100214042,
+      "pct1y": 0.46153846153846156,
+      "pct2y": 0.4
     },
     "SHELTER_CPI": {
       "id": "SHELTER_CPI",
@@ -3042,8 +3170,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "CUSR0000SAH1",
       "search": "CUSR0000SAH1",
@@ -3059,7 +3186,10 @@
       "change1y": -14.170897193954454,
       "n": 870,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -0.4011751551167016,
+      "pct1y": 0.4166666666666667,
+      "pct2y": 0.20833333333333334
     },
     "SUPERCORE": {
       "id": "SUPERCORE",
@@ -3070,8 +3200,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
-      "weight": 1,
+      "light": null,
       "note": "Supercore proxy",
       "sub": "CUSR0000SASLE",
       "search": "CUSR0000SASLE",
@@ -3087,7 +3216,10 @@
       "change1y": -17.79891563026889,
       "n": 702,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -0.7946446625810759,
+      "pct1y": 0.25,
+      "pct2y": 0.125
     },
     "CORESTICK": {
       "id": "CORESTICK",
@@ -3099,7 +3231,6 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
-      "weight": 1,
       "note": null,
       "sub": "CORESTICKM159SFRBATL",
       "search": "CORESTICKM159SFRBATL",
@@ -3115,7 +3246,10 @@
       "change1y": -20.75342594816507,
       "n": 703,
       "status": "ok",
-      "staleDays": 64
+      "staleDays": 64,
+      "z1y": -1.5859649588845952,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "BBB_OAS": {
       "id": "BBB_OAS",
@@ -3127,7 +3261,6 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
-      "weight": 1,
       "note": null,
       "sub": "BAMLC0A4CBBB",
       "search": "BAMLC0A4CBBB",
@@ -3143,7 +3276,10 @@
       "change1y": -2.9411764705882377,
       "n": 786,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": -0.1301802345112502,
+      "pct1y": 0.4431818181818182,
+      "pct2y": 0.2595419847328244
     },
     "HY_CCC_OAS": {
       "id": "HY_CCC_OAS",
@@ -3155,7 +3291,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "BAMLH0A3HYC",
       "search": "BAMLH0A3HYC",
@@ -3171,7 +3306,10 @@
       "change1y": 31.45363408521303,
       "n": 786,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": 2.082383884344016,
+      "pct1y": 0.9962121212121212,
+      "pct2y": 0.9790076335877863
     },
     "EPU": {
       "id": "EPU",
@@ -3183,7 +3321,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "USEPUINDXD",
       "search": "USEPUINDXD",
@@ -3199,7 +3336,10 @@
       "change1y": -25.113172874366903,
       "n": 15219,
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "z1y": -1.3153213987418382,
+      "pct1y": 0.03278688524590164,
+      "pct2y": 0.13679890560875513
     },
     "SAHM": {
       "id": "SAHM",
@@ -3210,8 +3350,7 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
-      "light": "risk",
-      "weight": 1,
+      "light": null,
       "note": null,
       "sub": "SAHMREALTIME",
       "search": "SAHMREALTIME",
@@ -3227,35 +3366,10 @@
       "change1y": -130,
       "n": 799,
       "status": "ok",
-      "staleDays": 64
-    },
-    "EVZ": {
-      "id": "EVZ",
-      "name": "Euro currency vol",
-      "layer": "conditions",
-      "street": "conditions",
-      "causal": "risk",
-      "units": "index",
-      "freq": "daily",
-      "sign": -1,
-      "light": null,
-      "weight": 1,
-      "note": null,
-      "sub": "EVZCLS",
-      "search": "EVZCLS",
-      "freshness": "stale",
-      "source": "FRED",
-      "sourceUrl": "https://fred.stlouisfed.org/series/EVZCLS",
-      "latest": 10.68,
-      "asOf": "2025-03-11",
-      "z2y": 2.22629588781224,
-      "z5y": 1.3257523700495955,
-      "pct5y": 0.880857823669579,
-      "pct10y": 0.8387609213661636,
-      "change1y": 76.82119205298012,
-      "n": 4360,
-      "status": "stale",
-      "staleDays": 541
+      "staleDays": 64,
+      "z1y": -1.7502260251866062,
+      "pct1y": 0,
+      "pct2y": 0
     },
     "HYG": {
       "id": "HYG",
@@ -3267,7 +3381,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "HYG",
       "search": "HYG",
@@ -3283,7 +3396,10 @@
       "change1y": -1.5922363341399606,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -1.9176773626444743,
+      "pct1y": 0.01984126984126984,
+      "pct2y": 0.13373253493013973
     },
     "LQD": {
       "id": "LQD",
@@ -3295,7 +3411,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "LQD",
       "search": "LQD",
@@ -3311,7 +3426,10 @@
       "change1y": -3.392943121588549,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -2.3794127061296457,
+      "pct1y": 0.003968253968253968,
+      "pct2y": 0.011976047904191617
     },
     "SKEW": {
       "id": "SKEW",
@@ -3323,7 +3441,6 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "^SKEW",
       "search": "^SKEW",
@@ -3339,7 +3456,10 @@
       "change1y": -4.858727764681019,
       "n": 2457,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -0.13993298509912538,
+      "pct1y": 0.49206349206349204,
+      "pct2y": 0.4088176352705411
     },
     "SILVER": {
       "id": "SILVER",
@@ -3351,7 +3471,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "SI=F",
       "search": "SI=F",
@@ -3367,7 +3486,10 @@
       "change1y": 60.644650966493444,
       "n": 2512,
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 0,
+      "z1y": 0.013606872968684439,
+      "pct1y": 0.49407114624505927,
+      "pct2y": 0.7465346534653465
     },
     "TLT": {
       "id": "TLT",
@@ -3379,7 +3501,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": null,
       "sub": "TLT",
       "search": "TLT",
@@ -3395,7 +3516,10 @@
       "change1y": -4.297559760845247,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": -2.058029104395069,
+      "pct1y": 0.011904761904761904,
+      "pct2y": 0.005988023952095809
     },
     "EWZ": {
       "id": "EWZ",
@@ -3407,7 +3531,6 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
-      "weight": 1,
       "note": "EM equities proxy",
       "sub": "EWZ",
       "search": "EWZ",
@@ -3423,7 +3546,10 @@
       "change1y": 31.344828112372035,
       "n": 2511,
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 1,
+      "z1y": 1.0452739418766976,
+      "pct1y": 0.8214285714285714,
+      "pct2y": 0.9101796407185628
     },
     "NET_LIQ": {
       "id": "NET_LIQ",
@@ -3450,11 +3576,14 @@
       "pct10y": 0.11302681992337164,
       "change1y": -61.80292846421032,
       "n": 1229,
-      "status": "ok"
+      "status": "ok",
+      "z1y": -1.130768402645244,
+      "pct1y": 0.11320754716981132,
+      "pct2y": 0.05714285714285714
     },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
-      "name": "Stock–bond corr",
+      "name": "Stock–bond 60d corr",
       "layer": "conditions",
       "street": "conditions",
       "causal": "risk",
@@ -3462,7 +3591,6 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
-      "weight": 1,
       "sub": "SPX vs −ΔDGS10",
       "search": "SPX vs −ΔDGS10",
       "freshness": "live",
@@ -3476,12 +3604,15 @@
       "pct10y": 0.9628571428571429,
       "change1y": 918.609740316071,
       "n": 2450,
-      "status": "ok"
+      "status": "ok",
+      "z1y": 0.8564321341409297,
+      "pct1y": 0.7103174603174603,
+      "pct2y": 0.8542914171656687
     }
   },
   "errors": [],
   "formula": {
-    "lights": "Per light: mean of member (sign × 2y z) and flipped 5y percentiles; score>0.45 easing/strong/hot/risk-on; <-0.45 tight/soft/cold/risk-off. Inflation uses raw upside = hot.",
+    "lights": "Per light: median of member scores (each = mean of sign×2y z and flipped 5y %ile). Clubs are small complementary sets; Street table keeps the rest. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
     "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
   }

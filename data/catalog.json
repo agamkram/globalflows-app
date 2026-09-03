@@ -1,6 +1,6 @@
 {
   "title": "GlobalFlows series book",
-  "note": "Flexible catalog — hang series on layers; empty cell > fake number.",
+  "note": "Flexible catalog \u2014 hang series on layers; empty cell > fake number.",
   "layers": [
     {
       "id": "liquidity",
@@ -88,7 +88,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "liquidity",
-      "note": "Rise parks cash → drains market liquidity",
+      "note": "Rise parks cash \u2192 drains market liquidity",
       "sourceUrl": "https://fred.stlouisfed.org/series/RRPONTSYD",
       "sub": "RRPONTSYD",
       "search": "RRPONTSYD",
@@ -114,7 +114,7 @@
     },
     {
       "id": "WSHOSHO",
-      "name": "Fed SOMA",
+      "name": "Fed securities held outright",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "WSHOSHO",
@@ -125,7 +125,8 @@
       "sub": "WSHOSHO",
       "search": "WSHOSHO",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "M2SL",
@@ -140,11 +141,12 @@
       "sub": "M2SL",
       "search": "M2SL",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "TOTLL",
-      "name": "Bank loans",
+      "name": "US bank loans & leases",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "TOTLL",
@@ -155,11 +157,12 @@
       "sub": "TOTLL",
       "search": "TOTLL",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "BUSLOANS",
-      "name": "C&I loans",
+      "name": "Commercial & industrial loans",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "BUSLOANS",
@@ -170,7 +173,8 @@
       "sub": "BUSLOANS",
       "search": "BUSLOANS",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "GFDEBTN",
@@ -185,7 +189,8 @@
       "sub": "GFDEBTN",
       "search": "GFDEBTN",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "TRESEGCNM052N",
@@ -201,7 +206,8 @@
       "sub": "TRESEGCNM052N",
       "search": "TRESEGCNM052N",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "ECBASSETS",
@@ -216,7 +222,8 @@
       "sub": "ECBASSETSW",
       "search": "ECBASSETSW",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "JPNASSETS",
@@ -224,7 +231,7 @@
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "JPNASSETS",
-      "units": "¥100m",
+      "units": "\u00a5100m",
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/JPNASSETS",
@@ -232,7 +239,8 @@
       "sub": "JPNASSETS",
       "search": "JPNASSETS",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "SOFR",
@@ -247,7 +255,8 @@
       "sub": "NY Fed SOFR",
       "search": "NY Fed SOFR",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "EFFR",
@@ -262,7 +271,8 @@
       "sub": "DFF",
       "search": "DFF",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "light": null
     },
     {
       "id": "NET_LIQ",
@@ -276,9 +286,9 @@
       "light": "liquidity",
       "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
-      "note": "WALCL − TGA − ON RRP (WALCL scaled to bn)",
-      "sub": "WALCL−TGA−RRP",
-      "search": "WALCL−TGA−RRP",
+      "note": "WALCL \u2212 TGA \u2212 ON RRP (WALCL scaled to bn)",
+      "sub": "WALCL\u2212TGA\u2212RRP",
+      "search": "WALCL\u2212TGA\u2212RRP",
       "causal": "liquidity",
       "street": "liquidity"
     },
@@ -291,7 +301,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS3MO",
       "sub": "DGS3MO",
       "search": "DGS3MO",
@@ -327,7 +337,8 @@
       "sub": "DGS5",
       "search": "DGS5",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "DGS10",
@@ -338,7 +349,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
       "sub": "DGS10",
       "search": "DGS10",
@@ -358,7 +369,8 @@
       "sub": "DGS30",
       "search": "DGS30",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "T10Y2Y",
@@ -390,7 +402,8 @@
       "sub": "T10Y3M",
       "search": "T10Y3M",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "DFII5",
@@ -401,7 +414,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII5",
       "sub": "DFII5",
       "search": "DFII5",
@@ -417,7 +430,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
       "sub": "DFII10",
       "search": "DFII10",
@@ -437,7 +450,8 @@
       "sub": "T5YIE",
       "search": "T5YIE",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "T10YIE",
@@ -452,11 +466,12 @@
       "sub": "T10YIE",
       "search": "T10YIE",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "T5YIFR",
-      "name": "5y5y infl",
+      "name": "5y5y forward inflation",
       "layer": "rates",
       "pipe": "fred",
       "fred": "T5YIFR",
@@ -467,11 +482,12 @@
       "sub": "T5YIFR",
       "search": "T5YIFR",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "DTWEXBGS",
-      "name": "Broad USD",
+      "name": "Fed broad dollar TWI",
       "layer": "fx",
       "pipe": "fred",
       "fred": "DTWEXBGS",
@@ -488,7 +504,7 @@
     },
     {
       "id": "RBUSBIS",
-      "name": "USD REER",
+      "name": "BIS USD REER",
       "layer": "fx",
       "pipe": "fred",
       "fred": "RBUSBIS",
@@ -500,7 +516,8 @@
       "sub": "RBUSBIS",
       "search": "RBUSBIS",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "IRLTLT01DEM156N",
@@ -515,7 +532,8 @@
       "sub": "IRLTLT01DEM156N",
       "search": "IRLTLT01DEM156N",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "IRLTLT01GBM156N",
@@ -530,7 +548,8 @@
       "sub": "IRLTLT01GBM156N",
       "search": "IRLTLT01GBM156N",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "IRLTLT01JPM156N",
@@ -545,7 +564,8 @@
       "sub": "IRLTLT01JPM156N",
       "search": "IRLTLT01JPM156N",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "light": null
     },
     {
       "id": "MOVE",
@@ -572,7 +592,7 @@
       "units": "index",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "sourceUrl": "https://finance.yahoo.com/quote/DX-Y.NYB",
       "sub": "DX-Y.NYB",
       "search": "DX-Y.NYB",
@@ -592,7 +612,8 @@
       "sub": "EURUSD=X",
       "search": "EURUSD=X",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "USDJPY",
@@ -608,7 +629,8 @@
       "sub": "JPY=X",
       "search": "JPY=X",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "USDCNH",
@@ -623,7 +645,8 @@
       "sub": "USDCNY=X",
       "search": "USDCNY=X",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "GBPUSD",
@@ -638,7 +661,8 @@
       "sub": "GBPUSD=X",
       "search": "GBPUSD=X",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "AUDUSD",
@@ -653,7 +677,8 @@
       "sub": "AUDUSD=X",
       "search": "AUDUSD=X",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "USDMXN",
@@ -668,23 +693,8 @@
       "sub": "MXN=X",
       "search": "MXN=X",
       "causal": "transmission",
-      "street": "fx"
-    },
-    {
-      "id": "USSLIND",
-      "name": "US leading idx",
-      "layer": "economy",
-      "pipe": "fred",
-      "fred": "USSLIND",
-      "units": "index",
-      "freq": "monthly",
-      "sign": 1,
-      "sourceUrl": "https://fred.stlouisfed.org/series/USSLIND",
-      "sub": "USSLIND",
-      "search": "USSLIND",
-      "causal": "labels",
-      "street": "economy",
-      "note": "Discontinued/stale on FRED"
+      "street": "fx",
+      "light": null
     },
     {
       "id": "STICKY_CPI",
@@ -695,7 +705,7 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/STICKCPIM157SFRBATL",
       "sub": "STICKCPIM157SFRBATL",
       "search": "STICKCPIM157SFRBATL",
@@ -704,14 +714,14 @@
     },
     {
       "id": "INDPRO",
-      "name": "IP",
+      "name": "Industrial production",
       "layer": "economy",
       "pipe": "fred",
       "fred": "INDPRO",
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/INDPRO",
       "sub": "INDPRO",
       "search": "INDPRO",
@@ -769,7 +779,7 @@
     },
     {
       "id": "CCSA",
-      "name": "Cont. claims",
+      "name": "Continuing claims",
       "layer": "economy",
       "pipe": "fred",
       "fred": "CCSA",
@@ -780,7 +790,8 @@
       "sub": "CCSA",
       "search": "CCSA",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "JTSJOL",
@@ -791,7 +802,7 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSJOL",
       "sub": "JTSJOL",
       "search": "JTSJOL",
@@ -800,7 +811,7 @@
     },
     {
       "id": "JTSQUR",
-      "name": "JOLTS quits",
+      "name": "JOLTS quit rate",
       "layer": "economy",
       "pipe": "fred",
       "fred": "JTSQUR",
@@ -811,11 +822,12 @@
       "sub": "JTSQUR",
       "search": "JTSQUR",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "CES0500000003",
-      "name": "AHE",
+      "name": "Avg hourly earnings",
       "layer": "economy",
       "pipe": "fred",
       "fred": "CES0500000003",
@@ -826,7 +838,8 @@
       "sub": "CES0500000003",
       "search": "CES0500000003",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "RSAFS",
@@ -846,7 +859,7 @@
     },
     {
       "id": "DGORDER",
-      "name": "Durables",
+      "name": "Durable goods orders",
       "layer": "economy",
       "pipe": "fred",
       "fred": "DGORDER",
@@ -857,7 +870,8 @@
       "sub": "DGORDER",
       "search": "DGORDER",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "HOUST",
@@ -872,11 +886,12 @@
       "sub": "HOUST",
       "search": "HOUST",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "PERMIT",
-      "name": "Permits",
+      "name": "Building permits",
       "layer": "economy",
       "pipe": "fred",
       "fred": "PERMIT",
@@ -887,7 +902,8 @@
       "sub": "PERMIT",
       "search": "PERMIT",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "light": null
     },
     {
       "id": "CPIAUCSL",
@@ -898,7 +914,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CPIAUCSL",
       "sub": "CPIAUCSL",
@@ -932,7 +948,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PCEPI",
       "sub": "PCEPI",
@@ -982,7 +998,7 @@
       "units": "% YoY",
       "freq": "quarterly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "transform": "yoy",
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/GDPC1",
@@ -1048,7 +1064,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "risk",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
       "sub": "BAMLC0A0CM",
       "search": "BAMLC0A0CM",
@@ -1085,7 +1101,8 @@
       "sub": "ANFCI",
       "search": "ANFCI",
       "causal": "risk",
-      "street": "conditions"
+      "street": "conditions",
+      "light": null
     },
     {
       "id": "SPX",
@@ -1100,7 +1117,8 @@
       "sub": "^GSPC",
       "search": "^GSPC",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "NDX",
@@ -1115,7 +1133,8 @@
       "sub": "^NDX",
       "search": "^NDX",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "RTY",
@@ -1130,7 +1149,8 @@
       "sub": "^RUT",
       "search": "^RUT",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "GOLD",
@@ -1145,7 +1165,8 @@
       "sub": "GC=F",
       "search": "GC=F",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "BTC",
@@ -1160,7 +1181,8 @@
       "sub": "BTC-USD",
       "search": "BTC-USD",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "WTI",
@@ -1175,7 +1197,8 @@
       "sub": "CL=F",
       "search": "CL=F",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "BRENT",
@@ -1190,37 +1213,24 @@
       "sub": "BZ=F",
       "search": "BZ=F",
       "causal": "assets",
-      "street": "markets"
+      "street": "markets",
+      "light": null
     },
     {
       "id": "STOCK_BOND_CORR",
-      "name": "Stock–bond corr",
+      "name": "Stock\u2013bond 60d corr",
       "layer": "conditions",
       "pipe": "derived",
       "derive": "stock_bond_corr",
-      "units": "ρ 60d",
+      "units": "\u03c1 60d",
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-      "sub": "SPX vs −ΔDGS10",
-      "search": "SPX vs −ΔDGS10",
+      "sub": "SPX vs \u2212\u0394DGS10",
+      "search": "SPX vs \u2212\u0394DGS10",
       "causal": "risk",
-      "street": "conditions"
-    },
-    {
-      "id": "UKASSETS",
-      "name": "BoE assets",
-      "street": "liquidity",
-      "causal": "liquidity",
-      "pipe": "fred",
-      "fred": "UKASSETS",
-      "units": "GBP mn",
-      "freq": "monthly",
-      "sign": 1,
-      "sourceUrl": "https://fred.stlouisfed.org/series/UKASSETS",
-      "layer": "liquidity",
-      "sub": "UKASSETS",
-      "search": "UKASSETS"
+      "street": "conditions",
+      "light": null
     },
     {
       "id": "MTSDS133FMS",
@@ -1232,11 +1242,12 @@
       "units": "USD mn",
       "freq": "monthly",
       "sign": 0,
-      "note": "Surplus(+)/deficit(−) — issuance pulse proxy",
+      "note": "Surplus(+)/deficit(\u2212) \u2014 issuance pulse proxy",
       "sourceUrl": "https://fred.stlouisfed.org/series/MTSDS133FMS",
       "layer": "liquidity",
       "sub": "MTSDS133FMS",
-      "search": "MTSDS133FMS"
+      "search": "MTSDS133FMS",
+      "light": null
     },
     {
       "id": "ROW_UST",
@@ -1253,7 +1264,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/BOGZ1FL263061110Q",
       "layer": "liquidity",
       "sub": "BOGZ1FL263061110Q",
-      "search": "BOGZ1FL263061110Q"
+      "search": "BOGZ1FL263061110Q",
+      "light": null
     },
     {
       "id": "TREAST",
@@ -1268,7 +1280,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/TREAST",
       "layer": "liquidity",
       "sub": "TREAST",
-      "search": "TREAST"
+      "search": "TREAST",
+      "light": null
     },
     {
       "id": "FYGFDPUN",
@@ -1283,7 +1296,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/FYGFDPUN",
       "layer": "liquidity",
       "sub": "FYGFDPUN",
-      "search": "FYGFDPUN"
+      "search": "FYGFDPUN",
+      "light": null
     },
     {
       "id": "DFEDTARU",
@@ -1314,7 +1328,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARL",
       "layer": "rates",
       "sub": "DFEDTARL",
-      "search": "DFEDTARL"
+      "search": "DFEDTARL",
+      "light": null
     },
     {
       "id": "MORTGAGE30US",
@@ -1342,7 +1357,7 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "transmission",
+      "light": null,
       "note": "NY Fed ACM instantaneous forward term premium 10y",
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP10",
       "layer": "rates",
@@ -1362,11 +1377,12 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP2",
       "layer": "rates",
       "sub": "THREEFFTP2",
-      "search": "THREEFFTP2"
+      "search": "THREEFFTP2",
+      "light": null
     },
     {
       "id": "T10YFF",
-      "name": "10y–FF spread",
+      "name": "10y\u2013FF spread",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1377,7 +1393,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/T10YFF",
       "layer": "rates",
       "sub": "T10YFF",
-      "search": "T10YFF"
+      "search": "T10YFF",
+      "light": null
     },
     {
       "id": "USDCHF",
@@ -1392,7 +1409,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/CHF=X",
       "layer": "fx",
       "sub": "CHF=X",
-      "search": "CHF=X"
+      "search": "CHF=X",
+      "light": null
     },
     {
       "id": "USDCAD",
@@ -1407,7 +1425,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/CAD=X",
       "layer": "fx",
       "sub": "CAD=X",
-      "search": "CAD=X"
+      "search": "CAD=X",
+      "light": null
     },
     {
       "id": "USDBRL",
@@ -1423,7 +1442,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/BRL=X",
       "layer": "fx",
       "sub": "BRL=X",
-      "search": "BRL=X"
+      "search": "BRL=X",
+      "light": null
     },
     {
       "id": "EURJPY",
@@ -1439,7 +1459,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/EURJPY=X",
       "layer": "fx",
       "sub": "EURJPY=X",
-      "search": "EURJPY=X"
+      "search": "EURJPY=X",
+      "light": null
     },
     {
       "id": "EMPIRE_MFG",
@@ -1451,7 +1472,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "note": "PMI-like (NY Fed)",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY",
       "layer": "economy",
@@ -1468,7 +1489,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "note": "PMI-like (Philly Fed)",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI",
       "layer": "economy",
@@ -1506,7 +1527,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/WEI",
       "layer": "economy",
       "sub": "WEI",
-      "search": "WEI"
+      "search": "WEI",
+      "weight": 2
     },
     {
       "id": "CSUSHPISA",
@@ -1522,7 +1544,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/CSUSHPISA",
       "layer": "economy",
       "sub": "CSUSHPISA",
-      "search": "CSUSHPISA"
+      "search": "CSUSHPISA",
+      "light": null
     },
     {
       "id": "EXHOSLUSM495S",
@@ -1537,7 +1560,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/EXHOSLUSM495S",
       "layer": "economy",
       "sub": "EXHOSLUSM495S",
-      "search": "EXHOSLUSM495S"
+      "search": "EXHOSLUSM495S",
+      "light": null
     },
     {
       "id": "UMCSENT",
@@ -1549,7 +1573,7 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/UMCSENT",
       "layer": "economy",
       "sub": "UMCSENT",
@@ -1565,7 +1589,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PPIACO",
       "layer": "inflation",
@@ -1582,7 +1606,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PPIFIS",
       "layer": "inflation",
@@ -1615,7 +1639,7 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/TRMMEANCPIM158SFRBCLE",
       "layer": "inflation",
       "sub": "TRMMEANCPIM158SFRBCLE",
@@ -1631,7 +1655,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CUSR0000SAH1",
       "layer": "inflation",
@@ -1648,7 +1672,7 @@
       "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "transform": "yoy",
       "note": "Supercore proxy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CUSR0000SASLE",
@@ -1701,7 +1725,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A3HYC",
       "layer": "conditions",
       "sub": "BAMLH0A3HYC",
-      "search": "BAMLH0A3HYC"
+      "search": "BAMLH0A3HYC",
+      "light": null
     },
     {
       "id": "EPU",
@@ -1716,7 +1741,8 @@
       "sourceUrl": "https://fred.stlouisfed.org/series/USEPUINDXD",
       "layer": "conditions",
       "sub": "USEPUINDXD",
-      "search": "USEPUINDXD"
+      "search": "USEPUINDXD",
+      "light": null
     },
     {
       "id": "SAHM",
@@ -1728,26 +1754,11 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
-      "light": "risk",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/SAHMREALTIME",
       "layer": "conditions",
       "sub": "SAHMREALTIME",
       "search": "SAHMREALTIME"
-    },
-    {
-      "id": "EVZ",
-      "name": "Euro currency vol",
-      "street": "conditions",
-      "causal": "risk",
-      "pipe": "fred",
-      "fred": "EVZCLS",
-      "units": "index",
-      "freq": "daily",
-      "sign": -1,
-      "sourceUrl": "https://fred.stlouisfed.org/series/EVZCLS",
-      "layer": "conditions",
-      "sub": "EVZCLS",
-      "search": "EVZCLS"
     },
     {
       "id": "HYG",
@@ -1762,7 +1773,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
       "layer": "conditions",
       "sub": "HYG",
-      "search": "HYG"
+      "search": "HYG",
+      "light": null
     },
     {
       "id": "LQD",
@@ -1777,7 +1789,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
       "layer": "conditions",
       "sub": "LQD",
-      "search": "LQD"
+      "search": "LQD",
+      "light": null
     },
     {
       "id": "SKEW",
@@ -1792,7 +1805,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/%5ESKEW",
       "layer": "conditions",
       "sub": "^SKEW",
-      "search": "^SKEW"
+      "search": "^SKEW",
+      "light": null
     },
     {
       "id": "SILVER",
@@ -1807,7 +1821,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/SI=F",
       "layer": "markets",
       "sub": "SI=F",
-      "search": "SI=F"
+      "search": "SI=F",
+      "light": null
     },
     {
       "id": "TLT",
@@ -1822,7 +1837,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/TLT",
       "layer": "markets",
       "sub": "TLT",
-      "search": "TLT"
+      "search": "TLT",
+      "light": null
     },
     {
       "id": "EWZ",
@@ -1838,7 +1854,8 @@
       "sourceUrl": "https://finance.yahoo.com/quote/EWZ",
       "layer": "markets",
       "sub": "EWZ",
-      "search": "EWZ"
+      "search": "EWZ",
+      "light": null
     }
   ],
   "lights": [
@@ -1945,7 +1962,7 @@
       "id": "assets",
       "label": "Assets",
       "role": "outputs",
-      "blurb": "Outputs — never lead with this."
+      "blurb": "Outputs \u2014 never lead with this."
     }
   ]
 }

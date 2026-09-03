@@ -5,13 +5,24 @@ const $ = (sel, el = document) => el.querySelector(sel);
 let SNAP = null;
 let activeLayer = "liquidity";
 
-/** Global row view: values | charts. Duration applies to every sparkline. */
+/** Global row view: values | charts. */
 let globalView = "values";
-let chartDuration = "2y";
+/** Today-vs horizon for table heat + sparklines (years). Lights stay on 2y+5y. */
+let statHorizon = 2;
 /** Series ids flipped from the global view (tap a row’s data/chart cell). */
 const rowFlip = new Set();
 const histCache = new Map();
-const COLSPAN_DATA = 6;
+const COLSPAN_DATA = 3;
+
+function chartDuration() {
+  return `${statHorizon}y`;
+}
+
+function horizonStats(s) {
+  if (statHorizon === 1) return { z: s.z1y, pct: s.pct1y, label: "1y" };
+  if (statHorizon === 5) return { z: s.z5y, pct: s.pct5y, label: "5y" };
+  return { z: s.z2y, pct: s.pct2y ?? s.pct5y, label: "2y" };
+}
 
 function fmtAsOf(d) {
   if (!d) return "—";
@@ -20,11 +31,9 @@ function fmtAsOf(d) {
   return `${+m[2]}/${+m[3]}/${m[1].slice(2)}`;
 }
 
-/** Search key under the name — FRED/Yahoo id, or short derived formula */
+/** Search key for detail — not shown in table rows (keeps rows single-line). */
 function seriesSub(s) {
-  if (s.sub) return s.sub;
-  if (s.status === "stale") return `${s.search || s.id} · stale`;
-  const key = s.search || s.id;
+  const key = s.sub || s.search || s.id;
   return s.freshness === "lagged" ? `${key} · lagged` : key;
 }
 
@@ -74,16 +83,417 @@ function wordFor(light) {
   return light.words?.[light.state] || light.state;
 }
 
+const LIGHT_BLURB = {
+  liquidity:
+    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Tap members to see the Fed sheet pieces that voted.",
+  transmission:
+    "Borrowing costs — policy rate, short yields, mortgages, the dollar, rate volatility. Easy = cheap to fund; tight = expensive to fund or a strong dollar fighting it.",
+  growth:
+    "Real activity — jobs, claims, weekly/monthly activity, spending, copper. Strong = holding up; soft = cooling. Separate from inflation.",
+  inflation:
+    "Underlying prices — core measures, median, sticky prices, expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
+  risk:
+    "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
+};
+
+const LIGHT_TO_TAB = {
+  liquidity: "liquidity",
+  transmission: "rates",
+  growth: "economy",
+  inflation: "inflation",
+  risk: "conditions",
+};
+
+let pendingLightTab = null;
+
+function jumpToStreetTab(tabId) {
+  activeLayer = tabId || "all";
+  const tabs = $("#tabs");
+  if (tabs) {
+    [...tabs.querySelectorAll("button")].forEach((x) =>
+      x.setAttribute(
+        "aria-selected",
+        x.dataset.layer === activeLayer ? "true" : "false"
+      )
+    );
+  }
+  refreshViews();
+  // Tab change only — keep viewport where it is / at top of series list
+  const scroll = document.querySelector(".table-scroll");
+  if (scroll) scroll.scrollTop = 0;
+}
+
+function openLight(id) {
+  if (!SNAP) return;
+  const L = SNAP.lights?.[id];
+  if (!L) return;
+  pendingLightTab = LIGHT_TO_TAB[id] || "all";
+  const word = wordFor(L);
+  $("#lightTitle").textContent = `${L.label || id} · ${word}`;
+  const members = (L.members || [])
+    .map((mid) => SNAP.series?.[mid])
+    .filter(Boolean);
+  const rows = members
+    .map(
+      (s) => `<tr data-mid="${s.id}">
+        <td>${escapeHtml(s.name)}</td>
+        <td>${fmt(s.latest)}</td>
+        <td class="${zClass(s.z2y)}">${fmtZ(s.z2y)}</td>
+        <td class="muted">${fmtAsOf(s.asOf)}</td>
+      </tr>`
+    )
+    .join("");
+  const score =
+    L.score != null && Number.isFinite(L.score)
+      ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
+      : "—";
+  $("#lightBody").innerHTML = `
+    <p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>
+    <p><strong>${escapeHtml(word)}</strong>
+      · score ${score}
+      · n=${L.n ?? members.length}
+      ${L.z2y != null ? `· agg 2y z ${fmtZ(L.z2y)}` : ""}
+      ${L.pct5y != null ? `· agg 5y %ile ${fmtPct(L.pct5y)}` : ""}
+    </p>
+    <h4>Who voted</h4>
+    <div class="light-members">
+      <table>
+        <thead><tr><th>Series</th><th>Latest</th><th>2y z</th><th>As-of</th></tr></thead>
+        <tbody>${rows || `<tr><td colspan="4" class="empty">no members</td></tr>`}</tbody>
+      </table>
+    </div>
+    <p class="muted tiny">Score = median of member scores (signed 2y z + 5y %ile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
+  `;
+  $("#dlgLight").showModal();
+}
+
+function lightState(snap, id) {
+  return snap.lights?.[id]?.state || "empty";
+}
+
+/** Tensions that belong on the teach sheet when not already baked into the story. */
+const TEACH_TENSION_ORDER = ["liquidity_vs_gold", "liquidity_vs_btc"];
+
+function hasDisagreement(snap, kind) {
+  return (snap.disagreements || []).some((d) => d.kind === kind);
+}
+
+function disagreement(snap, kind) {
+  return (snap.disagreements || []).find((d) => d.kind === kind) || null;
+}
+
+/** Same member score as ingest: sign × 2y z blended with flipped 5y %ile. */
+function memberLightScore(m, lid) {
+  if (!m) return null;
+  const sign = m.sign ?? 0;
+  const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
+  const parts = [];
+  if (m.z2y != null && Number.isFinite(m.z2y)) parts.push(m.z2y * s);
+  if (m.pct5y != null && Number.isFinite(m.pct5y)) {
+    const pct = s < 0 ? 1 - m.pct5y : m.pct5y;
+    parts.push((pct - 0.5) * 3);
+  }
+  if (!parts.length) return null;
+  return parts.reduce((a, b) => a + b, 0) / parts.length;
+}
+
+function lightMemberScores(snap, lid) {
+  const members = snap.lights?.[lid]?.members || [];
+  return members
+    .map((id) => {
+      const m = snap.series?.[id];
+      const score = memberLightScore(m, lid);
+      return m && score != null && Number.isFinite(score)
+        ? { id, name: m.name, score, latest: m.latest, z2y: m.z2y }
+        : null;
+    })
+    .filter(Boolean);
+}
+
+/** Club is split when some voters clearly easy and some clearly tight. */
+function clubSplit(snap, lid) {
+  const scores = lightMemberScores(snap, lid);
+  const easy = scores.filter((x) => x.score > 0.45);
+  const tight = scores.filter((x) => x.score < -0.45);
+  if (!easy.length || !tight.length) return null;
+  return { easy, tight, scores };
+}
+
+function transmissionClause(snap) {
+  const st = lightState(snap, "transmission");
+  const split = clubSplit(snap, "transmission");
+  if (split) {
+    return `Borrowing is <strong data-state="neutral">split</strong>: market rates still look expensive, while policy and the dollar look easier`;
+  }
+  return {
+    easing: `Borrowing costs look <strong data-state="easing">easy</strong>`,
+    tight: `Borrowing costs look <strong data-state="tight">expensive</strong>`,
+    neutral: `Borrowing costs look <strong data-state="neutral">mixed</strong>`,
+    empty: "",
+  }[st];
+}
+
+/**
+ * Regime box: short editorial from light states + tensions.
+ * Relations and splits — not a rewording of the five dial labels.
+ */
+function regimeStoryHtml(snap) {
+  const liq = lightState(snap, "liquidity");
+  const gr = lightState(snap, "growth");
+  const inf = lightState(snap, "inflation");
+  const risk = lightState(snap, "risk");
+
+  const cash = {
+    easing: `<strong data-state="easing">Cash is flowing back</strong> into the system`,
+    tight: `<strong data-state="tight">Cash is leaving</strong> the system`,
+    neutral: `Cash conditions look <strong data-state="neutral">steady</strong>`,
+    empty: `Cash conditions are unclear`,
+  }[liq];
+
+  const headCore = disagreement(snap, "inflation_headline_vs_core");
+  const headHotCoreCold = headCore && /headline.*hot/i.test(headCore.text || "");
+  const headColdCoreHot = headCore && /headline.*cold/i.test(headCore.text || "");
+
+  let economy;
+  if (gr === "easing" && inf === "tight") {
+    economy = headHotCoreCold
+      ? `the real economy still looks <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
+      : `the real economy still looks <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+  } else if (gr === "easing" && inf === "easing") {
+    economy = `the real economy looks <strong data-state="easing">firm</strong> while inflation pressure is still <strong data-state="easing">high</strong>`;
+  } else if (gr === "easing" && inf === "neutral") {
+    economy = `the real economy still looks <strong data-state="easing">firm</strong> while inflation looks <strong data-state="neutral">mixed</strong>`;
+  } else if (gr === "tight" && inf === "easing") {
+    economy = headColdCoreHot
+      ? `the real economy looks <strong data-state="tight">soft</strong> while underlying inflation is still <strong data-state="easing">hot</strong> — even if the overall CPI print looks cooler`
+      : `the real economy looks <strong data-state="tight">soft</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+  } else if (gr === "tight" && inf === "tight") {
+    economy = `the real economy looks <strong data-state="tight">soft</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+  } else if (gr === "tight" && inf === "neutral") {
+    economy = `the real economy looks <strong data-state="tight">soft</strong> while inflation looks <strong data-state="neutral">mixed</strong>`;
+  } else if (gr === "neutral" && inf === "easing") {
+    economy = `growth looks <strong data-state="neutral">mixed</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+  } else if (gr === "neutral" && inf === "tight") {
+    economy = headHotCoreCold
+      ? `growth looks <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
+      : `growth looks <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+  } else {
+    economy = `growth and inflation both look <strong data-state="neutral">mixed</strong>`;
+  }
+
+  const fear = {
+    easing: `market <strong data-state="easing">fear is low</strong>`,
+    tight: `markets are <strong data-state="tight">paying up for fear</strong>`,
+    neutral: `market fear looks <strong data-state="neutral">mixed</strong>`,
+    empty: `market fear is unclear`,
+  }[risk];
+
+  const money = transmissionClause(snap);
+
+  // Sentence 1: cash ↔ economy (and fear when it contrasts with cash)
+  const cashVsGrowth =
+    (liq === "tight" && gr === "easing") || (liq === "easing" && gr === "tight");
+  const cashVsFear =
+    (liq === "tight" && risk === "easing") || (liq === "easing" && risk === "tight");
+
+  let s1;
+  if (cashVsGrowth && cashVsFear) {
+    s1 = `${cash}, but ${economy} — and ${fear}`;
+  } else if (cashVsGrowth) {
+    s1 = `${cash}, but ${economy}`;
+  } else if (cashVsFear) {
+    s1 = `${cash}, but ${fear}`;
+  } else {
+    s1 = `${cash}, and ${economy}`;
+  }
+
+  // Sentence 2: fear if not already in s1, then borrowing
+  const parts2 = [];
+  if (!cashVsFear && fear) parts2.push(fear.charAt(0).toUpperCase() + fear.slice(1));
+  if (money) parts2.push(money);
+  const s2 = parts2.length ? ` ${parts2.join(". ")}.` : "";
+
+  return `${s1}.${s2}`;
+}
+
 function buildSentence(snap) {
-  const L = snap.lights || {};
-  const parts = [
-    `Liquidity is <strong>${wordFor(L.liquidity).toLowerCase()}</strong>`,
-    `money is <strong>${wordFor(L.transmission).toLowerCase()}</strong>`,
-    `growth <strong>${wordFor(L.growth).toLowerCase()}</strong>`,
-    `inflation <strong>${wordFor(L.inflation).toLowerCase()}</strong>`,
-    `tape <strong>${wordFor(L.risk).toLowerCase()}</strong>`,
-  ];
-  return parts.join(" · ") + ".";
+  return regimeStoryHtml(snap);
+}
+
+function fmtLightNum(n, digits = 2) {
+  if (n == null || !Number.isFinite(n)) return "—";
+  return fmt(n, digits);
+}
+
+/** Evidence beats for the teach sheet — why the paragraph, not a light glossary. */
+function regimeEvidence(snap) {
+  const beats = [];
+  const liq = lightState(snap, "liquidity");
+  const gr = lightState(snap, "growth");
+  const inf = lightState(snap, "inflation");
+  const risk = lightState(snap, "risk");
+  const series = snap.series || {};
+
+  if (liq === "tight") {
+    beats.push(`Cash: net liquidity and related Fed balances are draining.`);
+  } else if (liq === "easing") {
+    beats.push(`Cash: net liquidity and related Fed balances are rising.`);
+  } else if (liq === "neutral") {
+    beats.push(`Cash: neither a clear drain nor a clear flood right now.`);
+  }
+
+  if (gr === "easing" && inf === "tight") {
+    const core = series.CPILFESL;
+    beats.push(
+      core?.latest != null
+        ? `Economy: activity still firm while underlying inflation cooled (core CPI YoY ${fmtLightNum(core.latest, 2)}%).`
+        : `Economy: activity still firm while underlying inflation cooled.`
+    );
+  } else if (gr === "easing" && inf === "easing") {
+    beats.push(`Economy: activity firm and underlying inflation still hot — both dials lean the same way.`);
+  } else if (gr === "tight" && inf === "easing") {
+    beats.push(`Economy: activity soft while underlying inflation still hot — an ugly mix.`);
+  } else if (gr === "tight" && inf === "tight") {
+    beats.push(`Economy: activity soft and underlying inflation cooled.`);
+  } else {
+    beats.push(
+      `Economy: growth is ${wordFor(snap.lights?.growth).toLowerCase()}, inflation is ${wordFor(snap.lights?.inflation).toLowerCase()}.`
+    );
+  }
+
+  if (hasDisagreement(snap, "inflation_headline_vs_core")) {
+    const head = series.CPIAUCSL;
+    const core = series.CPILFESL;
+    const d = disagreement(snap, "inflation_headline_vs_core");
+    if (/headline.*hot/i.test(d?.text || "")) {
+      beats.push(
+        `Prices split: overall CPI still looks hot${head?.z2y != null ? ` (2y z ${fmtZ(head.z2y)})` : ""}; the Inflation light votes underlying/core${core?.z2y != null ? ` (2y z ${fmtZ(core.z2y)})` : ""}.`
+      );
+    } else {
+      beats.push(
+        `Prices split: overall CPI looks cooler than underlying/core — the light follows the underlying.`
+      );
+    }
+  }
+
+  const vix = series.VIX;
+  const hy = series.BAMLH0A0HYM2;
+  if (risk === "easing") {
+    beats.push(
+      vix?.latest != null
+        ? `Fear: vol and credit are quiet (VIX ${fmtLightNum(vix.latest, 1)}${hy?.latest != null ? `, HY OAS ${fmtLightNum(hy.latest, 2)}` : ""}).`
+        : `Fear: vol and credit stress are quiet — fear is cheap.`
+    );
+  } else if (risk === "tight") {
+    beats.push(`Fear: vol and/or credit spreads are elevated — markets are paying for protection.`);
+  } else {
+    beats.push(`Fear: gauges look mixed — not a clear risk-on or risk-off call.`);
+  }
+
+  if (liq === "tight" && risk === "easing") {
+    beats.push(
+      `Tension: cash is draining while fear stays low — don’t assume the tape agrees with the cash story.`
+    );
+  } else if (liq === "easing" && risk === "tight") {
+    beats.push(
+      `Tension: cash is easier while markets are still scared — the tape isn’t confirming.`
+    );
+  }
+
+  const split = clubSplit(snap, "transmission");
+  if (split) {
+    const dgs2 = series.DGS2;
+    const ff = series.DFEDTARU;
+    const bits = [];
+    if (dgs2?.latest != null) bits.push(`2y ${fmtLightNum(dgs2.latest, 2)}%`);
+    if (ff?.latest != null) bits.push(`Fed funds ${fmtLightNum(ff.latest, 2)}%`);
+    beats.push(
+      bits.length
+        ? `Borrowing split: market rates still high (${bits.join(", ")}), while policy and the dollar lean easier.`
+        : `Borrowing split: some rate voters still look expensive, others (policy, dollar) look easier.`
+    );
+  } else {
+    const st = lightState(snap, "transmission");
+    if (st === "easing") {
+      beats.push(`Borrowing: short rates, mortgages, and the dollar look easy overall.`);
+    } else if (st === "tight") {
+      beats.push(`Borrowing: short rates, mortgages, or the dollar look expensive overall.`);
+    } else if (st === "neutral") {
+      beats.push(`Borrowing: no loud easy/tight call once the club is combined.`);
+    }
+  }
+
+  return beats;
+}
+
+function teachOnlyTensions(snap) {
+  const byKind = Object.fromEntries(
+    (snap.disagreements || []).filter((d) => d?.kind).map((d) => [d.kind, d])
+  );
+  const out = [];
+  for (const kind of TEACH_TENSION_ORDER) {
+    if (byKind[kind]) out.push(byKind[kind]);
+  }
+  return out;
+}
+
+function tensionTeach(d) {
+  switch (d.kind) {
+    case "liquidity_vs_gold":
+      return "Gold isn’t following the cash story — treat it as an output, not an input.";
+    case "liquidity_vs_btc":
+      return "Bitcoin isn’t following the cash story — treat it as an output, not an input.";
+    default:
+      return d.text || "";
+  }
+}
+
+function tensionTitle(d) {
+  switch (d.kind) {
+    case "liquidity_vs_gold":
+      return "Gold isn’t confirming";
+    case "liquidity_vs_btc":
+      return "Bitcoin isn’t confirming";
+    default:
+      return (d.text || "").replace(/\.$/, "").trim();
+  }
+}
+
+function openSentence(snap) {
+  if (!snap) return;
+  const evidence = regimeEvidence(snap)
+    .map(
+      (line) =>
+        `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
+    )
+    .join("");
+
+  const extra = teachOnlyTensions(snap);
+  const watch = extra.length
+    ? `<p class="sent-kicker">Also note</p>${extra
+        .map(
+          (d) => `<div class="sent-explain sent-explain-flag">
+        <p class="sent-explain-title"><strong data-state="neutral">${escapeHtml(tensionTitle(d))}</strong>
+          <span class="muted sent-hint"> — ${escapeHtml(tensionTeach(d))}</span></p>
+      </div>`
+        )
+        .join("")}`
+    : "";
+
+  $("#sentenceBody").innerHTML = `
+    <p class="sent-story">${regimeStoryHtml(snap)}</p>
+    <p class="sent-kicker">Why we say that</p>
+    ${evidence}
+    ${watch}
+    <p class="muted tiny sent-foot">Tap a light for who voted.</p>
+  `;
+  const dlg = $("#dlgSentence");
+  dlg.showModal();
+  requestAnimationFrame(() => {
+    dlg.scrollTop = 0;
+    const body = $("#sentenceBody");
+    if (body) body.scrollTop = 0;
+  });
 }
 
 function renderLights(snap) {
@@ -106,24 +516,11 @@ function renderLights(snap) {
     .join("");
 }
 
-function renderConflicts(snap) {
-  const el = $("#conflicts");
-  const list = snap.disagreements || [];
-  if (!list.length) {
-    el.hidden = true;
-    el.innerHTML = "";
-    return;
-  }
-  el.hidden = false;
-  el.innerHTML = `<strong>Disagreement</strong><ul>${list
-    .map((d) => `<li>${d.text}</li>`)
-    .join("")}</ul>`;
-}
+
 
 function renderTabs(snap) {
   const tabs = $("#tabs");
-  const layers = (snap.layers || []).filter((l) => l.id !== "assets");
-  // Always show assets as tab too? Keep assets in side panel; tabs for causal layers + all
+  const layers = snap.layers || [];
   const items = [{ id: "all", label: "All", blurb: "Full book" }, ...layers];
   tabs.innerHTML = items
     .map(
@@ -140,12 +537,13 @@ function renderTabs(snap) {
     [...tabs.querySelectorAll("button")].forEach((x) =>
       x.setAttribute("aria-selected", x === b ? "true" : "false")
     );
-    renderTable(snap);
+    refreshViews();
   };
 }
 
 function seriesList(snap, layer) {
-  const all = Object.values(snap.series || {});
+  // Stale/excluded series stay out of the table — they only widen the layout
+  const all = Object.values(snap.series || {}).filter((s) => s.status === "ok");
   if (layer === "all") {
     return all.sort((a, b) => {
       const order = [
@@ -181,6 +579,11 @@ function setGlobalView(mode) {
   globalView = mode;
   rowFlip.clear();
   syncViewControls();
+  refreshViews();
+}
+
+function refreshViews() {
+  if (!SNAP) return;
   renderTable(SNAP);
 }
 
@@ -191,36 +594,25 @@ function syncViewControls() {
     btn.textContent = globalView === "values" ? "Chart" : "Values";
     btn.setAttribute("aria-pressed", globalView === "charts" ? "true" : "false");
   }
-  const g = $("#durGroup");
+  const g = $("#horizonGroup");
   if (g) {
-    [...g.querySelectorAll("[data-dur]")].forEach((b) => {
+    [...g.querySelectorAll("[data-horizon]")].forEach((b) => {
       b.setAttribute(
         "aria-pressed",
-        b.dataset.dur === chartDuration ? "true" : "false"
+        Number(b.dataset.horizon) === statHorizon ? "true" : "false"
       );
     });
   }
 }
 
 function valuesCells(s) {
-  if (s.status === "stale") {
-    return `<td>${fmt(s.latest)}</td>
-      <td colspan="4" class="empty">stale · excluded</td>
-      <td>${fmtAsOf(s.asOf)}</td>`;
-  }
   if (s.status !== "ok" || s.latest == null) {
-    return `<td colspan="5" class="empty">empty — ${escapeHtml(s.error || "no data")}</td>
-      <td class="empty">—</td>`;
+    return `<td colspan="${COLSPAN_DATA}" class="empty">empty — ${escapeHtml(s.error || "no data")}</td>`;
   }
-  const z = s.z2y;
+  const { z, pct } = horizonStats(s);
   return `<td><span class="cell-heat">${fmt(s.latest)}</span></td>
     <td class="${zClass(z)}">${fmtZ(z)}</td>
-    <td><span class="cell-heat" style="background:${heatBg(s.pct5y)}">${fmtPct(s.pct5y)}</span></td>
-    <td><span class="cell-heat" style="background:${heatBg(s.pct10y)}">${fmtPct(s.pct10y)}</span></td>
-    <td class="${zClass(s.change1y != null ? s.change1y / 20 : null)}">${
-      s.change1y == null ? "—" : fmtZ(s.change1y) + "%"
-    }</td>
-    <td>${fmtAsOf(s.asOf)}</td>`;
+    <td><span class="cell-heat" style="background:${heatBg(pct)}">${fmtPct(pct)}</span></td>`;
 }
 
 function chartCell(s) {
@@ -236,11 +628,12 @@ function renderThead(rows) {
   const thead = $("#heat thead tr");
   if (!thead) return;
   const anyValues = rows.some((s) => rowView(s.id) === "values");
+  const h = `${statHorizon}y`;
   if (!anyValues) {
-    thead.innerHTML = `<th>Series</th><th colspan="${COLSPAN_DATA}">Chart · ${chartDuration.toUpperCase()}</th>`;
+    thead.innerHTML = `<th>Series</th><th colspan="${COLSPAN_DATA}">Chart · ${h.toUpperCase()}</th>`;
   } else {
     thead.innerHTML = `<th>Series</th>
-      <th>Latest</th><th>2y z</th><th>5y %ile</th><th>10y %ile</th><th>1y Δ</th><th>As-of</th>`;
+      <th>Latest</th><th>${h} z</th><th>${h} %ile</th>`;
   }
 }
 
@@ -281,7 +674,7 @@ function renderTable(snap) {
     }
     if (e.target.closest(".chart-cell, td:not(.name-cell)")) {
       toggleRowView(id);
-      renderTable(snap);
+      refreshViews();
     }
   };
 
@@ -388,9 +781,10 @@ async function paintSparks() {
         if (msg) msg.textContent = "no history";
         return;
       }
-      const sliced = sliceDuration(hist.points, chartDuration);
+      const dur = chartDuration();
+      const sliced = sliceDuration(hist.points, dur);
       if (!sliced.length) {
-        if (msg) msg.textContent = `no ${chartDuration} data`;
+        if (msg) msg.textContent = `no ${dur} data`;
         return;
       }
       drawSpark(canvas, sliced);
@@ -414,25 +808,6 @@ function escapeHtml(t) {
     .replace(/>/g, "&gt;");
 }
 
-function renderAssets(snap) {
-  const root = $("#assets");
-  const ids = ["SPX", "NDX", "RTY", "DXY", "GOLD", "SILVER", "BTC", "WTI", "BRENT", "TLT", "EWZ"];
-  root.innerHTML = ids
-    .map((id) => {
-      const s = snap.series?.[id];
-      if (!s) return "";
-      if (s.status !== "ok") {
-        return `<div class="asset"><div class="n">${id}</div><div class="v empty">—</div><div class="m">empty</div></div>`;
-      }
-      return `<div class="asset">
-        <div class="n">${s.name}</div>
-        <div class="v ${zClass(s.z2y)}">${fmt(s.latest)}</div>
-        <div class="m">2y z ${fmtZ(s.z2y)} · 5y %ile ${fmtPct(s.pct5y)} · ${fmtAsOf(s.asOf)}</div>
-      </div>`;
-    })
-    .join("");
-}
-
 function openSeries(s) {
   if (!s) return;
   $("#seriesTitle").textContent = s.name;
@@ -441,7 +816,8 @@ function openSeries(s) {
     <p><strong>Latest:</strong> ${s.latest == null ? "empty" : fmt(s.latest)} <span class="muted">${s.units || ""}</span></p>
     ${s.note ? `<p class="muted">${escapeHtml(s.note)}</p>` : ""}
     <p><strong>As-of:</strong> ${fmtAsOf(s.asOf)}</p>
-    <p><strong>2y z:</strong> ${fmtZ(s.z2y)} · <strong>5y %ile:</strong> ${fmtPct(s.pct5y)} · <strong>10y %ile:</strong> ${fmtPct(s.pct10y)}</p>
+    <p><strong>1y z:</strong> ${fmtZ(s.z1y)} · <strong>2y z:</strong> ${fmtZ(s.z2y)} · <strong>5y z:</strong> ${fmtZ(s.z5y)}</p>
+    <p><strong>1y %ile:</strong> ${fmtPct(s.pct1y)} · <strong>2y %ile:</strong> ${fmtPct(s.pct2y)} · <strong>5y %ile:</strong> ${fmtPct(s.pct5y)}</p>
     <p><strong>Sign for lights:</strong> ${s.sign} ${s.note ? "· " + s.note : ""}</p>
     <p><strong>Source:</strong> ${escapeHtml(s.source || "")}${
       s.sourceUrl
@@ -463,6 +839,20 @@ function renderFormula(snap) {
   `;
 }
 
+function renderAboutMeta(snap) {
+  const d = new Date(snap.generatedAt);
+  const when = `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const vals = Object.values(snap.series || {});
+  const ok = vals.filter((s) => s.status === "ok").length;
+  const stale = vals.filter((s) => s.status === "stale");
+  const empty = vals.filter((s) => s.status !== "ok" && s.status !== "stale").length;
+  $("#aboutIngest").textContent = `Last ingest ${when} — when public series were last pulled (not each row’s as-of).`;
+  const staleNames = stale.map((s) => s.name || s.id).join(", ");
+  $("#aboutCoverage").textContent = stale.length
+    ? `${ok} live in table · ${stale.length} stale hidden (${staleNames})${empty ? ` · ${empty} empty` : ""}`
+    : `${ok} live series${empty ? ` · ${empty} empty` : ""}`;
+}
+
 async function boot() {
   try {
     const res = await fetch("./snapshot.json", { cache: "no-store" });
@@ -475,58 +865,76 @@ async function boot() {
     return;
   }
 
-  {
-    const d = new Date(SNAP.generatedAt);
-    $("#genAt").textContent = `ingest ${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  }
   $("#sentence").innerHTML = buildSentence(SNAP);
   renderLights(SNAP);
-  renderConflicts(SNAP);
   renderTabs(SNAP);
   renderTable(SNAP);
-  renderAssets(SNAP);
   renderFormula(SNAP);
+  renderAboutMeta(SNAP);
 
   $("#btnAbout").onclick = () => $("#dlgAbout").showModal();
+
+  // Backdrop click closes any dialog; regime sheet also closes on tap inside (read-only).
+  document.querySelectorAll("dialog").forEach((dlg) => {
+    dlg.addEventListener("click", (e) => {
+      if (e.target === dlg) {
+        dlg.close();
+        return;
+      }
+      if (dlg.id !== "dlgSentence") return;
+      if (e.target.closest("a, button, input, textarea, select, label")) return;
+      dlg.close();
+    });
+    dlg.addEventListener("close", () => {
+      // Dialog restore-focus can leave a blue ring on the regime box after tap-close.
+      requestAnimationFrame(() => {
+        const sent = $("#sentence");
+        if (sent && document.activeElement === sent) sent.blur();
+      });
+    });
+  });
+
+  const sent = $("#sentence");
+  if (sent) {
+    sent.style.cursor = "pointer";
+    sent.onclick = () => openSentence(SNAP);
+    sent.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openSentence(SNAP);
+      }
+    };
+  }
 
   syncViewControls();
   $("#btnViewMode").onclick = () => {
     setGlobalView(globalView === "values" ? "charts" : "values");
   };
-  $("#durGroup").onclick = (e) => {
-    const b = e.target.closest("[data-dur]");
+  $("#horizonGroup").onclick = (e) => {
+    const b = e.target.closest("[data-horizon]");
     if (!b) return;
-    chartDuration = b.dataset.dur;
+    const next = Number(b.dataset.horizon);
+    if (![1, 2, 5].includes(next)) return;
+    statHorizon = next;
     syncViewControls();
-    // Duration applies to all visible charts — redraw without resetting flips
-    paintSparks();
-    const thead = $("#heat thead tr");
-    if (thead && !seriesList(SNAP, activeLayer).some((s) => rowView(s.id) === "values")) {
-      thead.innerHTML = `<th>Series</th><th colspan="${COLSPAN_DATA}">Chart · ${chartDuration.toUpperCase()}</th>`;
-    }
+    refreshViews();
+    if (globalView === "charts" || [...rowFlip].length) paintSparks();
   };
 
-  // click light → filter that layer
+  // Tap light → teach first; Show series CTA jumps to Street tab
   $("#lights").onclick = (e) => {
     const card = e.target.closest(".light[data-id]");
     if (!card) return;
-    // Lights are causal scores; jump to the Street tab that holds that evidence
-    const map = {
-      liquidity: "liquidity",
-      transmission: "rates",
-      growth: "economy",
-      inflation: "inflation",
-      risk: "conditions",
-    };
-    activeLayer = map[card.dataset.id] || "all";
-    [...$("#tabs").querySelectorAll("button")].forEach((x) =>
-      x.setAttribute(
-        "aria-selected",
-        x.dataset.layer === activeLayer ? "true" : "false"
-      )
-    );
-    renderTable(SNAP);
+    openLight(card.dataset.id);
   };
+
+  $("#dlgLight")?.addEventListener("close", () => {
+    const dlg = $("#dlgLight");
+    if (dlg?.returnValue === "series" && pendingLightTab) {
+      jumpToStreetTab(pendingLightTab);
+    }
+    pendingLightTab = null;
+  });
 }
 
 boot();

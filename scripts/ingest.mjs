@@ -177,6 +177,13 @@ function mean(arr) {
   return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 
+function median(arr) {
+  if (!arr.length) return NaN;
+  const s = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+}
+
 function stdev(arr) {
   if (arr.length < 2) return NaN;
   const m = mean(arr);
@@ -259,33 +266,45 @@ function computeStats(points) {
     return {
       latest: null,
       asOf: null,
+      z1y: null,
       z2y: null,
       z5y: null,
+      pct1y: null,
+      pct2y: null,
       pct5y: null,
       pct10y: null,
       change1y: null,
     };
   }
   const latest = points[points.length - 1];
+  const w1pts = windowPoints(points, 1);
+  const w1 = w1pts.map((p) => p.value);
   const w2 = windowPoints(points, 2).map((p) => p.value);
   const w5 = windowPoints(points, 5).map((p) => p.value);
   const w10 = windowPoints(points, 10).map((p) => p.value);
-  const w1 = windowPoints(points, 1);
-  const yearAgo = w1.length > 5 ? w1[0].value : null;
+  const yearAgo = w1pts.length > 5 ? w1pts[0].value : null;
+  const m1 = mean(w1);
+  const s1 = stdev(w1);
   const m2 = mean(w2);
   const s2 = stdev(w2);
   const m5 = mean(w5);
   const s5 = stdev(w5);
   // Need enough history — never invent a percentile from one point
+  const z1y = w1.length >= 12 && s1 ? (latest.value - m1) / s1 : null;
   const z2y = w2.length >= 24 && s2 ? (latest.value - m2) / s2 : null;
   const z5y = w5.length >= 36 && s5 ? (latest.value - m5) / s5 : null;
+  const pct1y = w1.length >= 12 ? percentileRank(w1, latest.value) : null;
+  const pct2y = w2.length >= 24 ? percentileRank(w2, latest.value) : null;
   const pct5y = w5.length >= 36 ? percentileRank(w5, latest.value) : null;
   const pct10y = w10.length >= 60 ? percentileRank(w10, latest.value) : null;
   return {
     latest: latest.value,
     asOf: latest.date,
+    z1y,
     z2y,
     z5y,
+    pct1y,
+    pct2y,
     pct5y,
     pct10y,
     change1y:
@@ -298,19 +317,25 @@ function computeStats(points) {
   };
 }
 
-function lightState(signedZ, signedPct) {
-  // Combine 2y z and 5y percentile (signed already applied)
-  const parts = [];
-  if (signedZ != null && Number.isFinite(signedZ)) parts.push(signedZ);
-  if (signedPct != null && Number.isFinite(signedPct)) {
-    // map pct 0..1 to approx z-ish: (pct-0.5)*3
-    parts.push((signedPct - 0.5) * 3);
-  }
-  if (!parts.length) return { state: "empty", score: null };
-  const score = mean(parts);
+function lightStateFromScore(score) {
+  if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };
   if (score > 0.45) return { state: "easing", score };
   if (score < -0.45) return { state: "tight", score };
   return { state: "neutral", score };
+}
+
+/** One voter's score: signed 2y z blended with signed 5y %ile (mapped to z-ish). */
+function memberLightScore(m, lid) {
+  const sign = m.sign ?? 0;
+  const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
+  const parts = [];
+  if (m.z2y != null && Number.isFinite(m.z2y)) parts.push(m.z2y * s);
+  if (m.pct5y != null && Number.isFinite(m.pct5y)) {
+    const pct = s < 0 ? 1 - m.pct5y : m.pct5y;
+    parts.push((pct - 0.5) * 3);
+  }
+  if (!parts.length) return null;
+  return mean(parts);
 }
 
 function pearson(xs, ys) {
@@ -417,8 +442,11 @@ async function main() {
         sourceUrl: s.sourceUrl || null,
         latest: null,
         asOf: null,
+        z1y: null,
         z2y: null,
         z5y: null,
+        pct1y: null,
+        pct2y: null,
         pct5y: null,
         pct10y: null,
         change1y: null,
@@ -528,40 +556,38 @@ async function main() {
     errors.push({ id: "STOCK_BOND_CORR", error: String(e.message || e) });
   }
 
-  // Lights
+  // Lights — complementary clubs (catalog.light); median of member scores (not mean of a crowd)
   const lightIds = ["liquidity", "transmission", "growth", "inflation", "risk"];
   const lights = {};
   for (const lid of lightIds) {
     const members = Object.values(results).filter(
-      (r) => r.light === lid && r.status === "ok" && r.z2y != null
+      (r) => r.light === lid && r.status === "ok" && (r.z2y != null || r.pct5y != null)
     );
+    const scores = [];
     const signedZs = [];
     const signedPcts = [];
     for (const m of members) {
-      const w = m.weight || 1;
+      const sc = memberLightScore(m, lid);
+      if (sc == null || !Number.isFinite(sc)) continue;
+      const w = Math.max(1, Math.round(m.weight || 1));
+      for (let i = 0; i < w; i++) scores.push(sc);
       const sign = m.sign ?? 0;
-      // inflation light: higher = "hot" = easing side of that light's labels
       const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-      if (m.z2y != null) {
-        for (let i = 0; i < w; i++) signedZs.push(m.z2y * s);
-      }
-      if (m.pct5y != null) {
-        // for signed series, flip percentile around 0.5
-        const pct = s < 0 ? 1 - m.pct5y : m.pct5y;
-        for (let i = 0; i < w; i++) signedPcts.push(pct);
+      if (m.z2y != null && Number.isFinite(m.z2y)) signedZs.push(m.z2y * s);
+      if (m.pct5y != null && Number.isFinite(m.pct5y)) {
+        signedPcts.push(s < 0 ? 1 - m.pct5y : m.pct5y);
       }
     }
-    const z = signedZs.length ? mean(signedZs) : null;
-    const pct = signedPcts.length ? mean(signedPcts) : null;
-    const { state, score } = lightState(z, pct);
+    const score = scores.length ? median(scores) : null;
+    const { state } = lightStateFromScore(score);
     const meta = catalog.lights.find((l) => l.id === lid);
     lights[lid] = {
       id: lid,
       label: meta?.label || lid,
       state,
       score,
-      z2y: z,
-      pct5y: pct,
+      z2y: signedZs.length ? median(signedZs) : null,
+      pct5y: signedPcts.length ? median(signedPcts) : null,
       n: members.length,
       words: {
         easing: meta?.easing,
@@ -572,10 +598,15 @@ async function main() {
     };
   }
 
-  // Disagreement: liquidity easing vs gold/BTC soft (or reverse)
+  // Disagreements — live cross-checks (not a backtest loop)
   const liq = lights.liquidity;
+  const risk = lights.risk;
+  const growth = lights.growth;
+  const infl = lights.inflation;
   const gold = results.GOLD;
   const btc = results.BTC;
+  const headline = results.CPIAUCSL;
+  const core = results.CPILFESL;
   const disagreements = [];
   if (liq?.state && gold?.z2y != null) {
     const goldOn = gold.z2y > 0.3;
@@ -609,6 +640,51 @@ async function main() {
       });
     }
   }
+  if (liq?.state === "tight" && risk?.state === "easing") {
+    disagreements.push({
+      kind: "liquidity_vs_risk",
+      text: "Liquidity tightening, risk still on",
+    });
+  }
+  if (liq?.state === "easing" && risk?.state === "tight") {
+    disagreements.push({
+      kind: "liquidity_vs_risk",
+      text: "Liquidity easing, risk still off",
+    });
+  }
+  if (
+    headline?.z2y != null &&
+    core?.z2y != null &&
+    headline.z2y > 0.45 &&
+    core.z2y < -0.45
+  ) {
+    disagreements.push({
+      kind: "inflation_headline_vs_core",
+      text: "Headline CPI hot, core cold",
+    });
+  } else if (
+    headline?.z2y != null &&
+    core?.z2y != null &&
+    headline.z2y < -0.45 &&
+    core.z2y > 0.45
+  ) {
+    disagreements.push({
+      kind: "inflation_headline_vs_core",
+      text: "Headline CPI cold, core hot",
+    });
+  }
+  if (growth?.state === "easing" && infl?.state === "tight") {
+    disagreements.push({
+      kind: "growth_vs_inflation",
+      text: "Growth strong, inflation cold",
+    });
+  }
+  if (growth?.state === "tight" && infl?.state === "easing") {
+    disagreements.push({
+      kind: "growth_vs_inflation",
+      text: "Growth soft, inflation hot",
+    });
+  }
 
   const snapshot = {
     generatedAt: new Date().toISOString(),
@@ -624,7 +700,7 @@ async function main() {
     errors,
     formula: {
       lights:
-        "Per light: mean of member (sign × 2y z) and flipped 5y percentiles; score>0.45 easing/strong/hot/risk-on; <-0.45 tight/soft/cold/risk-off. Inflation uses raw upside = hot.",
+        "Per light: median of member scores (each = mean of sign×2y z and flipped 5y %ile). Clubs are small complementary sets; Street table keeps the rest. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot.",
       netLiquidity: "WALCL(bn) − TGA − ON RRP",
       stockBondCorr: "60d Pearson of SPX returns vs −ΔDGS10",
     },
