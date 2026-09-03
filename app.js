@@ -7,7 +7,7 @@ let activeLayer = "liquidity";
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** Today-vs horizon for table heat + sparklines (years). Lights stay on 2y+5y. */
+/** Today-vs horizon (years) for table, charts, lights, and regime story. Default 2. */
 let statHorizon = 2;
 /** Series ids flipped from the global view (tap a row’s data/chart cell). */
 const rowFlip = new Set();
@@ -18,10 +18,38 @@ function chartDuration() {
   return `${statHorizon}y`;
 }
 
-function horizonStats(s) {
-  if (statHorizon === 1) return { z: s.z1y, pct: s.pct1y, label: "1y" };
-  if (statHorizon === 5) return { z: s.z5y, pct: s.pct5y, label: "5y" };
-  return { z: s.z2y, pct: s.pct2y ?? s.pct5y, label: "2y" };
+function horizonStats(s, years = statHorizon) {
+  if (years === 1) return { z: s.z1y, pct: s.pct1y, label: "1y" };
+  if (years === 5) return { z: s.z5y, pct: s.pct5y, label: "5y" };
+  return { z: s.z2y, pct: s.pct2y, label: "2y" };
+}
+
+function median(arr) {
+  if (!arr?.length) return null;
+  const a = [...arr].sort((x, y) => x - y);
+  const mid = Math.floor(a.length / 2);
+  return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+}
+
+function lightStateFromScore(score) {
+  if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };
+  if (score > 0.45) return { state: "easing", score };
+  if (score < -0.45) return { state: "tight", score };
+  return { state: "neutral", score };
+}
+
+/**
+ * Active view: SNAP with lights + disagreements recomputed for statHorizon.
+ * Same-window score: mean(sign×zNy, flipped Ny %ile) → club median.
+ */
+function viewOf(snap) {
+  if (!snap) return null;
+  const lights = buildLights(snap, statHorizon);
+  return {
+    ...snap,
+    lights,
+    disagreements: buildDisagreements(snap, lights, statHorizon),
+  };
 }
 
 function fmtAsOf(d) {
@@ -125,23 +153,26 @@ function jumpToStreetTab(tabId) {
 
 function openLight(id) {
   if (!SNAP) return;
-  const L = SNAP.lights?.[id];
+  const snap = viewOf(SNAP);
+  const L = snap.lights?.[id];
   if (!L) return;
+  const h = `${statHorizon}y`;
   pendingLightTab = LIGHT_TO_TAB[id] || "all";
   const word = wordFor(L);
   $("#lightTitle").textContent = `${L.label || id} · ${word}`;
   const members = (L.members || [])
-    .map((mid) => SNAP.series?.[mid])
+    .map((mid) => snap.series?.[mid])
     .filter(Boolean);
   const rows = members
-    .map(
-      (s) => `<tr data-mid="${s.id}">
+    .map((s) => {
+      const { z } = horizonStats(s);
+      return `<tr data-mid="${s.id}">
         <td>${escapeHtml(s.name)}</td>
         <td>${fmt(s.latest)}</td>
-        <td class="${zClass(s.z2y)}">${fmtZ(s.z2y)}</td>
+        <td class="${zClass(z)}">${fmtZ(z)}</td>
         <td class="muted">${fmtAsOf(s.asOf)}</td>
-      </tr>`
-    )
+      </tr>`;
+    })
     .join("");
   const score =
     L.score != null && Number.isFinite(L.score)
@@ -152,17 +183,17 @@ function openLight(id) {
     <p><strong>${escapeHtml(word)}</strong>
       · score ${score}
       · n=${L.n ?? members.length}
-      ${L.z2y != null ? `· agg 2y z ${fmtZ(L.z2y)}` : ""}
-      ${L.pct5y != null ? `· agg 5y %ile ${fmtPct(L.pct5y)}` : ""}
+      ${L.z != null ? `· agg ${h} z ${fmtZ(L.z)}` : ""}
+      ${L.pct != null ? `· agg ${h} %ile ${fmtPct(L.pct)}` : ""}
     </p>
     <h4>Who voted</h4>
     <div class="light-members">
       <table>
-        <thead><tr><th>Series</th><th>Latest</th><th>2y z</th><th>As-of</th></tr></thead>
+        <thead><tr><th>Series</th><th>Latest</th><th>${h} z</th><th>As-of</th></tr></thead>
         <tbody>${rows || `<tr><td colspan="4" class="empty">no members</td></tr>`}</tbody>
       </table>
     </div>
-    <p class="muted tiny">Score = median of member scores (signed 2y z + 5y %ile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
+    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} %ile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
   `;
   $("#dlgLight").showModal();
 }
@@ -182,19 +213,155 @@ function disagreement(snap, kind) {
   return (snap.disagreements || []).find((d) => d.kind === kind) || null;
 }
 
-/** Same member score as ingest: sign × 2y z blended with flipped 5y %ile. */
-function memberLightScore(m, lid) {
+/** Member score: sign × Ny z blended with flipped Ny %ile (same window as 1·2·5). */
+function memberLightScore(m, lid, years = statHorizon) {
   if (!m) return null;
   const sign = m.sign ?? 0;
   const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
+  const { z, pct } = horizonStats(m, years);
   const parts = [];
-  if (m.z2y != null && Number.isFinite(m.z2y)) parts.push(m.z2y * s);
-  if (m.pct5y != null && Number.isFinite(m.pct5y)) {
-    const pct = s < 0 ? 1 - m.pct5y : m.pct5y;
-    parts.push((pct - 0.5) * 3);
+  if (z != null && Number.isFinite(z)) parts.push(z * s);
+  if (pct != null && Number.isFinite(pct)) {
+    const p = s < 0 ? 1 - pct : pct;
+    parts.push((p - 0.5) * 3);
   }
   if (!parts.length) return null;
   return parts.reduce((a, b) => a + b, 0) / parts.length;
+}
+
+function buildLights(snap, years = statHorizon) {
+  const meta = snap.lightsMeta || [];
+  const baked = snap.lights || {};
+  const lightIds = ["liquidity", "transmission", "growth", "inflation", "risk"];
+  const out = {};
+  for (const lid of lightIds) {
+    const memberIds =
+      baked[lid]?.members ||
+      Object.values(snap.series || {})
+        .filter((r) => r.light === lid && r.status === "ok")
+        .map((r) => r.id);
+    const members = memberIds
+      .map((id) => snap.series?.[id])
+      .filter((m) => m && m.status === "ok");
+    const scores = [];
+    const signedZs = [];
+    const signedPcts = [];
+    for (const m of members) {
+      const sc = memberLightScore(m, lid, years);
+      if (sc == null || !Number.isFinite(sc)) continue;
+      const w = Math.max(1, Math.round(m.weight || 1));
+      for (let i = 0; i < w; i++) scores.push(sc);
+      const sign = m.sign ?? 0;
+      const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
+      const { z, pct } = horizonStats(m, years);
+      if (z != null && Number.isFinite(z)) signedZs.push(z * s);
+      if (pct != null && Number.isFinite(pct)) {
+        signedPcts.push(s < 0 ? 1 - pct : pct);
+      }
+    }
+    const score = scores.length ? median(scores) : null;
+    const { state } = lightStateFromScore(score);
+    const m = meta.find((x) => x.id === lid) || baked[lid];
+    out[lid] = {
+      id: lid,
+      label: m?.label || baked[lid]?.label || lid,
+      state,
+      score,
+      z: signedZs.length ? median(signedZs) : null,
+      pct: signedPcts.length ? median(signedPcts) : null,
+      n: members.length,
+      words: {
+        easing: m?.easing || baked[lid]?.words?.easing,
+        neutral: m?.neutral || baked[lid]?.words?.neutral,
+        tight: m?.tight || baked[lid]?.words?.tight,
+      },
+      members: memberIds,
+    };
+  }
+  return out;
+}
+
+function seriesZ(snap, id, years) {
+  const s = snap.series?.[id];
+  if (!s) return null;
+  return horizonStats(s, years).z;
+}
+
+/** Live cross-checks for the selected horizon (not the ingest-baked list). */
+function buildDisagreements(snap, lights, years = statHorizon) {
+  const liq = lights.liquidity;
+  const risk = lights.risk;
+  const growth = lights.growth;
+  const infl = lights.inflation;
+  const goldZ = seriesZ(snap, "GOLD", years);
+  const btcZ = seriesZ(snap, "BTC", years);
+  const headZ = seriesZ(snap, "CPIAUCSL", years);
+  const coreZ = seriesZ(snap, "CPILFESL", years);
+  const disagreements = [];
+  if (liq?.state && goldZ != null) {
+    if (liq.state === "easing" && goldZ < -0.3) {
+      disagreements.push({
+        kind: "liquidity_vs_gold",
+        text: "Liquidity easing, gold not confirming",
+      });
+    }
+    if (liq.state === "tight" && goldZ > 0.3) {
+      disagreements.push({
+        kind: "liquidity_vs_gold",
+        text: "Liquidity tightening, gold firm anyway",
+      });
+    }
+  }
+  if (liq?.state && btcZ != null) {
+    if (liq.state === "easing" && btcZ < -0.3) {
+      disagreements.push({
+        kind: "liquidity_vs_btc",
+        text: "Liquidity easing, BTC not confirming",
+      });
+    }
+    if (liq.state === "tight" && btcZ > 0.3) {
+      disagreements.push({
+        kind: "liquidity_vs_btc",
+        text: "Liquidity tightening, BTC firm anyway",
+      });
+    }
+  }
+  if (liq?.state === "tight" && risk?.state === "easing") {
+    disagreements.push({
+      kind: "liquidity_vs_risk",
+      text: "Liquidity tightening, risk still on",
+    });
+  }
+  if (liq?.state === "easing" && risk?.state === "tight") {
+    disagreements.push({
+      kind: "liquidity_vs_risk",
+      text: "Liquidity easing, risk still off",
+    });
+  }
+  if (headZ != null && coreZ != null && headZ > 0.45 && coreZ < -0.45) {
+    disagreements.push({
+      kind: "inflation_headline_vs_core",
+      text: "Headline CPI hot, core cold",
+    });
+  } else if (headZ != null && coreZ != null && headZ < -0.45 && coreZ > 0.45) {
+    disagreements.push({
+      kind: "inflation_headline_vs_core",
+      text: "Headline CPI cold, core hot",
+    });
+  }
+  if (growth?.state === "easing" && infl?.state === "tight") {
+    disagreements.push({
+      kind: "growth_vs_inflation",
+      text: "Growth strong, inflation cold",
+    });
+  }
+  if (growth?.state === "tight" && infl?.state === "easing") {
+    disagreements.push({
+      kind: "growth_vs_inflation",
+      text: "Growth soft, inflation hot",
+    });
+  }
+  return disagreements;
 }
 
 function lightMemberScores(snap, lid) {
@@ -203,8 +370,9 @@ function lightMemberScores(snap, lid) {
     .map((id) => {
       const m = snap.series?.[id];
       const score = memberLightScore(m, lid);
+      const { z } = horizonStats(m || {});
       return m && score != null && Number.isFinite(score)
-        ? { id, name: m.name, score, latest: m.latest, z2y: m.z2y }
+        ? { id, name: m.name, score, latest: m.latest, z }
         : null;
     })
     .filter(Boolean);
@@ -365,9 +533,12 @@ function regimeEvidence(snap) {
     const head = series.CPIAUCSL;
     const core = series.CPILFESL;
     const d = disagreement(snap, "inflation_headline_vs_core");
+    const headZ = horizonStats(head || {}).z;
+    const coreZ = horizonStats(core || {}).z;
+    const h = `${statHorizon}y`;
     if (/headline.*hot/i.test(d?.text || "")) {
       beats.push(
-        `Prices split: overall CPI still looks hot${head?.z2y != null ? ` (2y z ${fmtZ(head.z2y)})` : ""}; the Inflation light votes underlying/core${core?.z2y != null ? ` (2y z ${fmtZ(core.z2y)})` : ""}.`
+        `Prices split: overall CPI still looks hot${headZ != null ? ` (${h} z ${fmtZ(headZ)})` : ""}; the Inflation light votes underlying/core${coreZ != null ? ` (${h} z ${fmtZ(coreZ)})` : ""}.`
       );
     } else {
       beats.push(
@@ -584,7 +755,10 @@ function setGlobalView(mode) {
 
 function refreshViews() {
   if (!SNAP) return;
-  renderTable(SNAP);
+  const snap = viewOf(SNAP);
+  $("#sentence").innerHTML = buildSentence(snap);
+  renderLights(snap);
+  renderTable(snap);
 }
 
 function syncViewControls() {
@@ -830,11 +1004,11 @@ function openSeries(s) {
 }
 
 function renderFormula(snap) {
-  const f = snap.formula || {};
+  const h = `${statHorizon}y`;
   $("#formulaBody").innerHTML = `
-    <p>${escapeHtml(f.lights || "")}</p>
-    <p><strong>Net liquidity:</strong> <code>${escapeHtml(f.netLiquidity || "")}</code></p>
-    <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(f.stockBondCorr || "")}</code></p>
+    <p>Per light: median of member scores (each = mean of sign×${h} z and flipped ${h} %ile). The 1·2·5 control sets that window for lights, the regime story, the table, and charts. Clubs are small complementary sets; Street table keeps the rest. Score &gt;+0.45 / &lt;−0.45 paints the word. Inflation upside = hot.</p>
+    <p><strong>Net liquidity:</strong> <code>${escapeHtml(snap.formula?.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></p>
+    <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(snap.formula?.stockBondCorr || "")}</code></p>
     <p class="muted">Per-series sign flips “higher” into easing vs tightening for that light. Inflation light treats upside as hot.</p>
   `;
 }
@@ -865,11 +1039,12 @@ async function boot() {
     return;
   }
 
-  $("#sentence").innerHTML = buildSentence(SNAP);
-  renderLights(SNAP);
+  const snap = viewOf(SNAP);
+  $("#sentence").innerHTML = buildSentence(snap);
+  renderLights(snap);
   renderTabs(SNAP);
-  renderTable(SNAP);
-  renderFormula(SNAP);
+  renderTable(snap);
+  renderFormula(snap);
   renderAboutMeta(SNAP);
 
   $("#btnAbout").onclick = () => $("#dlgAbout").showModal();
@@ -897,11 +1072,11 @@ async function boot() {
   const sent = $("#sentence");
   if (sent) {
     sent.style.cursor = "pointer";
-    sent.onclick = () => openSentence(SNAP);
+    sent.onclick = () => openSentence(viewOf(SNAP));
     sent.onkeydown = (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openSentence(SNAP);
+        openSentence(viewOf(SNAP));
       }
     };
   }
@@ -918,6 +1093,7 @@ async function boot() {
     statHorizon = next;
     syncViewControls();
     refreshViews();
+    renderFormula(viewOf(SNAP));
     if (globalView === "charts" || [...rowFlip].length) paintSparks();
   };
 

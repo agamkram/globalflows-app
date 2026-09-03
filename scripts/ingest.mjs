@@ -324,15 +324,17 @@ function lightStateFromScore(score) {
   return { state: "neutral", score };
 }
 
-/** One voter's score: signed 2y z blended with signed 5y %ile (mapped to z-ish). */
-function memberLightScore(m, lid) {
+/** One voter's score: signed Ny z blended with signed Ny %ile (same window). Default bake = 2y. */
+function memberLightScore(m, lid, years = 2) {
   const sign = m.sign ?? 0;
   const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
+  const z = years === 1 ? m.z1y : years === 5 ? m.z5y : m.z2y;
+  const pct = years === 1 ? m.pct1y : years === 5 ? m.pct5y : m.pct2y;
   const parts = [];
-  if (m.z2y != null && Number.isFinite(m.z2y)) parts.push(m.z2y * s);
-  if (m.pct5y != null && Number.isFinite(m.pct5y)) {
-    const pct = s < 0 ? 1 - m.pct5y : m.pct5y;
-    parts.push((pct - 0.5) * 3);
+  if (z != null && Number.isFinite(z)) parts.push(z * s);
+  if (pct != null && Number.isFinite(pct)) {
+    const p = s < 0 ? 1 - pct : pct;
+    parts.push((p - 0.5) * 3);
   }
   if (!parts.length) return null;
   return mean(parts);
@@ -557,25 +559,26 @@ async function main() {
   }
 
   // Lights — complementary clubs (catalog.light); median of member scores (not mean of a crowd)
+  // Default bake = 2y same-window (z2y + pct2y). UI recomputes for 1 / 2 / 5.
   const lightIds = ["liquidity", "transmission", "growth", "inflation", "risk"];
   const lights = {};
   for (const lid of lightIds) {
     const members = Object.values(results).filter(
-      (r) => r.light === lid && r.status === "ok" && (r.z2y != null || r.pct5y != null)
+      (r) => r.light === lid && r.status === "ok" && (r.z2y != null || r.pct2y != null)
     );
     const scores = [];
     const signedZs = [];
     const signedPcts = [];
     for (const m of members) {
-      const sc = memberLightScore(m, lid);
+      const sc = memberLightScore(m, lid, 2);
       if (sc == null || !Number.isFinite(sc)) continue;
       const w = Math.max(1, Math.round(m.weight || 1));
       for (let i = 0; i < w; i++) scores.push(sc);
       const sign = m.sign ?? 0;
       const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
       if (m.z2y != null && Number.isFinite(m.z2y)) signedZs.push(m.z2y * s);
-      if (m.pct5y != null && Number.isFinite(m.pct5y)) {
-        signedPcts.push(s < 0 ? 1 - m.pct5y : m.pct5y);
+      if (m.pct2y != null && Number.isFinite(m.pct2y)) {
+        signedPcts.push(s < 0 ? 1 - m.pct2y : m.pct2y);
       }
     }
     const score = scores.length ? median(scores) : null;
@@ -587,7 +590,7 @@ async function main() {
       state,
       score,
       z2y: signedZs.length ? median(signedZs) : null,
-      pct5y: signedPcts.length ? median(signedPcts) : null,
+      pct2y: signedPcts.length ? median(signedPcts) : null,
       n: members.length,
       words: {
         easing: meta?.easing,
@@ -700,7 +703,7 @@ async function main() {
     errors,
     formula: {
       lights:
-        "Per light: median of member scores (each = mean of sign×2y z and flipped 5y %ile). Clubs are small complementary sets; Street table keeps the rest. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot.",
+        "Per light: median of member scores (each = mean of sign×Ny z and flipped Ny %ile for the selected 1/2/5y window). Default bake = 2y. Clubs are small complementary sets; Street table keeps the rest. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot.",
       netLiquidity: "WALCL(bn) − TGA − ON RRP",
       stockBondCorr: "60d Pearson of SPX returns vs −ΔDGS10",
     },
