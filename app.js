@@ -1,4 +1,4 @@
-/** MacroFlows UI — reads snapshot.json */
+/** GlobalMacro UI — reads snapshot.json */
 
 const $ = (sel, el = document) => el.querySelector(sel);
 

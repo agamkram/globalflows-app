@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * MacroFlows ingest — public pipes only.
+ * GlobalMacro ingest — public pipes only.
  * FRED CSV graph (no key required), NY Fed Markets API, Yahoo chart API.
  * Empty cell > fake. Writes data/snapshot.json + data/history/*.json
  */
@@ -15,7 +15,7 @@ const OUT = path.join(ROOT, "data", "snapshot.json");
 const HIST = path.join(ROOT, "data", "history");
 
 const UA =
-  "MacroFlows/0.1 (+https://markmaga.com; public macro instrument; educational)";
+  "GlobalMacro/0.1 (+https://markmaga.com; public macro instrument; educational)";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
