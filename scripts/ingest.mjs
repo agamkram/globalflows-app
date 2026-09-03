@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * GlobalMacro ingest — public pipes only.
+ * GlobalFlows ingest — public pipes only.
  * FRED CSV graph (no key required), NY Fed Markets API, Yahoo chart API.
  * Empty cell > fake. Writes data/snapshot.json + data/history/*.json
  */
@@ -15,7 +15,7 @@ const OUT = path.join(ROOT, "data", "snapshot.json");
 const HIST = path.join(ROOT, "data", "history");
 
 const UA =
-  "GlobalMacro/0.1 (+https://markmaga.com; public macro instrument; educational)";
+  "GlobalFlows/0.1 (+https://markmaga.com; public macro instrument; educational)";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -136,9 +136,22 @@ async function fetchNyfedSofr() {
 
 async function fetchYahoo(symbol) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=10y&interval=1d&includePrePost=false`;
-  const json = await fetchJson(url, {
-    headers: { Accept: "application/json" },
-  });
+  let json;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      json = await fetchJson(url, {
+        headers: { Accept: "application/json" },
+      });
+      break;
+    } catch (e) {
+      const msg = String(e.message || e);
+      if (msg.includes("429") && attempt < 3) {
+        await sleep(1500 * (attempt + 1));
+        continue;
+      }
+      throw e;
+    }
+  }
   const result = json?.chart?.result?.[0];
   if (!result) throw new Error(`Yahoo empty: ${symbol}`);
   const ts = result.timestamp || [];
@@ -365,13 +378,17 @@ async function main() {
       results[s.id] = {
         id: s.id,
         name: s.name,
-        layer: s.layer,
+        layer: s.street || s.layer,
+        street: s.street || s.layer,
+        causal: s.causal || null,
         units: s.transform === "yoy" ? "% YoY" : s.transform === "diff" ? "change" : s.units,
         freq: s.freq,
         sign: s.sign ?? 0,
         light: stale ? null : s.light || null,
         weight: s.weight || 1,
         note: s.note || null,
+        sub: s.sub || s.fred || s.yahoo || s.id,
+        search: s.search || s.sub || s.fred || s.yahoo || s.id,
         freshness: stale ? "stale" : s.freshness || "live",
         source: got.source,
         sourceUrl: s.sourceUrl || got.sourceUrl,
@@ -409,7 +426,7 @@ async function main() {
         error: String(e.message || e),
       };
     }
-    await sleep(120);
+    await sleep(s.pipe === "yahoo" ? 350 : 100);
   }
 
   // Derived: net liquidity ≈ WALCL − TGA − ON RRP (scale WALCL millions → billions)
@@ -438,13 +455,17 @@ async function main() {
     results.NET_LIQ = {
       id: "NET_LIQ",
       name: meta.name,
-      layer: "liquidity",
+      layer: meta.street || "liquidity",
+      street: meta.street || "liquidity",
+      causal: meta.causal || "liquidity",
       units: meta.units,
       freq: "weekly",
       sign: 1,
       light: "liquidity",
       weight: 2,
       note: meta.note,
+      sub: meta.sub || "WALCL−TGA−RRP",
+      search: meta.search || meta.sub || "WALCL−TGA−RRP",
       freshness: "live",
       source: "derived (WALCL − TGA − ON RRP)",
       sourceUrl: meta.sourceUrl,
@@ -485,12 +506,16 @@ async function main() {
     results.STOCK_BOND_CORR = {
       id: "STOCK_BOND_CORR",
       name: meta.name,
-      layer: "risk",
+      layer: meta.street || "conditions",
+      street: meta.street || "conditions",
+      causal: meta.causal || "risk",
       units: meta.units,
       freq: "daily",
       sign: 0,
       light: null,
       weight: 1,
+      sub: meta.sub || "SPX vs −ΔDGS10",
+      search: meta.search || meta.sub || "SPX vs −ΔDGS10",
       freshness: "live",
       source: "derived (SPX vs −ΔDGS10, 60d)",
       sourceUrl: meta.sourceUrl,
@@ -588,7 +613,10 @@ async function main() {
   const snapshot = {
     generatedAt: new Date().toISOString(),
     catalogTitle: catalog.title,
+    defaultGroup: catalog.defaultGroup || "street",
     layers: catalog.layers,
+    street: catalog.street || catalog.layers,
+    causal: catalog.causal || null,
     lightsMeta: catalog.lights,
     lights,
     disagreements,
