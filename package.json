@@ -5,6 +5,9 @@
   "description": "Global macro causal picture — liquidity → rates/dollar → growth/inflation → risk",
   "scripts": {
     "ingest": "node scripts/ingest.mjs",
+    "sanity": "node scripts/sanity.mjs",
+    "bake:regime": "node scripts/bake-regime.mjs",
+    "refresh": "npm run ingest && npm run bake:regime && npm run sanity",
     "serve": "python3 serve-https.py"
   },
   "engines": {

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#0b0e13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GlobalFlows" />
+  <script>
+    (function () {
+      try {
+        var r = document.documentElement;
+        var n = window.navigator;
+        var standalone =
+          n.standalone === true ||
+          (window.matchMedia &&
+            (window.matchMedia("(display-mode: standalone)").matches ||
+              window.matchMedia("(display-mode: fullscreen)").matches));
+        var iw = window.innerWidth || 0;
+        var ih = window.innerHeight || 0;
+        var sw = (window.screen && window.screen.width) || 0;
+        var sh = (window.screen && window.screen.height) || 0;
+        var screenMax = Math.max(sw, sh);
+        var screenMin = Math.min(sw, sh);
+        if (standalone) {
+          r.classList.add("pwa-standalone");
+          var fillH = ih >= iw ? Math.max(ih, screenMax) : Math.max(ih, screenMin);
+          var extra = 0;
+          if (Math.min(iw, ih) >= 600 && screenMax < ih - 10) extra = 20;
+          var total = fillH + extra;
+          r.style.setProperty("--pwa-fill-h", fillH + "px");
+          r.style.setProperty("--pwa-extra-b", extra + "px");
+          r.style.height = total + "px";
+          r.style.minHeight = total + "px";
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="description" content="About GlobalFlows — glossary, data, light formula." />
+  <title>About — GlobalFlows</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-about">
+  <div class="app about-app">
+    <header class="page-head">
+      <a class="nav-link nav-link-sm" href="./">← Book</a>
+      <h1 class="page-title">About</h1>
+    </header>
+
+    <main class="about-main">
+      <p>One screen for the global money-and-economy machine — always in motion. Lines are filed Street-style:</p>
+      <ol>
+        <li><strong>Liquidity</strong> — Fed plumbing, money markets, credit</li>
+        <li><strong>Rates</strong> — curve, real yields, BEIs, global 10ys</li>
+        <li><strong>FX</strong> — dollar and major pairs</li>
+        <li><strong>Economy</strong> — labor, growth, housing</li>
+        <li><strong>Inflation</strong> — CPI, PCE, expectations</li>
+        <li><strong>Conditions</strong> — vol, credit, financial conditions</li>
+        <li><strong>Markets</strong> — equities, commodities, crypto</li>
+      </ol>
+      <p>Lights score the causal regime (liquidity → transmission → growth/inflation → risk). Equities, commodities, and crypto live under <strong>Markets</strong> (dollar under <strong>FX</strong>) — read them as outputs, not inputs. No news feed. No invented numbers.</p>
+
+      <h2>Data</h2>
+      <p id="aboutIngest" class="muted">ingest —</p>
+      <p id="aboutCoverage" class="muted"></p>
+
+      <h2>Light formula</h2>
+      <div id="formulaBody"></div>
+
+      <h2>Glossary</h2>
+      <dl class="glossary">
+        <div><dt>Percentile</dt><dd>Where today’s level sits in the last 1 / 2 / 5 years. 90th = higher than ~90% of readings in that window.</dd></div>
+        <div><dt>z-score</dt><dd>How many standard deviations today’s level is from the average over that same window. +1 = one σ above average.</dd></div>
+        <div><dt>1 · 2 · 5</dt><dd>Years in the comparison window for lights, table, and charts. Default 2.</dd></div>
+        <div><dt>Lights</dt><dd>Five regime dials (liquidity → transmission → growth → inflation → risk). Tap for who voted.</dd></div>
+        <div><dt>Asset (central bank)</dt><dd>Something the bank owns on its balance sheet — usually bonds, sometimes ETFs or loans — not “stable value.”</dd></div>
+        <div><dt>Reserves</dt><dd>Cash banks hold at the Fed. Fuel for money markets.</dd></div>
+        <div><dt>TGA</dt><dd>Treasury General Account — the government’s checking account at the Fed. When it fills, cash leaves banks.</dd></div>
+        <div><dt>ON RRP</dt><dd>Overnight reverse repo — cash parked at the Fed overnight. Rise drains market liquidity.</dd></div>
+        <div><dt>Net liquidity</dt><dd>Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.</dd></div>
+        <div><dt>Real yield</dt><dd>Yield after inflation (TIPS). Higher real yields = tighter for risk assets.</dd></div>
+        <div><dt>Breakeven</dt><dd>Market’s implied inflation from nominal vs TIPS yields.</dd></div>
+        <div><dt>OAS</dt><dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries. Wider = more credit stress.</dd></div>
+        <div><dt>VIX / MOVE</dt><dd>Implied volatility — equity fear (VIX) and Treasury fear (MOVE).</dd></div>
+        <div><dt>Curve (2s10s)</dt><dd>Long yield minus short yield. Inverted (negative) often warns of slowdown.</dd></div>
+        <div><dt>Outputs</dt><dd>Equities, commodities, crypto, gold — read them under Markets; they don’t drive the lights.</dd></div>
+      </dl>
+
+      <p class="muted">Mark Maga · curiosity portal · local until far along</p>
+    </main>
+  </div>
+  <script type="module" src="about.js"></script>
+</body>
+</html>

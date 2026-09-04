@@ -472,9 +472,10 @@ async function main() {
       while (rj + 1 < rrpSorted.length && rrpSorted[rj + 1].date <= row.date) rj++;
       const rrpV = rrpSorted[rj] && rrpSorted[rj].date <= row.date ? rrpSorted[rj].value : null;
       if (rrpV == null) continue;
-      // WALCL is millions; TGA & RRP typically billions on FRED
+      // WALCL & TGA (WTREGEN) are millions on FRED; ON RRP is billions
       const walclBn = row.a / 1000;
-      points.push({ date: row.date, value: walclBn - row.b - rrpV });
+      const tgaBn = row.b / 1000;
+      points.push({ date: row.date, value: walclBn - tgaBn - rrpV });
     }
     await fs.writeFile(
       path.join(HIST, "NET_LIQ.json"),

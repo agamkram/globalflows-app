@@ -54,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260904d" />
 </head>
 <body>
   <div class="app" id="app">
@@ -62,7 +62,20 @@
       <div class="topbar-title">
         <h1 class="brand-title">GlobalFlows</h1>
       </div>
-      <div class="topbar-chrome">
+    </header>
+
+    <div class="dials-band">
+      <div class="dials-toolbar">
+        <div
+          class="dur-group regime-horizon"
+          id="horizonGroup"
+          title="Today vs this many years — lights, table, and charts"
+          aria-label="Comparison horizon"
+        >
+          <button type="button" class="btn tiny-btn" data-horizon="1">1y</button>
+          <button type="button" class="btn tiny-btn" data-horizon="2" aria-pressed="true">2y</button>
+          <button type="button" class="btn tiny-btn" data-horizon="5">5y</button>
+        </div>
         <nav class="topbar-nav" aria-label="Primary">
           <a
             href="https://oilprice.com/oil-price-charts/#prices"
@@ -72,14 +85,26 @@
             title="Oil price charts (oilprice.com)"
             aria-label="Oil price charts on oilprice.com"
           ><img src="oilprice-32.png" width="16" height="16" alt="" /></a>
-          <button type="button" class="nav-link nav-link-sm" id="btnAbout">About</button>
+          <a
+            href="https://bubblincrude.markmaga.com"
+            class="nav-link nav-link-sm"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="BubblinCrude"
+            aria-label="BubblinCrude"
+          >B</a>
+          <a class="nav-link nav-link-sm" href="./about.html">About</a>
         </nav>
       </div>
-    </header>
-
-    <section class="sentence" id="sentence" aria-live="polite" role="button" tabindex="0" title="Tap for explanation"></section>
-
-    <section class="lights" id="lights" aria-label="Regime lights"></section>
+      <button
+        type="button"
+        class="regime-today"
+        id="regimeToday"
+        hidden
+        title="Tap for today’s confirming breakdown"
+      ></button>
+      <section class="lights" id="lights" aria-label="Regime lights"></section>
+    </div>
 
     <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
 
@@ -91,16 +116,6 @@
             <p class="muted" id="layerBlurb"></p>
           </div>
           <div class="heat-controls" role="toolbar" aria-label="Series view">
-            <div
-              class="dur-group"
-              id="horizonGroup"
-              title="Today vs this many years — lights, story, table, and charts"
-              aria-label="Comparison horizon"
-            >
-              <button type="button" class="btn tiny-btn" data-horizon="1">1</button>
-              <button type="button" class="btn tiny-btn" data-horizon="2" aria-pressed="true">2</button>
-              <button type="button" class="btn tiny-btn" data-horizon="5">5</button>
-            </div>
             <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
           </div>
         </div>
@@ -111,7 +126,7 @@
                 <th>Series</th>
                 <th>Latest</th>
                 <th>2y z</th>
-                <th>2y %ile</th>
+                <th>2y <span class="th-abbr">%ile</span><span class="th-full">percentile</span></th>
               </tr>
             </thead>
             <tbody id="heatBody"></tbody>
@@ -122,61 +137,35 @@
 
   </div>
 
-  <dialog id="dlgAbout" class="dlg">
+  <dialog id="dlgSentence" class="dlg dlg-tap dlg-topsheet">
     <form method="dialog">
-      <h3>About GlobalFlows</h3>
-      <div class="dlg-body">
-        <p>One screen for the global money-and-economy machine — always in motion. Series are filed Street-style:</p>
-        <ol>
-          <li><strong>Liquidity</strong> — Fed plumbing, money markets, credit</li>
-          <li><strong>Rates</strong> — curve, real yields, BEIs, global 10ys</li>
-          <li><strong>FX</strong> — dollar and major pairs</li>
-          <li><strong>Economy</strong> — labor, growth, housing</li>
-          <li><strong>Inflation</strong> — CPI, PCE, expectations</li>
-          <li><strong>Conditions</strong> — vol, credit, financial conditions</li>
-          <li><strong>Markets</strong> — equities, commodities, crypto</li>
-        </ol>
-        <p>Lights score the causal regime (liquidity → transmission → growth/inflation → risk). Equities, commodities, and crypto live under <strong>Markets</strong> (dollar under <strong>FX</strong>) — read them as outputs, not inputs. No news feed. No invented numbers.</p>
-        <h4>Data</h4>
-        <p id="aboutIngest" class="muted">ingest —</p>
-        <p id="aboutCoverage" class="muted"></p>
-        <h4>Light formula</h4>
-        <div id="formulaBody"></div>
-        <p class="muted">Mark Maga · curiosity portal · local until far along</p>
-      </div>
-      <button class="btn" value="ok">Close</button>
-    </form>
-  </dialog>
-
-  <dialog id="dlgSeries" class="dlg">
-    <form method="dialog">
-      <h3 id="seriesTitle">Series</h3>
-      <div id="seriesBody" class="dlg-body"></div>
-      <button class="btn" value="ok">Close</button>
-    </form>
-  </dialog>
-
-  <dialog id="dlgLight" class="dlg">
-    <form method="dialog" id="formLight">
-      <h3 id="lightTitle">Light</h3>
-      <div id="lightBody" class="dlg-body"></div>
+      <h3>Today’s regime</h3>
+      <div id="sentenceBody" class="dlg-body"></div>
       <div class="dlg-actions">
-        <button type="submit" class="btn ghost" id="btnLightSeries" value="series">Show series</button>
         <button type="submit" class="btn" value="ok">Close</button>
       </div>
     </form>
   </dialog>
 
-  <dialog id="dlgSentence" class="dlg dlg-topsheet">
+  <dialog id="dlgSeries" class="dlg dlg-tap">
     <form method="dialog">
-      <header class="dlg-head">
-        <h3>Regime readout</h3>
-        <button type="submit" class="dlg-x" value="ok" aria-label="Close">✕</button>
-      </header>
-      <div id="sentenceBody" class="dlg-body"></div>
+      <h3 id="seriesTitle">Name</h3>
+      <div id="seriesBody" class="dlg-body"></div>
+      <button class="btn" value="ok">Close</button>
     </form>
   </dialog>
 
-  <script type="module" src="app.js"></script>
+  <dialog id="dlgLight" class="dlg dlg-tap">
+    <form method="dialog" id="formLight">
+      <h3 id="lightTitle">Light</h3>
+      <div id="lightBody" class="dlg-body"></div>
+      <div class="dlg-actions">
+        <button type="submit" class="btn ghost" id="btnLightSeries" value="series">Show lines</button>
+        <button type="submit" class="btn" value="ok">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js?v=20260904d"></script>
 </body>
 </html>

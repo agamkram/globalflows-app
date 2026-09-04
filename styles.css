@@ -88,12 +88,12 @@ body {
   white-space: nowrap;
 }
 
-.topbar-chrome {
+.dials-toolbar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 6px 8px;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
   width: 100%;
 }
 
@@ -101,8 +101,9 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .nav-link {
@@ -146,6 +147,31 @@ body {
   font-size: 0.85rem;
 }
 
+.glossary {
+  margin: 0 0 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.glossary > div {
+  display: grid;
+  gap: 2px;
+}
+
+.glossary dt {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.glossary dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
 .dlg-actions {
   display: flex;
   flex-wrap: wrap;
@@ -155,9 +181,8 @@ body {
 }
 
 .light-members {
-  overflow: auto;
-  max-height: min(40vh, 280px);
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  max-height: min(28vh, 200px);
   margin: 6px 0 10px;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -230,6 +255,58 @@ body {
   border-color: var(--line);
 }
 
+.dials-band {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+
+.regime-horizon {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.regime-today {
+  display: block;
+  margin: 0;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: left;
+  color: var(--text);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.regime-today:focus,
+.regime-today:focus-visible {
+  outline: 2px solid var(--accent, #3b82f6);
+  outline-offset: 1px;
+}
+
+.regime-today[hidden] {
+  display: none;
+}
+
+.regime-today .regime-kicker {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
 .sentence strong {
   font-weight: 600;
 }
@@ -247,44 +324,45 @@ body {
   color: var(--muted);
 }
 
-/* Phone: causal stack top → bottom. Tablet/Mac: left → right strip. */
+/* Five dials: compact cards, packed left (all widths). */
 .lights {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 72px));
+  gap: 5px;
+  width: max-content;
+  max-width: 100%;
+  align-self: start;
   padding: 0;
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  overflow: visible;
 }
 
 .light {
-  display: grid;
-  grid-template-columns: 13px minmax(0, 1fr) auto auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  /* Fib padding: 5 / 8 — a tad taller than 3/8 without bloating */
-  padding: 5px 8px;
-  min-height: 21px;
+  justify-content: center;
+  gap: 5px;
+  padding: 13px 5px;
+  min-height: 89px;
   min-width: 0;
   cursor: pointer;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
+  text-align: center;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
 .light:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid var(--line);
 }
 
 .light .dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin: 0;
+  margin: 0 0 3px;
   box-shadow: 0 0 8px currentColor;
   flex-shrink: 0;
 }
@@ -308,14 +386,15 @@ body {
 }
 
 .light .lbl {
-  font-size: 0.62rem;
+  font-size: 0.52rem;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 1;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .light .word {
@@ -323,8 +402,11 @@ body {
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
-  line-height: 1;
-  text-align: right;
+  line-height: 1.1;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .light .score {
@@ -333,8 +415,26 @@ body {
   color: var(--muted);
   margin: 0;
   line-height: 1;
-  min-width: 2.4em;
-  text-align: right;
+  text-align: center;
+  min-width: 0;
+}
+
+@media (min-width: 721px) {
+  .lights {
+    grid-template-columns: repeat(5, 89px);
+  }
+
+  .light .lbl {
+    font-size: 0.58rem;
+  }
+
+  .light .word {
+    font-size: 0.76rem;
+  }
+
+  .light .score {
+    font-size: 0.62rem;
+  }
 }
 
 .sentence .sent-flags {
@@ -493,10 +593,11 @@ body {
 }
 
 .btn.tiny-btn {
-  padding: 3px 7px;
+  padding: 3px 6px;
   font-size: 0.68rem;
   border-radius: 6px;
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
 .btn.tiny-btn[aria-pressed="true"] {
@@ -512,19 +613,55 @@ body {
 .chart-cell {
   padding: 2px 4px !important;
   vertical-align: middle;
+  /* Let the spark shrink inside a fixed table — canvas width=600 was blowing the row right. */
+  width: 62%;
+  max-width: 0;
+  white-space: normal;
 }
 
 .spark-wrap {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 32px;
+  overflow: hidden;
   cursor: pointer;
 }
 
 .spark-wrap canvas.spark {
   display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
   width: 100%;
   height: 32px;
+}
+
+.spark-chg {
+  flex: 0 0 3.6em;
+  width: 3.6em;
+  text-align: right;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.spark-chg[data-dir="up"] {
+  color: var(--ease);
+}
+
+.spark-chg[data-dir="down"] {
+  color: var(--tight);
+}
+
+.spark-chg[data-dir="flat"] {
+  color: var(--muted);
 }
 
 .spark-msg {
@@ -555,6 +692,8 @@ body {
 
 .heat {
   width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.72rem;
 }
@@ -575,6 +714,10 @@ body {
   background: var(--bg2);
   z-index: 1;
   padding-left: 4px;
+  width: 38%;
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .heat th:last-child,
@@ -594,6 +737,19 @@ body {
   z-index: 2;
   padding-top: 4px;
   padding-bottom: 4px;
+}
+
+.heat .th-full {
+  display: none;
+}
+
+@media (min-width: 560px) {
+  .heat .th-abbr {
+    display: none;
+  }
+  .heat .th-full {
+    display: inline;
+  }
 }
 
 .heat th:first-child {
@@ -656,6 +812,36 @@ body {
   color: var(--text);
   padding: 0;
   max-width: min(520px, calc(100% - 24px));
+}
+
+/* Tap sheets: no scroll — content clips; background locked via body.dlg-open */
+.dlg-tap[open] {
+  overflow: hidden;
+  max-height: min(85dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 24px));
+}
+
+.dlg-tap[open] form {
+  overflow: hidden;
+  max-height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.dlg-tap[open] .dlg-body {
+  overflow: hidden;
+  margin-bottom: 10px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+body.dlg-open {
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+body.dlg-open .app {
+  overflow: hidden;
 }
 
 /* Regime headline detail: pin to top; close is in header (no footer focus scroll) */
@@ -734,6 +920,54 @@ body {
   margin-bottom: 14px;
 }
 
+.dlg-body .light-teach {
+  margin: 0 0 8px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.dlg-body .series-meta {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.dlg-body .series-meta code {
+  font-size: 0.72rem;
+}
+
+.dlg-body .series-stats {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.dlg-body .series-stats > div {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.dlg-body .series-stats dt {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dlg-body .series-stats dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+}
+
 .dlg-body ol {
   padding-left: 1.2rem;
 }
@@ -751,6 +985,16 @@ body {
   color: #9ec5ff;
   text-decoration: underline;
   text-underline-offset: 2px;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dlg-body a:focus,
+.dlg-body a:focus-visible,
+.dlg a:focus,
+.dlg a:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .dlg-body a:active,
@@ -758,53 +1002,48 @@ body {
   color: #c5dcff;
 }
 
-
-
-/* Tablet + Mac: lights left → right in one strip */
-@media (min-width: 721px) {
-  .lights {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 5px; /* fib */
-    background: transparent;
-    border: none;
-    overflow: visible;
-  }
-
-  .light {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 8px 5px; /* fib 8 / 5 */
-    min-height: 55px; /* fib */
-    text-align: center;
-    background: var(--bg2);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    grid-template-columns: unset;
-  }
-
-  .light:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .light .dot {
-    margin: 0 0 3px;
-  }
-
-  .light .lbl {
-    font-size: 0.58rem;
-  }
-
-  .light .word {
-    font-size: 0.72rem;
-    text-align: center;
-  }
-
-  .light .score {
-    text-align: center;
-    min-width: 0;
-  }
+/* —— About page —— */
+.page-about {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+.about-app {
+  gap: 10px;
+  padding-bottom: calc(16px + var(--safe-b));
+}
+
+.page-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--safe-t) 0 0;
+}
+
+.page-title {
+  margin: 0;
+  font-family: Michroma, "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.about-main {
+  max-width: 36rem;
+}
+
+.about-main h2 {
+  margin: 18px 0 6px;
+  font-size: 0.95rem;
+}
+
+.about-main p,
+.about-main ol {
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.about-main ol {
+  padding-left: 1.2rem;
+}
+

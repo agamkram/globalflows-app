@@ -1,0 +1,663 @@
+{
+  "title": "GlobalFlows regime — today",
+  "generatedAt": "2026-09-04T04:25:35.729Z",
+  "ingestAt": "2026-09-03T19:05:41.420Z",
+  "verdict": "SPOT ON",
+  "fails": [],
+  "defaultHorizon": 2,
+  "headline": "Cash tightening, borrowing neutral, growth strong, inflation hot, risk risk-on.",
+  "story": "Over the past two years, cash has been leaving the system. Over the past two years, borrowing has looked mixed. Over the past two years, real activity has looked firm. Over the past two years, underlying prices have still looked hot. Over the past two years, market fear has stayed cheap.",
+  "netLiquidity": {
+    "latest": 5779.474,
+    "asOf": "2026-08-26",
+    "units": "USD bn"
+  },
+  "horizons": {
+    "1": {
+      "years": 1,
+      "lights": {
+        "liquidity": {
+          "id": "liquidity",
+          "label": "Liquidity",
+          "state": "neutral",
+          "word": "Neutral",
+          "score": -0.13889430228834143,
+          "color": "amber",
+          "n": 5,
+          "teach": "Over the past year, cash conditions have looked steady — no clear flood or drain. Split: Fed assets, Overnight reverse repo lean easier; Bank reserves at Fed, Treasury cash account lean tighter. Point: liquidity isn’t the loud driver right now.",
+          "voters": [
+            {
+              "id": "WALCL",
+              "name": "Fed assets",
+              "score": 1.0657669087416812,
+              "weight": 1
+            },
+            {
+              "id": "RRPONTSYD",
+              "name": "Overnight reverse repo",
+              "score": 0.744472169512234,
+              "weight": 1
+            },
+            {
+              "id": "NET_LIQ",
+              "name": "Net liquidity",
+              "score": -0.13889430228834143,
+              "weight": 2
+            },
+            {
+              "id": "WRESBAL",
+              "name": "Bank reserves at Fed",
+              "score": -0.9117894962258104,
+              "weight": 1
+            },
+            {
+              "id": "WTREGEN",
+              "name": "Treasury cash account",
+              "score": -1.1177139826894062,
+              "weight": 1
+            }
+          ]
+        },
+        "transmission": {
+          "id": "transmission",
+          "label": "Transmission",
+          "state": "tight",
+          "word": "Tight",
+          "score": -1.0265249539826482,
+          "color": "red",
+          "n": 6,
+          "teach": "Over the past year, borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; Bond volatility (MOVE), 2s10s curve lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
+          "voters": [
+            {
+              "id": "DFEDTARU",
+              "name": "Fed funds target (top)",
+              "score": 1.026102838404297,
+              "weight": 1
+            },
+            {
+              "id": "DTWEXBGS",
+              "name": "Broad US dollar index",
+              "score": 0.8955557500792416,
+              "weight": 1
+            },
+            {
+              "id": "MOVE",
+              "name": "Bond volatility (MOVE)",
+              "score": -0.86008399345776,
+              "weight": 1
+            },
+            {
+              "id": "T10Y2Y",
+              "name": "2s10s curve",
+              "score": -1.1929659145075364,
+              "weight": 1
+            },
+            {
+              "id": "MORTGAGE30US",
+              "name": "30-year mortgage rate",
+              "score": -1.5197222182520145,
+              "weight": 1
+            },
+            {
+              "id": "DGS2",
+              "name": "US 2-year yield",
+              "score": -1.8020996053083624,
+              "weight": 1
+            }
+          ]
+        },
+        "growth": {
+          "id": "growth",
+          "label": "Growth",
+          "state": "easing",
+          "word": "Strong",
+          "score": 0.9967761699212432,
+          "color": "green",
+          "n": 7,
+          "teach": "Over the past year, real activity has looked firm. Split: Unemployment rate, Copper lean easier; Nonfarm payrolls lean tighter. Point: the economy is holding up — soft prints haven’t flipped the regime.",
+          "voters": [
+            {
+              "id": "UNRATE",
+              "name": "Unemployment rate",
+              "score": 1.8487005311470708,
+              "weight": 1
+            },
+            {
+              "id": "COPPER",
+              "name": "Copper",
+              "score": 1.428789650685153,
+              "weight": 1
+            },
+            {
+              "id": "ICSA",
+              "name": "Initial jobless claims",
+              "score": 1.1033083863276558,
+              "weight": 1
+            },
+            {
+              "id": "RSAFS",
+              "name": "Retail sales",
+              "score": 1.0559860434640709,
+              "weight": 1
+            },
+            {
+              "id": "WEI",
+              "name": "Weekly economic index",
+              "score": 0.9375662963784154,
+              "weight": 1
+            },
+            {
+              "id": "CFNAI",
+              "name": "Chicago Fed activity",
+              "score": 0.03671981560268893,
+              "weight": 1
+            },
+            {
+              "id": "PAYEMS",
+              "name": "Nonfarm payrolls",
+              "score": -0.6487961588441029,
+              "weight": 2
+            }
+          ]
+        },
+        "inflation": {
+          "id": "inflation",
+          "label": "Inflation",
+          "state": "neutral",
+          "word": "Mid",
+          "score": 0.23846079659807273,
+          "color": "amber",
+          "n": 3,
+          "teach": "Over the past year, inflation has looked mixed. Split: Core PCE lean easier; Inflation expectations, Core CPI lean tighter. Point: some core measures cool, others don’t — no clean Cold call.",
+          "voters": [
+            {
+              "id": "PCEPILFE",
+              "name": "Core PCE",
+              "score": 1.0870338622120708,
+              "weight": 2
+            },
+            {
+              "id": "MICH",
+              "name": "Inflation expectations",
+              "score": -0.6101122690159253,
+              "weight": 1
+            },
+            {
+              "id": "CPILFESL",
+              "name": "Core CPI",
+              "score": -1.3158508879340993,
+              "weight": 1
+            }
+          ]
+        },
+        "risk": {
+          "id": "risk",
+          "label": "Risk",
+          "state": "easing",
+          "word": "Risk-on",
+          "score": 1.1636504998899455,
+          "color": "green",
+          "n": 4,
+          "teach": "Over the past year, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "voters": [
+            {
+              "id": "BAMLH0A0HYM2",
+              "name": "High-yield spread",
+              "score": 1.3776407108688877,
+              "weight": 1
+            },
+            {
+              "id": "NFCI",
+              "name": "Financial conditions",
+              "score": 1.308770149203489,
+              "weight": 1
+            },
+            {
+              "id": "VIX",
+              "name": "Equity volatility (VIX)",
+              "score": 1.018530850576402,
+              "weight": 1
+            },
+            {
+              "id": "BBB_OAS",
+              "name": "BBB credit spread",
+              "score": 0.1503173899828979,
+              "weight": 1
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "years": 2,
+      "lights": {
+        "liquidity": {
+          "id": "liquidity",
+          "label": "Liquidity",
+          "state": "tight",
+          "word": "Tightening",
+          "score": -0.7966168700229566,
+          "color": "red",
+          "n": 5,
+          "teach": "Over the past two years, cash has been leaving the system. Split: Overnight reverse repo lean easier; Net liquidity, Treasury cash account lean tighter. Point: Fed plumbing is tightening — less fuel in the pipes.",
+          "voters": [
+            {
+              "id": "RRPONTSYD",
+              "name": "Overnight reverse repo",
+              "score": 1.048676693020098,
+              "weight": 1
+            },
+            {
+              "id": "WALCL",
+              "name": "Fed assets",
+              "score": 0.15224445919302307,
+              "weight": 1
+            },
+            {
+              "id": "NET_LIQ",
+              "name": "Net liquidity",
+              "score": -0.7966168700229566,
+              "weight": 2
+            },
+            {
+              "id": "WTREGEN",
+              "name": "Treasury cash account",
+              "score": -1.226625845576041,
+              "weight": 1
+            },
+            {
+              "id": "WRESBAL",
+              "name": "Bank reserves at Fed",
+              "score": -1.2619864591571914,
+              "weight": 1
+            }
+          ]
+        },
+        "transmission": {
+          "id": "transmission",
+          "label": "Transmission",
+          "state": "neutral",
+          "word": "Neutral",
+          "score": -0.026810772849792053,
+          "color": "amber",
+          "n": 6,
+          "teach": "Over the past two years, borrowing has looked mixed. Split: Fed funds target (top), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: funding isn’t clearly cheap or dear — transmission is split.",
+          "voters": [
+            {
+              "id": "DFEDTARU",
+              "name": "Fed funds target (top)",
+              "score": 1.3058902462905173,
+              "weight": 1
+            },
+            {
+              "id": "DTWEXBGS",
+              "name": "Broad US dollar index",
+              "score": 1.0930726500399195,
+              "weight": 1
+            },
+            {
+              "id": "MOVE",
+              "name": "Bond volatility (MOVE)",
+              "score": 0.26448101731528906,
+              "weight": 1
+            },
+            {
+              "id": "T10Y2Y",
+              "name": "2s10s curve",
+              "score": -0.31810256301487316,
+              "weight": 1
+            },
+            {
+              "id": "MORTGAGE30US",
+              "name": "30-year mortgage rate",
+              "score": -0.49175145430011863,
+              "weight": 1
+            },
+            {
+              "id": "DGS2",
+              "name": "US 2-year yield",
+              "score": -1.6668462925269272,
+              "weight": 1
+            }
+          ]
+        },
+        "growth": {
+          "id": "growth",
+          "label": "Growth",
+          "state": "easing",
+          "word": "Strong",
+          "score": 1.2243751622868344,
+          "color": "green",
+          "n": 7,
+          "teach": "Over the past two years, real activity has looked firm. Split: Copper, Retail sales lean easier; Nonfarm payrolls lean tighter. Point: the economy is holding up — soft prints haven’t flipped the regime.",
+          "voters": [
+            {
+              "id": "COPPER",
+              "name": "Copper",
+              "score": 1.66022024254801,
+              "weight": 1
+            },
+            {
+              "id": "RSAFS",
+              "name": "Retail sales",
+              "score": 1.4272133970815446,
+              "weight": 1
+            },
+            {
+              "id": "ICSA",
+              "name": "Initial jobless claims",
+              "score": 1.4008918829482857,
+              "weight": 1
+            },
+            {
+              "id": "UNRATE",
+              "name": "Unemployment rate",
+              "score": 1.2683275086422294,
+              "weight": 1
+            },
+            {
+              "id": "WEI",
+              "name": "Weekly economic index",
+              "score": 1.1804228159314394,
+              "weight": 1
+            },
+            {
+              "id": "CFNAI",
+              "name": "Chicago Fed activity",
+              "score": 0.1311580068350133,
+              "weight": 1
+            },
+            {
+              "id": "PAYEMS",
+              "name": "Nonfarm payrolls",
+              "score": -0.8742299525840875,
+              "weight": 2
+            }
+          ]
+        },
+        "inflation": {
+          "id": "inflation",
+          "label": "Inflation",
+          "state": "easing",
+          "word": "Hot",
+          "score": 0.6764692307702096,
+          "color": "green",
+          "n": 3,
+          "teach": "Over the past two years, underlying prices have still looked hot. Split: Core PCE lean easier; Core CPI lean tighter. Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.",
+          "voters": [
+            {
+              "id": "PCEPILFE",
+              "name": "Core PCE",
+              "score": 1.4841539426212855,
+              "weight": 2
+            },
+            {
+              "id": "MICH",
+              "name": "Inflation expectations",
+              "score": -0.13121548108086634,
+              "weight": 1
+            },
+            {
+              "id": "CPILFESL",
+              "name": "Core CPI",
+              "score": -1.5142917816330108,
+              "weight": 1
+            }
+          ]
+        },
+        "risk": {
+          "id": "risk",
+          "label": "Risk",
+          "state": "easing",
+          "word": "Risk-on",
+          "score": 1.0445531829033052,
+          "color": "green",
+          "n": 4,
+          "teach": "Over the past two years, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "voters": [
+            {
+              "id": "NFCI",
+              "name": "Financial conditions",
+              "score": 1.3995948168582166,
+              "weight": 1
+            },
+            {
+              "id": "BAMLH0A0HYM2",
+              "name": "High-yield spread",
+              "score": 1.1718672727573514,
+              "weight": 1
+            },
+            {
+              "id": "VIX",
+              "name": "Equity volatility (VIX)",
+              "score": 0.9172390930492591,
+              "weight": 1
+            },
+            {
+              "id": "BBB_OAS",
+              "name": "BBB credit spread",
+              "score": 0.6335901373927055,
+              "weight": 1
+            }
+          ]
+        }
+      }
+    },
+    "5": {
+      "years": 5,
+      "lights": {
+        "liquidity": {
+          "id": "liquidity",
+          "label": "Liquidity",
+          "state": "tight",
+          "word": "Tightening",
+          "score": -1.08624145921385,
+          "color": "red",
+          "n": 5,
+          "teach": "Over the past five years, cash has been leaving the system. Split: Overnight reverse repo lean easier; Fed assets, Net liquidity lean tighter. Point: Fed plumbing is tightening — less fuel in the pipes.",
+          "voters": [
+            {
+              "id": "RRPONTSYD",
+              "name": "Overnight reverse repo",
+              "score": 1.2383557628947999,
+              "weight": 1
+            },
+            {
+              "id": "WALCL",
+              "name": "Fed assets",
+              "score": -0.9100097324927783,
+              "weight": 1
+            },
+            {
+              "id": "NET_LIQ",
+              "name": "Net liquidity",
+              "score": -1.08624145921385,
+              "weight": 2
+            },
+            {
+              "id": "WRESBAL",
+              "name": "Bank reserves at Fed",
+              "score": -1.303491318255496,
+              "weight": 1
+            },
+            {
+              "id": "WTREGEN",
+              "name": "Treasury cash account",
+              "score": -1.405545463776834,
+              "weight": 1
+            }
+          ]
+        },
+        "transmission": {
+          "id": "transmission",
+          "label": "Transmission",
+          "state": "easing",
+          "word": "Easy",
+          "score": 0.4753359366659109,
+          "color": "green",
+          "n": 6,
+          "teach": "Over the past five years, borrowing has looked cheap. Split: Bond volatility (MOVE), Broad US dollar index lean easier; US 2-year yield lean tighter. Point: money is easy to fund with — rates/dollar aren’t fighting growth.",
+          "voters": [
+            {
+              "id": "MOVE",
+              "name": "Bond volatility (MOVE)",
+              "score": 0.8380765532354584,
+              "weight": 1
+            },
+            {
+              "id": "DTWEXBGS",
+              "name": "Broad US dollar index",
+              "score": 0.7560455660952388,
+              "weight": 1
+            },
+            {
+              "id": "T10Y2Y",
+              "name": "2s10s curve",
+              "score": 0.5171671456851001,
+              "weight": 1
+            },
+            {
+              "id": "DFEDTARU",
+              "name": "Fed funds target (top)",
+              "score": 0.43350472764672165,
+              "weight": 1
+            },
+            {
+              "id": "MORTGAGE30US",
+              "name": "30-year mortgage rate",
+              "score": -0.3872064602233307,
+              "weight": 1
+            },
+            {
+              "id": "DGS2",
+              "name": "US 2-year yield",
+              "score": -0.6569125023884375,
+              "weight": 1
+            }
+          ]
+        },
+        "growth": {
+          "id": "growth",
+          "label": "Growth",
+          "state": "neutral",
+          "word": "Mid",
+          "score": 0.18018373411473626,
+          "color": "amber",
+          "n": 7,
+          "teach": "Over the past five years, growth has looked mixed. Split: Copper, Retail sales lean easier; Nonfarm payrolls lean tighter. Point: no clean boom or bust signal once the club is combined.",
+          "voters": [
+            {
+              "id": "COPPER",
+              "name": "Copper",
+              "score": 2.078453134100642,
+              "weight": 1
+            },
+            {
+              "id": "RSAFS",
+              "name": "Retail sales",
+              "score": 1.59048503749717,
+              "weight": 1
+            },
+            {
+              "id": "ICSA",
+              "name": "Initial jobless claims",
+              "score": 1.0702250980969916,
+              "weight": 1
+            },
+            {
+              "id": "WEI",
+              "name": "Weekly economic index",
+              "score": 0.41218605567143507,
+              "weight": 1
+            },
+            {
+              "id": "CFNAI",
+              "name": "Chicago Fed activity",
+              "score": -0.051818587441962556,
+              "weight": 1
+            },
+            {
+              "id": "UNRATE",
+              "name": "Unemployment rate",
+              "score": -0.14915248741679274,
+              "weight": 1
+            },
+            {
+              "id": "PAYEMS",
+              "name": "Nonfarm payrolls",
+              "score": -1.1623504239389064,
+              "weight": 2
+            }
+          ]
+        },
+        "inflation": {
+          "id": "inflation",
+          "label": "Inflation",
+          "state": "neutral",
+          "word": "Mid",
+          "score": -0.2211178839174498,
+          "color": "amber",
+          "n": 3,
+          "teach": "Over the past five years, inflation has looked mixed. Point: some core measures cool, others don’t — no clean Cold call.",
+          "voters": [
+            {
+              "id": "MICH",
+              "name": "Inflation expectations",
+              "score": -0.18885041929423832,
+              "weight": 1
+            },
+            {
+              "id": "PCEPILFE",
+              "name": "Core PCE",
+              "score": -0.2211178839174498,
+              "weight": 2
+            },
+            {
+              "id": "CPILFESL",
+              "name": "Core CPI",
+              "score": -1.4014233727039667,
+              "weight": 1
+            }
+          ]
+        },
+        "risk": {
+          "id": "risk",
+          "label": "Risk",
+          "state": "easing",
+          "word": "Risk-on",
+          "score": 1.0542272577593943,
+          "color": "green",
+          "n": 4,
+          "teach": "Over the past five years, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "voters": [
+            {
+              "id": "BAMLH0A0HYM2",
+              "name": "High-yield spread",
+              "score": 1.2742705995328985,
+              "weight": 1
+            },
+            {
+              "id": "NFCI",
+              "name": "Financial conditions",
+              "score": 1.2143956345187543,
+              "weight": 1
+            },
+            {
+              "id": "BBB_OAS",
+              "name": "BBB credit spread",
+              "score": 0.8940588810000345,
+              "weight": 1
+            },
+            {
+              "id": "VIX",
+              "name": "Equity volatility (VIX)",
+              "score": 0.7785329081916529,
+              "weight": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "note": "Daily bake. Numbers locked before copy. Rarely needs an intraday refresh."
+}

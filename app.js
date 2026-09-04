@@ -1,8 +1,10 @@
-/** GlobalFlows UI — reads snapshot.json */
+/** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
 let SNAP = null;
+/** Daily regime bake (spot-on lights + teach). Null if missing. */
+let REGIME = null;
 let activeLayer = "liquidity";
 
 /** Global row view: values | charts. */
@@ -89,6 +91,23 @@ function fmtPct(p) {
   return (p * 100).toFixed(0) + "%";
 }
 
+/** % change from first → last of a history slice (chosen duration). */
+function windowPctChange(points) {
+  if (!points || points.length < 2) return null;
+  const first = points[0].value;
+  const last = points[points.length - 1].value;
+  if (!Number.isFinite(first) || !Number.isFinite(last)) return null;
+  if (first === 0) return null;
+  return ((last - first) / Math.abs(first)) * 100;
+}
+
+function fmtChg(n) {
+  if (n == null || !Number.isFinite(n)) return "—";
+  const abs = Math.abs(n);
+  const dig = abs >= 100 ? 0 : 1;
+  return `${n >= 0 ? "+" : ""}${n.toFixed(dig)}%`;
+}
+
 function zClass(z) {
   if (z == null || !Number.isFinite(z)) return "empty";
   if (z > 0.45) return "z-pos";
@@ -151,12 +170,41 @@ function jumpToStreetTab(tabId) {
   if (scroll) scroll.scrollTop = 0;
 }
 
+function bakeLight(id, years = statHorizon) {
+  return REGIME?.horizons?.[String(years)]?.lights?.[id] || null;
+}
+
+function plainStory(snap) {
+  const div = document.createElement("div");
+  div.innerHTML = regimeStoryHtml(snap);
+  return (div.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function renderRegimeToday() {
+  const el = $("#regimeToday");
+  if (!el || !SNAP) return;
+  const snap = viewOf(SNAP);
+  const verified = REGIME?.verdict === "SPOT ON";
+  const line = plainStory(snap);
+  if (!line) {
+    el.hidden = true;
+    el.innerHTML = "";
+    return;
+  }
+  el.hidden = false;
+  const kicker = verified
+    ? `Today · ${statHorizon}y · verified`
+    : `Today · ${statHorizon}y`;
+  el.innerHTML = `<span class="regime-kicker">${escapeHtml(kicker)}</span>${escapeHtml(line)}`;
+}
+
 function openLight(id) {
   if (!SNAP) return;
   const snap = viewOf(SNAP);
   const L = snap.lights?.[id];
   if (!L) return;
   const h = `${statHorizon}y`;
+  const baked = bakeLight(id);
   pendingLightTab = LIGHT_TO_TAB[id] || "all";
   const word = wordFor(L);
   $("#lightTitle").textContent = `${L.label || id} · ${word}`;
@@ -178,24 +226,28 @@ function openLight(id) {
     L.score != null && Number.isFinite(L.score)
       ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
       : "—";
+  const teach = baked?.teach
+    ? `<p class="light-teach">${escapeHtml(baked.teach)}</p>`
+    : `<p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>`;
   $("#lightBody").innerHTML = `
-    <p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>
+    ${teach}
     <p><strong>${escapeHtml(word)}</strong>
       · score ${score}
       · n=${L.n ?? members.length}
       ${L.z != null ? `· agg ${h} z ${fmtZ(L.z)}` : ""}
-      ${L.pct != null ? `· agg ${h} %ile ${fmtPct(L.pct)}` : ""}
+      ${L.pct != null ? `· agg ${h} percentile ${fmtPct(L.pct)}` : ""}
     </p>
     <h4>Who voted</h4>
     <div class="light-members">
       <table>
-        <thead><tr><th>Series</th><th>Latest</th><th>${h} z</th><th>As-of</th></tr></thead>
+        <thead><tr><th>Name</th><th>Latest</th><th>${h} z</th><th>As-of</th></tr></thead>
         <tbody>${rows || `<tr><td colspan="4" class="empty">no members</td></tr>`}</tbody>
       </table>
     </div>
-    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} %ile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
+    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} percentile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
   `;
   $("#dlgLight").showModal();
+  document.body.classList.add("dlg-open");
 }
 
 function lightState(snap, id) {
@@ -401,9 +453,16 @@ function transmissionClause(snap) {
   }[st];
 }
 
+function horizonPhrase(years = statHorizon) {
+  if (years === 1) return "Over the past year";
+  if (years === 5) return "Over the past five years";
+  return "Over the past two years";
+}
+
 /**
  * Regime box: short editorial from light states + tensions.
  * Relations and splits — not a rewording of the five dial labels.
+ * Leads with the active clock in plain language.
  */
 function regimeStoryHtml(snap) {
   const liq = lightState(snap, "liquidity");
@@ -412,10 +471,10 @@ function regimeStoryHtml(snap) {
   const risk = lightState(snap, "risk");
 
   const cash = {
-    easing: `<strong data-state="easing">Cash is flowing back</strong> into the system`,
-    tight: `<strong data-state="tight">Cash is leaving</strong> the system`,
-    neutral: `Cash conditions look <strong data-state="neutral">steady</strong>`,
-    empty: `Cash conditions are unclear`,
+    easing: `<strong data-state="easing">cash has been flowing back</strong> into the system`,
+    tight: `<strong data-state="tight">cash has been leaving</strong> the system`,
+    neutral: `cash conditions have looked <strong data-state="neutral">steady</strong>`,
+    empty: `cash conditions are unclear`,
   }[liq];
 
   const headCore = disagreement(snap, "inflation_headline_vs_core");
@@ -425,40 +484,39 @@ function regimeStoryHtml(snap) {
   let economy;
   if (gr === "easing" && inf === "tight") {
     economy = headHotCoreCold
-      ? `the real economy still looks <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
-      : `the real economy still looks <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+      ? `the real economy has still looked <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
+      : `the real economy has still looked <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else if (gr === "easing" && inf === "easing") {
-    economy = `the real economy looks <strong data-state="easing">firm</strong> while inflation pressure is still <strong data-state="easing">high</strong>`;
+    economy = `the real economy has looked <strong data-state="easing">firm</strong> while inflation pressure is still <strong data-state="easing">high</strong>`;
   } else if (gr === "easing" && inf === "neutral") {
-    economy = `the real economy still looks <strong data-state="easing">firm</strong> while inflation looks <strong data-state="neutral">mixed</strong>`;
+    economy = `the real economy has still looked <strong data-state="easing">firm</strong> while inflation has looked <strong data-state="neutral">mixed</strong>`;
   } else if (gr === "tight" && inf === "easing") {
     economy = headColdCoreHot
-      ? `the real economy looks <strong data-state="tight">soft</strong> while underlying inflation is still <strong data-state="easing">hot</strong> — even if the overall CPI print looks cooler`
-      : `the real economy looks <strong data-state="tight">soft</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+      ? `the real economy has looked <strong data-state="tight">soft</strong> while underlying inflation is still <strong data-state="easing">hot</strong> — even if the overall CPI print looks cooler`
+      : `the real economy has looked <strong data-state="tight">soft</strong> while inflation is still <strong data-state="easing">hot</strong>`;
   } else if (gr === "tight" && inf === "tight") {
-    economy = `the real economy looks <strong data-state="tight">soft</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+    economy = `the real economy has looked <strong data-state="tight">soft</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else if (gr === "tight" && inf === "neutral") {
-    economy = `the real economy looks <strong data-state="tight">soft</strong> while inflation looks <strong data-state="neutral">mixed</strong>`;
+    economy = `the real economy has looked <strong data-state="tight">soft</strong> while inflation has looked <strong data-state="neutral">mixed</strong>`;
   } else if (gr === "neutral" && inf === "easing") {
-    economy = `growth looks <strong data-state="neutral">mixed</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+    economy = `growth has looked <strong data-state="neutral">mixed</strong> while inflation is still <strong data-state="easing">hot</strong>`;
   } else if (gr === "neutral" && inf === "tight") {
     economy = headHotCoreCold
-      ? `growth looks <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
-      : `growth looks <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
+      ? `growth has looked <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
+      : `growth has looked <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else {
-    economy = `growth and inflation both look <strong data-state="neutral">mixed</strong>`;
+    economy = `growth and inflation have both looked <strong data-state="neutral">mixed</strong>`;
   }
 
   const fear = {
-    easing: `market <strong data-state="easing">fear is low</strong>`,
-    tight: `markets are <strong data-state="tight">paying up for fear</strong>`,
-    neutral: `market fear looks <strong data-state="neutral">mixed</strong>`,
+    easing: `market <strong data-state="easing">fear has stayed low</strong>`,
+    tight: `markets have been <strong data-state="tight">paying up for fear</strong>`,
+    neutral: `market fear has looked <strong data-state="neutral">mixed</strong>`,
     empty: `market fear is unclear`,
   }[risk];
 
   const money = transmissionClause(snap);
 
-  // Sentence 1: cash ↔ economy (and fear when it contrasts with cash)
   const cashVsGrowth =
     (liq === "tight" && gr === "easing") || (liq === "easing" && gr === "tight");
   const cashVsFear =
@@ -475,13 +533,14 @@ function regimeStoryHtml(snap) {
     s1 = `${cash}, and ${economy}`;
   }
 
-  // Sentence 2: fear if not already in s1, then borrowing
   const parts2 = [];
-  if (!cashVsFear && fear) parts2.push(fear.charAt(0).toUpperCase() + fear.slice(1));
+  if (!cashVsFear && fear) parts2.push(fear);
   if (money) parts2.push(money);
-  const s2 = parts2.length ? ` ${parts2.join(". ")}.` : "";
+  const s2 = parts2.length
+    ? ` ${parts2.map((p, i) => (i === 0 ? p.charAt(0).toUpperCase() + p.slice(1) : p)).join(". ")}.`
+    : "";
 
-  return `${s1}.${s2}`;
+  return `${horizonPhrase()}, ${s1}.${s2}`;
 }
 
 function buildSentence(snap) {
@@ -632,12 +691,22 @@ function tensionTitle(d) {
 
 function openSentence(snap) {
   if (!snap) return;
-  const evidence = regimeEvidence(snap)
-    .map(
-      (line) =>
-        `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
-    )
-    .join("");
+  const baked = REGIME?.verdict === "SPOT ON" ? REGIME.horizons?.[String(statHorizon)]?.lights : null;
+  const evidence = baked
+    ? ["liquidity", "transmission", "growth", "inflation", "risk"]
+        .map((id) => baked[id]?.teach)
+        .filter(Boolean)
+        .map(
+          (line) =>
+            `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
+        )
+        .join("")
+    : regimeEvidence(snap)
+        .map(
+          (line) =>
+            `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
+        )
+        .join("");
 
   const extra = teachOnlyTensions(snap);
   const watch = extra.length
@@ -651,15 +720,21 @@ function openSentence(snap) {
         .join("")}`
     : "";
 
+  const verified =
+    REGIME?.verdict === "SPOT ON"
+      ? `<p class="muted tiny sent-foot">Verified bake · ${statHorizon}y · tap a light for who voted.</p>`
+      : `<p class="muted tiny sent-foot">Tap a light for who voted.</p>`;
+
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
     <p class="sent-kicker">Why we say that</p>
     ${evidence}
     ${watch}
-    <p class="muted tiny sent-foot">Tap a light for who voted.</p>
+    ${verified}
   `;
   const dlg = $("#dlgSentence");
   dlg.showModal();
+  document.body.classList.add("dlg-open");
   requestAnimationFrame(() => {
     dlg.scrollTop = 0;
     const body = $("#sentenceBody");
@@ -756,9 +831,9 @@ function setGlobalView(mode) {
 function refreshViews() {
   if (!SNAP) return;
   const snap = viewOf(SNAP);
-  $("#sentence").innerHTML = buildSentence(snap);
   renderLights(snap);
   renderTable(snap);
+  renderRegimeToday();
 }
 
 function syncViewControls() {
@@ -793,6 +868,7 @@ function chartCell(s) {
   return `<td class="chart-cell" colspan="${COLSPAN_DATA}">
     <div class="spark-wrap" data-spark="${s.id}">
       <canvas class="spark" width="600" height="36" aria-hidden="true"></canvas>
+      <span class="spark-chg muted" aria-hidden="true"></span>
       <span class="spark-msg muted">…</span>
     </div>
   </td>`;
@@ -804,10 +880,11 @@ function renderThead(rows) {
   const anyValues = rows.some((s) => rowView(s.id) === "values");
   const h = `${statHorizon}y`;
   if (!anyValues) {
-    thead.innerHTML = `<th>Series</th><th colspan="${COLSPAN_DATA}">Chart · ${h.toUpperCase()}</th>`;
+    thead.innerHTML = `<th>Name</th><th colspan="${COLSPAN_DATA}">Chart · ${h.toUpperCase()}</th>`;
   } else {
-    thead.innerHTML = `<th>Series</th>
-      <th>Latest</th><th>${h} z</th><th>${h} %ile</th>`;
+    thead.innerHTML = `<th>Name</th>
+      <th>Latest</th><th>${h} z</th>
+      <th>${h} <span class="th-abbr">%ile</span><span class="th-full">percentile</span></th>`;
   }
 }
 
@@ -949,19 +1026,37 @@ async function paintSparks() {
       const id = wrap.dataset.spark;
       const canvas = wrap.querySelector("canvas");
       const msg = wrap.querySelector(".spark-msg");
+      const chgEl = wrap.querySelector(".spark-chg");
       const hist = await loadHistory(id);
       if (!canvas) return;
       if (!hist?.points?.length) {
         if (msg) msg.textContent = "no history";
+        if (chgEl) {
+          chgEl.textContent = "";
+          chgEl.removeAttribute("data-dir");
+        }
         return;
       }
       const dur = chartDuration();
       const sliced = sliceDuration(hist.points, dur);
       if (!sliced.length) {
         if (msg) msg.textContent = `no ${dur} data`;
+        if (chgEl) {
+          chgEl.textContent = "";
+          chgEl.removeAttribute("data-dir");
+        }
         return;
       }
       drawSpark(canvas, sliced);
+      const chg = windowPctChange(sliced);
+      if (chgEl) {
+        chgEl.textContent = fmtChg(chg);
+        chgEl.title = `${dur} change`;
+        if (chg == null || !Number.isFinite(chg)) chgEl.removeAttribute("data-dir");
+        else if (chg > 0) chgEl.dataset.dir = "up";
+        else if (chg < 0) chgEl.dataset.dir = "down";
+        else chgEl.dataset.dir = "flat";
+      }
     })
   );
 }
@@ -985,28 +1080,33 @@ function escapeHtml(t) {
 function openSeries(s) {
   if (!s) return;
   $("#seriesTitle").textContent = s.name;
+  const code = s.search || s.fred || s.yahoo || s.id;
   $("#seriesBody").innerHTML = `
-    <p><code>${escapeHtml(s.search || s.sub || s.id)}</code> · ${s.layer} · ${s.freq || "?"}</p>
-    <p><strong>Latest:</strong> ${s.latest == null ? "empty" : fmt(s.latest)} <span class="muted">${s.units || ""}</span></p>
-    ${s.note ? `<p class="muted">${escapeHtml(s.note)}</p>` : ""}
-    <p><strong>As-of:</strong> ${fmtAsOf(s.asOf)}</p>
-    <p><strong>1y z:</strong> ${fmtZ(s.z1y)} · <strong>2y z:</strong> ${fmtZ(s.z2y)} · <strong>5y z:</strong> ${fmtZ(s.z5y)}</p>
-    <p><strong>1y %ile:</strong> ${fmtPct(s.pct1y)} · <strong>2y %ile:</strong> ${fmtPct(s.pct2y)} · <strong>5y %ile:</strong> ${fmtPct(s.pct5y)}</p>
-    <p><strong>Sign for lights:</strong> ${s.sign} ${s.note ? "· " + s.note : ""}</p>
-    <p><strong>Source:</strong> ${escapeHtml(s.source || "")}${
-      s.sourceUrl
-        ? ` · <a href="${s.sourceUrl}" target="_blank" rel="noopener">open</a>`
-        : ""
-    }</p>
-    ${s.error ? `<p class="empty">Error: ${escapeHtml(s.error)}</p>` : ""}
+    <div class="series-sheet">
+      ${s.note ? `<p class="series-blurb">${escapeHtml(s.note)}</p>` : ""}
+      <p class="series-meta"><code>${escapeHtml(code)}</code> · ${escapeHtml(s.layer || "")} · ${escapeHtml(s.freq || "?")}</p>
+      <dl class="series-stats">
+        <div><dt>Latest</dt><dd>${s.latest == null ? "empty" : fmt(s.latest)}${s.units ? ` <span class="muted">${escapeHtml(s.units)}</span>` : ""}</dd></div>
+        <div><dt>As-of</dt><dd>${fmtAsOf(s.asOf)}</dd></div>
+        <div><dt>z</dt><dd>1y ${fmtZ(s.z1y)} · 2y ${fmtZ(s.z2y)} · 5y ${fmtZ(s.z5y)}</dd></div>
+        <div><dt>Percentile</dt><dd>1y ${fmtPct(s.pct1y)} · 2y ${fmtPct(s.pct2y)} · 5y ${fmtPct(s.pct5y)}</dd></div>
+        <div><dt>Source</dt><dd>${escapeHtml(s.source || "—")}${
+          s.sourceUrl
+            ? ` · <a href="${s.sourceUrl}" target="_blank" rel="noopener">open</a>`
+            : ""
+        }</dd></div>
+      </dl>
+      ${s.error ? `<p class="empty">${escapeHtml(s.error)}</p>` : ""}
+    </div>
   `;
   $("#dlgSeries").showModal();
+  document.body.classList.add("dlg-open");
 }
 
 function renderFormula(snap) {
   const h = `${statHorizon}y`;
   $("#formulaBody").innerHTML = `
-    <p>Per light: median of member scores (each = mean of sign×${h} z and flipped ${h} %ile). The 1·2·5 control sets that window for lights, the regime story, the table, and charts. Clubs are small complementary sets; Street table keeps the rest. Score &gt;+0.45 / &lt;−0.45 paints the word. Inflation upside = hot.</p>
+    <p>Per light: median of member scores (each = mean of sign×${h} z and flipped ${h} percentile). The 1·2·5 control sets that window for lights, the table, and charts. Clubs are small complementary sets; Street table keeps the rest. Score &gt;+0.45 / &lt;−0.45 paints the word. Inflation upside = hot.</p>
     <p><strong>Net liquidity:</strong> <code>${escapeHtml(snap.formula?.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></p>
     <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(snap.formula?.stockBondCorr || "")}</code></p>
     <p class="muted">Per-series sign flips “higher” into easing vs tightening for that light. Inflation light treats upside as hot.</p>
@@ -1033,53 +1133,41 @@ async function boot() {
     if (!res.ok) throw new Error("snapshot.json missing — run npm run ingest");
     SNAP = await res.json();
   } catch (e) {
-    $("#sentence").innerHTML = `<span class="empty">${escapeHtml(
-      e.message || String(e)
-    )}</span>`;
+    const lights = $("#lights");
+    if (lights) {
+      lights.innerHTML = `<p class="empty" style="padding:10px">${escapeHtml(
+        e.message || String(e)
+      )}</p>`;
+    }
     return;
   }
 
   const snap = viewOf(SNAP);
-  $("#sentence").innerHTML = buildSentence(snap);
   renderLights(snap);
   renderTabs(SNAP);
   renderTable(snap);
-  renderFormula(snap);
-  renderAboutMeta(SNAP);
+  renderRegimeToday();
 
-  $("#btnAbout").onclick = () => $("#dlgAbout").showModal();
+  try {
+    const rr = await fetch("./regime-today.json", { cache: "no-store" });
+    if (rr.ok) {
+      REGIME = await rr.json();
+      renderRegimeToday();
+    }
+  } catch (_) {
+    /* bake optional until first npm run bake:regime */
+  }
 
-  // Backdrop click closes any dialog; regime sheet also closes on tap inside (read-only).
-  document.querySelectorAll("dialog").forEach((dlg) => {
+  document.querySelectorAll("dialog.dlg-tap").forEach((dlg) => {
     dlg.addEventListener("click", (e) => {
-      if (e.target === dlg) {
-        dlg.close();
-        return;
-      }
-      if (dlg.id !== "dlgSentence") return;
-      if (e.target.closest("a, button, input, textarea, select, label")) return;
-      dlg.close();
+      if (e.target === dlg) dlg.close();
     });
     dlg.addEventListener("close", () => {
-      // Dialog restore-focus can leave a blue ring on the regime box after tap-close.
-      requestAnimationFrame(() => {
-        const sent = $("#sentence");
-        if (sent && document.activeElement === sent) sent.blur();
-      });
+      if (![...document.querySelectorAll("dialog.dlg-tap")].some((d) => d.open)) {
+        document.body.classList.remove("dlg-open");
+      }
     });
   });
-
-  const sent = $("#sentence");
-  if (sent) {
-    sent.style.cursor = "pointer";
-    sent.onclick = () => openSentence(viewOf(SNAP));
-    sent.onkeydown = (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openSentence(viewOf(SNAP));
-      }
-    };
-  }
 
   syncViewControls();
   $("#btnViewMode").onclick = () => {
@@ -1093,16 +1181,19 @@ async function boot() {
     statHorizon = next;
     syncViewControls();
     refreshViews();
-    renderFormula(viewOf(SNAP));
     if (globalView === "charts" || [...rowFlip].length) paintSparks();
   };
 
-  // Tap light → teach first; Show series CTA jumps to Street tab
   $("#lights").onclick = (e) => {
     const card = e.target.closest(".light[data-id]");
     if (!card) return;
     openLight(card.dataset.id);
   };
+
+  $("#regimeToday")?.addEventListener("click", () => {
+    if (!SNAP) return;
+    openSentence(viewOf(SNAP));
+  });
 
   $("#dlgLight")?.addEventListener("close", () => {
     const dlg = $("#dlgLight");

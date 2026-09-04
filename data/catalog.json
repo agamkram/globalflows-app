@@ -1,6 +1,6 @@
 {
   "title": "GlobalFlows series book",
-  "note": "Flexible catalog \u2014 hang series on layers; empty cell > fake number.",
+  "note": "Flexible catalog — hang series on layers; empty cell > fake number.",
   "layers": [
     {
       "id": "liquidity",
@@ -57,30 +57,32 @@
       "sign": 1,
       "light": "liquidity",
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
-      "sub": "WALCL",
+      "sub": "Bonds & MBS the Fed owns",
       "search": "WALCL",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "note": "Fed's total balance-sheet assets. Rising = more liquidity into the system."
     },
     {
       "id": "WRESBAL",
-      "name": "Reserves",
+      "name": "Bank reserves at Fed",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "WRESBAL",
-      "units": "USD bn",
+      "units": "USD mn",
       "freq": "weekly",
       "sign": 1,
       "light": "liquidity",
       "sourceUrl": "https://fred.stlouisfed.org/series/WRESBAL",
-      "sub": "WRESBAL",
+      "sub": "Cash banks park at Fed",
       "search": "WRESBAL",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "note": "Cash banks hold at the Fed. Falling reserves often mean tighter money-market conditions."
     },
     {
       "id": "RRPONTSYD",
-      "name": "ON RRP",
+      "name": "Overnight reverse repo",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "RRPONTSYD",
@@ -88,33 +90,33 @@
       "freq": "daily",
       "sign": -1,
       "light": "liquidity",
-      "note": "Rise parks cash \u2192 drains market liquidity",
+      "note": "Overnight reverse repo — cash parked at the Fed. Rise drains money available to markets.",
       "sourceUrl": "https://fred.stlouisfed.org/series/RRPONTSYD",
-      "sub": "RRPONTSYD",
+      "sub": "Cash parked at the Fed",
       "search": "RRPONTSYD",
       "causal": "liquidity",
       "street": "liquidity"
     },
     {
       "id": "WTREGEN",
-      "name": "TGA",
+      "name": "Treasury cash account",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "WTREGEN",
-      "units": "USD bn",
+      "units": "USD mn",
       "freq": "weekly",
       "sign": -1,
       "light": "liquidity",
-      "note": "Rise drains bank reserves",
+      "note": "Treasury General Account — the government's Fed checking account. Rise pulls reserves out of banks.",
       "sourceUrl": "https://fred.stlouisfed.org/series/WTREGEN",
-      "sub": "WTREGEN",
+      "sub": "Gov checking acct at Fed",
       "search": "WTREGEN",
       "causal": "liquidity",
       "street": "liquidity"
     },
     {
       "id": "WSHOSHO",
-      "name": "Fed securities held outright",
+      "name": "Fed securities held",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "WSHOSHO",
@@ -122,15 +124,16 @@
       "freq": "weekly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/WSHOSHO",
-      "sub": "WSHOSHO",
+      "sub": "QE bonds Fed still owns",
       "search": "WSHOSHO",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Securities the Fed holds outright (QE stock). Core of balance-sheet liquidity."
     },
     {
       "id": "M2SL",
-      "name": "US M2",
+      "name": "US money supply (M2)",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "M2SL",
@@ -138,11 +141,12 @@
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/M2SL",
-      "sub": "M2SL",
+      "sub": "Cash, checking, savings",
       "search": "M2SL",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Broad US money supply (cash, checking, savings). Slow growth can signal tight credit."
     },
     {
       "id": "TOTLL",
@@ -154,15 +158,16 @@
       "freq": "weekly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
-      "sub": "TOTLL",
+      "sub": "Bank credit outstanding",
       "search": "TOTLL",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Total bank loans & leases. Credit still flowing to the real economy."
     },
     {
       "id": "BUSLOANS",
-      "name": "Commercial & industrial loans",
+      "name": "Business bank loans",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "BUSLOANS",
@@ -170,15 +175,16 @@
       "freq": "weekly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/BUSLOANS",
-      "sub": "BUSLOANS",
+      "sub": "C&I lending to firms",
       "search": "BUSLOANS",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Bank lending to businesses. Soft = firms borrowing less or banks tightening."
     },
     {
       "id": "GFDEBTN",
-      "name": "US debt",
+      "name": "US federal debt",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "GFDEBTN",
@@ -186,11 +192,12 @@
       "freq": "quarterly",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/GFDEBTN",
-      "sub": "GFDEBTN",
+      "sub": "Total Treasury debt stock",
       "search": "GFDEBTN",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Total US federal debt outstanding. Stock of government paper, not the monthly deficit."
     },
     {
       "id": "TRESEGCNM052N",
@@ -203,11 +210,12 @@
       "sign": 1,
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/TRESEGCNM052N",
-      "sub": "TRESEGCNM052N",
+      "sub": "China's dollar & FX stash",
       "search": "TRESEGCNM052N",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "China's foreign-exchange reserves. Proxy for Asia USD liquidity and China capital flows."
     },
     {
       "id": "ECBASSETS",
@@ -219,32 +227,34 @@
       "freq": "weekly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/ECBASSETSW",
-      "sub": "ECBASSETSW",
+      "sub": "Bonds & loans ECB owns",
       "search": "ECBASSETSW",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "European Central Bank balance sheet. Euro-area QE/QT pulse."
     },
     {
       "id": "JPNASSETS",
-      "name": "BoJ assets",
+      "name": "Bank of Japan assets",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "JPNASSETS",
-      "units": "\u00a5100m",
+      "units": "¥100m",
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/JPNASSETS",
       "optional": true,
-      "sub": "JPNASSETS",
+      "sub": "Bonds, ETFs, loans",
       "search": "JPNASSETS",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Bank of Japan assets. Japan still a huge global liquidity source."
     },
     {
       "id": "SOFR",
-      "name": "SOFR",
+      "name": "SOFR overnight rate",
       "layer": "liquidity",
       "pipe": "nyfed",
       "nyfed": "sofr",
@@ -252,15 +262,16 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
-      "sub": "NY Fed SOFR",
-      "search": "NY Fed SOFR",
+      "sub": "Secured overnight funding",
+      "search": "SOFR",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Secured Overnight Financing Rate — US overnight secured funding cost. Higher = tighter cash."
     },
     {
       "id": "EFFR",
-      "name": "EFFR",
+      "name": "Fed funds rate",
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "DFF",
@@ -268,11 +279,12 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFF",
-      "sub": "DFF",
+      "sub": "Where bank reserves trade",
       "search": "DFF",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null
+      "light": null,
+      "note": "Effective Federal Funds Rate — where overnight bank reserves actually trade vs the Fed target."
     },
     {
       "id": "NET_LIQ",
@@ -286,15 +298,15 @@
       "light": "liquidity",
       "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
-      "note": "WALCL \u2212 TGA \u2212 ON RRP (WALCL scaled to bn)",
-      "sub": "WALCL\u2212TGA\u2212RRP",
-      "search": "WALCL\u2212TGA\u2212RRP",
+      "note": "Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.",
+      "sub": "Fed assets − TGA − ON RRP",
+      "search": "NET_LIQ",
       "causal": "liquidity",
       "street": "liquidity"
     },
     {
       "id": "DGS3MO",
-      "name": "US 3m",
+      "name": "US 3-month yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DGS3MO",
@@ -303,14 +315,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS3MO",
-      "sub": "DGS3MO",
+      "sub": "Short T-bill rate",
       "search": "DGS3MO",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "3-month Treasury yield. Short-rate anchor near Fed policy."
     },
     {
       "id": "DGS2",
-      "name": "US 2y",
+      "name": "US 2-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DGS2",
@@ -319,14 +332,15 @@
       "sign": -1,
       "light": "transmission",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS2",
-      "sub": "DGS2",
+      "sub": "Near-term Fed path",
       "search": "DGS2",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "2-year Treasury yield. Highly sensitive to near-term Fed path."
     },
     {
       "id": "DGS5",
-      "name": "US 5y",
+      "name": "US 5-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DGS5",
@@ -334,15 +348,16 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS5",
-      "sub": "DGS5",
+      "sub": "Medium-term rate",
       "search": "DGS5",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "5-year Treasury yield. Mid-curve — mix of policy path and growth/inflation views."
     },
     {
       "id": "DGS10",
-      "name": "US 10y",
+      "name": "US 10-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DGS10",
@@ -351,14 +366,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-      "sub": "DGS10",
+      "sub": "Benchmark long bond",
       "search": "DGS10",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "10-year Treasury yield. Benchmark long rate for mortgages, corporates, and risk assets."
     },
     {
       "id": "DGS30",
-      "name": "US 30y",
+      "name": "US 30-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DGS30",
@@ -366,15 +382,16 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS30",
-      "sub": "DGS30",
+      "sub": "Ultra-long bond rate",
       "search": "DGS30",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "30-year Treasury yield. Ultra-long duration; sensitive to term premium and fiscal supply."
     },
     {
       "id": "T10Y2Y",
-      "name": "2s10s",
+      "name": "2s10s curve",
       "layer": "rates",
       "pipe": "fred",
       "fred": "T10Y2Y",
@@ -382,16 +399,16 @@
       "freq": "daily",
       "sign": 1,
       "light": "transmission",
-      "note": "Steeper = easier long-end conditions (context-dependent)",
+      "note": "10y minus 2y curve. Negative (inverted) often warns of slowdown; steepening can ease long-end conditions.",
       "sourceUrl": "https://fred.stlouisfed.org/series/T10Y2Y",
-      "sub": "T10Y2Y",
+      "sub": "10y minus 2y spread",
       "search": "T10Y2Y",
       "causal": "transmission",
       "street": "rates"
     },
     {
       "id": "T10Y3M",
-      "name": "3m10s",
+      "name": "3m10s curve",
       "layer": "rates",
       "pipe": "fred",
       "fred": "T10Y3M",
@@ -399,15 +416,16 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/T10Y3M",
-      "sub": "T10Y3M",
+      "sub": "10y minus 3m spread",
       "search": "T10Y3M",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "10y minus 3m curve. Another recession-signal spread; deeper inversion = tighter credit impulse."
     },
     {
       "id": "DFII5",
-      "name": "5y real",
+      "name": "5-year real yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DFII5",
@@ -416,14 +434,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII5",
-      "sub": "DFII5",
+      "sub": "TIPS inflation-adjusted",
       "search": "DFII5",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "5-year TIPS real yield. Cost of real (inflation-adjusted) money for the medium term."
     },
     {
       "id": "DFII10",
-      "name": "10y real",
+      "name": "10-year real yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "DFII10",
@@ -432,14 +451,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
-      "sub": "DFII10",
+      "sub": "TIPS inflation-adjusted",
       "search": "DFII10",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "10-year TIPS real yield. Higher real yields = tighter financial conditions for risk assets."
     },
     {
       "id": "T5YIE",
-      "name": "5y BEI",
+      "name": "5-year inflation bet",
       "layer": "rates",
       "pipe": "fred",
       "fred": "T5YIE",
@@ -447,15 +467,16 @@
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/T5YIE",
-      "sub": "T5YIE",
+      "sub": "Market CPI expectation",
       "search": "T5YIE",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "5-year breakeven inflation — market's expected average CPI over 5 years."
     },
     {
       "id": "T10YIE",
-      "name": "10y BEI",
+      "name": "10-year inflation bet",
       "layer": "rates",
       "pipe": "fred",
       "fred": "T10YIE",
@@ -463,11 +484,12 @@
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/T10YIE",
-      "sub": "T10YIE",
+      "sub": "Market CPI expectation",
       "search": "T10YIE",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "10-year breakeven inflation — market's long-run inflation pricing."
     },
     {
       "id": "T5YIFR",
@@ -479,15 +501,16 @@
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/T5YIFR",
-      "sub": "T5YIFR",
+      "sub": "Inflation 5–10y ahead",
       "search": "T5YIFR",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "5y5y forward inflation — inflation expected 5–10 years out. Fed's preferred long-run gauge."
     },
     {
       "id": "DTWEXBGS",
-      "name": "Fed broad dollar TWI",
+      "name": "Broad US dollar index",
       "layer": "fx",
       "pipe": "fred",
       "fred": "DTWEXBGS",
@@ -495,16 +518,16 @@
       "freq": "daily",
       "sign": -1,
       "light": "transmission",
-      "note": "Stronger dollar = tighter USD liquidity abroad",
+      "note": "Fed broad dollar trade-weighted index. Stronger dollar = tighter USD liquidity abroad.",
       "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
-      "sub": "DTWEXBGS",
+      "sub": "USD vs trading partners",
       "search": "DTWEXBGS",
       "causal": "transmission",
       "street": "fx"
     },
     {
       "id": "RBUSBIS",
-      "name": "BIS USD REER",
+      "name": "Real dollar index",
       "layer": "fx",
       "pipe": "fred",
       "fred": "RBUSBIS",
@@ -513,15 +536,16 @@
       "sign": -1,
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/RBUSBIS",
-      "sub": "RBUSBIS",
+      "sub": "Inflation-adjusted USD",
       "search": "RBUSBIS",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "BIS real effective USD — inflation-adjusted dollar strength vs trading partners."
     },
     {
       "id": "IRLTLT01DEM156N",
-      "name": "Bund 10y",
+      "name": "German 10-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "IRLTLT01DEM156N",
@@ -529,15 +553,16 @@
       "freq": "monthly",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-      "sub": "IRLTLT01DEM156N",
+      "sub": "Bund risk-free rate",
       "search": "IRLTLT01DEM156N",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "German 10-year Bund yield. Euro risk-free long rate."
     },
     {
       "id": "IRLTLT01GBM156N",
-      "name": "Gilt 10y",
+      "name": "UK 10-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "IRLTLT01GBM156N",
@@ -545,15 +570,16 @@
       "freq": "monthly",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01GBM156N",
-      "sub": "IRLTLT01GBM156N",
+      "sub": "Gilt risk-free rate",
       "search": "IRLTLT01GBM156N",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "UK 10-year Gilt yield. UK risk-free long rate."
     },
     {
       "id": "IRLTLT01JPM156N",
-      "name": "JGB 10y",
+      "name": "Japan 10-year yield",
       "layer": "rates",
       "pipe": "fred",
       "fred": "IRLTLT01JPM156N",
@@ -561,15 +587,16 @@
       "freq": "monthly",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01JPM156N",
-      "sub": "IRLTLT01JPM156N",
+      "sub": "JGB risk-free rate",
       "search": "IRLTLT01JPM156N",
       "causal": "transmission",
       "street": "rates",
-      "light": null
+      "light": null,
+      "note": "Japan 10-year JGB yield. Global duration and BoJ policy pulse."
     },
     {
       "id": "MOVE",
-      "name": "MOVE",
+      "name": "Bond volatility (MOVE)",
       "layer": "rates",
       "pipe": "yahoo",
       "yahoo": "^MOVE",
@@ -578,14 +605,15 @@
       "sign": -1,
       "light": "transmission",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EMOVE",
-      "sub": "^MOVE",
+      "sub": "Fear gauge for Treasuries",
       "search": "^MOVE",
       "causal": "transmission",
-      "street": "rates"
+      "street": "rates",
+      "note": "ICE BofA MOVE — implied vol on Treasuries. Bond-market fear gauge (VIX for rates)."
     },
     {
       "id": "DXY",
-      "name": "DXY",
+      "name": "Dollar index (DXY)",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "DX-Y.NYB",
@@ -594,14 +622,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://finance.yahoo.com/quote/DX-Y.NYB",
-      "sub": "DX-Y.NYB",
+      "sub": "USD vs major currencies",
       "search": "DX-Y.NYB",
       "causal": "transmission",
-      "street": "fx"
+      "street": "fx",
+      "note": "ICE US Dollar Index vs majors (EUR, JPY, GBP, CAD, SEK, CHF). Classic DXY tape."
     },
     {
       "id": "EURUSD",
-      "name": "EURUSD",
+      "name": "Euro vs dollar",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "EURUSD=X",
@@ -609,24 +638,25 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/EURUSD=X",
-      "sub": "EURUSD=X",
+      "sub": "Higher = stronger euro",
       "search": "EURUSD=X",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "Euros per dollar. Higher = stronger euro / weaker dollar."
     },
     {
       "id": "USDJPY",
-      "name": "USDJPY",
+      "name": "Dollar vs yen",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "JPY=X",
       "units": "FX",
       "freq": "daily",
       "sign": -1,
-      "note": "Higher = stronger USD vs JPY",
+      "note": "Yen per dollar. Higher = stronger dollar vs yen (often risk-off or rate-gap driven).",
       "sourceUrl": "https://finance.yahoo.com/quote/JPY=X",
-      "sub": "JPY=X",
+      "sub": "Higher = stronger dollar",
       "search": "JPY=X",
       "causal": "transmission",
       "street": "fx",
@@ -634,7 +664,7 @@
     },
     {
       "id": "USDCNH",
-      "name": "USDCNH",
+      "name": "Dollar vs yuan",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "USDCNY=X",
@@ -642,15 +672,16 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://finance.yahoo.com/quote/USDCNY=X",
-      "sub": "USDCNY=X",
+      "sub": "Higher = weaker yuan",
       "search": "USDCNY=X",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "Offshore yuan per dollar. Higher = weaker CNH; China/EM stress tell."
     },
     {
       "id": "GBPUSD",
-      "name": "GBPUSD",
+      "name": "Pound vs dollar",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "GBPUSD=X",
@@ -658,15 +689,16 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/GBPUSD=X",
-      "sub": "GBPUSD=X",
+      "sub": "Higher = stronger pound",
       "search": "GBPUSD=X",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "Pounds per dollar. Higher = stronger sterling."
     },
     {
       "id": "AUDUSD",
-      "name": "AUDUSD",
+      "name": "Aussie vs dollar",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "AUDUSD=X",
@@ -674,15 +706,16 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/AUDUSD=X",
-      "sub": "AUDUSD=X",
+      "sub": "Risk & commodity FX",
       "search": "AUDUSD=X",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "Aussie dollar vs USD. Risk/commodity-linked FX."
     },
     {
       "id": "USDMXN",
-      "name": "USDMXN",
+      "name": "Dollar vs peso",
       "layer": "fx",
       "pipe": "yahoo",
       "yahoo": "MXN=X",
@@ -690,11 +723,12 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://finance.yahoo.com/quote/MXN=X",
-      "sub": "MXN=X",
+      "sub": "Higher = weaker peso",
       "search": "MXN=X",
       "causal": "transmission",
       "street": "fx",
-      "light": null
+      "light": null,
+      "note": "Pesos per dollar. Higher = weaker peso; EM stress proxy."
     },
     {
       "id": "STICKY_CPI",
@@ -707,10 +741,11 @@
       "sign": 0,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/STICKCPIM157SFRBATL",
-      "sub": "STICKCPIM157SFRBATL",
+      "sub": "Prices that rarely change",
       "search": "STICKCPIM157SFRBATL",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "Atlanta Fed sticky CPI — prices that change rarely. Persistence of inflation."
     },
     {
       "id": "INDPRO",
@@ -723,14 +758,15 @@
       "sign": 1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/INDPRO",
-      "sub": "INDPRO",
+      "sub": "Factory & utility output",
       "search": "INDPRO",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "US industrial production index. Factory and utility output pulse."
     },
     {
       "id": "PAYEMS",
-      "name": "NFP",
+      "name": "Nonfarm payrolls",
       "layer": "economy",
       "pipe": "fred",
       "fred": "PAYEMS",
@@ -740,14 +776,16 @@
       "light": "growth",
       "transform": "diff",
       "sourceUrl": "https://fred.stlouisfed.org/series/PAYEMS",
-      "sub": "PAYEMS",
+      "sub": "Monthly jobs added",
       "search": "PAYEMS",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Nonfarm payrolls — monthly jobs added. Headline labor-market print.",
+      "weight": 2
     },
     {
       "id": "UNRATE",
-      "name": "Unemployment",
+      "name": "Unemployment rate",
       "layer": "economy",
       "pipe": "fred",
       "fred": "UNRATE",
@@ -756,14 +794,16 @@
       "sign": -1,
       "light": "growth",
       "sourceUrl": "https://fred.stlouisfed.org/series/UNRATE",
-      "sub": "UNRATE",
+      "sub": "Share of labor force idle",
       "search": "UNRATE",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Unemployment rate. Rising = labor market cooling (soft for growth).",
+      "weight": 1
     },
     {
       "id": "ICSA",
-      "name": "Initial claims",
+      "name": "Initial jobless claims",
       "layer": "economy",
       "pipe": "fred",
       "fred": "ICSA",
@@ -772,10 +812,11 @@
       "sign": -1,
       "light": "growth",
       "sourceUrl": "https://fred.stlouisfed.org/series/ICSA",
-      "sub": "ICSA",
+      "sub": "New weekly unemployment",
       "search": "ICSA",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Initial jobless claims — weekly new unemployment filings. Fast labor stress tell."
     },
     {
       "id": "CCSA",
@@ -787,15 +828,16 @@
       "freq": "weekly",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/CCSA",
-      "sub": "CCSA",
+      "sub": "Still on unemployment",
       "search": "CCSA",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "Continuing claims — people still on unemployment. Stickier labor softening."
     },
     {
       "id": "JTSJOL",
-      "name": "JOLTS openings",
+      "name": "Job openings",
       "layer": "economy",
       "pipe": "fred",
       "fred": "JTSJOL",
@@ -804,14 +846,15 @@
       "sign": 1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSJOL",
-      "sub": "JTSJOL",
+      "sub": "Unfilled jobs (JOLTS)",
       "search": "JTSJOL",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "JOLTS job openings. Labor demand; falling openings = cooling."
     },
     {
       "id": "JTSQUR",
-      "name": "JOLTS quit rate",
+      "name": "Quit rate",
       "layer": "economy",
       "pipe": "fred",
       "fred": "JTSQUR",
@@ -819,15 +862,16 @@
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSQUR",
-      "sub": "JTSQUR",
+      "sub": "Workers leaving jobs",
       "search": "JTSQUR",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "JOLTS quit rate. Workers' confidence quitting — high = tight labor market."
     },
     {
       "id": "CES0500000003",
-      "name": "Avg hourly earnings",
+      "name": "Average hourly earnings",
       "layer": "economy",
       "pipe": "fred",
       "fred": "CES0500000003",
@@ -835,11 +879,12 @@
       "freq": "monthly",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/CES0500000003",
-      "sub": "CES0500000003",
+      "sub": "Wage growth pulse",
       "search": "CES0500000003",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "Average hourly earnings. Wage pressure into inflation and margins."
     },
     {
       "id": "RSAFS",
@@ -852,10 +897,11 @@
       "sign": 1,
       "light": "growth",
       "sourceUrl": "https://fred.stlouisfed.org/series/RSAFS",
-      "sub": "RSAFS",
+      "sub": "Consumer spending",
       "search": "RSAFS",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Advance retail sales. Consumer spending pulse (nominal)."
     },
     {
       "id": "DGORDER",
@@ -867,11 +913,12 @@
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGORDER",
-      "sub": "DGORDER",
+      "sub": "Big-ticket factory demand",
       "search": "DGORDER",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "Durable goods orders. Capex and goods-demand lead."
     },
     {
       "id": "HOUST",
@@ -883,11 +930,12 @@
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/HOUST",
-      "sub": "HOUST",
+      "sub": "New homes begun",
       "search": "HOUST",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "Housing starts. New residential construction — rate-sensitive growth."
     },
     {
       "id": "PERMIT",
@@ -899,15 +947,16 @@
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/PERMIT",
-      "sub": "PERMIT",
+      "sub": "OK to start building",
       "search": "PERMIT",
       "causal": "labels",
       "street": "economy",
-      "light": null
+      "light": null,
+      "note": "Building permits. Forward look at housing starts."
     },
     {
       "id": "CPIAUCSL",
-      "name": "CPI",
+      "name": "Headline CPI",
       "layer": "inflation",
       "pipe": "fred",
       "fred": "CPIAUCSL",
@@ -917,10 +966,11 @@
       "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CPIAUCSL",
-      "sub": "CPIAUCSL",
+      "sub": "All-items consumer prices",
       "search": "CPIAUCSL",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "Headline CPI (all items). What households feel; noisy month to month."
     },
     {
       "id": "CPILFESL",
@@ -934,14 +984,16 @@
       "light": "inflation",
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CPILFESL",
-      "sub": "CPILFESL",
+      "sub": "CPI ex food & energy",
       "search": "CPILFESL",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "Core CPI (ex food & energy). Fed's preferred CPI underlying read.",
+      "weight": 1
     },
     {
       "id": "PCEPI",
-      "name": "PCE",
+      "name": "Headline PCE",
       "layer": "inflation",
       "pipe": "fred",
       "fred": "PCEPI",
@@ -951,10 +1003,11 @@
       "light": null,
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PCEPI",
-      "sub": "PCEPI",
+      "sub": "Fed's inflation basket",
       "search": "PCEPI",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "Headline PCE price index — Fed's official inflation target basket."
     },
     {
       "id": "PCEPILFE",
@@ -968,14 +1021,16 @@
       "light": "inflation",
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PCEPILFE",
-      "sub": "PCEPILFE",
+      "sub": "PCE ex food & energy",
       "search": "PCEPILFE",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "Core PCE (ex food & energy). The Fed's main inflation target series.",
+      "weight": 2
     },
     {
       "id": "MICH",
-      "name": "UMich infl exp",
+      "name": "Inflation expectations",
       "layer": "inflation",
       "pipe": "fred",
       "fred": "MICH",
@@ -984,10 +1039,12 @@
       "sign": 0,
       "light": "inflation",
       "sourceUrl": "https://fred.stlouisfed.org/series/MICH",
-      "sub": "MICH",
+      "sub": "Households' 1y CPI view",
       "search": "MICH",
       "causal": "labels",
-      "street": "inflation"
+      "street": "inflation",
+      "note": "UMich 1-year inflation expectations. Household inflation psychology.",
+      "weight": 1
     },
     {
       "id": "GDPC1",
@@ -1002,10 +1059,11 @@
       "transform": "yoy",
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/GDPC1",
-      "sub": "GDPC1",
+      "sub": "Economy-wide growth",
       "search": "GDPC1",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Real GDP (chained). Quarterly growth of the whole economy."
     },
     {
       "id": "COPPER",
@@ -1018,14 +1076,15 @@
       "sign": 1,
       "light": "growth",
       "sourceUrl": "https://finance.yahoo.com/quote/HG=F",
-      "sub": "HG=F",
+      "sub": "Industrial metal / growth",
       "search": "HG=F",
       "causal": "labels",
-      "street": "economy"
+      "street": "economy",
+      "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy."
     },
     {
       "id": "VIX",
-      "name": "VIX",
+      "name": "Equity volatility (VIX)",
       "layer": "conditions",
       "pipe": "yahoo",
       "yahoo": "^VIX",
@@ -1034,14 +1093,15 @@
       "sign": -1,
       "light": "risk",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EVIX",
-      "sub": "^VIX",
+      "sub": "S&P 500 fear gauge",
       "search": "^VIX",
       "causal": "risk",
-      "street": "conditions"
+      "street": "conditions",
+      "note": "Cboe VIX — 30-day implied vol on the S&P 500. Equity fear gauge."
     },
     {
       "id": "BAMLH0A0HYM2",
-      "name": "HY OAS",
+      "name": "High-yield spread",
       "layer": "conditions",
       "pipe": "fred",
       "fred": "BAMLH0A0HYM2",
@@ -1050,14 +1110,15 @@
       "sign": -1,
       "light": "risk",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
-      "sub": "BAMLH0A0HYM2",
+      "sub": "Extra yield on junk bonds",
       "search": "BAMLH0A0HYM2",
       "causal": "risk",
-      "street": "conditions"
+      "street": "conditions",
+      "note": "ICE BofA high-yield OAS. Extra yield junk bonds demand over Treasuries. Credit stress."
     },
     {
       "id": "BAMLC0A0CM",
-      "name": "IG OAS",
+      "name": "IG credit spread",
       "layer": "conditions",
       "pipe": "fred",
       "fred": "BAMLC0A0CM",
@@ -1066,14 +1127,15 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
-      "sub": "BAMLC0A0CM",
+      "sub": "Extra yield on IG bonds",
       "search": "BAMLC0A0CM",
       "causal": "risk",
-      "street": "conditions"
+      "street": "conditions",
+      "note": "ICE BofA investment-grade OAS. Extra yield on IG corporates — milder credit stress."
     },
     {
       "id": "NFCI",
-      "name": "NFCI",
+      "name": "Financial conditions",
       "layer": "conditions",
       "pipe": "fred",
       "fred": "NFCI",
@@ -1081,16 +1143,16 @@
       "freq": "weekly",
       "sign": -1,
       "light": "risk",
-      "note": "Higher = tighter financial conditions",
+      "note": "Chicago Fed National Financial Conditions Index. Higher = tighter US financial conditions.",
       "sourceUrl": "https://fred.stlouisfed.org/series/NFCI",
-      "sub": "NFCI",
+      "sub": "Chicago Fed stress index",
       "search": "NFCI",
       "causal": "risk",
       "street": "conditions"
     },
     {
       "id": "ANFCI",
-      "name": "ANFCI",
+      "name": "Adjusted financial cond.",
       "layer": "conditions",
       "pipe": "fred",
       "fred": "ANFCI",
@@ -1098,11 +1160,12 @@
       "freq": "weekly",
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/ANFCI",
-      "sub": "ANFCI",
+      "sub": "NFCI minus growth effects",
       "search": "ANFCI",
       "causal": "risk",
       "street": "conditions",
-      "light": null
+      "light": null,
+      "note": "Adjusted NFCI — strips out economic activity so it's more about pure financial stress."
     },
     {
       "id": "SPX",
@@ -1114,11 +1177,12 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/%5EGSPC",
-      "sub": "^GSPC",
+      "sub": "US large-cap equities",
       "search": "^GSPC",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "S&P 500. Broad US large-cap equity risk appetite."
     },
     {
       "id": "NDX",
@@ -1130,11 +1194,12 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/%5ENDX",
-      "sub": "^NDX",
+      "sub": "US mega-cap / growth",
       "search": "^NDX",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "Nasdaq-100. US mega-cap / growth equity tape."
     },
     {
       "id": "RTY",
@@ -1146,11 +1211,12 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/%5ERUT",
-      "sub": "^RUT",
+      "sub": "US small-cap equities",
       "search": "^RUT",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "Russell 2000. US small-cap risk — more domestic and credit-sensitive."
     },
     {
       "id": "GOLD",
@@ -1162,11 +1228,12 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/GC=F",
-      "sub": "GC=F",
+      "sub": "Monetary metal / hedge",
       "search": "GC=F",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "Gold futures. Real-rate / dollar / fear hedge — treat as an output, not a cause."
     },
     {
       "id": "BTC",
@@ -1178,15 +1245,16 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/BTC-USD",
-      "sub": "BTC-USD",
+      "sub": "Crypto risk asset",
       "search": "BTC-USD",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "Bitcoin. Speculative liquidity-sensitive risk asset — output, not input."
     },
     {
       "id": "WTI",
-      "name": "WTI",
+      "name": "WTI crude oil",
       "layer": "markets",
       "pipe": "yahoo",
       "yahoo": "CL=F",
@@ -1194,15 +1262,16 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/CL=F",
-      "sub": "CL=F",
+      "sub": "US oil benchmark",
       "search": "CL=F",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "West Texas Intermediate crude. US oil benchmark."
     },
     {
       "id": "BRENT",
-      "name": "Brent",
+      "name": "Brent crude oil",
       "layer": "markets",
       "pipe": "yahoo",
       "yahoo": "BZ=F",
@@ -1210,27 +1279,29 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/BZ=F",
-      "sub": "BZ=F",
+      "sub": "Global oil benchmark",
       "search": "BZ=F",
       "causal": "assets",
       "street": "markets",
-      "light": null
+      "light": null,
+      "note": "Brent crude. Global oil benchmark."
     },
     {
       "id": "STOCK_BOND_CORR",
-      "name": "Stock\u2013bond 60d corr",
+      "name": "Stock–bond correlation",
       "layer": "conditions",
       "pipe": "derived",
       "derive": "stock_bond_corr",
-      "units": "\u03c1 60d",
+      "units": "ρ 60d",
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-      "sub": "SPX vs \u2212\u0394DGS10",
-      "search": "SPX vs \u2212\u0394DGS10",
+      "sub": "Stocks vs bonds co-move",
+      "search": "STOCK_BOND_CORR",
       "causal": "risk",
       "street": "conditions",
-      "light": null
+      "light": null,
+      "note": "60-day correlation of stocks vs bonds (sign-flipped). Rising together = less diversification."
     },
     {
       "id": "MTSDS133FMS",
@@ -1242,16 +1313,16 @@
       "units": "USD mn",
       "freq": "monthly",
       "sign": 0,
-      "note": "Surplus(+)/deficit(\u2212) \u2014 issuance pulse proxy",
+      "note": "Monthly federal budget balance. Deficit (−) means more Treasury issuance ahead.",
       "sourceUrl": "https://fred.stlouisfed.org/series/MTSDS133FMS",
       "layer": "liquidity",
-      "sub": "MTSDS133FMS",
+      "sub": "Monthly surplus/deficit",
       "search": "MTSDS133FMS",
       "light": null
     },
     {
       "id": "ROW_UST",
-      "name": "ROW UST holdings",
+      "name": "Foreign Treasury holdings",
       "street": "liquidity",
       "causal": "liquidity",
       "pipe": "fred",
@@ -1260,16 +1331,16 @@
       "freq": "quarterly",
       "sign": 1,
       "freshness": "lagged",
-      "note": "Rest-of-world Treasury securities (TIC-like)",
+      "note": "Foreign holdings of US Treasuries. Soft = overseas buyers stepping back.",
       "sourceUrl": "https://fred.stlouisfed.org/series/BOGZ1FL263061110Q",
       "layer": "liquidity",
-      "sub": "BOGZ1FL263061110Q",
+      "sub": "Overseas owners of USTs",
       "search": "BOGZ1FL263061110Q",
       "light": null
     },
     {
       "id": "TREAST",
-      "name": "Fed SOMA Treasuries",
+      "name": "Fed Treasury holdings",
       "street": "liquidity",
       "causal": "liquidity",
       "pipe": "fred",
@@ -1279,9 +1350,10 @@
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/TREAST",
       "layer": "liquidity",
-      "sub": "TREAST",
+      "sub": "Treasuries in Fed's SOMA",
       "search": "TREAST",
-      "light": null
+      "light": null,
+      "note": "Fed's SOMA Treasury holdings — the QE/QT Treasury piece of the balance sheet."
     },
     {
       "id": "FYGFDPUN",
@@ -1295,13 +1367,14 @@
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/FYGFDPUN",
       "layer": "liquidity",
-      "sub": "FYGFDPUN",
+      "sub": "Publicly financed debt",
       "search": "FYGFDPUN",
-      "light": null
+      "light": null,
+      "note": "Debt held by the public (ex Fed/gov accounts). The stock markets actually finance."
     },
     {
       "id": "DFEDTARU",
-      "name": "FF target upper",
+      "name": "Fed funds target (top)",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1312,12 +1385,13 @@
       "light": "transmission",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARU",
       "layer": "rates",
-      "sub": "DFEDTARU",
-      "search": "DFEDTARU"
+      "sub": "Policy rate ceiling",
+      "search": "DFEDTARU",
+      "note": "Top of the Fed's federal funds target range. Official policy rate ceiling."
     },
     {
       "id": "DFEDTARL",
-      "name": "FF target lower",
+      "name": "Fed funds target (low)",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1327,13 +1401,14 @@
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARL",
       "layer": "rates",
-      "sub": "DFEDTARL",
+      "sub": "Policy rate floor",
       "search": "DFEDTARL",
-      "light": null
+      "light": null,
+      "note": "Bottom of the Fed's federal funds target range. Official policy rate floor."
     },
     {
       "id": "MORTGAGE30US",
-      "name": "30y mortgage",
+      "name": "30-year mortgage rate",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1344,12 +1419,13 @@
       "light": "transmission",
       "sourceUrl": "https://fred.stlouisfed.org/series/MORTGAGE30US",
       "layer": "rates",
-      "sub": "MORTGAGE30US",
-      "search": "MORTGAGE30US"
+      "sub": "Home loan borrowing cost",
+      "search": "MORTGAGE30US",
+      "note": "Average 30-year fixed mortgage rate. Direct hit to housing and consumer duration."
     },
     {
       "id": "THREEFFTP10",
-      "name": "ACM TP 10y fwd",
+      "name": "10y term premium",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1358,15 +1434,15 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "note": "NY Fed ACM instantaneous forward term premium 10y",
+      "note": "NY Fed ACM 10y forward term premium — extra yield for long-bond risk, beyond rate-path expectations.",
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP10",
       "layer": "rates",
-      "sub": "THREEFFTP10",
+      "sub": "Extra pay for long bonds",
       "search": "THREEFFTP10"
     },
     {
       "id": "THREEFFTP2",
-      "name": "ACM TP 2y fwd",
+      "name": "2y term premium",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1376,13 +1452,14 @@
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP2",
       "layer": "rates",
-      "sub": "THREEFFTP2",
+      "sub": "Extra pay for rate risk",
       "search": "THREEFFTP2",
-      "light": null
+      "light": null,
+      "note": "NY Fed ACM 2y forward term premium — near-term bond risk premium."
     },
     {
       "id": "T10YFF",
-      "name": "10y\u2013FF spread",
+      "name": "10y vs fed funds",
       "street": "rates",
       "causal": "transmission",
       "pipe": "fred",
@@ -1392,13 +1469,14 @@
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/T10YFF",
       "layer": "rates",
-      "sub": "T10YFF",
+      "sub": "Long rate minus policy",
       "search": "T10YFF",
-      "light": null
+      "light": null,
+      "note": "10y yield minus fed funds. Positive steepness vs policy; compressed = tighter/longer-end caution."
     },
     {
       "id": "USDCHF",
-      "name": "USDCHF",
+      "name": "Dollar vs franc",
       "street": "fx",
       "causal": "transmission",
       "pipe": "yahoo",
@@ -1408,13 +1486,14 @@
       "sign": -1,
       "sourceUrl": "https://finance.yahoo.com/quote/CHF=X",
       "layer": "fx",
-      "sub": "CHF=X",
+      "sub": "Higher = stronger dollar",
       "search": "CHF=X",
-      "light": null
+      "light": null,
+      "note": "Swiss francs per dollar. Higher = stronger USD / weaker CHF safe-haven bid fading."
     },
     {
       "id": "USDCAD",
-      "name": "USDCAD",
+      "name": "Dollar vs loonie",
       "street": "fx",
       "causal": "transmission",
       "pipe": "yahoo",
@@ -1424,13 +1503,14 @@
       "sign": -1,
       "sourceUrl": "https://finance.yahoo.com/quote/CAD=X",
       "layer": "fx",
-      "sub": "CAD=X",
+      "sub": "Oil-sensitive FX",
       "search": "CAD=X",
-      "light": null
+      "light": null,
+      "note": "Canadian dollars per dollar. Oil- and NAFTA-sensitive cross."
     },
     {
       "id": "USDBRL",
-      "name": "USDBRL",
+      "name": "Dollar vs real",
       "street": "fx",
       "causal": "transmission",
       "pipe": "yahoo",
@@ -1438,16 +1518,16 @@
       "units": "FX",
       "freq": "daily",
       "sign": -1,
-      "note": "EM FX stress proxy",
+      "note": "Reais per dollar. Higher = weaker BRL; EM stress proxy.",
       "sourceUrl": "https://finance.yahoo.com/quote/BRL=X",
       "layer": "fx",
-      "sub": "BRL=X",
+      "sub": "Higher = weaker Brazil",
       "search": "BRL=X",
       "light": null
     },
     {
       "id": "EURJPY",
-      "name": "EURJPY",
+      "name": "Euro vs yen",
       "street": "fx",
       "causal": "transmission",
       "pipe": "yahoo",
@@ -1455,16 +1535,16 @@
       "units": "FX",
       "freq": "daily",
       "sign": 1,
-      "note": "Risk cross",
+      "note": "Euro vs yen. Classic risk-on cross — rises when risk appetite improves.",
       "sourceUrl": "https://finance.yahoo.com/quote/EURJPY=X",
       "layer": "fx",
-      "sub": "EURJPY=X",
+      "sub": "Risk appetite cross",
       "search": "EURJPY=X",
       "light": null
     },
     {
       "id": "EMPIRE_MFG",
-      "name": "Empire mfg",
+      "name": "Empire manufacturing",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1473,15 +1553,15 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "note": "PMI-like (NY Fed)",
+      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity.",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY",
       "layer": "economy",
-      "sub": "GACDISA066MSFRBNY",
+      "sub": "NY Fed factory survey",
       "search": "GACDISA066MSFRBNY"
     },
     {
       "id": "PHILLY_MFG",
-      "name": "Philly mfg",
+      "name": "Philly manufacturing",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1490,15 +1570,15 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
-      "note": "PMI-like (Philly Fed)",
+      "note": "Philly Fed manufacturing survey. Another regional PMI-style read.",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI",
       "layer": "economy",
-      "sub": "GACDFSA066MSFRBPHI",
+      "sub": "Philly Fed factory survey",
       "search": "GACDFSA066MSFRBPHI"
     },
     {
       "id": "CFNAI",
-      "name": "CFNAI",
+      "name": "Chicago Fed activity",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1509,12 +1589,13 @@
       "light": "growth",
       "sourceUrl": "https://fred.stlouisfed.org/series/CFNAI",
       "layer": "economy",
-      "sub": "CFNAI",
-      "search": "CFNAI"
+      "sub": "Broad growth index",
+      "search": "CFNAI",
+      "note": "Chicago Fed National Activity Index. Broad monthly growth factor (0 ≈ trend)."
     },
     {
       "id": "WEI",
-      "name": "Weekly Econ Index",
+      "name": "Weekly economic index",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1523,16 +1604,16 @@
       "freq": "weekly",
       "sign": 1,
       "light": "growth",
-      "note": "High-freq growth (NY Fed)",
+      "note": "NY Fed Weekly Economic Index. High-frequency real activity blend.",
       "sourceUrl": "https://fred.stlouisfed.org/series/WEI",
       "layer": "economy",
-      "sub": "WEI",
+      "sub": "High-frequency growth",
       "search": "WEI",
-      "weight": 2
+      "weight": 1
     },
     {
       "id": "CSUSHPISA",
-      "name": "Case-Shiller HPI",
+      "name": "Case-Shiller home prices",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1543,9 +1624,10 @@
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CSUSHPISA",
       "layer": "economy",
-      "sub": "CSUSHPISA",
+      "sub": "National house prices",
       "search": "CSUSHPISA",
-      "light": null
+      "light": null,
+      "note": "Case-Shiller home price index. National house-price level."
     },
     {
       "id": "EXHOSLUSM495S",
@@ -1559,13 +1641,14 @@
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/EXHOSLUSM495S",
       "layer": "economy",
-      "sub": "EXHOSLUSM495S",
+      "sub": "Homes changing hands",
       "search": "EXHOSLUSM495S",
-      "light": null
+      "light": null,
+      "note": "Existing home sales. Housing turnover — rates and affordability."
     },
     {
       "id": "UMCSENT",
-      "name": "UMich sentiment",
+      "name": "Consumer sentiment",
       "street": "economy",
       "causal": "labels",
       "pipe": "fred",
@@ -1576,12 +1659,13 @@
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/UMCSENT",
       "layer": "economy",
-      "sub": "UMCSENT",
-      "search": "UMCSENT"
+      "sub": "Household mood (UMich)",
+      "search": "UMCSENT",
+      "note": "University of Michigan consumer sentiment. Soft demand / mood gauge."
     },
     {
       "id": "PPIACO",
-      "name": "PPI all commodities",
+      "name": "Commodity PPI",
       "street": "inflation",
       "causal": "labels",
       "pipe": "fred",
@@ -1593,12 +1677,13 @@
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PPIACO",
       "layer": "inflation",
-      "sub": "PPIACO",
-      "search": "PPIACO"
+      "sub": "Upstream goods prices",
+      "search": "PPIACO",
+      "note": "PPI all commodities. Upstream goods inflation."
     },
     {
       "id": "PPIFIS",
-      "name": "PPI final demand",
+      "name": "Final-demand PPI",
       "street": "inflation",
       "causal": "labels",
       "pipe": "fred",
@@ -1610,8 +1695,9 @@
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/PPIFIS",
       "layer": "inflation",
-      "sub": "PPIFIS",
-      "search": "PPIFIS"
+      "sub": "Pipeline into CPI",
+      "search": "PPIFIS",
+      "note": "PPI final demand. Pipeline prices into consumer inflation."
     },
     {
       "id": "MEDIAN_CPI",
@@ -1623,11 +1709,12 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/MEDCPIM159SFRBCLE",
       "layer": "inflation",
-      "sub": "MEDCPIM159SFRBCLE",
-      "search": "MEDCPIM159SFRBCLE"
+      "sub": "Typical item's inflation",
+      "search": "MEDCPIM159SFRBCLE",
+      "note": "Cleveland Fed median CPI. Robust underlying inflation (less noisy than mean)."
     },
     {
       "id": "TRIMMED_CPI",
@@ -1642,8 +1729,9 @@
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/TRMMEANCPIM158SFRBCLE",
       "layer": "inflation",
-      "sub": "TRMMEANCPIM158SFRBCLE",
-      "search": "TRMMEANCPIM158SFRBCLE"
+      "sub": "Core-like, less noise",
+      "search": "TRMMEANCPIM158SFRBCLE",
+      "note": "Cleveland Fed trimmed-mean CPI. Another core-like inflation measure."
     },
     {
       "id": "SHELTER_CPI",
@@ -1659,12 +1747,13 @@
       "transform": "yoy",
       "sourceUrl": "https://fred.stlouisfed.org/series/CUSR0000SAH1",
       "layer": "inflation",
-      "sub": "CUSR0000SAH1",
-      "search": "CUSR0000SAH1"
+      "sub": "Rents & housing in CPI",
+      "search": "CUSR0000SAH1",
+      "note": "CPI shelter. Housing rents/OER — big, sticky CPI weight."
     },
     {
       "id": "SUPERCORE",
-      "name": "CPI serv. ex energy",
+      "name": "Services CPI ex energy",
       "street": "inflation",
       "causal": "labels",
       "pipe": "fred",
@@ -1674,10 +1763,10 @@
       "sign": 0,
       "light": null,
       "transform": "yoy",
-      "note": "Supercore proxy",
+      "note": "CPI services ex energy. \"Supercore\" — services inflation the Fed watches.",
       "sourceUrl": "https://fred.stlouisfed.org/series/CUSR0000SASLE",
       "layer": "inflation",
-      "sub": "CUSR0000SASLE",
+      "sub": "Supercore services prices",
       "search": "CUSR0000SASLE"
     },
     {
@@ -1690,15 +1779,16 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/CORESTICKM159SFRBATL",
       "layer": "inflation",
-      "sub": "CORESTICKM159SFRBATL",
-      "search": "CORESTICKM159SFRBATL"
+      "sub": "Slow-moving core prices",
+      "search": "CORESTICKM159SFRBATL",
+      "note": "Atlanta Fed sticky core CPI. Core prices that are slow to change."
     },
     {
       "id": "BBB_OAS",
-      "name": "BBB OAS",
+      "name": "BBB credit spread",
       "street": "conditions",
       "causal": "risk",
       "pipe": "fred",
@@ -1709,12 +1799,13 @@
       "light": "risk",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
       "layer": "conditions",
-      "sub": "BAMLC0A4CBBB",
-      "search": "BAMLC0A4CBBB"
+      "sub": "Weakest IG bond premium",
+      "search": "BAMLC0A4CBBB",
+      "note": "BBB corporate OAS. Credit spread for the weakest IG bucket — early stress tell."
     },
     {
       "id": "HY_CCC_OAS",
-      "name": "CCC OAS",
+      "name": "CCC credit spread",
       "street": "conditions",
       "causal": "risk",
       "pipe": "fred",
@@ -1724,9 +1815,10 @@
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A3HYC",
       "layer": "conditions",
-      "sub": "BAMLH0A3HYC",
+      "sub": "Distressed junk premium",
       "search": "BAMLH0A3HYC",
-      "light": null
+      "light": null,
+      "note": "CCC high-yield OAS. Distressed credit; blows out in risk-off."
     },
     {
       "id": "EPU",
@@ -1740,13 +1832,14 @@
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/USEPUINDXD",
       "layer": "conditions",
-      "sub": "USEPUINDXD",
+      "sub": "News-based policy risk",
       "search": "USEPUINDXD",
-      "light": null
+      "light": null,
+      "note": "Economic Policy Uncertainty index. News-based US policy risk."
     },
     {
       "id": "SAHM",
-      "name": "Sahm rule",
+      "name": "Sahm recession rule",
       "street": "conditions",
       "causal": "risk",
       "pipe": "fred",
@@ -1757,12 +1850,13 @@
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/SAHMREALTIME",
       "layer": "conditions",
-      "sub": "SAHMREALTIME",
-      "search": "SAHMREALTIME"
+      "sub": "Jobless jump vs low",
+      "search": "SAHMREALTIME",
+      "note": "Sahm rule trigger — unemployment jump vs recent low. Recession flag when ≥0.5."
     },
     {
       "id": "HYG",
-      "name": "HYG",
+      "name": "High-yield bond ETF",
       "street": "conditions",
       "causal": "risk",
       "pipe": "yahoo",
@@ -1772,13 +1866,14 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
       "layer": "conditions",
-      "sub": "HYG",
+      "sub": "Junk bond price tape",
       "search": "HYG",
-      "light": null
+      "light": null,
+      "note": "iShares High Yield Corporate Bond ETF. Price tape for HY credit (up = easier)."
     },
     {
       "id": "LQD",
-      "name": "LQD",
+      "name": "IG bond ETF",
       "street": "conditions",
       "causal": "risk",
       "pipe": "yahoo",
@@ -1788,13 +1883,14 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
       "layer": "conditions",
-      "sub": "LQD",
+      "sub": "IG corporate bond prices",
       "search": "LQD",
-      "light": null
+      "light": null,
+      "note": "iShares IG Corporate Bond ETF. Price tape for investment-grade credit."
     },
     {
       "id": "SKEW",
-      "name": "Cboe SKEW",
+      "name": "Crash-insurance skew",
       "street": "conditions",
       "causal": "risk",
       "pipe": "yahoo",
@@ -1804,9 +1900,10 @@
       "sign": -1,
       "sourceUrl": "https://finance.yahoo.com/quote/%5ESKEW",
       "layer": "conditions",
-      "sub": "^SKEW",
+      "sub": "Price of S&P crash hedges",
       "search": "^SKEW",
-      "light": null
+      "light": null,
+      "note": "Cboe SKEW — price of S&P crash insurance (tail risk). Higher = more fear of a crash."
     },
     {
       "id": "SILVER",
@@ -1820,13 +1917,14 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/SI=F",
       "layer": "markets",
-      "sub": "SI=F",
+      "sub": "Precious + industrial",
       "search": "SI=F",
-      "light": null
+      "light": null,
+      "note": "Silver futures. Precious metal with industrial demand too."
     },
     {
       "id": "TLT",
-      "name": "TLT",
+      "name": "Long Treasury ETF",
       "street": "markets",
       "causal": "assets",
       "pipe": "yahoo",
@@ -1836,13 +1934,14 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/TLT",
       "layer": "markets",
-      "sub": "TLT",
+      "sub": "20+ year bond prices",
       "search": "TLT",
-      "light": null
+      "light": null,
+      "note": "iShares 20+ Year Treasury ETF. Long-bond price tape (up = yields down)."
     },
     {
       "id": "EWZ",
-      "name": "EWZ",
+      "name": "Brazil equity ETF",
       "street": "markets",
       "causal": "assets",
       "pipe": "yahoo",
@@ -1850,10 +1949,10 @@
       "units": "USD",
       "freq": "daily",
       "sign": 1,
-      "note": "EM equities proxy",
+      "note": "iShares MSCI Brazil ETF. EM equity risk proxy.",
       "sourceUrl": "https://finance.yahoo.com/quote/EWZ",
       "layer": "markets",
-      "sub": "EWZ",
+      "sub": "EM stock risk proxy",
       "search": "EWZ",
       "light": null
     }
@@ -1962,7 +2061,7 @@
       "id": "assets",
       "label": "Assets",
       "role": "outputs",
-      "blurb": "Outputs \u2014 never lead with this."
+      "blurb": "Outputs — never lead with this."
     }
   ]
 }
