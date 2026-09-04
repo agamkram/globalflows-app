@@ -12,6 +12,7 @@
   --neutral: #e6b84d;
   --tight: #e86a5c;
   --accent: #6aa7ff;
+  --pick: #e6b84d;
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-l: env(safe-area-inset-left, 0px);
@@ -135,7 +136,8 @@ body {
   display: block;
   width: 16px;
   height: 16px;
-  border-radius: 3px;
+  border-radius: 0;
+  background: transparent;
 }
 
 .nav-link:active {
@@ -175,6 +177,7 @@ body {
 .dlg-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   justify-content: flex-end;
   margin-top: 4px;
@@ -228,8 +231,22 @@ body {
   cursor: pointer;
 }
 
-.btn.ghost {
+/* Quiet text action — not a second Close */
+.btn.link {
+  border-color: transparent;
   background: transparent;
+  color: var(--muted);
+  padding: 7px 4px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent);
+}
+
+.btn.link:hover,
+.btn.link:focus-visible {
+  color: var(--text);
+  text-decoration-color: color-mix(in srgb, var(--text) 55%, transparent);
 }
 
 .btn:active {
@@ -263,10 +280,43 @@ body {
   min-width: 0;
 }
 
+/* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick. */
+.pin-stack {
+  position: sticky;
+  top: var(--safe-t);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 0 6px;
+  background: var(--bg);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.pin-stack::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 100%;
+  height: var(--safe-t);
+  background: var(--bg);
+}
+
 .regime-horizon {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   flex-shrink: 0;
+}
+
+.regime-horizon .btn.tiny-btn {
+  padding: 5px 9px;
+  font-size: 0.78rem;
+  border-radius: 7px;
+  min-width: 2.1rem;
 }
 
 .regime-today {
@@ -352,6 +402,10 @@ body {
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+.light[data-focus="true"] {
+  border-color: var(--accent);
 }
 
 .light:last-child {
@@ -516,24 +570,37 @@ body {
 
 .layer-tabs {
   display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  flex-wrap: nowrap;
+  gap: 1px;
+  overflow: hidden;
   padding: 0 0 2px;
+  width: 100%;
+  min-width: 0;
 }
 
 .layer-tabs button {
-  flex: 0 0 auto;
+  flex: 1 1 0;
+  min-width: 0;
   border: 1px solid var(--line);
   background: var(--bg2);
   color: var(--muted);
   border-radius: 999px;
-  padding: 4px 9px;
-  font: 500 0.72rem var(--sans);
+  padding: 4px 2px;
+  font: 500 0.68rem var(--sans);
+  letter-spacing: -0.02em;
   cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .layer-tabs button[aria-selected="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--bg3);
+  box-shadow: none;
+}
+
+.layer-tabs button[data-scroll-on="true"] {
   color: var(--text);
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 18%, var(--bg2));
@@ -547,12 +614,77 @@ body {
   min-height: 0;
 }
 
-.heatmap-wrap {
-  background: var(--bg2);
+.market-buckets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 4px 2px 2px;
+}
+
+.market-buckets[hidden] {
+  display: none;
+}
+
+.btn.tiny-btn.compare-go {
+  border-color: var(--accent);
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg2));
+}
+
+.btn.tiny-btn.compare-done {
+  border-color: var(--line);
+}
+
+.btn.tiny-btn.danger {
+  border-color: color-mix(in srgb, var(--tight) 45%, var(--line));
+  color: color-mix(in srgb, var(--tight) 70%, var(--text));
+}
+
+.btn.tiny-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.heat-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.heat-controls .ctrl-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--bg3) 80%, transparent);
   border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 4px 4px 2px;
-  min-width: 0;
+}
+
+.heat-controls .ctrl-group[hidden] {
+  display: none;
+}
+
+.heat-controls .ctrl-group .btn.tiny-btn {
+  border-color: transparent;
+  background: transparent;
+}
+
+.heat-controls .ctrl-group .btn.tiny-btn[aria-pressed="true"],
+.heat-controls .ctrl-group .btn.tiny-btn.compare-go {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg2));
+  border-color: transparent;
+}
+
+.heat-controls .ctrl-group .btn.tiny-btn.danger {
+  border-color: transparent;
+}
+
+.name-cell {
+  cursor: pointer;
 }
 
 .heatmap-head {
@@ -573,20 +705,6 @@ body {
   font-size: 1rem;
 }
 
-.heatmap-head .muted {
-  margin: 1px 0 0;
-  font-size: 0.72rem;
-}
-
-.heat-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  flex: 0 0 auto;
-}
-
 .dur-group {
   display: flex;
   gap: 2px;
@@ -601,13 +719,10 @@ body {
 }
 
 .btn.tiny-btn[aria-pressed="true"] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 18%, var(--bg2));
+  border-color: var(--line);
+  background: var(--bg3);
   color: var(--text);
-}
-
-.name-cell {
-  cursor: pointer;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 18%, transparent);
 }
 
 .chart-cell {
@@ -639,6 +754,7 @@ body {
   max-width: 100%;
   width: 100%;
   height: 32px;
+  background: transparent;
 }
 
 .spark-chg {
@@ -732,7 +848,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   position: sticky;
-  top: 0;
+  top: var(--pin-h, 0px);
   background: var(--bg2);
   z-index: 2;
   padding-top: 4px;
@@ -760,12 +876,56 @@ body {
   cursor: pointer;
 }
 
+.heat tbody tr[data-voter] td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.heat tbody tr[data-voter] td {
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg2));
+}
+
+.heat tbody tr[data-voter] td:first-child {
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg2));
+}
+
 .heat tbody tr:hover td {
   background: var(--bg3);
 }
 
+.heat tbody tr[data-voter]:hover td {
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg3));
+}
+
 .heat tbody tr:hover td:first-child {
   background: var(--bg3);
+}
+
+.heat tbody tr[data-voter]:hover td:first-child {
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg3));
+}
+
+/* Pick tint (amber) — third state vs none / blue vote; wins when both. */
+.heat tbody tr[data-compare] td {
+  background: color-mix(in srgb, var(--pick) 9%, var(--bg2));
+}
+
+.heat tbody tr[data-compare] td:first-child {
+  box-shadow: inset 3px 0 0 var(--pick);
+  background: color-mix(in srgb, var(--pick) 12%, var(--bg2));
+}
+
+.heat tbody tr[data-compare]:hover td {
+  background: color-mix(in srgb, var(--pick) 14%, var(--bg3));
+}
+
+.heat tbody tr[data-compare]:hover td:first-child {
+  background: color-mix(in srgb, var(--pick) 16%, var(--bg3));
+}
+
+.heat .name-stack {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
 }
 
 .heat .name {
@@ -925,6 +1085,24 @@ body.dlg-open .app {
   font-size: 0.86rem;
   line-height: 1.4;
   color: var(--text);
+}
+
+.dlg-body .series-blurb {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.dlg-body .series-vote {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.dlg-body .series-vote strong {
+  color: var(--accent);
 }
 
 .dlg-body .series-meta {

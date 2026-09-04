@@ -54,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260904d" />
+  <link rel="stylesheet" href="styles.css?v=20260904ai" />
 </head>
 <body>
   <div class="app" id="app">
@@ -64,61 +64,72 @@
       </div>
     </header>
 
-    <div class="dials-band">
-      <div class="dials-toolbar">
-        <div
-          class="dur-group regime-horizon"
-          id="horizonGroup"
-          title="Today vs this many years — lights, table, and charts"
-          aria-label="Comparison horizon"
-        >
-          <button type="button" class="btn tiny-btn" data-horizon="1">1y</button>
-          <button type="button" class="btn tiny-btn" data-horizon="2" aria-pressed="true">2y</button>
-          <button type="button" class="btn tiny-btn" data-horizon="5">5y</button>
-        </div>
-        <nav class="topbar-nav" aria-label="Primary">
-          <a
-            href="https://oilprice.com/oil-price-charts/#prices"
-            class="nav-link nav-link-icon"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Oil price charts (oilprice.com)"
-            aria-label="Oil price charts on oilprice.com"
-          ><img src="oilprice-32.png" width="16" height="16" alt="" /></a>
-          <a
-            href="https://bubblincrude.markmaga.com"
-            class="nav-link nav-link-sm"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="BubblinCrude"
-            aria-label="BubblinCrude"
-          >B</a>
-          <a class="nav-link nav-link-sm" href="./about.html">About</a>
-        </nav>
+    <div class="dials-toolbar">
+      <div
+        class="dur-group regime-horizon"
+        id="horizonGroup"
+        title="Today vs this many years — lights, table, and charts"
+        aria-label="Comparison horizon"
+      >
+        <button type="button" class="btn tiny-btn" data-horizon="1">1y</button>
+        <button type="button" class="btn tiny-btn" data-horizon="2" aria-pressed="true">2y</button>
+        <button type="button" class="btn tiny-btn" data-horizon="5">5y</button>
       </div>
-      <button
-        type="button"
-        class="regime-today"
-        id="regimeToday"
-        hidden
-        title="Tap for today’s confirming breakdown"
-      ></button>
-      <section class="lights" id="lights" aria-label="Regime lights"></section>
+      <nav class="topbar-nav" aria-label="Primary">
+        <a
+          href="https://oilprice.com/oil-price-charts/#prices"
+          class="nav-link nav-link-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Oil price charts (oilprice.com)"
+          aria-label="Oil price charts on oilprice.com"
+        ><img src="oilprice-32.png" width="16" height="16" alt="" /></a>
+        <a
+          href="https://bubblincrude.markmaga.com"
+          class="nav-link nav-link-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="BubblinCrude"
+          aria-label="BubblinCrude"
+        ><img src="bubblincrude-32.png?v=20260904ag" srcset="bubblincrude-64.png?v=20260904ag 2x" width="16" height="16" alt="" /></a>
+        <a class="nav-link nav-link-sm" href="./about.html">About</a>
+      </nav>
     </div>
 
-    <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
+    <button
+      type="button"
+      class="regime-today"
+      id="regimeToday"
+      hidden
+      title="Tap for today’s confirming breakdown"
+    ></button>
+
+    <div class="pin-stack" id="pinStack">
+      <section class="lights" id="lights" aria-label="Regime lights"></section>
+      <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
+      <div class="heatmap-head">
+        <div class="heatmap-titles">
+          <h2 id="layerTitle">Series</h2>
+        </div>
+        <div class="heat-controls" role="toolbar" aria-label="Series view">
+          <div class="ctrl-group" id="compareSaveGroup" hidden aria-label="Saved clubs">
+            <button type="button" class="btn tiny-btn" id="btnCompare_m1" hidden aria-pressed="false" title="Open m1">m1</button>
+            <button type="button" class="btn tiny-btn" id="btnCompare_m2" hidden aria-pressed="false" title="Open m2">m2</button>
+            <button type="button" class="btn tiny-btn" id="btnCompare_m3" hidden aria-pressed="false" title="Open m3">m3</button>
+          </div>
+          <div class="ctrl-group" id="compareClubGroup" hidden aria-label="Club actions">
+            <button type="button" class="btn tiny-btn" id="btnCompareSave" hidden aria-pressed="false" title="Save this club">m</button>
+            <button type="button" class="btn tiny-btn danger" id="btnCompareDelete" hidden title="Delete this saved club">Delete</button>
+          </div>
+          <button type="button" class="btn tiny-btn" id="btnCompare" aria-pressed="false" title="Pick up to 10 series, then Go">Compare</button>
+          <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
+        </div>
+      </div>
+    </div>
 
     <main class="main">
       <section class="heatmap-wrap">
-        <div class="heatmap-head">
-          <div class="heatmap-titles">
-            <h2 id="layerTitle">Series</h2>
-            <p class="muted" id="layerBlurb"></p>
-          </div>
-          <div class="heat-controls" role="toolbar" aria-label="Series view">
-            <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
-          </div>
-        </div>
+        <div class="market-buckets" id="marketBuckets" hidden></div>
         <div class="table-scroll">
           <table class="heat" id="heat">
             <thead>
@@ -160,12 +171,11 @@
       <h3 id="lightTitle">Light</h3>
       <div id="lightBody" class="dlg-body"></div>
       <div class="dlg-actions">
-        <button type="submit" class="btn ghost" id="btnLightSeries" value="series">Show lines</button>
         <button type="submit" class="btn" value="ok">Close</button>
       </div>
     </form>
   </dialog>
 
-  <script type="module" src="app.js?v=20260904d"></script>
+  <script type="module" src="app.js?v=20260904ai"></script>
 </body>
 </html>

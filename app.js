@@ -1,16 +1,63 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
+import { buildMeaning } from "./meaning.js";
+
 const $ = (sel, el = document) => el.querySelector(sel);
 
 let SNAP = null;
 /** Daily regime bake (spot-on lights + teach). Null if missing. */
 let REGIME = null;
-let activeLayer = "liquidity";
 
 /** Global row view: values | charts. */
 let globalView = "values";
 /** Today-vs horizon (years) for table, charts, lights, and regime story. Default 2. */
 let statHorizon = 2;
+/** Markets sub-shelf when on Markets tab. */
+let marketBucket = "all";
+/**
+ * Compare flow:
+ *   off  — normal book; saved m1–m3 sit left of Compare
+ *   pick — choose up to 10, then Go
+ *   view — club; tap m to save into next free slot (m becomes m# here, then stays on streets)
+ */
+let comparePhase = "off";
+/** Ids in the working club (pick + view), in pick order. Not remembered across reload. */
+let compareList = [];
+/** Which saved slot is open in view (for Delete). Null if unsaved Go club. */
+let compareActiveSlot = null;
+/** In club after a save this visit — temp label on the m button (m1/m2/m3). */
+let clubSavedAs = null;
+/** Saved clubs m1/m2/m3 — only these persist. */
+const COMPARE_SLOTS = ["m1", "m2", "m3"];
+const COMPARE_STORE_VER = "2"; // bump to wipe leftover slots from older compare UX
+const compareSaves = { m1: [], m2: [], m3: [] };
+try {
+  if (localStorage.getItem("gf-compare-ver") !== COMPARE_STORE_VER) {
+    for (const slot of COMPARE_SLOTS) localStorage.removeItem(`gf-compare-${slot}`);
+    localStorage.setItem("gf-compare-ver", COMPARE_STORE_VER);
+  }
+  for (const slot of COMPARE_SLOTS) {
+    const raw = JSON.parse(localStorage.getItem(`gf-compare-${slot}`) || "[]");
+    if (Array.isArray(raw) && raw.length) {
+      compareSaves[slot] = raw.filter((id) => typeof id === "string").slice(0, 10);
+    }
+  }
+} catch (_) {
+  /* ignore */
+}
+
+const MARKET_BUCKETS = [
+  { id: "all", label: "All" },
+  { id: "equities", label: "Equities" },
+  { id: "credit", label: "Credit" },
+  { id: "duration", label: "Duration" },
+  { id: "metals", label: "Metals" },
+  { id: "energy", label: "Energy" },
+  { id: "crypto", label: "Crypto" },
+];
+
+const COMPARE_MAX = 10;
+
 /** Series ids flipped from the global view (tap a row’s data/chart cell). */
 const rowFlip = new Set();
 const histCache = new Map();
@@ -143,6 +190,10 @@ const LIGHT_BLURB = {
     "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
 };
 
+/** Which light dial is selected (blue border). Table shows that light’s full Street shelf. */
+let focusLight = "liquidity";
+
+/** Street shelf when a light is focused — lights own these; tabs keep All / FX / Markets. */
 const LIGHT_TO_TAB = {
   liquidity: "liquidity",
   transmission: "rates",
@@ -151,24 +202,21 @@ const LIGHT_TO_TAB = {
   risk: "conditions",
 };
 
-let pendingLightTab = null;
+/** Inverse: street layer → light (for All scroll-spy). */
+const TAB_TO_LIGHT = {
+  liquidity: "liquidity",
+  rates: "transmission",
+  economy: "growth",
+  inflation: "inflation",
+  conditions: "risk",
+};
 
-function jumpToStreetTab(tabId) {
-  activeLayer = tabId || "all";
-  const tabs = $("#tabs");
-  if (tabs) {
-    [...tabs.querySelectorAll("button")].forEach((x) =>
-      x.setAttribute(
-        "aria-selected",
-        x.dataset.layer === activeLayer ? "true" : "false"
-      )
-    );
-  }
-  refreshViews();
-  // Tab change only — keep viewport where it is / at top of series list
-  const scroll = document.querySelector(".table-scroll");
-  if (scroll) scroll.scrollTop = 0;
-}
+/** Tabs that remain as doors (no light owns them). */
+const STREET_TABS = new Set(["all", "fx", "markets"]);
+
+let activeLayer = "liquidity";
+/** All-view scroll spy: which street section is in view (layer id). */
+let scrollStreet = null;
 
 function bakeLight(id, years = statHorizon) {
   return REGIME?.horizons?.[String(years)]?.lights?.[id] || null;
@@ -203,9 +251,18 @@ function openLight(id) {
   const snap = viewOf(SNAP);
   const L = snap.lights?.[id];
   if (!L) return;
+
+  // Light owns the shelf: full Street set (voters tinted), not club-only.
+  focusLight = id;
+  activeLayer = LIGHT_TO_TAB[id] || "all";
+  // Don't nuke an in-progress pick when opening a light shelf.
+  if (comparePhase !== "pick") {
+    exitCompareToStreets();
+  }
+  refreshViews();
+
   const h = `${statHorizon}y`;
   const baked = bakeLight(id);
-  pendingLightTab = LIGHT_TO_TAB[id] || "all";
   const word = wordFor(L);
   $("#lightTitle").textContent = `${L.label || id} · ${word}`;
   const members = (L.members || [])
@@ -244,7 +301,7 @@ function openLight(id) {
         <tbody>${rows || `<tr><td colspan="4" class="empty">no members</td></tr>`}</tbody>
       </table>
     </div>
-    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} percentile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
+    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} percentile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About. Close to see the full shelf — voters stay tinted.</p>
   `;
   $("#dlgLight").showModal();
   document.body.classList.add("dlg-open");
@@ -691,7 +748,10 @@ function tensionTitle(d) {
 
 function openSentence(snap) {
   if (!snap) return;
-  const baked = REGIME?.verdict === "SPOT ON" ? REGIME.horizons?.[String(statHorizon)]?.lights : null;
+  const baked =
+    REGIME?.verdict === "SPOT ON" ? REGIME.horizons?.[String(statHorizon)]?.lights : null;
+  const meaning = buildMeaning(snap, statHorizon);
+
   const evidence = baked
     ? ["liquidity", "transmission", "growth", "inflation", "risk"]
         .map((id) => baked[id]?.teach)
@@ -720,6 +780,39 @@ function openSentence(snap) {
         .join("")}`
     : "";
 
+  const soWhat = `<p class="sent-kicker">So what</p>
+    <div class="sent-explain"><p class="sent-explain-title"><strong data-state="${
+      meaning.duration.dir === "rising"
+        ? "tight"
+        : meaning.duration.dir === "falling"
+          ? "easing"
+          : "neutral"
+    }">${escapeHtml(meaning.duration.label)}</strong>
+      <span class="muted sent-hint"> — ${escapeHtml(meaning.duration.line)}</span></p></div>
+    <div class="sent-explain"><p class="sent-explain-title"><strong data-state="${
+      meaning.credit.dir === "rising"
+        ? "tight"
+        : meaning.credit.dir === "falling"
+          ? "easing"
+          : "neutral"
+    }">${escapeHtml(meaning.credit.label)}</strong>
+      <span class="muted sent-hint"> — ${escapeHtml(meaning.credit.line)}</span></p></div>
+    ${meaning.confirm
+      .slice(0, 3)
+      .map(
+        (line) =>
+          `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
+      )
+      .join("")}
+    ${meaning.falsify
+      .slice(0, 2)
+      .map(
+        (line) =>
+          `<div class="sent-explain sent-explain-flag"><p class="sent-explain-title"><strong data-state="neutral">Watch</strong>
+          <span class="muted sent-hint"> — ${escapeHtml(line.replace(/^Falsify if /i, "Falsify if "))}</span></p></div>`
+      )
+      .join("")}`;
+
   const verified =
     REGIME?.verdict === "SPOT ON"
       ? `<p class="muted tiny sent-foot">Verified bake · ${statHorizon}y · tap a light for who voted.</p>`
@@ -727,6 +820,7 @@ function openSentence(snap) {
 
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
+    ${soWhat}
     <p class="sent-kicker">Why we say that</p>
     ${evidence}
     ${watch}
@@ -745,6 +839,10 @@ function openSentence(snap) {
 function renderLights(snap) {
   const root = $("#lights");
   const order = ["liquidity", "transmission", "growth", "inflation", "risk"];
+  const spyLight =
+    activeLayer === "all" && comparePhase === "off" && scrollStreet
+      ? TAB_TO_LIGHT[scrollStreet] || null
+      : null;
   root.innerHTML = order
     .map((id) => {
       const L = snap.lights?.[id] || { state: "empty", label: id };
@@ -752,7 +850,11 @@ function renderLights(snap) {
         L.score != null && Number.isFinite(L.score)
           ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
           : "—";
-      return `<article class="light" data-state="${L.state || "empty"}" data-id="${id}">
+      const on =
+        spyLight != null ? spyLight === id : focusLight === id;
+      return `<article class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
+        on ? "true" : "false"
+      }" aria-pressed="${on ? "true" : "false"}">
         <div class="dot" aria-hidden="true"></div>
         <div class="lbl">${L.label || id}</div>
         <div class="word">${wordFor(L)}</div>
@@ -764,32 +866,136 @@ function renderLights(snap) {
 
 
 
+function fitTabs() {
+  const tabs = $("#tabs");
+  if (!tabs) return;
+  const buttons = [...tabs.querySelectorAll("button")];
+  if (!buttons.length) return;
+
+  const apply = (px) => {
+    for (const b of buttons) {
+      b.style.fontSize = `${px}px`;
+      b.style.paddingLeft = px < 10 ? "1px" : "2px";
+      b.style.paddingRight = px < 10 ? "1px" : "2px";
+      b.style.letterSpacing = px < 10 ? "-0.04em" : "-0.02em";
+    }
+  };
+
+  const overflowing = () =>
+    tabs.scrollWidth > tabs.clientWidth + 1 ||
+    buttons.some((b) => b.scrollWidth > b.clientWidth + 1);
+
+  // One row, full labels: shrink type until nothing clips.
+  let size = 11.5;
+  const min = 7.5;
+  apply(size);
+  while (size > min && overflowing()) {
+    size -= 0.25;
+    apply(size);
+  }
+}
+
 function renderTabs(snap) {
   const tabs = $("#tabs");
-  const layers = snap.layers || [];
+  const layers = (snap.layers || []).filter((l) => STREET_TABS.has(l.id));
   const items = [{ id: "all", label: "All", blurb: "Full book" }, ...layers];
   tabs.innerHTML = items
-    .map(
-      (l) =>
-        `<button type="button" role="tab" data-layer="${l.id}" aria-selected="${
-          l.id === activeLayer ? "true" : "false"
-        }">${l.label}</button>`
-    )
+    .map((l) => {
+      const full = l.label || l.id;
+      return `<button type="button" role="tab" data-layer="${l.id}" title="${escapeHtml(
+        full
+      )}" aria-selected="${
+        !focusLight && l.id === activeLayer ? "true" : "false"
+      }">${escapeHtml(full)}</button>`;
+    })
     .join("");
   tabs.onclick = (e) => {
     const b = e.target.closest("button[data-layer]");
     if (!b) return;
     activeLayer = b.dataset.layer;
-    [...tabs.querySelectorAll("button")].forEach((x) =>
-      x.setAttribute("aria-selected", x === b ? "true" : "false")
-    );
+    focusLight = null;
+    scrollStreet = null;
+    // Keep picks when browsing streets to build a club; wipe only outside pick.
+    if (comparePhase !== "pick") {
+      exitCompareToStreets();
+    }
+    syncStreetSelection();
     refreshViews();
   };
+  requestAnimationFrame(() => {
+    fitTabs();
+    requestAnimationFrame(fitTabs);
+  });
+}
+
+function nextFreeCompareSlot() {
+  return COMPARE_SLOTS.find((slot) => !(compareSaves[slot] || []).length) || null;
+}
+
+function saveCompareSlot(slot) {
+  if (!COMPARE_SLOTS.includes(slot)) return;
+  if (!compareList.length) return;
+  compareSaves[slot] = [...compareList].slice(0, COMPARE_MAX);
+  try {
+    localStorage.setItem(`gf-compare-${slot}`, JSON.stringify(compareSaves[slot]));
+  } catch (_) {
+    /* ignore */
+  }
+  syncCompareBtn();
+}
+
+function clearCompareSlot(slot) {
+  if (!COMPARE_SLOTS.includes(slot)) return;
+  compareSaves[slot] = [];
+  try {
+    localStorage.removeItem(`gf-compare-${slot}`);
+  } catch (_) {
+    /* ignore */
+  }
+}
+
+function loadCompareSlot(slot) {
+  if (!COMPARE_SLOTS.includes(slot)) return;
+  const list = compareSaves[slot] || [];
+  if (!list.length) return;
+  compareList = [...list];
+  comparePhase = "view";
+  compareActiveSlot = slot;
+  focusLight = null;
+  refreshViews();
+}
+
+function exitCompareToStreets() {
+  comparePhase = "off";
+  compareList = [];
+  compareActiveSlot = null;
+  clubSavedAs = null;
+}
+
+function sortSeries(a, b) {
+  const ao = a.order != null && Number.isFinite(a.order) ? a.order : 9999;
+  const bo = b.order != null && Number.isFinite(b.order) ? b.order : 9999;
+  return ao - bo || a.name.localeCompare(b.name);
+}
+
+function isMarketsSeries(s) {
+  return (
+    s.street === "markets" ||
+    s.layer === "markets" ||
+    !!s.marketBucket
+  );
 }
 
 function seriesList(snap, layer) {
   // Stale/excluded series stay out of the table — they only widen the layout
-  const all = Object.values(snap.series || {}).filter((s) => s.status === "ok");
+  let all = Object.values(snap.series || {}).filter((s) => s.status === "ok");
+
+  // View phase only — pick phase keeps the full current shelf so you can choose.
+  if (comparePhase === "view" && compareList.length) {
+    const byId = Object.fromEntries(all.map((s) => [s.id, s]));
+    return compareList.map((id) => byId[id]).filter(Boolean);
+  }
+
   if (layer === "all") {
     return all.sort((a, b) => {
       const order = [
@@ -802,12 +1008,129 @@ function seriesList(snap, layer) {
         "markets",
       ];
       const d = order.indexOf(a.layer) - order.indexOf(b.layer);
-      return d || a.name.localeCompare(b.name);
+      return d || sortSeries(a, b);
     });
   }
-  return all
-    .filter((s) => s.layer === layer)
-    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (layer === "markets") {
+    all = all.filter(isMarketsSeries);
+    if (marketBucket !== "all") {
+      all = all.filter((s) => s.marketBucket === marketBucket);
+    }
+    return all.sort(sortSeries);
+  }
+
+  return all.filter((s) => s.layer === layer).sort(sortSeries);
+}
+
+function renderMarketBuckets() {
+  const el = $("#marketBuckets");
+  if (!el) return;
+  const show =
+    !focusLight &&
+    activeLayer === "markets" &&
+    comparePhase === "off";
+  el.hidden = !show;
+  if (!show) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = MARKET_BUCKETS.map(
+    (b) =>
+      `<button type="button" class="btn tiny-btn" data-bucket="${b.id}" aria-pressed="${
+        marketBucket === b.id ? "true" : "false"
+      }">${b.label}</button>`
+  ).join("");
+  el.onclick = (e) => {
+    const b = e.target.closest("[data-bucket]");
+    if (!b) return;
+    marketBucket = b.dataset.bucket;
+    refreshViews();
+  };
+}
+
+function syncCompareBtn() {
+  const btn = $("#btnCompare");
+  if (!btn) return;
+  const n = compareList.length;
+  btn.classList.remove("compare-go", "compare-done");
+  if (comparePhase === "off") {
+    btn.textContent = "Compare";
+    btn.setAttribute("aria-pressed", "false");
+    btn.disabled = false;
+    btn.title = "Pick up to 10 series, then Go";
+  } else if (comparePhase === "pick") {
+    if (n < 1) {
+      btn.textContent = "Cancel";
+      btn.classList.add("compare-done");
+      btn.title = "Leave pick";
+    } else {
+      btn.textContent = `Go · ${n}`;
+      btn.classList.add("compare-go");
+      btn.title = "Open this club";
+    }
+    btn.setAttribute("aria-pressed", "true");
+    btn.disabled = false;
+  } else {
+    btn.textContent = "Done";
+    btn.setAttribute("aria-pressed", "true");
+    btn.classList.add("compare-done");
+    btn.disabled = false;
+    btn.title = "Leave compare club";
+  }
+
+  // Streets: saved m1–m3 sit left of Compare.
+  const saveGroup = $("#compareSaveGroup");
+  let anySave = false;
+  for (const slot of COMPARE_SLOTS) {
+    const b = $(`#btnCompare_${slot}`);
+    if (!b) continue;
+    const saved = compareSaves[slot] || [];
+    const show = saved.length > 0 && comparePhase === "off";
+    b.hidden = !show;
+    if (show) {
+      anySave = true;
+      b.textContent = slot;
+      b.setAttribute("aria-pressed", "false");
+      b.title = `Open ${slot} (${saved.length})`;
+      b.disabled = false;
+    }
+  }
+  if (saveGroup) saveGroup.hidden = !anySave;
+
+  // Club: same [m# · Delete] cluster whether you just saved or opened a recall.
+  const clubGroup = $("#compareClubGroup");
+  const saveBtn = $("#btnCompareSave");
+  const del = $("#btnCompareDelete");
+  const inClub = comparePhase === "view";
+  const free = nextFreeCompareSlot();
+  const slotLabel = clubSavedAs || compareActiveSlot;
+  const showSave = inClub && (!!slotLabel || !compareActiveSlot);
+  const showDel = inClub && !!compareActiveSlot;
+
+  if (saveBtn) {
+    saveBtn.hidden = !showSave;
+    if (showSave) {
+      if (slotLabel) {
+        saveBtn.textContent = slotLabel;
+        saveBtn.disabled = true;
+        saveBtn.title = `Saved as ${slotLabel}`;
+        saveBtn.setAttribute("aria-pressed", "true");
+      } else {
+        saveBtn.textContent = "m";
+        saveBtn.disabled = n < 1 || !free;
+        saveBtn.title = !free
+          ? "All m slots full — delete one first"
+          : `Save this club to ${free}`;
+        saveBtn.setAttribute("aria-pressed", "false");
+      }
+    }
+  }
+  if (del) {
+    del.hidden = !showDel;
+    if (showDel) del.title = `Delete ${compareActiveSlot} and return to streets`;
+  }
+  if (clubGroup) clubGroup.hidden = !(showSave || showDel);
 }
 
 function rowView(id) {
@@ -828,12 +1151,77 @@ function setGlobalView(mode) {
   refreshViews();
 }
 
+function syncStreetSelection() {
+  const tabs = $("#tabs");
+  if (!tabs) return;
+  const spyTab =
+    activeLayer === "all" &&
+    comparePhase === "off" &&
+    (scrollStreet === "fx" || scrollStreet === "markets")
+      ? scrollStreet
+      : null;
+  [...tabs.querySelectorAll("button[data-layer]")].forEach((x) => {
+    const layer = x.dataset.layer;
+    const on = !focusLight && layer === activeLayer;
+    x.setAttribute("aria-selected", on ? "true" : "false");
+    x.dataset.scrollOn = spyTab && layer === spyTab ? "true" : "false";
+  });
+}
+
+/** All only: which street block is under the read line → light / FX·Markets button. */
+function syncScrollSpy() {
+  if (activeLayer !== "all" || comparePhase !== "off") {
+    if (scrollStreet != null) {
+      scrollStreet = null;
+      if (SNAP) {
+        renderLights(viewOf(SNAP));
+        syncStreetSelection();
+      }
+    }
+    return;
+  }
+  const rows = [...document.querySelectorAll("#heatBody tr[data-street]")];
+  if (!rows.length) return;
+
+  // Read line just under the stuck series title.
+  const pin = $("#pinStack");
+  const probe = (pin?.getBoundingClientRect().bottom ?? 160) + 8;
+  let current = rows[0].dataset.street || null;
+  for (const tr of rows) {
+    const top = tr.getBoundingClientRect().top;
+    if (top <= probe) current = tr.dataset.street || current;
+    else break;
+  }
+  if (current === scrollStreet) {
+    // Still refresh light/tab attrs after a full re-render.
+    applyScrollSpyUi();
+    return;
+  }
+  scrollStreet = current;
+  applyScrollSpyUi();
+}
+
+function applyScrollSpyUi() {
+  if (!SNAP) return;
+  const spyLight = scrollStreet ? TAB_TO_LIGHT[scrollStreet] || null : null;
+  document.querySelectorAll("#lights .light[data-id]").forEach((el) => {
+    const on = spyLight != null && el.dataset.id === spyLight;
+    el.dataset.focus = on ? "true" : "false";
+    el.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  syncStreetSelection();
+}
+
 function refreshViews() {
   if (!SNAP) return;
   const snap = viewOf(SNAP);
   renderLights(snap);
   renderTable(snap);
+  renderMarketBuckets();
+  syncStreetSelection();
+  syncCompareBtn();
   renderRegimeToday();
+  syncScrollSpy();
 }
 
 function syncViewControls() {
@@ -890,16 +1278,40 @@ function renderThead(rows) {
 
 function renderTable(snap) {
   if (!snap) return;
-  const layerMeta =
-    (snap.layers || []).find((l) => l.id === activeLayer) ||
-    (activeLayer === "all"
-      ? { label: "All series", blurb: "Full public book" }
-      : { label: activeLayer, blurb: "" });
+  // All keeps the full book even if a light is visually spy-focused.
+  const streetId =
+    activeLayer === "all"
+      ? "all"
+      : focusLight
+        ? LIGHT_TO_TAB[focusLight] || activeLayer
+        : activeLayer;
+  const focusMeta =
+    activeLayer !== "all" && focusLight ? snap.lights?.[focusLight] : null;
+  let layerMeta;
+  if (comparePhase === "view") {
+    layerMeta = { label: `Compare · ${compareList.length}` };
+  } else if (comparePhase === "pick") {
+    layerMeta = { label: `Pick · ${compareList.length}/${COMPARE_MAX}` };
+  } else if (focusMeta) {
+    layerMeta = {
+      label:
+        (snap.layers || []).find((l) => l.id === streetId)?.label ||
+        focusMeta.label ||
+        streetId,
+    };
+  } else if (activeLayer === "markets") {
+    layerMeta = { label: "Markets" };
+  } else {
+    layerMeta =
+      (snap.layers || []).find((l) => l.id === activeLayer) ||
+      (activeLayer === "all"
+        ? { label: "All series" }
+        : { label: activeLayer });
+  }
   $("#layerTitle").textContent = layerMeta.label || activeLayer;
-  $("#layerBlurb").textContent = layerMeta.blurb || "";
 
   const body = $("#heatBody");
-  const rows = seriesList(snap, activeLayer);
+  const rows = seriesList(snap, streetId);
   renderThead(rows);
 
   body.innerHTML = rows
@@ -907,8 +1319,15 @@ function renderTable(snap) {
       const view = rowView(s.id);
       const data =
         view === "charts" ? chartCell(s) : valuesCells(s);
-      return `<tr data-id="${s.id}" data-view="${view}">
-        <td class="name-cell"><span class="name">${s.name}</span><span class="sub">${seriesSub(s)}</span></td>
+      const voter = s.light || "";
+      const picked = compareList.includes(s.id);
+      const street = s.layer || s.street || "";
+      return `<tr data-id="${s.id}" data-view="${view}"${
+        street ? ` data-street="${escapeHtml(street)}"` : ""
+      }${voter ? ` data-voter="${escapeHtml(voter)}"` : ""}${
+        picked && comparePhase === "pick" ? ` data-compare="1"` : ""
+      }>
+        <td class="name-cell"><span class="name-stack"><span class="name">${escapeHtml(s.name)}</span><span class="sub">${escapeHtml(seriesSub(s))}</span></span></td>
         ${data}
       </tr>`;
     })
@@ -918,7 +1337,14 @@ function renderTable(snap) {
     const tr = e.target.closest("tr[data-id]");
     if (!tr) return;
     const id = tr.dataset.id;
-    // Name column → series detail; data/chart → flip that line only
+    // Pick mode: any tap on the row toggles membership (Go · n tracks live).
+    if (comparePhase === "pick") {
+      const i = compareList.indexOf(id);
+      if (i >= 0) compareList.splice(i, 1);
+      else if (compareList.length < COMPARE_MAX) compareList.push(id);
+      refreshViews();
+      return;
+    }
     if (e.target.closest(".name-cell")) {
       openSeries(snap.series[id]);
       return;
@@ -1081,10 +1507,27 @@ function openSeries(s) {
   if (!s) return;
   $("#seriesTitle").textContent = s.name;
   const code = s.search || s.fred || s.yahoo || s.id;
+  const voter = s.light || null;
+  const home = voter ? LIGHT_TO_TAB[voter] : null;
+  const street = s.street || s.layer || "";
+  const cross = voter && home && street && street !== home;
+  const lightLabel = SNAP?.lights?.[voter]?.label || voter;
+  const voteLine = voter
+    ? `<p class="series-vote">Votes the <strong>${escapeHtml(
+        lightLabel
+      )}</strong> light${
+        cross
+          ? ` · lives on ${escapeHtml(street)}, club is usually under ${escapeHtml(
+              home
+            )}`
+          : ""
+      }</p>`
+    : `<p class="series-vote muted">Does not vote a regime light — book / output line.</p>`;
   $("#seriesBody").innerHTML = `
     <div class="series-sheet">
       ${s.note ? `<p class="series-blurb">${escapeHtml(s.note)}</p>` : ""}
-      <p class="series-meta"><code>${escapeHtml(code)}</code> · ${escapeHtml(s.layer || "")} · ${escapeHtml(s.freq || "?")}</p>
+      ${voteLine}
+      <p class="series-meta"><code>${escapeHtml(code)}</code> · ${escapeHtml(street || "")} · ${escapeHtml(s.freq || "?")}</p>
       <dl class="series-stats">
         <div><dt>Latest</dt><dd>${s.latest == null ? "empty" : fmt(s.latest)}${s.units ? ` <span class="muted">${escapeHtml(s.units)}</span>` : ""}</dd></div>
         <div><dt>As-of</dt><dd>${fmtAsOf(s.asOf)}</dd></div>
@@ -1173,6 +1616,48 @@ async function boot() {
   $("#btnViewMode").onclick = () => {
     setGlobalView(globalView === "values" ? "charts" : "values");
   };
+  $("#btnCompare").onclick = () => {
+    if (comparePhase === "off") {
+      comparePhase = "pick";
+      compareList = [];
+      compareActiveSlot = null;
+      clubSavedAs = null;
+      focusLight = null;
+    } else if (comparePhase === "pick") {
+      if (!compareList.length) {
+        exitCompareToStreets();
+      } else {
+        comparePhase = "view";
+        compareActiveSlot = null;
+        clubSavedAs = null;
+      }
+    } else {
+      exitCompareToStreets();
+    }
+    refreshViews();
+  };
+  $("#btnCompareSave")?.addEventListener("click", () => {
+    if (comparePhase !== "view" || clubSavedAs) return;
+    const slot = nextFreeCompareSlot();
+    if (!slot || !compareList.length) return;
+    saveCompareSlot(slot);
+    clubSavedAs = slot;
+    compareActiveSlot = slot;
+    syncCompareBtn();
+  });
+  $("#btnCompareDelete")?.addEventListener("click", () => {
+    if (comparePhase !== "view" || !compareActiveSlot) return;
+    clearCompareSlot(compareActiveSlot);
+    exitCompareToStreets();
+    refreshViews();
+  });
+  for (const slot of COMPARE_SLOTS) {
+    $(`#btnCompare_${slot}`)?.addEventListener("click", () => {
+      if (comparePhase === "pick") return;
+      clubSavedAs = null;
+      loadCompareSlot(slot);
+    });
+  }
   $("#horizonGroup").onclick = (e) => {
     const b = e.target.closest("[data-horizon]");
     if (!b) return;
@@ -1195,13 +1680,39 @@ async function boot() {
     openSentence(viewOf(SNAP));
   });
 
-  $("#dlgLight")?.addEventListener("close", () => {
-    const dlg = $("#dlgLight");
-    if (dlg?.returnValue === "series" && pendingLightTab) {
-      jumpToStreetTab(pendingLightTab);
-    }
-    pendingLightTab = null;
+  let tabFitTimer = 0;
+  const syncPinHeight = () => {
+    const pin = $("#pinStack");
+    if (!pin) return;
+    document.documentElement.style.setProperty(
+      "--pin-h",
+      `calc(var(--safe-t) + ${Math.ceil(pin.offsetHeight)}px)`
+    );
+  };
+  window.addEventListener("resize", () => {
+    clearTimeout(tabFitTimer);
+    tabFitTimer = setTimeout(() => {
+      fitTabs();
+      syncPinHeight();
+    }, 80);
   });
+  if (window.ResizeObserver) {
+    const pin = $("#pinStack");
+    if (pin) new ResizeObserver(syncPinHeight).observe(pin);
+  }
+  syncPinHeight();
+
+  let spyRaf = 0;
+  const onScrollSpy = () => {
+    if (spyRaf) return;
+    spyRaf = requestAnimationFrame(() => {
+      spyRaf = 0;
+      syncScrollSpy();
+    });
+  };
+  window.addEventListener("scroll", onScrollSpy, { passive: true });
+  document.addEventListener("scroll", onScrollSpy, { passive: true, capture: true });
+  syncScrollSpy();
 }
 
 boot();

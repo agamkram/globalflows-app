@@ -34,8 +34,8 @@
     },
     {
       "id": "conditions",
-      "label": "Conditions",
-      "blurb": "Vol, credit spreads, financial conditions.",
+      "label": "Risk",
+      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress.",
       "role": "street"
     },
     {
@@ -162,8 +162,27 @@
       "search": "TOTLL",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null,
-      "note": "Total bank loans & leases. Credit still flowing to the real economy."
+      "light": "liquidity",
+      "weight": 1,
+      "note": "Total bank loans & leases. Private credit still flowing to the real economy."
+    },
+    {
+      "id": "CREDIT_IMPULSE",
+      "name": "Credit impulse",
+      "layer": "liquidity",
+      "pipe": "derived",
+      "derive": "credit_impulse",
+      "units": "pp",
+      "freq": "weekly",
+      "sign": 1,
+      "light": "liquidity",
+      "weight": 2,
+      "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
+      "sub": "Acceleration of bank credit",
+      "search": "CREDIT_IMPULSE",
+      "causal": "liquidity",
+      "street": "liquidity",
+      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing."
     },
     {
       "id": "BUSLOANS",
@@ -1055,15 +1074,54 @@
       "units": "% YoY",
       "freq": "quarterly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
+      "weight": 1,
       "transform": "yoy",
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/GDPC1",
-      "sub": "Economy-wide growth",
+      "sub": "Real economy-wide growth",
       "search": "GDPC1",
       "causal": "labels",
       "street": "economy",
-      "note": "Real GDP (chained). Quarterly growth of the whole economy."
+      "note": "Real GDP YoY. Volume of the whole economy — the real side of growth."
+    },
+    {
+      "id": "GDP",
+      "name": "Nominal GDP",
+      "layer": "economy",
+      "pipe": "fred",
+      "fred": "GDP",
+      "units": "% YoY",
+      "freq": "quarterly",
+      "sign": 1,
+      "light": "growth",
+      "weight": 1,
+      "transform": "yoy",
+      "freshness": "lagged",
+      "sourceUrl": "https://fred.stlouisfed.org/series/GDP",
+      "sub": "Dollar growth of the economy",
+      "search": "GDP",
+      "causal": "labels",
+      "street": "economy",
+      "note": "Nominal GDP YoY. Dollar spending in the economy — growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation."
+    },
+    {
+      "id": "NOM_REAL_SPREAD",
+      "name": "Nominal − real GDP",
+      "layer": "economy",
+      "pipe": "derived",
+      "derive": "nom_real_spread",
+      "units": "pp",
+      "freq": "quarterly",
+      "sign": 1,
+      "light": null,
+      "freshness": "lagged",
+      "sourceUrl": "https://fred.stlouisfed.org/series/GDP",
+      "sub": "Price heat in GDP",
+      "search": "NOM_REAL_SPREAD",
+      "causal": "labels",
+      "street": "economy",
+      "note": "Nominal GDP YoY minus real GDP YoY. Wide = more of the expansion is prices; tight = more is real activity. Core for credit vs duration attribution."
     },
     {
       "id": "COPPER",
@@ -1080,7 +1138,9 @@
       "search": "HG=F",
       "causal": "labels",
       "street": "economy",
-      "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy."
+      "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy.",
+      "marketBucket": "metals",
+      "order": 30
     },
     {
       "id": "VIX",
@@ -1182,7 +1242,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "S&P 500. Broad US large-cap equity risk appetite."
+      "note": "S&P 500. Broad US large-cap equity risk appetite.",
+      "marketBucket": "equities",
+      "order": 10
     },
     {
       "id": "NDX",
@@ -1199,7 +1261,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Nasdaq-100. US mega-cap / growth equity tape."
+      "note": "Nasdaq-100. US mega-cap / growth equity tape.",
+      "marketBucket": "equities",
+      "order": 20
     },
     {
       "id": "RTY",
@@ -1216,7 +1280,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Russell 2000. US small-cap risk — more domestic and credit-sensitive."
+      "note": "Russell 2000. US small-cap risk — more domestic and credit-sensitive.",
+      "marketBucket": "equities",
+      "order": 30
     },
     {
       "id": "GOLD",
@@ -1233,7 +1299,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Gold futures. Real-rate / dollar / fear hedge — treat as an output, not a cause."
+      "note": "Gold futures. Real-rate / dollar / fear hedge — treat as an output, not a cause.",
+      "marketBucket": "metals",
+      "order": 10
     },
     {
       "id": "BTC",
@@ -1250,7 +1318,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Bitcoin. Speculative liquidity-sensitive risk asset — output, not input."
+      "note": "Bitcoin. Speculative liquidity-sensitive risk asset — output, not input.",
+      "marketBucket": "crypto",
+      "order": 10
     },
     {
       "id": "WTI",
@@ -1267,7 +1337,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "West Texas Intermediate crude. US oil benchmark."
+      "note": "West Texas Intermediate crude. US oil benchmark.",
+      "marketBucket": "energy",
+      "order": 10
     },
     {
       "id": "BRENT",
@@ -1284,7 +1356,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Brent crude. Global oil benchmark."
+      "note": "Brent crude. Global oil benchmark.",
+      "marketBucket": "energy",
+      "order": 20
     },
     {
       "id": "STOCK_BOND_CORR",
@@ -1869,7 +1943,9 @@
       "sub": "Junk bond price tape",
       "search": "HYG",
       "light": null,
-      "note": "iShares High Yield Corporate Bond ETF. Price tape for HY credit (up = easier)."
+      "note": "iShares High Yield Corporate Bond ETF. Price tape for HY credit (up = easier).",
+      "marketBucket": "credit",
+      "order": 10
     },
     {
       "id": "LQD",
@@ -1886,7 +1962,9 @@
       "sub": "IG corporate bond prices",
       "search": "LQD",
       "light": null,
-      "note": "iShares IG Corporate Bond ETF. Price tape for investment-grade credit."
+      "note": "iShares IG Corporate Bond ETF. Price tape for investment-grade credit.",
+      "marketBucket": "credit",
+      "order": 20
     },
     {
       "id": "SKEW",
@@ -1920,7 +1998,9 @@
       "sub": "Precious + industrial",
       "search": "SI=F",
       "light": null,
-      "note": "Silver futures. Precious metal with industrial demand too."
+      "note": "Silver futures. Precious metal with industrial demand too.",
+      "marketBucket": "metals",
+      "order": 20
     },
     {
       "id": "TLT",
@@ -1937,7 +2017,9 @@
       "sub": "20+ year bond prices",
       "search": "TLT",
       "light": null,
-      "note": "iShares 20+ Year Treasury ETF. Long-bond price tape (up = yields down)."
+      "note": "iShares 20+ Year Treasury ETF. Long-bond price tape (up = yields down).",
+      "marketBucket": "duration",
+      "order": 30
     },
     {
       "id": "EWZ",
@@ -1954,7 +2036,237 @@
       "layer": "markets",
       "sub": "EM stock risk proxy",
       "search": "EWZ",
-      "light": null
+      "light": null,
+      "marketBucket": "equities",
+      "order": 80
+    },
+    {
+      "id": "EFA",
+      "name": "Developed ex-US equities",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "EFA",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "equities",
+      "order": 40,
+      "sourceUrl": "https://finance.yahoo.com/quote/EFA",
+      "sub": "EAFE equity ETF",
+      "search": "EFA",
+      "causal": "assets",
+      "note": "iShares MSCI EAFE. Developed equities outside the US."
+    },
+    {
+      "id": "FEZ",
+      "name": "Euro Stoxx 50 ETF",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "FEZ",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "equities",
+      "order": 45,
+      "sourceUrl": "https://finance.yahoo.com/quote/FEZ",
+      "sub": "Euro large-cap",
+      "search": "FEZ",
+      "causal": "assets",
+      "note": "SPDR Euro Stoxx 50. Core European equity risk."
+    },
+    {
+      "id": "EWJ",
+      "name": "Japan equities",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "EWJ",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "equities",
+      "order": 50,
+      "sourceUrl": "https://finance.yahoo.com/quote/EWJ",
+      "sub": "Japan equity ETF",
+      "search": "EWJ",
+      "causal": "assets",
+      "note": "iShares MSCI Japan. Japanese equity risk appetite."
+    },
+    {
+      "id": "EEM",
+      "name": "Emerging market equities",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "EEM",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "equities",
+      "order": 60,
+      "sourceUrl": "https://finance.yahoo.com/quote/EEM",
+      "sub": "EM equity ETF",
+      "search": "EEM",
+      "causal": "assets",
+      "note": "iShares MSCI Emerging Markets. Broad EM equity risk."
+    },
+    {
+      "id": "FXI",
+      "name": "China large-cap equities",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "FXI",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "equities",
+      "order": 70,
+      "sourceUrl": "https://finance.yahoo.com/quote/FXI",
+      "sub": "China equity ETF",
+      "search": "FXI",
+      "causal": "assets",
+      "note": "iShares China Large-Cap. China equity risk proxy."
+    },
+    {
+      "id": "JNK",
+      "name": "High-yield bond ETF",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "JNK",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "credit",
+      "order": 15,
+      "sourceUrl": "https://finance.yahoo.com/quote/JNK",
+      "sub": "Junk bond prices",
+      "search": "JNK",
+      "causal": "assets",
+      "note": "SPDR Bloomberg High Yield Bond ETF. Credit risk as a traded price."
+    },
+    {
+      "id": "IEF",
+      "name": "7–10y Treasury ETF",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "IEF",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "duration",
+      "order": 20,
+      "sourceUrl": "https://finance.yahoo.com/quote/IEF",
+      "sub": "Intermediate Treasuries",
+      "search": "IEF",
+      "causal": "assets",
+      "note": "iShares 7–10 Year Treasury. Intermediate duration prices."
+    },
+    {
+      "id": "SHY",
+      "name": "1–3y Treasury ETF",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "SHY",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "duration",
+      "order": 10,
+      "sourceUrl": "https://finance.yahoo.com/quote/SHY",
+      "sub": "Short Treasuries",
+      "search": "SHY",
+      "causal": "assets",
+      "note": "iShares 1–3 Year Treasury. Short duration / cash-like rates."
+    },
+    {
+      "id": "TIP",
+      "name": "TIPS ETF",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "TIP",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "duration",
+      "order": 40,
+      "sourceUrl": "https://finance.yahoo.com/quote/TIP",
+      "sub": "Inflation-linked bonds",
+      "search": "TIP",
+      "causal": "assets",
+      "note": "iShares TIPS Bond ETF. Real-rate / inflation-protected duration."
+    },
+    {
+      "id": "PLAT",
+      "name": "Platinum",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "PL=F",
+      "units": "USD/oz",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "metals",
+      "order": 40,
+      "sourceUrl": "https://finance.yahoo.com/quote/PL=F",
+      "sub": "Platinum futures",
+      "search": "PL=F",
+      "causal": "assets",
+      "note": "Platinum futures. Industrial + precious metal."
+    },
+    {
+      "id": "NATGAS",
+      "name": "Natural gas",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "NG=F",
+      "units": "USD/mmBtu",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "energy",
+      "order": 30,
+      "sourceUrl": "https://finance.yahoo.com/quote/NG=F",
+      "sub": "Henry Hub gas",
+      "search": "NG=F",
+      "causal": "assets",
+      "note": "Natural gas futures. Energy tape beyond oil."
+    },
+    {
+      "id": "ETH",
+      "name": "Ethereum",
+      "layer": "markets",
+      "street": "markets",
+      "pipe": "yahoo",
+      "yahoo": "ETH-USD",
+      "units": "USD",
+      "freq": "daily",
+      "sign": 1,
+      "light": null,
+      "marketBucket": "crypto",
+      "order": 20,
+      "sourceUrl": "https://finance.yahoo.com/quote/ETH-USD",
+      "sub": "Crypto risk asset",
+      "search": "ETH-USD",
+      "causal": "assets",
+      "note": "Ethereum. Second crypto liquidity/risk proxy beside Bitcoin."
     }
   ],
   "lights": [
@@ -1967,7 +2279,7 @@
     },
     {
       "id": "transmission",
-      "label": "Transmission",
+      "label": "Rates",
       "easing": "Easy",
       "neutral": "Neutral",
       "tight": "Tight"
@@ -2023,8 +2335,8 @@
     },
     {
       "id": "conditions",
-      "label": "Conditions",
-      "blurb": "Vol, credit spreads, financial conditions."
+      "label": "Risk",
+      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress."
     },
     {
       "id": "markets",

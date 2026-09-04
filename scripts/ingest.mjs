@@ -366,13 +366,38 @@ async function main() {
   await fs.mkdir(HIST, { recursive: true });
 
   const apiKey = process.env.FRED_API_KEY || "";
+  const marketsOnly = process.env.GF_MARKETS_ONLY === "1";
   const results = {};
   const errors = [];
 
-  console.log(`Ingesting ${catalog.series.length} series…`);
+  let priorSeries = {};
+  if (marketsOnly) {
+    try {
+      const prev = JSON.parse(await fs.readFile(path.join(ROOT, "snapshot.json"), "utf8"));
+      priorSeries = prev.series || {};
+      console.log(`Markets-only refresh — keeping ${Object.keys(priorSeries).length} prior series…`);
+    } catch {
+      console.log("Markets-only refresh — no prior snapshot, full pull for selected…");
+    }
+  }
+
+  const isMarketSeries = (s) =>
+    s.street === "markets" ||
+    s.layer === "markets" ||
+    !!s.marketBucket;
+
+  console.log(
+    marketsOnly
+      ? `Ingesting market tape (${catalog.series.filter(isMarketSeries).length} series)…`
+      : `Ingesting ${catalog.series.length} series…`
+  );
 
   for (const s of catalog.series) {
     if (s.pipe === "derived") continue;
+    if (marketsOnly && !isMarketSeries(s)) {
+      if (priorSeries[s.id]) results[s.id] = priorSeries[s.id];
+      continue;
+    }
     process.stdout.write(`  ${s.id} (${s.pipe})… `);
     try {
       let got;
@@ -413,6 +438,8 @@ async function main() {
         sign: s.sign ?? 0,
         light: stale ? null : s.light || null,
         weight: s.weight || 1,
+        marketBucket: s.marketBucket || null,
+        order: s.order ?? null,
         note: s.note || null,
         sub: s.sub || s.fred || s.yahoo || s.id,
         search: s.search || s.sub || s.fred || s.yahoo || s.id,
@@ -557,6 +584,117 @@ async function main() {
   } catch (e) {
     console.log(`  STOCK_BOND_CORR FAIL  ${e.message}`);
     errors.push({ id: "STOCK_BOND_CORR", error: String(e.message || e) });
+  }
+
+  // Derived: credit impulse = Δ(YoY% of TOTLL) over ~1y, in percentage points
+  try {
+    const totll = JSON.parse(await fs.readFile(path.join(HIST, "TOTLL.json"), "utf8"));
+    const pts = [...(totll.points || [])].sort((a, b) => a.date.localeCompare(b.date));
+    const yoy = [];
+    let j = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const end = Date.parse(pts[i].date + "T00:00:00Z");
+      const target = end - 365.25 * 86400000;
+      const targetIso = new Date(target).toISOString().slice(0, 10);
+      while (j + 1 < i && pts[j + 1].date <= targetIso) j++;
+      const base = pts[j];
+      if (!base || base.date > targetIso || !base.value) continue;
+      // Prefer nearest print within ~3 weeks of the 1y mark
+      const baseT = Date.parse(base.date + "T00:00:00Z");
+      if (Math.abs(end - baseT - 365.25 * 86400000) > 21 * 86400000) continue;
+      yoy.push({
+        date: pts[i].date,
+        value: ((pts[i].value - base.value) / Math.abs(base.value)) * 100,
+      });
+    }
+    const impulse = [];
+    let k = 0;
+    for (let i = 0; i < yoy.length; i++) {
+      const end = Date.parse(yoy[i].date + "T00:00:00Z");
+      const targetIso = new Date(end - 365.25 * 86400000).toISOString().slice(0, 10);
+      while (k + 1 < i && yoy[k + 1].date <= targetIso) k++;
+      const base = yoy[k];
+      if (!base || base.date > targetIso) continue;
+      const baseT = Date.parse(base.date + "T00:00:00Z");
+      if (Math.abs(end - baseT - 365.25 * 86400000) > 28 * 86400000) continue;
+      impulse.push({ date: yoy[i].date, value: yoy[i].value - base.value });
+    }
+    if (impulse.length < 24) throw new Error(`thin impulse history (${impulse.length})`);
+    await fs.writeFile(
+      path.join(HIST, "CREDIT_IMPULSE.json"),
+      JSON.stringify({ id: "CREDIT_IMPULSE", source: "derived", points: impulse }, null, 0)
+    );
+    const stats = computeStats(impulse);
+    const meta = catalog.series.find((x) => x.id === "CREDIT_IMPULSE");
+    results.CREDIT_IMPULSE = {
+      id: "CREDIT_IMPULSE",
+      name: meta.name,
+      layer: meta.street || "liquidity",
+      street: meta.street || "liquidity",
+      causal: meta.causal || "liquidity",
+      units: meta.units,
+      freq: "weekly",
+      sign: 1,
+      light: "liquidity",
+      weight: 2,
+      note: meta.note,
+      sub: meta.sub || "Δ bank-credit YoY",
+      search: meta.search || "CREDIT_IMPULSE",
+      freshness: "live",
+      source: "derived (Δ YoY TOTLL)",
+      sourceUrl: meta.sourceUrl,
+      ...stats,
+      status: "ok",
+    };
+    console.log(
+      `  CREDIT_IMPULSE… ok  asOf=${stats.asOf}  ${stats.latest?.toFixed?.(2)} pp`
+    );
+  } catch (e) {
+    console.log(`  CREDIT_IMPULSE FAIL  ${e.message}`);
+    errors.push({ id: "CREDIT_IMPULSE", error: String(e.message || e) });
+  }
+
+  // Derived: nominal − real GDP YoY (pp) — price heat in the expansion
+  try {
+    const nom = JSON.parse(await fs.readFile(path.join(HIST, "GDP.json"), "utf8"));
+    const real = JSON.parse(await fs.readFile(path.join(HIST, "GDPC1.json"), "utf8"));
+    const aligned = alignWeeklyApprox(nom.points || [], real.points || []);
+    const points = aligned
+      .filter((r) => Number.isFinite(r.a) && Number.isFinite(r.b))
+      .map((r) => ({ date: r.date, value: r.a - r.b }));
+    if (points.length < 8) throw new Error(`thin nom−real history (${points.length})`);
+    await fs.writeFile(
+      path.join(HIST, "NOM_REAL_SPREAD.json"),
+      JSON.stringify({ id: "NOM_REAL_SPREAD", source: "derived", points }, null, 0)
+    );
+    const stats = computeStats(points);
+    const meta = catalog.series.find((x) => x.id === "NOM_REAL_SPREAD");
+    results.NOM_REAL_SPREAD = {
+      id: "NOM_REAL_SPREAD",
+      name: meta.name,
+      layer: meta.street || "economy",
+      street: meta.street || "economy",
+      causal: meta.causal || "labels",
+      units: meta.units,
+      freq: "quarterly",
+      sign: 1,
+      light: null,
+      weight: 1,
+      note: meta.note,
+      sub: meta.sub || "GDP YoY − real GDP YoY",
+      search: meta.search || "NOM_REAL_SPREAD",
+      freshness: "lagged",
+      source: "derived (nominal − real GDP YoY)",
+      sourceUrl: meta.sourceUrl,
+      ...stats,
+      status: "ok",
+    };
+    console.log(
+      `  NOM_REAL_SPREAD… ok  asOf=${stats.asOf}  ${stats.latest?.toFixed?.(2)} pp`
+    );
+  } catch (e) {
+    console.log(`  NOM_REAL_SPREAD FAIL  ${e.message}`);
+    errors.push({ id: "NOM_REAL_SPREAD", error: String(e.message || e) });
   }
 
   // Lights — complementary clubs (catalog.light); median of member scores (not mean of a crowd)

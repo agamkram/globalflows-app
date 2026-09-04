@@ -10,6 +10,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildMeaning } from "../meaning.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
@@ -209,7 +210,18 @@ async function main() {
         })),
       };
     }
-    horizons[String(y)] = { years: y, lights };
+    const viewLights = Object.fromEntries(
+      LIGHTS.map((id) => [
+        id,
+        {
+          state: lights[id].state,
+          word: lights[id].word,
+          words: WORD[id],
+        },
+      ])
+    );
+    const meaning = buildMeaning({ series: snap.series, lights: viewLights }, y);
+    horizons[String(y)] = { years: y, lights, meaning };
   }
 
   const net = snap.series?.NET_LIQ;
@@ -218,8 +230,13 @@ async function main() {
   } else if (net.latest < 1000 || net.latest > 15000) {
     fails.push(`net liquidity absurd (${net.latest})`);
   }
+  const impulse = snap.series?.CREDIT_IMPULSE;
+  if (!impulse || impulse.status !== "ok") fails.push("credit impulse missing");
+  const gdp = snap.series?.GDP;
+  if (!gdp || gdp.status !== "ok") fails.push("nominal GDP missing");
 
   const lights2 = horizons["2"].lights;
+  const meaning2 = horizons["2"].meaning;
   const verdict = fails.length ? "NOT SPOT ON" : "SPOT ON";
 
   const bake = {
@@ -231,11 +248,22 @@ async function main() {
     defaultHorizon: 2,
     headline: headline(lights2),
     story: story(lights2),
+    meaning: meaning2,
     netLiquidity: net
       ? { latest: net.latest, asOf: net.asOf, units: net.units }
       : null,
+    creditImpulse: impulse
+      ? { latest: impulse.latest, asOf: impulse.asOf, units: impulse.units }
+      : null,
+    nomRealSpread: snap.series?.NOM_REAL_SPREAD?.status === "ok"
+      ? {
+          latest: snap.series.NOM_REAL_SPREAD.latest,
+          asOf: snap.series.NOM_REAL_SPREAD.asOf,
+          units: snap.series.NOM_REAL_SPREAD.units,
+        }
+      : null,
     horizons,
-    note: "Daily bake. Numbers locked before copy. Rarely needs an intraday refresh.",
+    note: "Daily bake. Numbers locked before copy. Meaning = duration/credit implications.",
   };
 
   const json = JSON.stringify(bake, null, 2) + "\n";
@@ -245,6 +273,10 @@ async function main() {
   console.log(`regime bake → ${path.relative(ROOT, OUT_DATA)}`);
   console.log(`verdict  ${verdict}`);
   console.log(`headline ${bake.headline}`);
+  if (meaning2) {
+    console.log(`duration ${meaning2.duration.label}`);
+    console.log(`credit   ${meaning2.credit.label}`);
+  }
   if (fails.length) {
     for (const f of fails) console.log(`  FAIL ${f}`);
     process.exit(1);
