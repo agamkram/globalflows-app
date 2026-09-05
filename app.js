@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=8";
+import { buildMeaning } from "./meaning.js?v=9";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1900,17 +1900,30 @@ async function boot() {
     if (!isPwa()) {
       pin.classList.remove("is-fixed");
       if (anchor) anchor.style.height = "0px";
-      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      const scrollY = Math.max(
+        0,
+        window.scrollY || document.documentElement.scrollTop || 0
+      );
+      const vvOff = window.visualViewport ? window.visualViewport.offsetTop : 0;
       if (safariPinHome == null) {
         pin.style.transform = "none";
-        safariPinHome = pin.getBoundingClientRect().top + scrollY;
+        safariPinHome = Math.round(
+          pin.getBoundingClientRect().top + scrollY - vvOff
+        );
       }
-      const delta = scrollY - safariPinHome;
+      // Keep ceiling on the visual viewport (URL bar show/hide).
+      const delta = Math.round(scrollY - safariPinHome + vvOff);
       if (delta > 0) {
-        pin.style.transform = `translateY(${delta}px)`;
+        pin.style.transform = `translate3d(0, ${delta}px, 0)`;
+        pin.classList.add("is-safari-stuck");
       } else {
         pin.style.transform = "none";
-        safariPinHome = pin.getBoundingClientRect().top + scrollY;
+        pin.classList.remove("is-safari-stuck");
+        const measured = Math.round(
+          pin.getBoundingClientRect().top + scrollY - vvOff
+        );
+        // Hysteresis — rubber-band / subpixels were rewriting home every frame.
+        if (Math.abs(measured - safariPinHome) > 2) safariPinHome = measured;
       }
       const top = pin.getBoundingClientRect().top;
       const bottom = pin.getBoundingClientRect().bottom;
@@ -1970,6 +1983,11 @@ async function boot() {
   document.addEventListener("scroll", onScrollSpy, spyOpts);
   document.scrollingElement?.addEventListener("scroll", onScrollSpy, spyOpts);
   document.documentElement.addEventListener("scroll", onScrollSpy, spyOpts);
+  // iOS URL bar moves visualViewport without always firing window scroll.
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("scroll", onScrollSpy, spyOpts);
+    window.visualViewport.addEventListener("resize", onScrollSpy, spyOpts);
+  }
   requestAnimationFrame(() => {
     syncPinHeight();
     syncScrollSpy();

@@ -335,6 +335,10 @@ html.pwa-standalone .pin-stack.is-fixed {
   transform: none;
 }
 
+.pin-stack.is-safari-stuck {
+  will-change: transform;
+}
+
 .pin-stack .lights {
   overflow: visible;
   /* keep focus ring from clipping at the pin edge */
