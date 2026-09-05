@@ -1,0 +1,165 @@
+# Daily regime bake. Same pattern as GovDash Heat / Orbital catalog:
+# runner pulls public series → bake → sanity → commit allowlisted JSON → Vercel.
+#
+# Kickoff ~9:29 America/New_York (after Heat 9:17, Orbital 9:23).
+# Odd minute; timezone keeps ET through DST. Actions cron can still drift.
+# workflow_dispatch for manual / dry_run.
+#
+# Email (optional): repo Actions secrets —
+#   BAKE_NOTIFY_TO   your inbox
+#   BAKE_SMTP_HOST   e.g. smtp.gmail.com
+#   BAKE_SMTP_PORT   587
+#   BAKE_SMTP_USER   SMTP login (usually the Gmail address)
+#   BAKE_SMTP_PASS   app password (not the normal Gmail password)
+# Optional: FRED_API_KEY for the JSON API path (CSV graph works without it).
+# Without mail secrets the bake still ships; before/after is always in the job summary.
+name: Regime bake
+
+on:
+  schedule:
+    - cron: "29 9 * * *"
+      timezone: "America/New_York"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Ingest + bake + sanity without committing or pushing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: globalflows-regime
+  cancel-in-progress: false
+
+jobs:
+  regime:
+    name: Bake regime
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: America/New_York
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      BAKE_NOTIFY_TO: ${{ secrets.BAKE_NOTIFY_TO }}
+      BAKE_SMTP_HOST: ${{ secrets.BAKE_SMTP_HOST }}
+      BAKE_SMTP_PORT: ${{ secrets.BAKE_SMTP_PORT }}
+      BAKE_SMTP_USER: ${{ secrets.BAKE_SMTP_USER }}
+      BAKE_SMTP_PASS: ${{ secrets.BAKE_SMTP_PASS }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      - name: Snapshot before
+        run: node scripts/bake-report.mjs --snapshot-before /tmp/regime-before.json
+
+      - name: Ingest + bake + sanity
+        id: refresh
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          npm run refresh
+
+      - name: Write before/after report
+        id: report
+        if: always()
+        run: |
+          set -euo pipefail
+          node scripts/bake-report.mjs \
+            --before /tmp/regime-before.json \
+            --after regime-today.json \
+            --out /tmp/bake-report.md
+          cat /tmp/bake-report.md >> "$GITHUB_STEP_SUMMARY"
+          cp /tmp/bake-report.md /tmp/bake-report.txt
+
+      - name: Require SPOT ON
+        id: gate
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.refresh.outcome }}" != "success" ]; then
+            echo "::error::npm run refresh failed (ingest, bake, or sanity)."
+            exit 1
+          fi
+          verdict="$(node -e "const j=require('./regime-today.json'); process.stdout.write(j.verdict||'')")"
+          if [ "$verdict" != "SPOT ON" ]; then
+            echo "::error::Bake verdict is '$verdict' — refusing to commit."
+            exit 1
+          fi
+          echo "Verdict SPOT ON."
+
+      - name: Commit and push bake files
+        id: commit
+        if: ${{ success() && (github.event_name != 'workflow_dispatch' || inputs.dry_run != true) }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          files=(
+            snapshot.json
+            data/snapshot.json
+            regime-today.json
+            data/regime-today.json
+          )
+
+          git add -- "${files[@]}"
+
+          if git diff --cached --quiet; then
+            echo "No bake file changes — nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          extra="$(git diff --cached --name-only | grep -v \
+            -e '^snapshot.json$' \
+            -e '^data/snapshot.json$' \
+            -e '^regime-today.json$' \
+            -e '^data/regime-today.json$' \
+            || true)"
+          if [ -n "${extra}" ]; then
+            echo "::error::Refusing to commit unexpected staged files:"
+            echo "${extra}"
+            exit 1
+          fi
+
+          date_label="$(LC_TIME=C date '+%-d %b %Y')"
+          git commit -m "Refresh GlobalFlows regime bake for ${date_label}."
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dry run — skip commit
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+        run: echo "Dry run — refresh finished; no commit or push."
+
+      - name: Mail before/after report
+        if: ${{ always() && steps.report.outcome == 'success' && env.BAKE_NOTIFY_TO != '' && env.BAKE_SMTP_HOST != '' && env.BAKE_SMTP_USER != '' && env.BAKE_SMTP_PASS != '' }}
+        uses: dawidd6/action-send-mail@v4
+        with:
+          server_address: ${{ env.BAKE_SMTP_HOST }}
+          server_port: ${{ env.BAKE_SMTP_PORT != '' && env.BAKE_SMTP_PORT || 587 }}
+          secure: false
+          username: ${{ env.BAKE_SMTP_USER }}
+          password: ${{ env.BAKE_SMTP_PASS }}
+          subject: ${{ steps.gate.outcome == 'success' && 'GlobalFlows bake · SUCCESS' || 'GlobalFlows bake · FAIL' }}
+          to: ${{ env.BAKE_NOTIFY_TO }}
+          from: GlobalFlows bake <${{ env.BAKE_SMTP_USER }}>
+          body: file:///tmp/bake-report.txt
+          html_body: file:///tmp/bake-report.md
+
+      - name: Note when mail secrets are missing
+        if: ${{ always() && (env.BAKE_NOTIFY_TO == '' || env.BAKE_SMTP_HOST == '' || env.BAKE_SMTP_USER == '' || env.BAKE_SMTP_PASS == '') }}
+        run: |
+          echo "Mail skipped — add BAKE_NOTIFY_TO, BAKE_SMTP_HOST, BAKE_SMTP_PORT (587), BAKE_SMTP_USER, BAKE_SMTP_PASS under Settings → Secrets → Actions. Report is in the job summary."

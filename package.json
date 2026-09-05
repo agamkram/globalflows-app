@@ -9,6 +9,7 @@
     "markets:live": "node scripts/markets-live.mjs",
     "sanity": "node scripts/sanity.mjs",
     "bake:regime": "node scripts/bake-regime.mjs",
+    "bake:report": "node scripts/bake-report.mjs",
     "mint:icons": "python3 scripts/mint-icons.py",
     "refresh": "npm run ingest && npm run bake:regime && npm run sanity",
     "refresh:markets": "npm run ingest:markets && npm run bake:regime",
