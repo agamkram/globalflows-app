@@ -64,9 +64,14 @@ html.pwa-standalone body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  /* Clear the notch/status bar at rest. Pin bleed does not depend on this. */
-  padding: max(4px, var(--safe-t)) 0 0;
+  /* Safari tab: no safe-t — env(safe-area) on scroll locks faded full-bleed off.
+     PWA clears the notch below. */
+  padding: 4px 0 0;
   flex-shrink: 0;
+}
+
+html.pwa-standalone .topbar {
+  padding-top: max(4px, var(--safe-t));
 }
 
 .topbar-title {
@@ -290,8 +295,8 @@ html.pwa-standalone body {
 }
 
 /* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick.
-   Safari tab: sticky under the notch (fixed was killing faded full-bleed for good).
-   PWA: relative + .is-fixed (fixed-when-pinned) — already solid on device. */
+   Safari tab: sticky at top:0 — sticky top:safe-t (and fixed) both kill faded
+   full-bleed until refresh. PWA: fixed-when-pinned under the notch. */
 .pin-anchor {
   height: 0;
   overflow: hidden;
@@ -300,7 +305,7 @@ html.pwa-standalone body {
 
 .pin-stack {
   position: sticky;
-  top: var(--safe-t);
+  top: 0;
   z-index: 30;
   display: flex;
   flex-direction: column;

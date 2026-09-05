@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=6";
+import { buildMeaning } from "./meaning.js?v=7";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
