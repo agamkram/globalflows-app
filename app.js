@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=12";
+import { buildMeaning } from "./meaning.js?v=13";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1919,6 +1919,7 @@ async function boot() {
         safariStickTop = next;
         pin.style.top = next ? `${next}px` : "0px";
       }
+      pin.classList.toggle("is-stuck", scrollY >= safariPinHome - 0.5);
       const top = pin.getBoundingClientRect().top;
       const bottom = pin.getBoundingClientRect().bottom;
       const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
@@ -1927,6 +1928,7 @@ async function boot() {
     }
 
     pin.style.top = "";
+    pin.classList.remove("is-stuck");
     safariPinHome = null;
     safariStickTop = null;
 
