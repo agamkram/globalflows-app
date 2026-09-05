@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260904bl";
+import { buildMeaning } from "./meaning.js?v=6";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1875,17 +1875,59 @@ async function boot() {
   });
 
   let tabFitTimer = 0;
+  let cachedSafeT = null;
+  const readSafeT = () => {
+    if (cachedSafeT != null) return cachedSafeT;
+    const probePad = document.createElement("div");
+    probePad.style.cssText =
+      "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)";
+    document.body.appendChild(probePad);
+    cachedSafeT = parseFloat(getComputedStyle(probePad).paddingTop) || 0;
+    probePad.remove();
+    return cachedSafeT;
+  };
+
+  const isPwa = () => document.documentElement.classList.contains("pwa-standalone");
+
   const syncPinHeight = () => {
     const pin = $("#pinStack");
+    const anchor = $("#pinAnchor");
     if (!pin) return;
-    // Match the stuck pin's bottom edge — offsetHeight alone was short, so
-    // row .sub lines peeked under the series title while scrolling.
+
+    // Safari tab: sticky CSS only. position:fixed was blinking faded full-bleed
+    // off permanently until refresh. PWA keeps fixed-when-pinned.
+    if (!isPwa()) {
+      pin.classList.remove("is-fixed");
+      if (anchor) anchor.style.height = "0px";
+      const top = pin.getBoundingClientRect().top;
+      const bottom = pin.getBoundingClientRect().bottom;
+      const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
+      document.documentElement.style.setProperty("--pin-h", `${pinned}px`);
+      return;
+    }
+
+    const safeT = readSafeT();
+    const probe = pin.classList.contains("is-fixed") && anchor ? anchor : pin;
+    const shouldFix = probe.getBoundingClientRect().top <= safeT + 0.5;
+
+    if (shouldFix) {
+      pin.classList.add("is-fixed");
+      if (anchor) {
+        const h = pin.offsetHeight;
+        if (anchor.offsetHeight !== h) anchor.style.height = `${h}px`;
+      }
+    } else if (pin.classList.contains("is-fixed")) {
+      pin.classList.remove("is-fixed");
+      if (anchor) anchor.style.height = "0px";
+    }
+
     const top = pin.getBoundingClientRect().top;
     const bottom = pin.getBoundingClientRect().bottom;
     const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
     document.documentElement.style.setProperty("--pin-h", `${pinned}px`);
   };
   window.addEventListener("resize", () => {
+    cachedSafeT = null;
     clearTimeout(tabFitTimer);
     tabFitTimer = setTimeout(() => {
       fitTabs();
