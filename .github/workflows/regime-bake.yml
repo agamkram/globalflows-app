@@ -1,7 +1,8 @@
 # Daily regime bake. Same pattern as GovDash Heat / Orbital catalog:
 # runner pulls public series → bake → sanity → commit allowlisted JSON → Vercel.
 #
-# Kickoff ~9:29 America/New_York (after Heat 9:17, Orbital 9:23).
+# Kickoff ~8:47 America/New_York (after typical 8:30 macro prints start
+# posting; early on purpose — 2y lights don't need mid-morning padding).
 # Odd minute; timezone keeps ET through DST. Actions cron can still drift.
 # workflow_dispatch for manual / dry_run.
 #
@@ -17,7 +18,7 @@ name: Regime bake
 
 on:
   schedule:
-    - cron: "29 9 * * *"
+    - cron: "47 8 * * *"
       timezone: "America/New_York"
   workflow_dispatch:
     inputs:
