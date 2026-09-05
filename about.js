@@ -1,4 +1,4 @@
-/** About page — ingest meta, bake status, light formula. */
+/** About page — data status + how a light gets its color. */
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -23,25 +23,26 @@ function fmtWhen(iso) {
 
 function renderFormula(snap) {
   const f = snap.formula || {};
+  const lights =
+    f.lights ||
+    "Each light averages a small set of related indicators for the window you pick (1, 2, or 5 years). A clearly high score paints green; a clearly low score paints red; in between stays amber.";
   $("#formulaBody").innerHTML = `
-    <p>${escapeHtml(
-      f.lights ||
-        "Per light: median of member scores (each = mean of sign×Ny z and flipped Ny %ile for the selected 1/2/5y window). Score >+0.45 / <−0.45 paints the word."
-    )}</p>
+    <p>${escapeHtml(lights)}</p>
     <dl class="formula-dl">
       <div>
         <dt>Net liquidity</dt>
-        <dd><code>${escapeHtml(f.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></dd>
+        <dd><code>${escapeHtml(f.netLiquidity || "Fed assets − TGA − ON RRP")}</code></dd>
       </div>
       <div>
-        <dt>Stock–bond corr</dt>
-        <dd><code>${escapeHtml(f.stockBondCorr || "rolling corr of daily equity vs Treasury returns")}</code></dd>
+        <dt>Stock–bond correlation</dt>
+        <dd><code>${escapeHtml(f.stockBondCorr || "how stock and Treasury returns have been moving together lately")}</code></dd>
       </div>
     </dl>
     <p class="muted tiny">
-      Per-line sign flips “higher” into easing vs tightening for that light.
-      Inflation treats upside as hot. The book’s 1·2·5 control recomputes lights in the UI;
-      the daily bake locks the 2y teach story.
+      For most lights, “higher” can mean easier or tighter depending on the indicator
+      (a rising yield is not the same story as rising bank reserves). Inflation treats
+      upside as hot. Changing 1 · 2 · 5 recalculates the lights on screen; the morning
+      update locks the written So what for the two-year read.
     </p>
   `;
 }
@@ -54,12 +55,11 @@ function renderAboutMeta(snap, regime) {
 
   $("#aboutIngest").textContent = fmtWhen(snap.generatedAt);
 
-  const staleNames = stale.map((s) => s.name || s.id).join(", ");
   $("#aboutCoverage").textContent = stale.length
     ? `${ok} live · ${stale.length} stale hidden${empty ? ` · ${empty} empty` : ""}`
     : `${ok} live lines${empty ? ` · ${empty} empty` : ""}`;
-  if (staleNames) {
-    $("#aboutCoverage").title = staleNames;
+  if (stale.length) {
+    $("#aboutCoverage").title = stale.map((s) => s.name || s.id).join(", ");
   }
 
   if (regime?.verdict) {
