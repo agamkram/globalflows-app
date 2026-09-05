@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=11";
+import { buildMeaning } from "./meaning.js?v=12";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1876,6 +1876,8 @@ async function boot() {
 
   let tabFitTimer = 0;
   let cachedSafeT = null;
+  let safariPinHome = null;
+  let safariStickTop = null;
   const readSafeT = () => {
     if (cachedSafeT != null) return cachedSafeT;
     const probePad = document.createElement("div");
@@ -1887,13 +1889,46 @@ async function boot() {
     return cachedSafeT;
   };
 
+  const isPwa = () => document.documentElement.classList.contains("pwa-standalone");
+
+  const scrollClamp = () => {
+    const se = document.scrollingElement || document.documentElement;
+    const maxScroll = Math.max(0, se.scrollHeight - window.innerHeight);
+    const y = window.scrollY || se.scrollTop || 0;
+    return Math.max(0, Math.min(maxScroll, y));
+  };
+
   const syncPinHeight = () => {
     const pin = $("#pinStack");
     const anchor = $("#pinAnchor");
     if (!pin) return;
 
-    pin.style.transform = "";
-    pin.classList.remove("is-safari-stuck");
+    // Safari tab: in-flow relative + top. Never sticky, never fixed, never
+    // translateY — those three were the thrash. Rubber-band is clamped.
+    if (!isPwa()) {
+      pin.classList.remove("is-fixed");
+      if (anchor) anchor.style.height = "0px";
+      const scrollY = scrollClamp();
+      if (safariPinHome == null) {
+        pin.style.top = "0px";
+        safariStickTop = 0;
+        safariPinHome = pin.getBoundingClientRect().top + scrollY;
+      }
+      const next = Math.max(0, Math.round(scrollY - safariPinHome));
+      if (safariStickTop !== next) {
+        safariStickTop = next;
+        pin.style.top = next ? `${next}px` : "0px";
+      }
+      const top = pin.getBoundingClientRect().top;
+      const bottom = pin.getBoundingClientRect().bottom;
+      const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
+      document.documentElement.style.setProperty("--pin-h", `${pinned}px`);
+      return;
+    }
+
+    pin.style.top = "";
+    safariPinHome = null;
+    safariStickTop = null;
 
     const safeT = readSafeT();
     const probe = pin.classList.contains("is-fixed") && anchor ? anchor : pin;
@@ -1917,6 +1952,8 @@ async function boot() {
   };
   window.addEventListener("resize", () => {
     cachedSafeT = null;
+    safariPinHome = null;
+    safariStickTop = null;
     clearTimeout(tabFitTimer);
     tabFitTimer = setTimeout(() => {
       fitTabs();

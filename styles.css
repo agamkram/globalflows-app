@@ -295,8 +295,9 @@ html.pwa-standalone .topbar {
 }
 
 /* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick.
-   One path: fixed-when-pinned under the notch. Safari transform polyfill
-   flickered and flew off — ripped out. */
+   PWA: fixed-when-pinned under the notch.
+   Safari tab: stay in-flow (relative + top). sticky/fixed latch the
+   translucent status-bar fade off until refresh; transform stick flew off. */
 .pin-anchor {
   height: 0;
   overflow: hidden;
@@ -322,7 +323,7 @@ html.pwa-standalone .topbar {
   overflow: visible;
 }
 
-.pin-stack.is-fixed {
+html.pwa-standalone .pin-stack.is-fixed {
   position: fixed;
   /* Sit just under the notch — leave status-bar zone clear for faded bleed. */
   top: var(--safe-t);
