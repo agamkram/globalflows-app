@@ -1,6 +1,6 @@
 /**
  * Regime → duration / credit meaning (Street physics, plain English).
- * Shared by UI + bake. Not trade advice — what the regime implies and what would break it.
+ * Shared by UI + bake. Regime → duration / credit → confirm / falsify.
  */
 
 const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];

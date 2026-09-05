@@ -67,10 +67,8 @@ function renderAboutMeta(snap, regime) {
     $("#aboutBake").textContent = `${regime.verdict} · ${when}`;
     $("#aboutBake").classList.toggle("is-ok", regime.verdict === "SPOT ON");
     $("#aboutBake").classList.toggle("is-bad", regime.verdict !== "SPOT ON");
-    const hint = $("#aboutVerdictHint");
-    if (hint) hint.textContent = regime.verdict;
   } else {
-    $("#aboutBake").textContent = "no bake file yet";
+    $("#aboutBake").textContent = "—";
   }
 }
 
