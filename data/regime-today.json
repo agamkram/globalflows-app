@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-05T00:39:52.239Z",
-  "ingestAt": "2026-09-04T21:52:05.275Z",
+  "generatedAt": "2026-09-05T15:34:00.801Z",
+  "ingestAt": "2026-09-05T15:34:00.649Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultHorizon": 2,
@@ -42,9 +42,9 @@
       "growth": "Strong",
       "inflation": "Hot",
       "risk": "Risk-on",
-      "creditImpulse": 2.9715549785887054,
+      "creditImpulse": 3.00274393222095,
       "nomRealSpread": 4.463880581194535,
-      "stockBondCorr": 0.4047807264527199
+      "stockBondCorr": 0.41329133792027456
     }
   },
   "netLiquidity": {
@@ -53,8 +53,8 @@
     "units": "USD bn"
   },
   "creditImpulse": {
-    "latest": 2.9715549785887054,
-    "asOf": "2026-08-19",
+    "latest": 3.00274393222095,
+    "asOf": "2026-08-26",
     "units": "pp"
   },
   "nomRealSpread": {
@@ -79,7 +79,7 @@
             {
               "id": "TOTLL",
               "name": "US bank loans & leases",
-              "score": 1.5538779338046889,
+              "score": 1.5500694118149179,
               "weight": 1
             },
             {
@@ -91,7 +91,7 @@
             {
               "id": "RRPONTSYD",
               "name": "Overnight reverse repo",
-              "score": 0.6377114427114834,
+              "score": 0.6482156067739562,
               "weight": 1
             },
             {
@@ -103,7 +103,7 @@
             {
               "id": "CREDIT_IMPULSE",
               "name": "Credit impulse",
-              "score": -0.5264633205709416,
+              "score": -0.5279306416356853,
               "weight": 2
             },
             {
@@ -125,15 +125,15 @@
           "label": "Rates",
           "state": "tight",
           "word": "Tight",
-          "score": -0.6215301484826263,
+          "score": -0.5820831386123592,
           "color": "red",
           "n": 6,
-          "teach": "Borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; 2s10s curve, 30-year mortgage rate lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
+          "teach": "Borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; 2s10s curve, US 2-year yield lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
           "voters": [
             {
               "id": "DFEDTARU",
               "name": "Fed funds target (top)",
-              "score": 1.022888411454908,
+              "score": 1.0213214002776287,
               "weight": 1
             },
             {
@@ -145,25 +145,25 @@
             {
               "id": "MOVE",
               "name": "Bond volatility (MOVE)",
-              "score": -0.2889746593159902,
+              "score": -0.06376518784567616,
               "weight": 1
             },
             {
               "id": "T10Y2Y",
               "name": "2s10s curve",
-              "score": -0.9540856376492626,
+              "score": -1.1004010893790421,
+              "weight": 1
+            },
+            {
+              "id": "DGS2",
+              "name": "US 2-year yield",
+              "score": -1.6644033345965843,
               "weight": 1
             },
             {
               "id": "MORTGAGE30US",
               "name": "30-year mortgage rate",
               "score": -1.7053332715453893,
-              "weight": 1
-            },
-            {
-              "id": "DGS2",
-              "name": "US 2-year yield",
-              "score": -1.7848102682226143,
               "weight": 1
             }
           ]
@@ -185,15 +185,15 @@
               "weight": 1
             },
             {
-              "id": "COPPER",
-              "name": "Copper",
-              "score": 1.48754527006942,
-              "weight": 1
-            },
-            {
               "id": "WEI",
               "name": "Weekly economic index",
               "score": 1.441559118885317,
+              "weight": 1
+            },
+            {
+              "id": "COPPER",
+              "name": "Copper",
+              "score": 1.3818097497655466,
               "weight": 1
             },
             {
@@ -257,7 +257,7 @@
           "label": "Risk",
           "state": "easing",
           "word": "Risk-on",
-          "score": 1.3166017638805663,
+          "score": 1.2644214726781657,
           "color": "green",
           "n": 4,
           "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
@@ -269,15 +269,15 @@
               "weight": 1
             },
             {
-              "id": "VIX",
-              "name": "Equity volatility (VIX)",
-              "score": 1.3244333785576434,
-              "weight": 1
-            },
-            {
               "id": "NFCI",
               "name": "Financial conditions",
               "score": 1.308770149203489,
+              "weight": 1
+            },
+            {
+              "id": "VIX",
+              "name": "Equity volatility (VIX)",
+              "score": 1.2200727961528424,
               "weight": 1
             },
             {
@@ -319,9 +319,9 @@
           "growth": "Strong",
           "inflation": "Mid",
           "risk": "Risk-on",
-          "creditImpulse": 2.9715549785887054,
+          "creditImpulse": 3.00274393222095,
           "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.4047807264527199
+          "stockBondCorr": 0.41329133792027456
         }
       }
     },
@@ -341,19 +341,19 @@
             {
               "id": "TOTLL",
               "name": "US bank loans & leases",
-              "score": 1.6864385495546035,
+              "score": 1.6809230501049945,
               "weight": 1
             },
             {
               "id": "RRPONTSYD",
               "name": "Overnight reverse repo",
-              "score": 0.9993721729873304,
+              "score": 1.0044017015747035,
               "weight": 1
             },
             {
               "id": "CREDIT_IMPULSE",
               "name": "Credit impulse",
-              "score": 0.5592730955111558,
+              "score": 0.5607735882925042,
               "weight": 2
             },
             {
@@ -387,7 +387,7 @@
           "label": "Rates",
           "state": "neutral",
           "word": "Neutral",
-          "score": 0.20719521825501852,
+          "score": 0.21403320562985856,
           "color": "amber",
           "n": 6,
           "teach": "Borrowing has looked mixed. Split: Fed funds target (top), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: funding isn’t clearly cheap or dear — funding is split.",
@@ -395,7 +395,7 @@
             {
               "id": "DFEDTARU",
               "name": "Fed funds target (top)",
-              "score": 1.3054304364550586,
+              "score": 1.3052372126752503,
               "weight": 1
             },
             {
@@ -407,13 +407,13 @@
             {
               "id": "MOVE",
               "name": "Bond volatility (MOVE)",
-              "score": 0.5916348520121322,
+              "score": 0.7069431739768761,
               "weight": 1
             },
             {
               "id": "T10Y2Y",
               "name": "2s10s curve",
-              "score": -0.17724441550209513,
+              "score": -0.278876762717159,
               "weight": 1
             },
             {
@@ -425,7 +425,7 @@
             {
               "id": "DGS2",
               "name": "US 2-year yield",
-              "score": -1.6597827014320663,
+              "score": -1.5344369778206088,
               "weight": 1
             }
           ]
@@ -443,7 +443,7 @@
             {
               "id": "COPPER",
               "name": "Copper",
-              "score": 1.6991860336641307,
+              "score": 1.6306097838702382,
               "weight": 1
             },
             {
@@ -519,7 +519,7 @@
           "label": "Risk",
           "state": "easing",
           "word": "Risk-on",
-          "score": 1.1826164435062765,
+          "score": 1.1390853700271684,
           "color": "green",
           "n": 4,
           "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
@@ -531,15 +531,15 @@
               "weight": 1
             },
             {
-              "id": "VIX",
-              "name": "Equity volatility (VIX)",
-              "score": 1.1958879182862945,
-              "weight": 1
-            },
-            {
               "id": "BAMLH0A0HYM2",
               "name": "High-yield spread",
               "score": 1.1693449687262585,
+              "weight": 1
+            },
+            {
+              "id": "VIX",
+              "name": "Equity volatility (VIX)",
+              "score": 1.1088257713280782,
               "weight": 1
             },
             {
@@ -586,9 +586,9 @@
           "growth": "Strong",
           "inflation": "Hot",
           "risk": "Risk-on",
-          "creditImpulse": 2.9715549785887054,
+          "creditImpulse": 3.00274393222095,
           "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.4047807264527199
+          "stockBondCorr": 0.41329133792027456
         }
       }
     },
@@ -608,19 +608,19 @@
             {
               "id": "TOTLL",
               "name": "US bank loans & leases",
-              "score": 1.713248229963656,
+              "score": 1.7165713840410222,
               "weight": 1
             },
             {
               "id": "RRPONTSYD",
               "name": "Overnight reverse repo",
-              "score": 1.2182692109971454,
+              "score": 1.2199501470083,
               "weight": 1
             },
             {
               "id": "CREDIT_IMPULSE",
               "name": "Credit impulse",
-              "score": 0.3758931630163819,
+              "score": 0.37558715244941443,
               "weight": 2
             },
             {
@@ -654,7 +654,7 @@
           "label": "Rates",
           "state": "easing",
           "word": "Easy",
-          "score": 0.5072390527232115,
+          "score": 0.4877962372884588,
           "color": "green",
           "n": 6,
           "teach": "Borrowing has looked cheap. Split: Bond volatility (MOVE), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: money is easy to fund with — rates/dollar aren’t fighting growth.",
@@ -662,7 +662,7 @@
             {
               "id": "MOVE",
               "name": "Bond volatility (MOVE)",
-              "score": 1.0452596040600557,
+              "score": 1.1151186637865478,
               "weight": 1
             },
             {
@@ -674,13 +674,13 @@
             {
               "id": "T10Y2Y",
               "name": "2s10s curve",
-              "score": 0.578129441552776,
+              "score": 0.5378194933375782,
               "weight": 1
             },
             {
               "id": "DFEDTARU",
               "name": "Fed funds target (top)",
-              "score": 0.4363486638936469,
+              "score": 0.4377729812393394,
               "weight": 1
             },
             {
@@ -692,7 +692,7 @@
             {
               "id": "DGS2",
               "name": "US 2-year yield",
-              "score": -0.6552841826938163,
+              "score": -0.5914566326564383,
               "weight": 1
             }
           ]
@@ -710,7 +710,7 @@
             {
               "id": "COPPER",
               "name": "Copper",
-              "score": 2.1112172113417413,
+              "score": 2.0574631353205586,
               "weight": 1
             },
             {
@@ -786,7 +786,7 @@
           "label": "Risk",
           "state": "easing",
           "word": "Risk-on",
-          "score": 1.1133965887762691,
+          "score": 1.0709399522717804,
           "color": "green",
           "n": 4,
           "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
@@ -806,7 +806,7 @@
             {
               "id": "VIX",
               "name": "Equity volatility (VIX)",
-              "score": 1.012397543033784,
+              "score": 0.9274842700248065,
               "weight": 1
             },
             {
@@ -854,9 +854,9 @@
           "growth": "Mid",
           "inflation": "Mid",
           "risk": "Risk-on",
-          "creditImpulse": 2.9715549785887054,
+          "creditImpulse": 3.00274393222095,
           "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.4047807264527199
+          "stockBondCorr": 0.41329133792027456
         }
       }
     }

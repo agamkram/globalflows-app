@@ -64,14 +64,9 @@ html.pwa-standalone body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  /* Safari tab: no safe-t — env(safe-area) on scroll locks faded full-bleed off.
-     PWA clears the notch below. */
-  padding: 4px 0 0;
+  /* Safe area lives on the stuck pin once brand scrolls away */
+  padding: var(--safe-t) 0 0;
   flex-shrink: 0;
-}
-
-html.pwa-standalone .topbar {
-  padding-top: max(4px, var(--safe-t));
 }
 
 .topbar-title {
@@ -97,10 +92,14 @@ html.pwa-standalone .topbar {
 
 .build-badge {
   flex: 0 0 auto;
-  font: 600 0.7rem var(--mono);
-  letter-spacing: 0.02em;
+  font: 600 0.62rem var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
   color: var(--muted);
-  line-height: 1;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.2;
 }
 
 .dials-toolbar {
@@ -294,20 +293,11 @@ html.pwa-standalone .topbar {
   min-width: 0;
 }
 
-/* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick.
-   PWA: fixed-when-pinned under the notch.
-   Safari tab: stay in-flow (relative + top). sticky/fixed latch the
-   translucent status-bar fade off until refresh; transform stick flew off. */
-.pin-anchor {
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
+/* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick. */
 .pin-stack {
-  position: relative;
+  position: sticky;
+  top: var(--safe-t);
   z-index: 30;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -324,37 +314,23 @@ html.pwa-standalone .topbar {
   overflow: visible;
 }
 
-/* Solid slab so the table never shows through the lights. In-flow, not
-   sticky/fixed — those latch Safari’s top fade off. */
-.pin-stack::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
-  z-index: -1;
-  pointer-events: none;
-}
-
-html:not(.pwa-standalone) .pin-stack.is-stuck::before {
-  top: calc(-1 * var(--safe-t));
-}
-
-html.pwa-standalone .pin-stack.is-fixed {
-  position: fixed;
-  /* Sit just under the notch — leave status-bar zone clear for faded bleed. */
-  top: var(--safe-t);
-  left: 0;
-  right: 0;
-  margin: 0;
-  width: auto;
-  max-width: none;
-  box-sizing: border-box;
-}
-
 .pin-stack .lights {
   overflow: visible;
   /* keep focus ring from clipping at the pin edge */
   padding: 1px;
+}
+
+/* Cover notch while pin is stuck (layout-neutral). */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--safe-t);
+  background: var(--bg);
+  z-index: 40;
+  pointer-events: none;
 }
 
 .regime-horizon {
@@ -434,7 +410,7 @@ html.pwa-standalone .pin-stack.is-fixed {
   max-width: 100%;
   align-self: start;
   padding: 0;
-  background: var(--bg);
+  background: transparent;
   border: none;
   overflow: visible;
 }
@@ -671,8 +647,6 @@ html.pwa-standalone .pin-stack.is-fixed {
 }
 
 .main {
-  position: relative;
-  z-index: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
