@@ -17,11 +17,11 @@ const SNAP = path.join(ROOT, "snapshot.json");
 const OUT_DATA = path.join(ROOT, "data", "regime-today.json");
 const OUT_ROOT = path.join(ROOT, "regime-today.json");
 
-const LIGHTS = ["liquidity", "transmission", "growth", "inflation", "risk"];
+const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
 const YEARS = [1, 2, 5];
 const WORD = {
   liquidity: { easing: "Easing", neutral: "Neutral", tight: "Tightening" },
-  transmission: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
+  rates: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
   growth: { easing: "Strong", neutral: "Mid", tight: "Soft" },
   inflation: { easing: "Hot", neutral: "Mid", tight: "Cold" },
   risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },
@@ -117,7 +117,7 @@ function pastWindow(years) {
   return "Over the past two years";
 }
 
-/** Teaching blurb — duration first, then the call, then the point. */
+/** Teaching blurb — clock is set once at the top of the regime sheet. */
 function teach(lid, c, years) {
   const soft = names(c.easy, 2);
   const hard = names(c.tight, 2);
@@ -125,52 +125,54 @@ function teach(lid, c, years) {
     c.easy.length && c.tight.length
       ? ` Split: ${soft || "some"} lean easier; ${hard || "others"} lean tighter.`
       : "";
-  const past = pastWindow(years);
 
   const by = {
     liquidity: {
-      easing: `${past}, cash has been flowing back into the system.${split} Point: plumbing is adding fuel, not draining it.`,
-      neutral: `${past}, cash conditions have looked steady — no clear flood or drain.${split} Point: liquidity isn’t the loud driver right now.`,
-      tight: `${past}, cash has been leaving the system.${split} Point: Fed plumbing is tightening — less fuel in the pipes.`,
+      easing: `Cash has been flowing back into the system.${split} Point: plumbing is adding fuel, not draining it.`,
+      neutral: `Cash conditions have looked steady — no clear flood or drain.${split} Point: liquidity isn’t the loud driver right now.`,
+      tight: `Cash has been leaving the system.${split} Point: Fed plumbing is tightening — less fuel in the pipes.`,
     },
-    transmission: {
-      easing: `${past}, borrowing has looked cheap.${split} Point: money is easy to fund with — rates/dollar aren’t fighting growth.`,
-      neutral: `${past}, borrowing has looked mixed.${split} Point: funding isn’t clearly cheap or dear — transmission is split.`,
-      tight: `${past}, borrowing has looked expensive.${split} Point: higher rates or a strong dollar are tightening the screw.`,
+    rates: {
+      easing: `Borrowing has looked cheap.${split} Point: money is easy to fund with — rates/dollar aren’t fighting growth.`,
+      neutral: `Borrowing has looked mixed.${split} Point: funding isn’t clearly cheap or dear — funding is split.`,
+      tight: `Borrowing has looked expensive.${split} Point: higher rates or a strong dollar are tightening the screw.`,
     },
     growth: {
-      easing: `${past}, real activity has looked firm.${split} Point: the economy is holding up — soft prints haven’t flipped the regime.`,
-      neutral: `${past}, growth has looked mixed.${split} Point: no clean boom or bust signal once the club is combined.`,
-      tight: `${past}, real activity has looked soft.${split} Point: the growth dial is cooling — demand/labor are under pressure.`,
+      easing: `Real activity has looked firm.${split} Point: activity is holding up — soft prints haven’t flipped the regime.`,
+      neutral: `Growth has looked mixed.${split} Point: no clean boom or bust signal once the club is combined.`,
+      tight: `Real activity has looked soft.${split} Point: the Growth dial is cooling — demand/labor are under pressure.`,
     },
     inflation: {
-      easing: `${past}, underlying prices have still looked hot.${split} Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.`,
-      neutral: `${past}, inflation has looked mixed.${split} Point: some core measures cool, others don’t — no clean Cold call.`,
-      tight: `${past}, underlying prices have looked cooler.${split} Point: inflation pressure is fading in this window.`,
+      easing: `Underlying prices have still looked hot.${split} Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.`,
+      neutral: `Inflation has looked mixed.${split} Point: some core measures cool, others don’t — no clean Cold call.`,
+      tight: `Underlying prices have looked cooler.${split} Point: inflation pressure is fading in this window.`,
     },
     risk: {
-      easing: `${past}, market fear has stayed cheap.${split} Point: vol and credit are quiet — the tape isn’t priced for pain.`,
-      neutral: `${past}, fear gauges have looked mixed.${split} Point: not a clear risk-on or risk-off tape.`,
-      tight: `${past}, markets have been paying up for fear.${split} Point: vol/credit stress is elevated — risk is on the back foot.`,
+      easing: `Market fear has stayed cheap.${split} Point: vol and credit are quiet — the tape isn’t priced for pain.`,
+      neutral: `Fear gauges have looked mixed.${split} Point: not a clear risk-on or risk-off tape.`,
+      tight: `Markets have been paying up for fear.${split} Point: vol/credit stress is elevated — risk is on the back foot.`,
     },
   };
-  return by[lid]?.[c.state] || `${past}, ${c.word}.`;
+  return by[lid]?.[c.state] || `${c.word}.`;
 }
 
 function headline(lights2) {
   const L = lights2.liquidity.word;
-  const T = lights2.transmission.word;
+  const T = lights2.rates.word;
   const G = lights2.growth.word;
   const I = lights2.inflation.word;
   const R = lights2.risk.word;
   return `Cash ${L.toLowerCase()}, borrowing ${T.toLowerCase()}, growth ${G.toLowerCase()}, inflation ${I.toLowerCase()}, risk ${R.toLowerCase()}.`;
 }
 
-function story(lights2) {
+function story(lights2, years = 2) {
   const parts = LIGHTS.map((id) => lights2[id].teach);
-  // One tight paragraph from the five teaches — first sentence of each
+  // Clock once, then first sentence of each teach — no repeated “Over the past…”
   const bites = parts.map((t) => t.split(".")[0].trim() + ".");
-  return bites.join(" ");
+  const first = bites[0];
+  const rest = bites.slice(1).join(" ");
+  const opened = first.charAt(0).toLowerCase() + first.slice(1);
+  return `${pastWindow(years)}, ${opened}${rest ? ` ${rest}` : ""}`;
 }
 
 async function main() {

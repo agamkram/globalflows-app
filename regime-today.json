@@ -1,27 +1,27 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-04T19:02:50.502Z",
-  "ingestAt": "2026-09-04T19:02:48.820Z",
+  "generatedAt": "2026-09-05T00:39:52.239Z",
+  "ingestAt": "2026-09-04T21:52:05.275Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultHorizon": 2,
   "headline": "Cash neutral, borrowing neutral, growth strong, inflation hot, risk risk-on.",
-  "story": "Over the past two years, cash conditions have looked steady — no clear flood or drain. Over the past two years, borrowing has looked mixed. Over the past two years, real activity has looked firm. Over the past two years, underlying prices have still looked hot. Over the past two years, market fear has stayed cheap.",
+  "story": "Over the past two years, cash conditions have looked steady — no clear flood or drain. Borrowing has looked mixed. Real activity has looked firm. Underlying prices have still looked hot. Market fear has stayed cheap.",
   "meaning": {
     "past": "Over the past two years",
     "years": 2,
     "duration": {
       "dir": "rising",
       "label": "Duration risk rising",
-      "line": "Over the past two years, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite."
+      "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
     },
     "credit": {
       "dir": "falling",
       "label": "Credit risk falling",
-      "line": "Over the past two years, credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
+      "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
     },
     "confirm": [
-      "Strong growth with hot inflation is a classic duration-hostile mix — credit can still look fine until the Fed or the long end bites.",
+      "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
       "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
       "The 10y yield is high vs this window — markets are already marking duration risk up."
     ],
@@ -29,16 +29,16 @@
       "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
     ],
     "lines": [
-      "Over the past two years, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite.",
-      "Over the past two years, credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
-      "Strong growth with hot inflation is a classic duration-hostile mix — credit can still look fine until the Fed or the long end bites.",
+      "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
+      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
+      "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
       "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
       "The 10y yield is high vs this window — markets are already marking duration risk up.",
       "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
     ],
     "snapshot": {
       "liquidity": "Neutral",
-      "transmission": "Neutral",
+      "rates": "Neutral",
       "growth": "Strong",
       "inflation": "Hot",
       "risk": "Risk-on",
@@ -74,7 +74,7 @@
           "score": -0.2872490030891269,
           "color": "amber",
           "n": 7,
-          "teach": "Over the past year, cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Fed assets lean easier; Credit impulse, Bank reserves at Fed lean tighter. Point: liquidity isn’t the loud driver right now.",
+          "teach": "Cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Fed assets lean easier; Credit impulse, Bank reserves at Fed lean tighter. Point: liquidity isn’t the loud driver right now.",
           "voters": [
             {
               "id": "TOTLL",
@@ -120,15 +120,15 @@
             }
           ]
         },
-        "transmission": {
-          "id": "transmission",
+        "rates": {
+          "id": "rates",
           "label": "Rates",
           "state": "tight",
           "word": "Tight",
           "score": -0.6215301484826263,
           "color": "red",
           "n": 6,
-          "teach": "Over the past year, borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; 2s10s curve, 30-year mortgage rate lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
+          "teach": "Borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; 2s10s curve, 30-year mortgage rate lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
           "voters": [
             {
               "id": "DFEDTARU",
@@ -176,7 +176,7 @@
           "score": 1.0651781042788833,
           "color": "green",
           "n": 7,
-          "teach": "Over the past year, real activity has looked firm. Point: the economy is holding up — soft prints haven’t flipped the regime.",
+          "teach": "Real activity has looked firm. Point: activity is holding up — soft prints haven’t flipped the regime.",
           "voters": [
             {
               "id": "UNRATE",
@@ -187,7 +187,7 @@
             {
               "id": "COPPER",
               "name": "Copper",
-              "score": 1.4772888809115372,
+              "score": 1.48754527006942,
               "weight": 1
             },
             {
@@ -230,7 +230,7 @@
           "score": 0.23846079659807273,
           "color": "amber",
           "n": 3,
-          "teach": "Over the past year, inflation has looked mixed. Split: Core PCE lean easier; Inflation expectations, Core CPI lean tighter. Point: some core measures cool, others don’t — no clean Cold call.",
+          "teach": "Inflation has looked mixed. Split: Core PCE lean easier; Inflation expectations, Core CPI lean tighter. Point: some core measures cool, others don’t — no clean Cold call.",
           "voters": [
             {
               "id": "PCEPILFE",
@@ -260,7 +260,7 @@
           "score": 1.3166017638805663,
           "color": "green",
           "n": 4,
-          "teach": "Over the past year, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
           "voters": [
             {
               "id": "BAMLH0A0HYM2",
@@ -295,12 +295,12 @@
         "duration": {
           "dir": "rising",
           "label": "Duration risk rising",
-          "line": "Over the past year, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite."
+          "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
         },
         "credit": {
           "dir": "mixed",
           "label": "Credit risk mixed",
-          "line": "Over the past year, credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing."
+          "line": "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing."
         },
         "confirm": [
           "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
@@ -308,14 +308,14 @@
         ],
         "falsify": [],
         "lines": [
-          "Over the past year, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite.",
-          "Over the past year, credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing.",
+          "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
+          "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing.",
           "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
           "The 10y yield is high vs this window — markets are already marking duration risk up."
         ],
         "snapshot": {
           "liquidity": "Neutral",
-          "transmission": "Tight",
+          "rates": "Tight",
           "growth": "Strong",
           "inflation": "Mid",
           "risk": "Risk-on",
@@ -336,7 +336,7 @@
           "score": 0.24437400882305182,
           "color": "amber",
           "n": 7,
-          "teach": "Over the past two years, cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Overnight reverse repo lean easier; Net liquidity, Treasury cash account lean tighter. Point: liquidity isn’t the loud driver right now.",
+          "teach": "Cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Overnight reverse repo lean easier; Net liquidity, Treasury cash account lean tighter. Point: liquidity isn’t the loud driver right now.",
           "voters": [
             {
               "id": "TOTLL",
@@ -382,15 +382,15 @@
             }
           ]
         },
-        "transmission": {
-          "id": "transmission",
+        "rates": {
+          "id": "rates",
           "label": "Rates",
           "state": "neutral",
           "word": "Neutral",
           "score": 0.20719521825501852,
           "color": "amber",
           "n": 6,
-          "teach": "Over the past two years, borrowing has looked mixed. Split: Fed funds target (top), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: funding isn’t clearly cheap or dear — transmission is split.",
+          "teach": "Borrowing has looked mixed. Split: Fed funds target (top), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: funding isn’t clearly cheap or dear — funding is split.",
           "voters": [
             {
               "id": "DFEDTARU",
@@ -438,12 +438,12 @@
           "score": 1.2238243870100316,
           "color": "green",
           "n": 7,
-          "teach": "Over the past two years, real activity has looked firm. Point: the economy is holding up — soft prints haven’t flipped the regime.",
+          "teach": "Real activity has looked firm. Point: activity is holding up — soft prints haven’t flipped the regime.",
           "voters": [
             {
               "id": "COPPER",
               "name": "Copper",
-              "score": 1.6912993924384754,
+              "score": 1.6991860336641307,
               "weight": 1
             },
             {
@@ -492,7 +492,7 @@
           "score": 0.6764692307702096,
           "color": "green",
           "n": 3,
-          "teach": "Over the past two years, underlying prices have still looked hot. Split: Core PCE lean easier; Core CPI lean tighter. Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.",
+          "teach": "Underlying prices have still looked hot. Split: Core PCE lean easier; Core CPI lean tighter. Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.",
           "voters": [
             {
               "id": "PCEPILFE",
@@ -522,7 +522,7 @@
           "score": 1.1826164435062765,
           "color": "green",
           "n": 4,
-          "teach": "Over the past two years, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
           "voters": [
             {
               "id": "NFCI",
@@ -557,15 +557,15 @@
         "duration": {
           "dir": "rising",
           "label": "Duration risk rising",
-          "line": "Over the past two years, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite."
+          "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
         },
         "credit": {
           "dir": "falling",
           "label": "Credit risk falling",
-          "line": "Over the past two years, credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
+          "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
         },
         "confirm": [
-          "Strong growth with hot inflation is a classic duration-hostile mix — credit can still look fine until the Fed or the long end bites.",
+          "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
           "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
           "The 10y yield is high vs this window — markets are already marking duration risk up."
         ],
@@ -573,16 +573,16 @@
           "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
         ],
         "lines": [
-          "Over the past two years, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value. Real 10y yields sit high vs this window — discount rates bite.",
-          "Over the past two years, credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
-          "Strong growth with hot inflation is a classic duration-hostile mix — credit can still look fine until the Fed or the long end bites.",
+          "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
+          "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
+          "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
           "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
           "The 10y yield is high vs this window — markets are already marking duration risk up.",
           "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
         ],
         "snapshot": {
           "liquidity": "Neutral",
-          "transmission": "Neutral",
+          "rates": "Neutral",
           "growth": "Strong",
           "inflation": "Hot",
           "risk": "Risk-on",
@@ -603,7 +603,7 @@
           "score": -0.8794952486278635,
           "color": "red",
           "n": 7,
-          "teach": "Over the past five years, cash has been leaving the system. Split: US bank loans & leases, Overnight reverse repo lean easier; Fed assets, Net liquidity lean tighter. Point: Fed plumbing is tightening — less fuel in the pipes.",
+          "teach": "Cash has been leaving the system. Split: US bank loans & leases, Overnight reverse repo lean easier; Fed assets, Net liquidity lean tighter. Point: Fed plumbing is tightening — less fuel in the pipes.",
           "voters": [
             {
               "id": "TOTLL",
@@ -649,15 +649,15 @@
             }
           ]
         },
-        "transmission": {
-          "id": "transmission",
+        "rates": {
+          "id": "rates",
           "label": "Rates",
           "state": "easing",
           "word": "Easy",
           "score": 0.5072390527232115,
           "color": "green",
           "n": 6,
-          "teach": "Over the past five years, borrowing has looked cheap. Split: Bond volatility (MOVE), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: money is easy to fund with — rates/dollar aren’t fighting growth.",
+          "teach": "Borrowing has looked cheap. Split: Bond volatility (MOVE), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: money is easy to fund with — rates/dollar aren’t fighting growth.",
           "voters": [
             {
               "id": "MOVE",
@@ -705,12 +705,12 @@
           "score": 0.2621290523141743,
           "color": "amber",
           "n": 7,
-          "teach": "Over the past five years, growth has looked mixed. Point: no clean boom or bust signal once the club is combined.",
+          "teach": "Growth has looked mixed. Point: no clean boom or bust signal once the club is combined.",
           "voters": [
             {
               "id": "COPPER",
               "name": "Copper",
-              "score": 2.103434527041852,
+              "score": 2.1112172113417413,
               "weight": 1
             },
             {
@@ -759,7 +759,7 @@
           "score": -0.2211178839174498,
           "color": "amber",
           "n": 3,
-          "teach": "Over the past five years, inflation has looked mixed. Point: some core measures cool, others don’t — no clean Cold call.",
+          "teach": "Inflation has looked mixed. Point: some core measures cool, others don’t — no clean Cold call.",
           "voters": [
             {
               "id": "MICH",
@@ -789,7 +789,7 @@
           "score": 1.1133965887762691,
           "color": "green",
           "n": 4,
-          "teach": "Over the past five years, market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
+          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
           "voters": [
             {
               "id": "BAMLH0A0HYM2",
@@ -824,12 +824,12 @@
         "duration": {
           "dir": "mixed",
           "label": "Duration risk mixed",
-          "line": "Over the past five years, duration is split — parts of the rates complex ease while inflation or growth still fight a clean bond rally. Real 10y yields sit high vs this window — discount rates bite."
+          "line": "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid. Real 10y yields sit high vs this window — discount rates still bite."
         },
         "credit": {
           "dir": "mixed",
           "label": "Credit risk mixed",
-          "line": "Over the past five years, credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty."
+          "line": "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty."
         },
         "confirm": [
           "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
@@ -841,8 +841,8 @@
           "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
         ],
         "lines": [
-          "Over the past five years, duration is split — parts of the rates complex ease while inflation or growth still fight a clean bond rally. Real 10y yields sit high vs this window — discount rates bite.",
-          "Over the past five years, credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.",
+          "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid. Real 10y yields sit high vs this window — discount rates still bite.",
+          "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.",
           "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
           "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
           "Gold is strong while cash drains — not a clean plumbing confirmation; gold is doing another job.",
@@ -850,7 +850,7 @@
         ],
         "snapshot": {
           "liquidity": "Tightening",
-          "transmission": "Easy",
+          "rates": "Easy",
           "growth": "Mid",
           "inflation": "Mid",
           "risk": "Risk-on",

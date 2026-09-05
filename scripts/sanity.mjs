@@ -13,13 +13,13 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
 const OUT = path.join(ROOT, "sanity.txt");
 
-const LIGHTS = ["liquidity", "transmission", "growth", "inflation", "risk"];
+const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
 const YEARS = [1, 2, 5];
 
 /** Word the UI paints for each light + state. */
 const WORD = {
   liquidity: { easing: "Easing", neutral: "Neutral", tight: "Tightening" },
-  transmission: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
+  rates: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
   growth: { easing: "Strong", neutral: "Mid", tight: "Soft" },
   inflation: { easing: "Hot", neutral: "Mid", tight: "Cold" },
   risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },

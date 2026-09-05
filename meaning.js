@@ -3,7 +3,7 @@
  * Shared by UI + bake. Not trade advice — what the regime implies and what would break it.
  */
 
-const LIGHT_IDS = ["liquidity", "transmission", "growth", "inflation", "risk"];
+const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -38,7 +38,7 @@ function pastWindow(years) {
 export function buildMeaning(snap, years = 2) {
   const lights = snap?.lights || {};
   const L = stateOf(lights, "liquidity");
-  const T = stateOf(lights, "transmission");
+  const T = stateOf(lights, "rates");
   const G = stateOf(lights, "growth");
   const I = stateOf(lights, "inflation");
   const R = stateOf(lights, "risk");
@@ -60,8 +60,8 @@ export function buildMeaning(snap, years = 2) {
   const realYZ = hz(realY, years).z;
 
   // --- Duration risk (rates / present value) ---
-  // Rising duration risk: inflation heat, tight transmission, or hot nominal-vs-real GDP.
-  // Falling: cold inflation + easy transmission.
+  // Rising duration risk: inflation heat, tight rates, or hot nominal-vs-real GDP.
+  // Falling: cold inflation + easy rates.
   let durationDir = "mixed";
   let durationLabel = "Duration risk mixed";
   let durationLine = "";
@@ -78,19 +78,22 @@ export function buildMeaning(snap, years = 2) {
   if (durationUp && !durationDown) {
     durationDir = "rising";
     durationLabel = "Duration risk rising";
-    durationLine = `${past}, duration looks hard — inflation and/or funding aren’t giving bonds a clean bid. Long rates stay a constraint on present value.`;
+    durationLine =
+      "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure.";
   } else if (durationDown && !durationUp) {
     durationDir = "falling";
     durationLabel = "Duration risk falling";
-    durationLine = `${past}, duration looks easier — cooler inflation and softer transmission open room for bonds to work if credit stays calm.`;
+    durationLine =
+      "Long bonds can work again — cooler inflation and softer funding open room for duration if credit stays calm.";
   } else {
     durationDir = "mixed";
     durationLabel = "Duration risk mixed";
-    durationLine = `${past}, duration is split — parts of the rates complex ease while inflation or growth still fight a clean bond rally.`;
+    durationLine =
+      "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid.";
   }
 
   if (realYZ != null && realYZ > 0.75 && durationDir !== "falling") {
-    durationLine += ` Real 10y yields sit high vs this window — discount rates bite.`;
+    durationLine += " Real 10y yields sit high vs this window — discount rates still bite.";
   }
 
   // --- Credit risk (cash-flow / risk appetite) ---
@@ -110,15 +113,18 @@ export function buildMeaning(snap, years = 2) {
   if (creditUp && !creditDown) {
     creditDir = "rising";
     creditLabel = "Credit risk rising";
-    creditLine = `${past}, credit risk is waking up — soft growth, wider spreads, or a weak credit impulse mean cash flows look less certain.`;
+    creditLine =
+      "Credit risk is waking up — soft growth, wider spreads, or a weak credit impulse mean cash flows look less certain.";
   } else if (creditDown && !creditUp) {
     creditDir = "falling";
     creditLabel = "Credit risk falling";
-    creditLine = `${past}, credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible.`;
+    creditLine =
+      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible.";
   } else {
     creditDir = "mixed";
     creditLabel = "Credit risk mixed";
-    creditLine = `${past}, credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.`;
+    creditLine =
+      "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.";
   }
 
   if (impulseZ != null && Number.isFinite(impulseZ)) {
@@ -153,7 +159,7 @@ export function buildMeaning(snap, years = 2) {
 
   if (G === "easing" && I === "easing") {
     confirm.push(
-      "Strong growth with hot inflation is a classic duration-hostile mix — credit can still look fine until the Fed or the long end bites."
+      "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites."
     );
     falsify.push("Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens.");
   }
@@ -193,7 +199,7 @@ export function buildMeaning(snap, years = 2) {
   if (dollar && T === "tight") {
     const dz = hz(dollar, years).z;
     if (dz != null && dz > 0.45) {
-      confirm.push("A strong dollar is part of the tight transmission story — global USD liquidity is scarce.");
+      confirm.push("A strong dollar is part of the tight rates story — global USD liquidity is scarce.");
     }
   }
 
@@ -219,7 +225,7 @@ export function buildMeaning(snap, years = 2) {
     lines,
     snapshot: {
       liquidity: wordOf(lights, "liquidity"),
-      transmission: wordOf(lights, "transmission"),
+      rates: wordOf(lights, "rates"),
       growth: wordOf(lights, "growth"),
       inflation: wordOf(lights, "inflation"),
       risk: wordOf(lights, "risk"),

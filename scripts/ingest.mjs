@@ -564,8 +564,8 @@ async function main() {
     results.STOCK_BOND_CORR = {
       id: "STOCK_BOND_CORR",
       name: meta.name,
-      layer: meta.street || "conditions",
-      street: meta.street || "conditions",
+      layer: meta.street || "risk",
+      street: meta.street || "risk",
       causal: meta.causal || "risk",
       units: meta.units,
       freq: "daily",
@@ -672,8 +672,8 @@ async function main() {
     results.NOM_REAL_SPREAD = {
       id: "NOM_REAL_SPREAD",
       name: meta.name,
-      layer: meta.street || "economy",
-      street: meta.street || "economy",
+      layer: meta.street || "growth",
+      street: meta.street || "growth",
       causal: meta.causal || "labels",
       units: meta.units,
       freq: "quarterly",
@@ -699,7 +699,7 @@ async function main() {
 
   // Lights — complementary clubs (catalog.light); median of member scores (not mean of a crowd)
   // Default bake = 2y same-window (z2y + pct2y). UI recomputes for 1 / 2 / 5.
-  const lightIds = ["liquidity", "transmission", "growth", "inflation", "risk"];
+  const lightIds = ["liquidity", "rates", "growth", "inflation", "risk"];
   const lights = {};
   for (const lid of lightIds) {
     const members = Object.values(results).filter(

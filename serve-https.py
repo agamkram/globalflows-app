@@ -11,6 +11,12 @@ import sys
 import tempfile
 import threading
 import time
+import json as jsonlib
+
+_LIVE_LOCK = threading.Lock()
+_LIVE_CACHE = {"t": 0, "body": None}
+_LIVE_CACHE_S = 15
+_LIVE_MIN_FRESH_S = 8
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_PORT = 8891
@@ -39,11 +45,66 @@ class Handler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def do_GET(self):
-        path = (self.path or "/").split("?", 1)[0]
+        raw = self.path or "/"
+        path = raw.split("?", 1)[0]
+        if path == "/api/markets-live":
+            return self._markets_live(raw)
         if path != "/" and not (ROOT / path.lstrip("/")).exists():
             if not path.startswith("/api"):
                 self.path = "/index.html"
         return super().do_GET()
+
+    def _markets_live(self, raw):
+        fresh = "fresh=1" in (raw.split("?", 1)[1] if "?" in raw else "")
+        now = time.time()
+        with _LIVE_LOCK:
+            hit = _LIVE_CACHE["body"] and (
+                (fresh and now - _LIVE_CACHE["t"] < _LIVE_MIN_FRESH_S)
+                or (not fresh and now - _LIVE_CACHE["t"] < _LIVE_CACHE_S)
+            )
+            if hit:
+                body = _LIVE_CACHE["body"]
+                self._send_json(200, body)
+                return
+        try:
+            proc = subprocess.run(
+                ["node", str(ROOT / "scripts" / "markets-live.mjs")],
+                cwd=str(ROOT),
+                capture_output=True,
+                timeout=25,
+                check=False,
+            )
+        except Exception as e:
+            with _LIVE_LOCK:
+                if _LIVE_CACHE["body"]:
+                    self._send_json(200, _LIVE_CACHE["body"])
+                    return
+            self._send_json(502, jsonlib.dumps({"error": str(e), "quotes": {}}))
+            return
+        if proc.returncode != 0 or not proc.stdout:
+            err = (proc.stderr or b"").decode("utf-8", "replace").strip() or "live pull failed"
+            with _LIVE_LOCK:
+                if _LIVE_CACHE["body"]:
+                    self._send_json(200, _LIVE_CACHE["body"])
+                    return
+            self._send_json(502, jsonlib.dumps({"error": err, "quotes": {}}))
+            return
+        body = proc.stdout
+        with _LIVE_LOCK:
+            _LIVE_CACHE["t"] = now
+            _LIVE_CACHE["body"] = body
+        self._send_json(200, body)
+
+    def _send_json(self, code, body):
+        if isinstance(body, str):
+            raw = body.encode("utf-8")
+        else:
+            raw = body
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
 
     def guess_type(self, path):
         p = (path or "").split("?", 1)[0].lower()

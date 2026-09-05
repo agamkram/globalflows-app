@@ -35,18 +35,15 @@ body {
   color: var(--text);
   font-family: var(--sans);
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
   max-width: 100%;
+  min-height: 100%;
+  /* No overflow here: overflow-x + visible-y pairs to auto and breaks sticky + scroll-spy. */
 }
 
 html.pwa-standalone,
 html.pwa-standalone body {
   height: calc(var(--pwa-fill-h) + var(--pwa-extra-b));
   min-height: calc(var(--pwa-fill-h) + var(--pwa-extra-b));
-}
-
-body {
-  min-height: 100%;
 }
 
 .app {
@@ -59,7 +56,7 @@ body {
   max-width: 100%;
   width: 100%;
   margin: 0;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 .topbar {
@@ -67,16 +64,20 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  /* Title as high as safe-area allows */
+  /* Safe area lives on the stuck pin once brand scrolls away */
   padding: var(--safe-t) 0 0;
+  flex-shrink: 0;
 }
 
 .topbar-title {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .brand-title {
@@ -87,6 +88,18 @@ body {
   letter-spacing: -0.02em;
   line-height: 26px;
   white-space: nowrap;
+}
+
+.build-badge {
+  flex: 0 0 auto;
+  font: 600 0.62rem var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.2;
 }
 
 .dials-toolbar {
@@ -289,21 +302,35 @@ body {
   flex-direction: column;
   align-items: stretch;
   gap: 6px;
-  width: 100%;
+  width: auto;
   min-width: 0;
+  flex-shrink: 0;
   padding: 4px 0 6px;
+  margin: 0 calc(-1 * (4px + var(--safe-r))) 0 calc(-1 * (4px + var(--safe-l)));
+  padding-left: calc(4px + var(--safe-l));
+  padding-right: calc(4px + var(--safe-r));
   background: var(--bg);
   box-shadow: 0 1px 0 var(--line);
+  overflow: visible;
 }
 
-.pin-stack::before {
+.pin-stack .lights {
+  overflow: visible;
+  /* keep focus ring from clipping at the pin edge */
+  padding: 1px;
+}
+
+/* Cover notch while pin is stuck (layout-neutral). */
+body::before {
   content: "";
-  position: absolute;
-  left: -4px;
-  right: -4px;
-  bottom: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: var(--safe-t);
   background: var(--bg);
+  z-index: 40;
+  pointer-events: none;
 }
 
 .regime-horizon {
@@ -402,10 +429,17 @@ body {
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: 1;
 }
 
 .light[data-focus="true"] {
   border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .light:last-child {
@@ -572,10 +606,16 @@ body {
   display: flex;
   flex-wrap: nowrap;
   gap: 1px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 0 0 2px;
   width: 100%;
   min-width: 0;
+  scrollbar-width: none;
+}
+
+.layer-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .layer-tabs button {
@@ -610,7 +650,7 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
-  flex: 1;
+  flex: 0 0 auto;
   min-height: 0;
 }
 
@@ -698,11 +738,103 @@ body {
 
 .heatmap-titles {
   min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .heatmap-head h2 {
   margin: 0;
   font-size: 1rem;
+}
+
+.street-hint {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 500 0.72rem var(--sans);
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent);
+  text-underline-offset: 2px;
+}
+
+.street-hint:active {
+  color: var(--accent);
+}
+
+.street-hint[hidden] {
+  display: none;
+}
+
+.title-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title-live[hidden] {
+  display: none;
+}
+
+.title-age {
+  font: 500 0.78rem var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.btn-refresh {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg2);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-refresh svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.btn-refresh:active {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.btn-refresh:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.btn-refresh.is-loading svg {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-refresh.is-loading svg {
+    animation: none;
+  }
 }
 
 .dur-group {
@@ -802,15 +934,28 @@ body {
 }
 
 .table-scroll {
-  overflow: visible;
+  /* Prefer clip so x:auto does not force y:auto (sticky/spy regression). */
+  overflow-x: auto;
+  overflow-y: clip;
   margin-top: 4px;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+@supports not (overflow: clip) {
+  .table-scroll {
+    /* Older WebKit: avoid creating a vertical scrollport; allow x swipe only via touch. */
+    overflow: visible;
+  }
 }
 
 .heat {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
-  border-collapse: collapse;
+  /* separate: collapse breaks position:sticky on th in WebKit */
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.72rem;
 }
 
@@ -827,11 +972,11 @@ body {
   text-align: left;
   position: sticky;
   left: 0;
-  background: var(--bg2);
+  background: var(--bg);
   z-index: 1;
   padding-left: 4px;
   width: 38%;
-  max-width: 11rem;
+  /* no max-width — must match .heat-colhead Name column */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -842,17 +987,59 @@ body {
 }
 
 .heat th {
+  /* Layout-only — visible labels are #heatColhead in the pin. */
+  height: 0;
+  max-height: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  overflow: hidden;
+  line-height: 0;
+  font-size: 0;
+  color: transparent;
+  position: static;
+  background: transparent;
+  box-shadow: none;
+}
+
+.heat th:first-child {
+  z-index: 1;
+}
+
+html {
+  scroll-padding-top: var(--pin-h, 0px);
+}
+
+.heat-colhead {
+  display: grid;
+  grid-template-columns: minmax(0, 38%) 1fr 1fr 1fr;
+  gap: 0;
+  width: 100%;
+  padding: 4px 4px 6px;
+  margin: 0;
   color: var(--muted);
-  font-weight: 500;
-  font-size: 0.6rem;
+  font: 500 0.6rem var(--sans);
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  position: sticky;
-  top: var(--pin-h, 0px);
-  background: var(--bg2);
-  z-index: 2;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.heat-colhead[data-mode="charts"] {
+  grid-template-columns: minmax(0, 38%) 1fr;
+}
+
+.heat-colhead span {
+  text-align: right;
+  padding: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heat-colhead span:first-child {
+  text-align: left;
+  padding-left: 4px;
 }
 
 .heat .th-full {
@@ -995,16 +1182,30 @@ body {
 }
 
 body.dlg-open {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: none;
 }
 
-body.dlg-open .app {
+html:has(body.dlg-open) {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
-/* Regime headline detail: pin to top; close is in header (no footer focus scroll) */
+body.dlg-open .app {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.dlg-open dialog {
+  pointer-events: auto;
+}
+
+/* Regime topsheet: phone-wide, tall enough to read — not a collapsed strip */
 #dlgSentence[open] {
   position: fixed !important;
   inset: unset !important;
@@ -1014,10 +1215,48 @@ body.dlg-open .app {
   bottom: auto !important;
   transform: translateX(-50%) !important;
   margin: 0 !important;
-  width: min(520px, calc(100% - 24px));
-  max-width: min(520px, calc(100% - 24px));
-  max-height: calc(100dvh - var(--safe-t) - 24px);
+  width: min(680px, calc(100vw - 16px)) !important;
+  max-width: min(680px, calc(100vw - 16px)) !important;
+  height: calc(100dvh - var(--safe-t) - var(--safe-b) - 16px) !important;
+  max-height: calc(100dvh - var(--safe-t) - var(--safe-b) - 16px) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#dlgSentence[open] form {
+  overflow: hidden;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 0;
+}
+
+#dlgSentence[open] > form > h3 {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 14px 18px 8px;
+  font-size: 1.05rem;
+}
+
+#dlgSentence[open] .dlg-body {
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-bottom: 0;
+  padding: 4px 18px 14px;
+  font-size: 0.92rem;
+  line-height: 1.42;
+}
+
+#dlgSentence[open] .dlg-actions {
+  flex: 0 0 auto;
+  padding: 10px 18px calc(14px + var(--safe-b));
 }
 
 .dlg-head {
