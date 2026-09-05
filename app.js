@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=10";
+import { buildMeaning } from "./meaning.js?v=11";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1876,8 +1876,6 @@ async function boot() {
 
   let tabFitTimer = 0;
   let cachedSafeT = null;
-  let safariPinHome = null;
-  let safariLockRaf = 0;
   const readSafeT = () => {
     if (cachedSafeT != null) return cachedSafeT;
     const probePad = document.createElement("div");
@@ -1889,55 +1887,14 @@ async function boot() {
     return cachedSafeT;
   };
 
-  const isPwa = () => document.documentElement.classList.contains("pwa-standalone");
-
-  const pumpSafariLock = () => {
-    safariLockRaf = 0;
-    if (isPwa()) return;
-    syncPinHeight();
-    if ($("#pinStack")?.classList.contains("is-safari-stuck") && !safariLockRaf) {
-      safariLockRaf = requestAnimationFrame(pumpSafariLock);
-    }
-  };
-
   const syncPinHeight = () => {
     const pin = $("#pinStack");
     const anchor = $("#pinAnchor");
     if (!pin) return;
 
-    // Safari tab: transform stick with per-frame visual lock — scrollY-only
-    // translate bounced hard on rubber-band flicks. PWA: fixed-when-pinned.
-    if (!isPwa()) {
-      pin.classList.remove("is-fixed");
-      if (anchor) anchor.style.height = "0px";
-      const vv = window.visualViewport;
-      const targetTop = vv ? vv.offsetTop : 0;
-      let ty = 0;
-      const tm = /translate3d\(0,\s*([-\d.]+)px/.exec(pin.style.transform || "");
-      if (tm) ty = parseFloat(tm[1]) || 0;
-      const rectTop = pin.getBoundingClientRect().top;
-      // Viewport top as if transform were identity.
-      const naturalTop = rectTop - ty;
-      if (naturalTop < targetTop - 0.5) {
-        // Correct so pin’s painted top stays on the visual viewport edge.
-        const nextTy = Math.round(ty + (targetTop - rectTop));
-        pin.style.transform = `translate3d(0, ${nextTy}px, 0)`;
-        pin.classList.add("is-safari-stuck");
-        // Keep correcting during momentum / rubber-band (no scroll events).
-        if (!safariLockRaf) safariLockRaf = requestAnimationFrame(pumpSafariLock);
-      } else {
-        pin.style.transform = "none";
-        pin.classList.remove("is-safari-stuck");
-        safariPinHome = null;
-      }
-      const top = pin.getBoundingClientRect().top;
-      const bottom = pin.getBoundingClientRect().bottom;
-      const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
-      document.documentElement.style.setProperty("--pin-h", `${pinned}px`);
-      return;
-    }
+    pin.style.transform = "";
+    pin.classList.remove("is-safari-stuck");
 
-    pin.style.transform = "none";
     const safeT = readSafeT();
     const probe = pin.classList.contains("is-fixed") && anchor ? anchor : pin;
     const shouldFix = probe.getBoundingClientRect().top <= safeT + 0.5;
@@ -1960,7 +1917,6 @@ async function boot() {
   };
   window.addEventListener("resize", () => {
     cachedSafeT = null;
-    safariPinHome = null;
     clearTimeout(tabFitTimer);
     tabFitTimer = setTimeout(() => {
       fitTabs();
@@ -1988,11 +1944,6 @@ async function boot() {
   document.addEventListener("scroll", onScrollSpy, spyOpts);
   document.scrollingElement?.addEventListener("scroll", onScrollSpy, spyOpts);
   document.documentElement.addEventListener("scroll", onScrollSpy, spyOpts);
-  // iOS URL bar moves visualViewport without always firing window scroll.
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("scroll", onScrollSpy, spyOpts);
-    window.visualViewport.addEventListener("resize", onScrollSpy, spyOpts);
-  }
   requestAnimationFrame(() => {
     syncPinHeight();
     syncScrollSpy();
