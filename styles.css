@@ -295,7 +295,7 @@ html.pwa-standalone .topbar {
 }
 
 /* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick.
-   Safari tab: sticky at top:0 — sticky top:safe-t (and fixed) both kill faded
+   Safari tab: transform “stick” only — position sticky/fixed both kill faded
    full-bleed until refresh. PWA: fixed-when-pinned under the notch. */
 .pin-anchor {
   height: 0;
@@ -304,8 +304,7 @@ html.pwa-standalone .topbar {
 }
 
 .pin-stack {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 30;
   display: flex;
   flex-direction: column;
@@ -323,11 +322,6 @@ html.pwa-standalone .topbar {
   overflow: visible;
 }
 
-html.pwa-standalone .pin-stack {
-  position: relative;
-  top: auto;
-}
-
 html.pwa-standalone .pin-stack.is-fixed {
   position: fixed;
   /* Sit just under the notch — leave status-bar zone clear for faded bleed. */
@@ -338,6 +332,7 @@ html.pwa-standalone .pin-stack.is-fixed {
   width: auto;
   max-width: none;
   box-sizing: border-box;
+  transform: none;
 }
 
 .pin-stack .lights {

@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=7";
+import { buildMeaning } from "./meaning.js?v=8";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1876,6 +1876,7 @@ async function boot() {
 
   let tabFitTimer = 0;
   let cachedSafeT = null;
+  let safariPinHome = null;
   const readSafeT = () => {
     if (cachedSafeT != null) return cachedSafeT;
     const probePad = document.createElement("div");
@@ -1894,11 +1895,23 @@ async function boot() {
     const anchor = $("#pinAnchor");
     if (!pin) return;
 
-    // Safari tab: sticky CSS only. position:fixed was blinking faded full-bleed
-    // off permanently until refresh. PWA keeps fixed-when-pinned.
+    // Safari tab: translateY stick — sticky/fixed both permanently kill faded
+    // full-bleed after the ceiling engages. PWA keeps fixed-when-pinned.
     if (!isPwa()) {
       pin.classList.remove("is-fixed");
       if (anchor) anchor.style.height = "0px";
+      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      if (safariPinHome == null) {
+        pin.style.transform = "none";
+        safariPinHome = pin.getBoundingClientRect().top + scrollY;
+      }
+      const delta = scrollY - safariPinHome;
+      if (delta > 0) {
+        pin.style.transform = `translateY(${delta}px)`;
+      } else {
+        pin.style.transform = "none";
+        safariPinHome = pin.getBoundingClientRect().top + scrollY;
+      }
       const top = pin.getBoundingClientRect().top;
       const bottom = pin.getBoundingClientRect().bottom;
       const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
@@ -1906,6 +1919,7 @@ async function boot() {
       return;
     }
 
+    pin.style.transform = "none";
     const safeT = readSafeT();
     const probe = pin.classList.contains("is-fixed") && anchor ? anchor : pin;
     const shouldFix = probe.getBoundingClientRect().top <= safeT + 0.5;
@@ -1928,6 +1942,7 @@ async function boot() {
   };
   window.addEventListener("resize", () => {
     cachedSafeT = null;
+    safariPinHome = null;
     clearTimeout(tabFitTimer);
     tabFitTimer = setTimeout(() => {
       fitTabs();
