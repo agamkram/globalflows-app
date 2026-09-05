@@ -1,4 +1,4 @@
-/** About page — fills ingest meta + light formula from snapshot. */
+/** About page — ingest meta, bake status, light formula. */
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -9,39 +9,92 @@ function escapeHtml(t) {
     .replace(/>/g, "&gt;");
 }
 
+function fmtWhen(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  const mm = d.getMonth() + 1;
+  const dd = d.getDate();
+  const yy = String(d.getFullYear()).slice(2);
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mi = String(d.getMinutes()).padStart(2, "0");
+  return `${mm}/${dd}/${yy} ${hh}:${mi}`;
+}
+
 function renderFormula(snap) {
   const f = snap.formula || {};
   $("#formulaBody").innerHTML = `
-    <p>${escapeHtml(f.lights || "Per light: median of member scores (sign×z and flipped percentile for the selected 1/2/5y window).")}</p>
-    <p><strong>Net liquidity:</strong> <code>${escapeHtml(f.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></p>
-    <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(f.stockBondCorr || "")}</code></p>
-    <p class="muted">Per-line sign flips “higher” into easing vs tightening for that light. Inflation light treats upside as hot. The book’s 1·2·5 control recomputes lights in the UI.</p>
+    <p>${escapeHtml(
+      f.lights ||
+        "Per light: median of member scores (each = mean of sign×Ny z and flipped Ny %ile for the selected 1/2/5y window). Score >+0.45 / <−0.45 paints the word."
+    )}</p>
+    <dl class="formula-dl">
+      <div>
+        <dt>Net liquidity</dt>
+        <dd><code>${escapeHtml(f.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></dd>
+      </div>
+      <div>
+        <dt>Stock–bond corr</dt>
+        <dd><code>${escapeHtml(f.stockBondCorr || "rolling corr of daily equity vs Treasury returns")}</code></dd>
+      </div>
+    </dl>
+    <p class="muted tiny">
+      Per-line sign flips “higher” into easing vs tightening for that light.
+      Inflation treats upside as hot. The book’s 1·2·5 control recomputes lights in the UI;
+      the daily bake locks the 2y teach story.
+    </p>
   `;
 }
 
-function renderAboutMeta(snap) {
-  const d = new Date(snap.generatedAt);
-  const when = `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+function renderAboutMeta(snap, regime) {
   const vals = Object.values(snap.series || {});
   const ok = vals.filter((s) => s.status === "ok").length;
   const stale = vals.filter((s) => s.status === "stale");
   const empty = vals.filter((s) => s.status !== "ok" && s.status !== "stale").length;
-  $("#aboutIngest").textContent = `Last ingest ${when} — when public lines were last pulled (not each row’s as-of).`;
+
+  $("#aboutIngest").textContent = fmtWhen(snap.generatedAt);
+
   const staleNames = stale.map((s) => s.name || s.id).join(", ");
   $("#aboutCoverage").textContent = stale.length
-    ? `${ok} live in table · ${stale.length} stale hidden (${staleNames})${empty ? ` · ${empty} empty` : ""}`
+    ? `${ok} live · ${stale.length} stale hidden${empty ? ` · ${empty} empty` : ""}`
     : `${ok} live lines${empty ? ` · ${empty} empty` : ""}`;
+  if (staleNames) {
+    $("#aboutCoverage").title = staleNames;
+  }
+
+  if (regime?.verdict) {
+    const when = fmtWhen(regime.generatedAt);
+    $("#aboutBake").textContent = `${regime.verdict} · ${when}`;
+    $("#aboutBake").classList.toggle("is-ok", regime.verdict === "SPOT ON");
+    $("#aboutBake").classList.toggle("is-bad", regime.verdict !== "SPOT ON");
+    const hint = $("#aboutVerdictHint");
+    if (hint) hint.textContent = regime.verdict;
+  } else {
+    $("#aboutBake").textContent = "no bake file yet";
+  }
 }
 
 async function boot() {
   try {
-    const res = await fetch("./snapshot.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("snapshot missing");
-    const snap = await res.json();
+    const [snapRes, regRes] = await Promise.all([
+      fetch("./snapshot.json", { cache: "no-store" }),
+      fetch("./regime-today.json", { cache: "no-store" }),
+    ]);
+    if (!snapRes.ok) throw new Error("snapshot missing");
+    const snap = await snapRes.json();
+    let regime = null;
+    if (regRes.ok) {
+      try {
+        regime = await regRes.json();
+      } catch {
+        regime = null;
+      }
+    }
     renderFormula(snap);
-    renderAboutMeta(snap);
+    renderAboutMeta(snap, regime);
   } catch (e) {
     $("#aboutIngest").textContent = e.message || String(e);
+    $("#formulaBody").innerHTML = `<p class="muted">${escapeHtml(e.message || String(e))}</p>`;
   }
 }
 

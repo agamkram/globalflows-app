@@ -40,74 +40,316 @@
       } catch (e) {}
     })();
   </script>
-  <meta name="description" content="About GlobalFlows — meaning matrix, glossary, data, light formula." />
+  <meta
+    name="description"
+    content="About GlobalFlows — how the lights, So what, data bake, and public book work."
+  />
   <title>About — GlobalFlows</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260904bg" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260904bg" />
-  <link rel="stylesheet" href="styles.css?v=20260904bg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260904bh" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260904bh" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css?v=20260904bh" />
 </head>
 <body class="page-about">
-  <div class="app about-app">
-    <header class="page-head">
-      <a class="nav-link nav-link-sm" href="./">← Book</a>
-      <h1 class="page-title">About</h1>
+  <div class="about-shell">
+    <header class="about-top">
+      <a class="about-back" href="./">← Book</a>
+      <span class="about-top-mark" aria-hidden="true">
+        <i class="dot ease"></i><i class="dot mid"></i><i class="dot tight"></i>
+      </span>
     </header>
 
     <main class="about-main">
-      <p>One screen for the global money-and-economy machine — always in motion. <strong>Lights</strong> open each shelf: Liquidity, Rates, Growth, Inflation, Risk. Extra doors:</p>
-      <ol>
-        <li><strong>All</strong> — full public book</li>
-        <li><strong>FX</strong> — dollar and major pairs (dollar also votes Rates)</li>
-        <li><strong>Markets</strong> — equities, credit, duration, commodities, crypto (outputs, not inputs)</li>
-      </ol>
-      <p>Blue tint on a row = votes the selected light. Tap a light to open its shelf; tap <strong>Tap for who voted</strong> under the title for the club card. Equities, commodities, and crypto are outputs. Tap today’s regime for <strong>So what</strong>: duration risk vs credit risk, what confirms, and what would falsify. No news feed. No invented numbers.</p>
+      <header class="about-hero">
+        <p class="about-kicker">Mark Maga · curiosity portal</p>
+        <h1 class="about-brand">GlobalFlows</h1>
+        <p class="about-lede">
+          One screen for the global money-and-economy machine — always in motion.
+          Public data only. No news feed. No invented numbers.
+        </p>
+      </header>
 
-      <h2>Meaning</h2>
-      <p>The lights describe the machine. <strong>So what</strong> translates them into Street physics — what the regime implies for assets, and what would break the call.</p>
-      <ol>
-        <li><strong>Duration risk</strong> — from inflation, rates (yields / dollar / mortgages), and how hot nominal GDP is vs real. Rising = discount rates bite; bonds and long-duration assets have a harder time.</li>
-        <li><strong>Credit risk</strong> — from Growth, the Risk light (vol / spreads / financial conditions), and <strong>credit impulse</strong> (is private bank lending accelerating?). Falling = cash flows still look collectible; rising = stress on collectability.</li>
-        <li><strong>Confirm</strong> — outputs and cross-checks that agree or quarrel with the causal story (stock–bond correlation, dollar, gold, BTC vs liquidity, and similar).</li>
-        <li><strong>Falsify</strong> — the clean flip that would kill the call (e.g. Inflation turns Cold while Growth stays Strong softens a hard-duration read).</li>
-      </ol>
-      <p>Same <strong>1y · 2y · 5y</strong> clock as the lights. Numbers lock first (verified bake); copy follows. Not trade tips — a readable map from regime → duration vs credit → prove me wrong.</p>
+      <nav class="about-toc" aria-label="On this page">
+        <a href="#how">How it works</a>
+        <a href="#lights">Lights</a>
+        <a href="#sowhat">So what</a>
+        <a href="#read">How to read</a>
+        <a href="#data">Data</a>
+        <a href="#formula">Formula</a>
+        <a href="#glossary">Glossary</a>
+        <a href="#honest">Honesty</a>
+      </nav>
 
-      <h2>Data</h2>
-      <p id="aboutIngest" class="muted">ingest —</p>
-      <p id="aboutCoverage" class="muted"></p>
+      <section class="about-block" id="how">
+        <h2>How it works</h2>
+        <p>
+          The book is a causal chain. Cash and central-bank plumbing set the tone;
+          rates and the dollar transmit it; growth and inflation say what the real
+          economy is doing; risk appetite prices fear. You read the machine left to
+          right — then ask what that regime implies for assets.
+        </p>
+        <ol class="about-chain" aria-label="Causal chain">
+          <li><span class="chain-label">Liquidity</span><span class="chain-sub">cash &amp; plumbing</span></li>
+          <li><span class="chain-label">Rates</span><span class="chain-sub">yields · dollar</span></li>
+          <li><span class="chain-label">Growth</span><span class="chain-sub">real activity</span></li>
+          <li><span class="chain-label">Inflation</span><span class="chain-sub">price pressure</span></li>
+          <li><span class="chain-label">Risk</span><span class="chain-sub">fear &amp; spreads</span></li>
+        </ol>
+        <div class="about-doors">
+          <div class="about-door">
+            <h3>All</h3>
+            <p>The full public book — every series we pull, one scrollable street.</p>
+          </div>
+          <div class="about-door">
+            <h3>FX</h3>
+            <p>Dollar and major pairs. The broad dollar also votes the Rates light.</p>
+          </div>
+          <div class="about-door">
+            <h3>Markets</h3>
+            <p>Equities, credit, duration, commodities, crypto — outputs, not inputs to the lights.</p>
+          </div>
+        </div>
+      </section>
 
-      <h2>Light formula</h2>
-      <div id="formulaBody"></div>
+      <section class="about-block" id="lights">
+        <h2>Lights</h2>
+        <p>
+          Five dials open five shelves. Each light is a small club of complementary
+          series — not the whole street. A blue tint on a row means that series
+          votes the light you selected.
+        </p>
+        <ul class="about-steps">
+          <li><strong>Tap a light</strong> — opens its shelf on the street.</li>
+          <li><strong>Tap “Tap for who voted”</strong> — club card: who voted, scores, teach line.</li>
+          <li><strong>1y · 2y · 5y</strong> — comparison window for lights, table, and charts. Default 2.</li>
+        </ul>
+        <div class="about-legend" aria-label="Light colors">
+          <span><i class="swatch ease"></i> Easing / easy / strong / hot / risk-on</span>
+          <span><i class="swatch mid"></i> Neutral / mid</span>
+          <span><i class="swatch tight"></i> Tightening / tight / soft / cold / risk-off</span>
+        </div>
+      </section>
 
-      <h2>Glossary</h2>
-      <dl class="glossary">
-        <div><dt>Percentile</dt><dd>Where today’s level sits in the last 1 / 2 / 5 years. 90th = higher than ~90% of readings in that window.</dd></div>
-        <div><dt>z-score</dt><dd>How many standard deviations today’s level is from the average over that same window. +1 = one σ above average.</dd></div>
-        <div><dt>1 · 2 · 5</dt><dd>Years in the comparison window for lights, table, and charts. Default 2.</dd></div>
-        <div><dt>Lights</dt><dd>Five regime dials (liquidity → rates → growth → inflation → risk). Each opens its shelf. Tap “Tap for who voted” beside the street title for the club card.</dd></div>
-        <div><dt>Asset (central bank)</dt><dd>Something the bank owns on its balance sheet — usually bonds, sometimes ETFs or loans — not “stable value.”</dd></div>
-        <div><dt>Reserves</dt><dd>Cash banks hold at the Fed. Fuel for money markets.</dd></div>
-        <div><dt>TGA</dt><dd>Treasury General Account — the government’s checking account at the Fed. When it fills, cash leaves banks.</dd></div>
-        <div><dt>ON RRP</dt><dd>Overnight reverse repo — cash parked at the Fed overnight. Rise drains market liquidity.</dd></div>
-        <div><dt>Net liquidity</dt><dd>Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.</dd></div>
-        <div><dt>Real yield</dt><dd>Yield after inflation (TIPS). Higher real yields = tighter for risk assets.</dd></div>
-        <div><dt>Breakeven</dt><dd>Market’s implied inflation from nominal vs TIPS yields.</dd></div>
-        <div><dt>OAS</dt><dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries. Wider = more credit stress.</dd></div>
-        <div><dt>VIX / MOVE</dt><dd>Implied volatility — equity fear (VIX) and Treasury fear (MOVE).</dd></div>
-        <div><dt>Curve (2s10s)</dt><dd>Long yield minus short yield. Inverted (negative) often warns of slowdown.</dd></div>
-        <div><dt>Outputs</dt><dd>Equities, commodities, crypto, gold — read them under Markets; they don’t drive the lights.</dd></div>
-        <div><dt>Last print</dt><dd>Markets Latest on open (age beside the Markets title). The circle next to the age pulls again. Listed names can lag ~15 minutes. z and percentile stay daily.</dd></div>
-        <div><dt>Credit impulse</dt><dd>How fast bank credit growth is accelerating or decelerating (change in the YoY rate of loans). Fed plumbing is one liquidity story; private lending is the other.</dd></div>
-        <div><dt>Nominal − real GDP</dt><dd>Nominal GDP YoY minus real GDP YoY. How much of the expansion is prices vs real activity — core for duration vs credit.</dd></div>
-        <div><dt>Duration risk</dt><dd>How rate moves hit the present value of future cash flows (bonds, and equity valuations). Rising = harder for long duration.</dd></div>
-        <div><dt>Credit risk</dt><dd>Uncertainty that cash flows actually arrive (spreads, growth, risk appetite). Rising = markets less sure about collectability.</dd></div>
-        <div><dt>So what</dt><dd>Tap today’s regime: what the lights imply for duration and credit, what confirms, and what would falsify the call.</dd></div>
-      </dl>
+      <section class="about-block" id="sowhat">
+        <h2>So what</h2>
+        <p>
+          Lights describe the machine. <strong>So what</strong> translates them into
+          Street physics — what the regime implies, and what would break the call.
+          Same 1 · 2 · 5 clock. Numbers lock first (verified bake); copy follows.
+          Not trade tips.
+        </p>
+        <div class="about-grid-2">
+          <article class="about-panel">
+            <h3>Duration risk</h3>
+            <p>
+              From inflation, rates (yields / dollar / mortgages), and how hot
+              nominal GDP is vs real. Rising = discount rates bite; bonds and
+              long-duration assets have a harder time.
+            </p>
+          </article>
+          <article class="about-panel">
+            <h3>Credit risk</h3>
+            <p>
+              From Growth, the Risk light (vol / spreads / financial conditions),
+              and <strong>credit impulse</strong> — is private bank lending
+              accelerating? Falling = cash flows still look collectible.
+            </p>
+          </article>
+          <article class="about-panel">
+            <h3>Confirm</h3>
+            <p>
+              Outputs and cross-checks that agree or quarrel with the causal story —
+              stock–bond correlation, dollar, gold, BTC vs liquidity, and similar.
+            </p>
+          </article>
+          <article class="about-panel">
+            <h3>Falsify</h3>
+            <p>
+              The clean flip that would kill the call — e.g. Inflation turns Cold
+              while Growth stays Strong softens a hard-duration read.
+            </p>
+          </article>
+        </div>
+      </section>
 
-      <p class="muted">Mark Maga · curiosity portal</p>
+      <section class="about-block" id="read">
+        <h2>How to read the book</h2>
+        <ol class="about-read">
+          <li>
+            <strong>Set the clock</strong>
+            <span>1y is twitchy; 5y is slow; 2y is the house default.</span>
+          </li>
+          <li>
+            <strong>Read the five lights</strong>
+            <span>Left to right — plumbing → transmission → real economy → fear.</span>
+          </li>
+          <li>
+            <strong>Open a shelf</strong>
+            <span>See who voted. Blue rows are the club; the rest of the street is context.</span>
+          </li>
+          <li>
+            <strong>Tap today’s regime</strong>
+            <span>So what: duration vs credit, confirm, falsify.</span>
+          </li>
+          <li>
+            <strong>Check Markets last</strong>
+            <span>Outputs. Latest prints refresh on open; z and percentile stay on the daily bake.</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="about-block" id="data">
+        <h2>Data</h2>
+        <p>
+          Series come from public pipes — FRED, NY Fed Markets, Yahoo chart API.
+          A scheduled morning bake refreshes the book; you can also refresh locally.
+          History stays on the server side of ingest; the site ships a snapshot.
+        </p>
+        <div class="about-status" id="aboutStatus">
+          <div>
+            <span class="status-label">Last ingest</span>
+            <span class="status-value" id="aboutIngest">—</span>
+          </div>
+          <div>
+            <span class="status-label">Coverage</span>
+            <span class="status-value" id="aboutCoverage">—</span>
+          </div>
+          <div>
+            <span class="status-label">Regime bake</span>
+            <span class="status-value" id="aboutBake">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-block" id="formula">
+        <h2>Light formula</h2>
+        <div id="formulaBody" class="about-formula">
+          <p class="muted">Loading…</p>
+        </div>
+      </section>
+
+      <section class="about-block" id="glossary">
+        <h2>Glossary</h2>
+
+        <h3 class="about-gloss-head">Reading the numbers</h3>
+        <dl class="glossary">
+          <div>
+            <dt id="g-pct">Percentile</dt>
+            <dd>Where today’s level sits in the last 1 / 2 / 5 years. 90th = higher than ~90% of readings in that window.</dd>
+          </div>
+          <div>
+            <dt id="g-z">z-score</dt>
+            <dd>How many standard deviations today’s level is from the average over that same window. +1 = one σ above average.</dd>
+          </div>
+          <div>
+            <dt id="g-125">1 · 2 · 5</dt>
+            <dd>Years in the comparison window for lights, table, and charts. Default 2.</dd>
+          </div>
+        </dl>
+
+        <h3 class="about-gloss-head">The instrument</h3>
+        <dl class="glossary">
+          <div>
+            <dt id="g-lights">Lights</dt>
+            <dd>Five regime dials (liquidity → rates → growth → inflation → risk). Each opens its shelf. Tap “Tap for who voted” for the club card.</dd>
+          </div>
+          <div>
+            <dt id="g-outputs">Outputs</dt>
+            <dd>Equities, commodities, crypto, gold — read them under Markets; they don’t drive the lights.</dd>
+          </div>
+          <div>
+            <dt id="g-last">Last print</dt>
+            <dd>Markets Latest on open (age beside the Markets title). The circle next to the age pulls again. Listed names can lag ~15 minutes. z and percentile stay daily.</dd>
+          </div>
+          <div>
+            <dt id="g-sowhat">So what</dt>
+            <dd>Tap today’s regime: what the lights imply for duration and credit, what confirms, and what would falsify the call.</dd>
+          </div>
+          <div>
+            <dt id="g-duration">Duration risk</dt>
+            <dd>How rate moves hit the present value of future cash flows (bonds, and equity valuations). Rising = harder for long duration.</dd>
+          </div>
+          <div>
+            <dt id="g-credit">Credit risk</dt>
+            <dd>Uncertainty that cash flows actually arrive (spreads, growth, risk appetite). Rising = markets less sure about collectability.</dd>
+          </div>
+          <div>
+            <dt id="g-impulse">Credit impulse</dt>
+            <dd>How fast bank credit growth is accelerating or decelerating (change in the YoY rate of loans). Fed plumbing is one liquidity story; private lending is the other.</dd>
+          </div>
+          <div>
+            <dt id="g-nomreal">Nominal − real GDP</dt>
+            <dd>Nominal GDP YoY minus real GDP YoY. How much of the expansion is prices vs real activity — core for duration vs credit.</dd>
+          </div>
+        </dl>
+
+        <h3 class="about-gloss-head">Plumbing &amp; rates</h3>
+        <dl class="glossary">
+          <div>
+            <dt id="g-asset">Asset (central bank)</dt>
+            <dd>Something the bank owns on its balance sheet — usually bonds, sometimes ETFs or loans — not “stable value.”</dd>
+          </div>
+          <div>
+            <dt id="g-reserves">Reserves</dt>
+            <dd>Cash banks hold at the Fed. Fuel for money markets.</dd>
+          </div>
+          <div>
+            <dt id="g-tga">TGA</dt>
+            <dd>Treasury General Account — the government’s checking account at the Fed. When it fills, cash leaves banks.</dd>
+          </div>
+          <div>
+            <dt id="g-rrp">ON RRP</dt>
+            <dd>Overnight reverse repo — cash parked at the Fed overnight. Rise drains market liquidity.</dd>
+          </div>
+          <div>
+            <dt id="g-netliq">Net liquidity</dt>
+            <dd>Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.</dd>
+          </div>
+          <div>
+            <dt id="g-real">Real yield</dt>
+            <dd>Yield after inflation (TIPS). Higher real yields = tighter for risk assets.</dd>
+          </div>
+          <div>
+            <dt id="g-be">Breakeven</dt>
+            <dd>Market’s implied inflation from nominal vs TIPS yields.</dd>
+          </div>
+          <div>
+            <dt id="g-curve">Curve (2s10s)</dt>
+            <dd>Long yield minus short yield. Inverted (negative) often warns of slowdown.</dd>
+          </div>
+        </dl>
+
+        <h3 class="about-gloss-head">Risk &amp; credit tape</h3>
+        <dl class="glossary">
+          <div>
+            <dt id="g-oas">OAS</dt>
+            <dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries. Wider = more credit stress.</dd>
+          </div>
+          <div>
+            <dt id="g-vol">VIX / MOVE</dt>
+            <dd>Implied volatility — equity fear (VIX) and Treasury fear (MOVE).</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="about-block" id="honest">
+        <h2>Honesty</h2>
+        <ul class="about-honest">
+          <li>Public sources only — if a line is empty or stale, we say so.</li>
+          <li>Bake verifies lights before teach copy ships (<span id="aboutVerdictHint">SPOT ON</span> or it doesn’t).</li>
+          <li>So what is a map from regime → duration vs credit → prove me wrong — not advice.</li>
+          <li>Equities, commodities, and crypto are outputs. They don’t vote the lights.</li>
+        </ul>
+        <p class="about-foot">Mark Maga · curiosity portal</p>
+      </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260904bg"></script>
+  <script type="module" src="about.js?v=20260904bh"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
