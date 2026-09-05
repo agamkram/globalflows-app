@@ -1523,28 +1523,6 @@ body.dlg-open dialog {
   max-width: 34rem;
 }
 
-.about-toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-  margin: 22px 0 8px;
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.about-toc a {
-  font: 500 0.72rem var(--mono);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.about-toc a:hover {
-  color: var(--accent);
-}
-
 .about-block {
   margin: 0;
   padding: 28px 0 8px;
