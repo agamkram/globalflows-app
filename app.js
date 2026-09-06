@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260925";
+import { buildMeaning } from "./meaning.js?v=20260926";
 import {
   buildLights,
   attachImpulse,
@@ -367,7 +367,9 @@ function favorBaseRate(favorId, stance) {
   if (lean === "flat") verdict = "coinflip";
   else if (stance === "in") verdict = lean === "up" ? "agrees" : "disagrees";
   else if (stance === "out") verdict = lean === "down" ? "agrees" : "disagrees";
-  return { ...r, hz, lean, verdict };
+  // When nothing in the record sits near today, the sample is context and not
+  // evidence, so the wording softens and the strip stops raising a flag over it.
+  return { ...r, hz, lean, verdict, weak: a.closeness === "distant" };
 }
 
 function renderFavorStrip() {
@@ -402,7 +404,7 @@ function renderFavorStrip() {
           </span>`;
         }
         const br = favorBaseRate(it.id, it.stance);
-        const clash = br?.verdict === "disagrees";
+        const clash = br?.verdict === "disagrees" && !br.weak;
         return `<span class="favor-cell${clash ? " favor-clash" : ""}" data-state="${st}"${
           clash ? ` title="History disagrees with this call"` : ""
         }>
@@ -950,8 +952,11 @@ function openSentence(snap) {
         const br = favorBaseRate(it.id, it.stance);
         if (br) {
           const sign = br.median > 0 ? "+" : "";
-          const verdictWord =
-            br.verdict === "agrees"
+          const verdictWord = br.weak
+            ? br.verdict === "coinflip"
+              ? "Loose history, no lean"
+              : `Loose history, ${br.verdict === "disagrees" ? "argues the other way" : `leans ${br.lean}`}`
+            : br.verdict === "agrees"
               ? "History agrees"
               : br.verdict === "disagrees"
                 ? "History disagrees"
