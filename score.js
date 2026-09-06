@@ -145,8 +145,16 @@ function scoreKind(kind, value) {
       return bandScore(value, 4.0, 6.0, 7.5, true);
     case "curve":
       return bandScore(value, -0.3, 0.3, 1.2, false);
+    // MOVE ran a median of 56 through the 2015-21 QE years, so a floor at 70 left
+    // it stuck at maximum calm for most of a decade and unable to tell quiet from
+    // silent. Drop the floor to the quarter-percentile of the last ten years; the
+    // stress end is unchanged, since 140 is still where bond vol hurts.
     case "move":
-      return bandScore(value, 70, 100, 140, true);
+      return bandScore(value, 55, 100, 140, true);
+    // Deliberately left straddling zero. This voter sits at the ceiling on 45% of
+    // days since 2015, but that is a true description of a decade in which real
+    // policy was genuinely at its easiest, not a band that the series escaped —
+    // and 0.5% is a real economic line for a neutral real rate, not a fitted one.
     case "real_rate":
       return bandScore(value, -0.5, 0.5, 2.0, true);
     default:

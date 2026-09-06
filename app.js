@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260921";
+import { buildMeaning } from "./meaning.js?v=20260922";
 import {
   buildLights,
   attachImpulse,

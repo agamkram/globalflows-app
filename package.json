@@ -14,7 +14,8 @@
     "refresh": "npm run ingest && npm run bake:history && npm run bake:regime && npm run sanity",
     "refresh:markets": "npm run ingest:markets && npm run bake:regime",
     "serve": "python3 serve-https.py",
-    "bake:history": "node scripts/bake-history.mjs"
+    "bake:history": "node scripts/bake-history.mjs",
+    "audit:bands": "node scripts/audit-bands.mjs"
   },
   "engines": {
     "node": ">=20"
