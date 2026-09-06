@@ -163,9 +163,18 @@ async function fetchYahoo(symbol) {
   if (!result) throw new Error(`Yahoo empty: ${symbol}`);
   const ts = result.timestamp || [];
   const closes = result.indicators?.quote?.[0]?.close || [];
+  // Adjusted close, where Yahoo has it. For a bond fund the coupon *is* the
+  // return — high yield rose 53% of six-month windows on price and 80% on total
+  // return over the last decade — so measuring TLT or HYG on price alone
+  // understates every one of them and quietly flatters any call against duration
+  // or credit. Yahoo back-adjusts, so the latest point still equals the real
+  // close and the tape shows a genuine price; only the history is put on a
+  // like-for-like footing. Futures and cash indices have no distribution to
+  // adjust for and come back unchanged.
+  const adj = result.indicators?.adjclose?.[0]?.adjclose || [];
   const points = [];
   for (let i = 0; i < ts.length; i++) {
-    const v = closes[i];
+    const v = Number.isFinite(adj[i]) ? adj[i] : closes[i];
     if (v == null || !Number.isFinite(v)) continue;
     const d = new Date(ts[i] * 1000);
     const date = d.toISOString().slice(0, 10);

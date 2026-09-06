@@ -27,7 +27,12 @@ const START = "2018-04-02"; // first SOFR print
 const STALE_DAYS = 400;
 const HORIZONS = { "1m": 21, "3m": 63, "6m": 126 };
 
-/** Assets we measure forward through. Bonds are total-return ETFs, not yields. */
+/**
+ * Assets we measure forward through. Bonds are ETFs rather than yields, measured
+ * on adjusted closes so a coupon counts as the return it is — the raw price of a
+ * bond fund drifts down as it pays out, which made every duration and credit
+ * base rate look worse than the trade actually was.
+ */
 const ASSETS = [
   { id: "SPX", name: "S&P 500" },
   { id: "TLT", name: "Long Treasuries" },

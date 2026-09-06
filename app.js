@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260929";
+import { buildMeaning } from "./meaning.js?v=20260930";
 import {
   buildLights,
   attachImpulse,
@@ -866,7 +866,7 @@ function baseRateHtml() {
   return `<p class="sent-kicker">What happened last time</p>
     <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five lights — ${match} Median move over ${window}, and how often it rose:</p>
     <div class="base-grid">${body}</div>
-    <p class="muted tiny">Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
+    <p class="muted tiny">Returns are total return — coupons and dividends included, which is most of the return on a bond. Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
 }
 
 function openSentence(snap) {
