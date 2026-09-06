@@ -2111,31 +2111,36 @@ html.page-about body,
   font-size: 12px;
   line-height: 1.45;
 }
-.rubric-base[data-verdict="agrees"] {
-  border-left-color: var(--ease, #35c08a);
-}
+/*
+ * Whether the record backs a call is a different question from which way the
+ * machine is leaning, so it deliberately does not use the axis palette. Green,
+ * amber and red mean reflationary/mixed/contractionary everywhere else in the
+ * app, and red also carries an unavoidable "something is broken" reading; a red
+ * ring on a call would collide with both. Brightness carries it instead — bright
+ * for the case worth stopping on, muted for agreement — which also survives
+ * colour blindness and greyscale.
+ */
 .rubric-base[data-verdict="disagrees"] {
-  border-left-color: var(--tight, #e5534b);
+  border-left-color: rgba(255, 255, 255, 0.55);
 }
 .rubric-base > strong {
   font-size: 11px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  color: var(--muted, #8b97a8);
 }
-.rubric-base[data-verdict="agrees"] > strong { color: var(--ease, #35c08a); }
-.rubric-base[data-verdict="disagrees"] > strong { color: var(--tight, #e5534b); }
+.rubric-base[data-verdict="disagrees"] > strong {
+  color: #e8edf5;
+}
 
-/* A call the record argues with, marked on the compact strip. */
+/* A call the record argues with, footnoted on the compact strip. */
 .favor-cell { position: relative; }
 .favor-flag {
   position: absolute;
-  top: 2px;
+  top: 1px;
   right: 3px;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
-  color: var(--tight, #e5534b);
-}
-.favor-clash {
-  box-shadow: inset 0 0 0 1px rgba(229, 83, 75, 0.55);
+  color: var(--muted, #8b97a8);
 }

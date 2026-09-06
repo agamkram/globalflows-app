@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260927";
+import { buildMeaning } from "./meaning.js?v=20260929";
 import {
   buildLights,
   attachImpulse,
@@ -394,10 +394,19 @@ function renderFavorStrip() {
       .map((it) => {
         const st = stanceState(it.stance);
         const title = it.name;
+        // One clash test for both layouts. Keeping it above the branch is what
+        // stops the multi-tenor cells drifting out of step with the plain ones,
+        // which is how they ended up flagging on evidence too weak to flag on.
+        const br = favorBaseRate(it.id, it.stance);
+        const clash = br?.verdict === "disagrees" && !br.weak;
+        const mark = clash
+          ? '<span class="favor-flag" aria-label="history disagrees with this call">*</span>'
+          : "";
+        const flagAttr = clash
+          ? ` title="History disagrees with this call — see Today's regime"`
+          : "";
         if (it.tenors?.length) {
-          const brU = favorBaseRate(it.id, it.stance);
-          const clashU = brU?.verdict === "disagrees";
-          return `<span class="favor-cell favor-ust${clashU ? " favor-clash" : ""}" data-state="${st}">
+          return `<span class="favor-cell favor-ust" data-state="${st}"${flagAttr}>
             <span class="favor-title">${escapeHtml(title)}</span>
             <span class="favor-curve">${it.tenors
               .map(
@@ -407,16 +416,13 @@ function renderFavorStrip() {
                   )}</b></span>`
               )
               .join("")}</span>
+            ${mark}
           </span>`;
         }
-        const br = favorBaseRate(it.id, it.stance);
-        const clash = br?.verdict === "disagrees" && !br.weak;
-        return `<span class="favor-cell${clash ? " favor-clash" : ""}" data-state="${st}"${
-          clash ? ` title="History disagrees with this call"` : ""
-        }>
+        return `<span class="favor-cell" data-state="${st}"${flagAttr}>
           <span class="favor-title">${escapeHtml(title)}</span>
           <span class="favor-dot" aria-hidden="true"></span>
-          ${clash ? '<span class="favor-flag" aria-label="history disagrees">!</span>' : ""}
+          ${mark}
         </span>`;
       })
       .join("");
