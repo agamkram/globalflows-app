@@ -3,6 +3,7 @@
  * Lights read anchors only. 1m/3m/6m/1y are impulse clocks.
  */
 
+export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 export const IMPULSE_KEYS = ["1m", "3m", "6m", "1y"];
 export const DEFAULT_IMPULSE = "6m";
 
@@ -120,8 +121,13 @@ function scoreKind(kind, value) {
       return bandScore(value, 3.2, 4.2, 6.0, true);
     case "bbb":
       return bandScore(value, 1.0, 1.5, 2.5, true);
+    // NFCI is standardised against its own 1971+ history, but conditions have sat
+    // in the loose half of that range for most of the post-crisis era: the band
+    // (-0.4, 0, +0.4) left it pinned at a maximum risk-on vote on 70% of days since
+    // 2015, which is a constant, not a signal. Recentre on the modern range —
+    // roughly -0.65 at its loosest, -0.50 typical, and +0.18 at the COVID peak.
     case "nfci":
-      return bandScore(value, -0.4, 0, 0.4, true);
+      return bandScore(value, -0.6, -0.45, -0.1, true);
     // SOFR minus the top of the fed funds target, in bp. Deeply negative = reserves
     // so ample that secured cash trades well inside the corridor; at or above zero =
     // scarce, the condition that broke repo in September 2019.
@@ -329,9 +335,8 @@ export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {
 export function buildLights(snap) {
   const meta = snap.lightsMeta || [];
   const baked = snap.lights || {};
-  const lightIds = ["liquidity", "rates", "growth", "inflation", "risk"];
   const out = {};
-  for (const lid of lightIds) {
+  for (const lid of LIGHT_IDS) {
     const memberIds = Object.values(snap.series || {})
       .filter((r) => r.light === lid && r.status === "ok")
       .map((r) => r.id);

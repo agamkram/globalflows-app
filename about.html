@@ -45,15 +45,15 @@
     content="About GlobalFlows — how the five lights, So what, and the data table work."
   />
   <title>About — GlobalFlows</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260919" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260919" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260921" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260921" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260919" />
+  <link rel="stylesheet" href="styles.css?v=20260921" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -250,6 +250,32 @@
         </ul>
       </section>
 
+      <section class="about-block" id="baserates">
+        <h2>What happened last time</h2>
+        <p>
+          A read is worth more when you know how often it has been right. Under
+          <strong>So what</strong> sits a base rate: the app scores every trading
+          day back to 2018 with the same five lights, finds the days that sat
+          closest to today, and shows what the market actually did over the weeks
+          that followed — the median move and how often each asset rose.
+        </p>
+        <p>
+          Three things to hold in mind. It says how close the match is, and a
+          distant match is context rather than evidence. Days sitting next to each
+          other in the calendar are nearly the same day, so matches are kept at
+          least a month apart to stop one episode counting as twenty. And the
+          replay scores the economic indicators using figures that have since been
+          revised, so it is kinder than the numbers a trader actually had that
+          morning; the market-priced gauges — funding, the curve, volatility,
+          spreads — are not revised and do not have that problem.
+        </p>
+        <p>
+          It is a base rate, not a forecast. Its most useful moments are when it
+          disagrees with the read above it, because that tells you the call rests
+          on this cycle being different from the last few.
+        </p>
+      </section>
+
       <section class="about-block" id="read">
         <h2>How to read it</h2>
         <ol class="about-read">
@@ -401,7 +427,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260919"></script>
+  <script type="module" src="about.js?v=20260921"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

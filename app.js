@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260919";
+import { buildMeaning } from "./meaning.js?v=20260921";
 import {
   buildLights,
   attachImpulse,
@@ -775,6 +775,44 @@ function tensionTitle(d) {
   }
 }
 
+/**
+ * What the market actually did after the days that most resembled today. Baked in
+ * `scripts/analogs.mjs`; absent until the archive has been built, so the dialog
+ * simply omits the section rather than showing an empty shell.
+ */
+function baseRateHtml() {
+  const a = REGIME?.analogs;
+  if (!a?.stats) return "";
+  const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
+  const rows = Object.values(a.stats[hz] || {});
+  if (!rows.length) return "";
+
+  const window = { "1m": "the next month", "3m": "the next three months", "6m": "the next six months" }[hz] || `the next ${hz}`;
+  const match =
+    a.closeness === "close"
+      ? "a close match."
+      : a.closeness === "loose"
+        ? "a loose match."
+        : "only a distant match, so read this as context rather than evidence.";
+
+  const body = rows
+    .map((r) => {
+      const cls = r.median > 0 ? "z-pos" : r.median < 0 ? "z-neg" : "z-mid";
+      const sign = r.median > 0 ? "+" : "";
+      return `<div class="base-row">
+        <span class="base-name">${escapeHtml(r.name)}</span>
+        <span class="base-med ${cls}">${sign}${r.median}%</span>
+        <span class="base-up muted">${r.up}% up</span>
+      </div>`;
+    })
+    .join("");
+
+  return `<p class="sent-kicker">What happened last time</p>
+    <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five lights — ${match} Median move over ${window}, and how often it rose:</p>
+    <div class="base-grid">${body}</div>
+    <p class="muted tiny">Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
+}
+
 function openSentence(snap) {
   if (!snap) return;
   const baked =
@@ -892,6 +930,7 @@ function openSentence(snap) {
       .join("")}`;
 
   const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each light, red the contractionary end — neither is good or bad on its own.</p>`;
+
   const verified =
     REGIME?.verdict === "SPOT ON"
       ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light, then “Tap for who voted”.</p>`
@@ -900,6 +939,7 @@ function openSentence(snap) {
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
     ${soWhat}
+    ${baseRateHtml()}
     <p class="sent-kicker">Why we say that</p>
     ${evidence}
     ${watch}

@@ -1,0 +1,35 @@
+{
+  "note": "What the app said each morning, recorded live and never recomputed. data/regime-history.json is a replay of the current model over revised data; this is the contemporaneous record.",
+  "modelVersions": [],
+  "days": [
+    {
+      "date": "2026-09-06",
+      "generatedAt": "2026-09-06T04:04:43.307Z",
+      "headline": "Cash neutral, borrowing neutral, growth mid, inflation hot, risk risk-on.",
+      "lights": {
+        "liquidity": {
+          "state": "neutral",
+          "score": -0.2316551133030395
+        },
+        "rates": {
+          "state": "neutral",
+          "score": 0.09414300403382825
+        },
+        "growth": {
+          "state": "neutral",
+          "score": 0.08
+        },
+        "inflation": {
+          "state": "easing",
+          "score": 0.6720715020169141
+        },
+        "risk": {
+          "state": "easing",
+          "score": 0.9558333555857341
+        }
+      },
+      "duration": "rising",
+      "credit": "rising"
+    }
+  ]
+}

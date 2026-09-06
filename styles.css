@@ -2062,3 +2062,42 @@ html.page-about body,
   }
 }
 
+
+/* Base rates: what the market did after the days most like today. */
+.base-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 8px 0 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+.base-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 10px;
+  background: var(--panel, #12161d);
+}
+.base-name {
+  font-size: 13px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.base-med {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.base-up {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  min-width: 56px;
+}

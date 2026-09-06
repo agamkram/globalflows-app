@@ -4,6 +4,8 @@ node_modules/
 .local-key.pem
 .npm-cache/
 data/history/
+# Rebuilt from data/history on every refresh; the live record is data/regime-log.json
+data/regime-history.json
 .vercel/
 *.log
 sanity.txt

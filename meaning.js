@@ -2,9 +2,7 @@
  * Regime → duration / credit → six asset classes.
  * Lights are anchors. Impulse horizon only nudges the mapping.
  */
-import { DEFAULT_IMPULSE } from "./score.js";
-
-const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
+import { DEFAULT_IMPULSE, LIGHT_IDS } from "./score.js";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";

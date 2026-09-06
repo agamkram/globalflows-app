@@ -7,6 +7,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildMeaning } from "../meaning.js";
+import { buildAnalogs } from "./analogs.mjs";
+import { appendRegimeLog } from "./regime-log.mjs";
 import {
   buildLights,
   attachImpulse,
@@ -197,6 +199,11 @@ async function main() {
     note: "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes.",
   };
 
+  const analogs = await buildAnalogs(
+    Object.fromEntries(LIGHTS.map((id) => [id, lights[id]?.score]))
+  );
+  bake.analogs = analogs;
+
   const json = JSON.stringify(bake, null, 2) + "\n";
   await fs.writeFile(OUT_DATA, json);
   await fs.writeFile(OUT_ROOT, json);
@@ -215,6 +222,15 @@ async function main() {
     const L = lights[lid];
     console.log(`  ${L.word.padEnd(11)} ${lid}  ${L.score >= 0 ? "+" : ""}${(L.score ?? 0).toFixed(2)}`);
   }
+  if (analogs) {
+    console.log(
+      `analogs  ${analogs.n} comparable days (${analogs.closeness}) from ${analogs.sampleDays} in the record`
+    );
+  } else {
+    console.log("analogs  none — run `npm run bake:history` to build the archive");
+  }
+  const logged = await appendRegimeLog(bake);
+  if (logged) console.log(`logged   ${logged.date} → data/regime-log.json (${logged.n} days)`);
 }
 
 main().catch((e) => {

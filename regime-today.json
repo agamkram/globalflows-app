@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-06T03:27:36.008Z",
-  "ingestAt": "2026-09-06T03:27:34.191Z",
+  "generatedAt": "2026-09-06T04:04:43.307Z",
+  "ingestAt": "2026-09-06T04:04:37.883Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "6m",
@@ -294,7 +294,7 @@
       "label": "Risk",
       "state": "easing",
       "word": "Risk-on",
-      "score": 1,
+      "score": 0.9558333555857341,
       "color": "green",
       "n": 4,
       "teach": "Fear is cheap on the gauges. Point: vol and credit are quiet.",
@@ -305,13 +305,6 @@
           "score": 1,
           "weight": 1,
           "why": "HY OAS 2.6%"
-        },
-        {
-          "id": "NFCI",
-          "name": "Financial conditions",
-          "score": 1,
-          "weight": 1,
-          "why": "NFCI -0.56"
         },
         {
           "id": "BBB_OAS",
@@ -326,6 +319,13 @@
           "score": 0.9116667111714681,
           "weight": 1,
           "why": "VIX 14.5"
+        },
+        {
+          "id": "NFCI",
+          "name": "Financial conditions",
+          "score": 0.7200000000000004,
+          "weight": 1,
+          "why": "NFCI -0.56"
         }
       ]
     }
@@ -340,5 +340,232 @@
     "asOf": "2026-08-26",
     "units": "pp"
   },
-  "note": "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes."
+  "note": "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes.",
+  "analogs": {
+    "n": 40,
+    "closeness": "distant",
+    "medianDistance": 0.761,
+    "windowStart": "2018-04-02",
+    "windowEnd": "2026-09-04",
+    "sampleDays": 2120,
+    "minGapDays": 21,
+    "caveats": {
+      "revisions": "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
+      "start": "The record starts at the first SOFR print so the liquidity light has the same three voters throughout."
+    },
+    "dates": [
+      "2026-08-06",
+      "2026-07-01",
+      "2026-06-01",
+      "2026-04-30",
+      "2026-04-06",
+      "2026-03-12",
+      "2026-02-19",
+      "2026-01-27",
+      "2026-01-06",
+      "2025-12-11",
+      "2025-11-07",
+      "2025-10-17"
+    ],
+    "stats": {
+      "1m": {
+        "SPX": {
+          "name": "S&P 500",
+          "n": 40,
+          "median": 1.24,
+          "up": 70,
+          "best": 9.8,
+          "worst": -8.6
+        },
+        "TLT": {
+          "name": "Long Treasuries",
+          "n": 40,
+          "median": -0.21,
+          "up": 48,
+          "best": 6.2,
+          "worst": -8.2
+        },
+        "IEF": {
+          "name": "7–10y Treasuries",
+          "n": 40,
+          "median": -0.05,
+          "up": 50,
+          "best": 3,
+          "worst": -3.8
+        },
+        "HYG": {
+          "name": "High yield",
+          "n": 40,
+          "median": -0.01,
+          "up": 48,
+          "best": 1.4,
+          "worst": -3.2
+        },
+        "LQD": {
+          "name": "Investment grade",
+          "n": 40,
+          "median": -0.13,
+          "up": 45,
+          "best": 3.7,
+          "worst": -4.7
+        },
+        "GOLD": {
+          "name": "Gold",
+          "n": 40,
+          "median": 0.61,
+          "up": 50,
+          "best": 10.1,
+          "worst": -9.1
+        },
+        "DXY": {
+          "name": "Dollar",
+          "n": 40,
+          "median": 0.29,
+          "up": 60,
+          "best": 3.6,
+          "worst": -4.5
+        },
+        "COPPER": {
+          "name": "Copper",
+          "n": 40,
+          "median": 1.06,
+          "up": 57,
+          "best": 11.3,
+          "worst": -14.2
+        }
+      },
+      "3m": {
+        "SPX": {
+          "name": "S&P 500",
+          "n": 38,
+          "median": 3.41,
+          "up": 68,
+          "best": 13.8,
+          "worst": -10.8
+        },
+        "TLT": {
+          "name": "Long Treasuries",
+          "n": 38,
+          "median": -1.57,
+          "up": 32,
+          "best": 14.5,
+          "worst": -10.5
+        },
+        "IEF": {
+          "name": "7–10y Treasuries",
+          "n": 38,
+          "median": -0.38,
+          "up": 37,
+          "best": 6.1,
+          "worst": -5.6
+        },
+        "HYG": {
+          "name": "High yield",
+          "n": 38,
+          "median": -0.17,
+          "up": 45,
+          "best": 2.3,
+          "worst": -4
+        },
+        "LQD": {
+          "name": "Investment grade",
+          "n": 38,
+          "median": -0.7,
+          "up": 42,
+          "best": 7.7,
+          "worst": -5.2
+        },
+        "GOLD": {
+          "name": "Gold",
+          "n": 38,
+          "median": 5.25,
+          "up": 66,
+          "best": 25.1,
+          "worst": -20.1
+        },
+        "DXY": {
+          "name": "Dollar",
+          "n": 38,
+          "median": 0.77,
+          "up": 74,
+          "best": 7.3,
+          "worst": -7.7
+        },
+        "COPPER": {
+          "name": "Copper",
+          "n": 38,
+          "median": 1.95,
+          "up": 63,
+          "best": 22.3,
+          "worst": -16.4
+        }
+      },
+      "6m": {
+        "SPX": {
+          "name": "S&P 500",
+          "n": 34,
+          "median": 4.94,
+          "up": 68,
+          "best": 23.7,
+          "worst": -7.5
+        },
+        "TLT": {
+          "name": "Long Treasuries",
+          "n": 34,
+          "median": -2,
+          "up": 32,
+          "best": 22.6,
+          "worst": -9.9
+        },
+        "IEF": {
+          "name": "7–10y Treasuries",
+          "n": 34,
+          "median": 0.79,
+          "up": 59,
+          "best": 9.4,
+          "worst": -4.2
+        },
+        "HYG": {
+          "name": "High yield",
+          "n": 34,
+          "median": -0.5,
+          "up": 44,
+          "best": 3,
+          "worst": -3.4
+        },
+        "LQD": {
+          "name": "Investment grade",
+          "n": 34,
+          "median": -0.96,
+          "up": 47,
+          "best": 11.1,
+          "worst": -5
+        },
+        "GOLD": {
+          "name": "Gold",
+          "n": 34,
+          "median": 14.21,
+          "up": 82,
+          "best": 43.1,
+          "worst": -20.6
+        },
+        "DXY": {
+          "name": "Dollar",
+          "n": 34,
+          "median": 1.35,
+          "up": 68,
+          "best": 7,
+          "worst": -10.2
+        },
+        "COPPER": {
+          "name": "Copper",
+          "n": 34,
+          "median": 7.79,
+          "up": 71,
+          "best": 36.2,
+          "worst": -14
+        }
+      }
+    }
+  }
 }
