@@ -1,0 +1,72 @@
+---
+description: How GlobalFlows fails quietly, and the checks that catch it
+alwaysApply: true
+---
+
+# GlobalFlows guardrails
+
+Nothing here has ever broken loudly. Every real bug in this app ran clean, produced
+a plausible number, and stated something false with total confidence. Assume a
+result that looks fine is wrong until a check says otherwise.
+
+## Anchors are frozen at ingest
+
+`score.js` bands are applied during `npm run ingest` and written into
+`snapshot.json`. `bake-regime` **reads** them, it does not recompute them.
+
+So editing a band and re-baking looks like it did nothing. After any change to
+`score.js` bands or `KIND`, run the whole pipeline:
+
+```bash
+npm run refresh   # ingest -> bake:history -> bake:regime -> sanity
+```
+
+## Never add or retune a voter without auditing it
+
+```bash
+npm run audit:bands
+```
+
+`pinned > 50%` or `sd < 0.15` means the voter returns the same value every day: a
+constant wearing the costume of a signal. Reverse repo did this for two years and
+NFCI for a decade. A band must be set from the series' measured distribution, not
+guessed — print percentiles first, then choose.
+
+A flag on a series with under ~5 years of history usually describes the short
+sample, not the band.
+
+## Units are a trap
+
+`units` in `data/catalog.json` drives `fmtValue()` in `app.js`. Check what the
+source actually publishes: FRED reports China's reserves in **millions**, the BoJ
+in **hundreds of millions of yen**. A new unit string with no `fmtValue` case
+renders as a bare number.
+
+Bond and equity ETFs must use Yahoo's **adjusted close**. A coupon is most of a
+bond's return, and raw price makes every duration and credit read look worse than
+the trade was.
+
+## Colour means one thing
+
+Green / amber / red are the axis: reflationary, mixed, contractionary. Blue is
+selection. Never reuse them for another dimension — red also reads as "broken".
+Use brightness or wording for anything else.
+
+## Verify off the wire
+
+`node --check` proves nothing about what a browser received. `curl` the running
+server and grep for the actual change. Bump assets with
+`python3 scripts/bump-version.py` — never hand-edit a version.
+
+## Before handing anything over
+
+```bash
+npm run sanity                 # number, word and colour must lock
+git status --short             # clean
+```
+
+To prove the 8:47 job survives a bare checkout, hide `data/history/` and
+`data/regime-history.json` (both gitignored) and run `npm run refresh`.
+
+Commit before risky changes and once something works; Mark never types git. Ask
+before pushing to `main`.
