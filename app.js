@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260923";
+import { buildMeaning } from "./meaning.js?v=20260925";
 import {
   buildLights,
   attachImpulse,
@@ -335,6 +335,41 @@ function stanceState(stance) {
   return "neutral";
 }
 
+/** The tradeable each asset-class call is judged against in the archive. */
+const FAVOR_ASSET = {
+  treasuries: "TLT",
+  credit: "HYG",
+  stocks: "SPX",
+  gold: "GOLD",
+  cmdty: "COPPER",
+  // Cash has no price series; its return is the thing everything else is measured
+  // against, so a base rate for it would be circular.
+  cash: null,
+};
+
+/**
+ * How the record lines up with a call. The interesting case is disagreement: it
+ * says the read depends on this cycle differing from the ones behind it, which is
+ * worth knowing before you act on it.
+ */
+function favorBaseRate(favorId, stance) {
+  const a = REGIME?.analogs;
+  const assetId = FAVOR_ASSET[favorId];
+  if (!a?.stats || !assetId) return null;
+  const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
+  const r = a.stats[hz]?.[assetId];
+  if (!r) return null;
+
+  const lean = r.up >= 58 ? "up" : r.up <= 42 ? "down" : "flat";
+  // A mixed call has nothing to agree or disagree with, so report which way the
+  // record leans instead of calling the history split when it plainly is not.
+  let verdict = "leans";
+  if (lean === "flat") verdict = "coinflip";
+  else if (stance === "in") verdict = lean === "up" ? "agrees" : "disagrees";
+  else if (stance === "out") verdict = lean === "down" ? "agrees" : "disagrees";
+  return { ...r, hz, lean, verdict };
+}
+
 function renderFavorStrip() {
   const el = $("#favorStrip");
   if (!el || !SNAP) return;
@@ -352,7 +387,9 @@ function renderFavorStrip() {
         const st = stanceState(it.stance);
         const title = it.name;
         if (it.tenors?.length) {
-          return `<span class="favor-cell favor-ust" data-state="${st}">
+          const brU = favorBaseRate(it.id, it.stance);
+          const clashU = brU?.verdict === "disagrees";
+          return `<span class="favor-cell favor-ust${clashU ? " favor-clash" : ""}" data-state="${st}">
             <span class="favor-title">${escapeHtml(title)}</span>
             <span class="favor-curve">${it.tenors
               .map(
@@ -364,9 +401,14 @@ function renderFavorStrip() {
               .join("")}</span>
           </span>`;
         }
-        return `<span class="favor-cell" data-state="${st}">
+        const br = favorBaseRate(it.id, it.stance);
+        const clash = br?.verdict === "disagrees";
+        return `<span class="favor-cell${clash ? " favor-clash" : ""}" data-state="${st}"${
+          clash ? ` title="History disagrees with this call"` : ""
+        }>
           <span class="favor-title">${escapeHtml(title)}</span>
           <span class="favor-dot" aria-hidden="true"></span>
+          ${clash ? '<span class="favor-flag" aria-label="history disagrees">!</span>' : ""}
         </span>`;
       })
       .join("");
@@ -904,6 +946,24 @@ function openSentence(snap) {
         }
         if (it.note) {
           extras.push(`<span class="muted sent-hint">${escapeHtml(it.note)}</span>`);
+        }
+        const br = favorBaseRate(it.id, it.stance);
+        if (br) {
+          const sign = br.median > 0 ? "+" : "";
+          const verdictWord =
+            br.verdict === "agrees"
+              ? "History agrees"
+              : br.verdict === "disagrees"
+                ? "History disagrees"
+                : br.verdict === "coinflip"
+                  ? "History is a coin flip"
+                  : `History leans ${br.lean}`;
+          extras.push(
+            `<span class="rubric-base" data-verdict="${br.verdict}">
+              <strong>${escapeHtml(verdictWord)}</strong>
+              <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time (${br.n} days).</span>
+            </span>`
+          );
         }
         return `<div class="sent-explain rubric-row"><p class="sent-explain-title">
           <span class="rubric-name">${escapeHtml(it.name)}</span>

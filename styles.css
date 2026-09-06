@@ -2101,3 +2101,41 @@ html.page-about body,
   text-align: right;
   min-width: 56px;
 }
+
+/* Base rate shown against the call it judges. */
+.rubric-base {
+  display: block;
+  margin-top: 5px;
+  padding-left: 8px;
+  border-left: 2px solid rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.rubric-base[data-verdict="agrees"] {
+  border-left-color: var(--ease, #35c08a);
+}
+.rubric-base[data-verdict="disagrees"] {
+  border-left-color: var(--tight, #e5534b);
+}
+.rubric-base > strong {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.rubric-base[data-verdict="agrees"] > strong { color: var(--ease, #35c08a); }
+.rubric-base[data-verdict="disagrees"] > strong { color: var(--tight, #e5534b); }
+
+/* A call the record argues with, marked on the compact strip. */
+.favor-cell { position: relative; }
+.favor-flag {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--tight, #e5534b);
+}
+.favor-clash {
+  box-shadow: inset 0 0 0 1px rgba(229, 83, 75, 0.55);
+}
