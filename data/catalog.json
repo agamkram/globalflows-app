@@ -1926,6 +1926,24 @@
       "note": "Atlanta Fed sticky core CPI. Core prices that are slow to change."
     },
     {
+      "id": "BAA10Y",
+      "name": "Baa spread over 10s",
+      "layer": "risk",
+      "pipe": "fred",
+      "fred": "BAA10Y",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "light": "risk",
+      "weight": 1,
+      "sourceUrl": "https://fred.stlouisfed.org/series/BAA10Y",
+      "sub": "Moody's Baa vs 10y Treasury",
+      "search": "BAA10Y",
+      "causal": "risk",
+      "street": "risk",
+      "note": "Moody's Baa corporate yield minus the 10-year Treasury - the extra yield demanded to lend to a middling company. Widening means doubt that borrowers pay. FRED computes this one rather than licensing it, so it carries 40 years of history and can be scored consistently across past cycles: 2.1 is the long-run median, 3.3 is where 2011 and 2016 topped out, and the 2008 peak was 6.07."
+    },
+    {
       "id": "BBB_OAS",
       "name": "BBB credit spread",
       "street": "risk",
@@ -1935,12 +1953,13 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "risk",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
       "layer": "risk",
       "sub": "Weakest IG bond premium",
       "search": "BAMLC0A4CBBB",
-      "note": "BBB corporate OAS. Credit spread for the weakest IG bucket — early stress tell."
+      "note": "ICE BofA BBB option-adjusted spread. FRED's open download only carries three years of this one, so the risk light votes Moody's Baa over 10s instead, which reaches back to 1986.",
+      "impulseLight": "risk"
     },
     {
       "id": "HY_CCC_OAS",

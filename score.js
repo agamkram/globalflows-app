@@ -69,6 +69,11 @@ const KIND = {
   VIX: "vix",
   BAMLH0A0HYM2: "hy",
   NFCI: "nfci",
+  // Moody's Baa over 10s. FRED computes it rather than licensing it from ICE, so
+  // unlike BAMLH0A0HYM2 and BBB_OAS it downloads with 40 years of history instead
+  // of three — which is what lets the risk light be scored consistently back
+  // through the archive.
+  BAA10Y: "baa10y",
   BBB_OAS: "bbb",
   // Plumbing levels are normalised before they vote: a spread against policy and
   // two shares of nominal GDP. The dollar stocks themselves are impulse-only.
@@ -121,6 +126,12 @@ function scoreKind(kind, value) {
       return bandScore(value, 3.2, 4.2, 6.0, true);
     case "bbb":
       return bandScore(value, 1.0, 1.5, 2.5, true);
+    // Calibrated on the full 1986-2026 record: 1.45 is the 5th percentile, 2.10 the
+    // median, and 3.30 the 95th - roughly where 2011 and 2016 topped out, with the
+    // GFC (6.07) and COVID (4.31) beyond it. That pins on 8% of days over 40 years,
+    // against 68% for the three-year ICE series it stands in for.
+    case "baa10y":
+      return bandScore(value, 1.45, 2.1, 3.3, true);
     // NFCI is standardised against its own 1971+ history, but conditions have sat
     // in the loose half of that range for most of the post-crisis era: the band
     // (-0.4, 0, +0.4) left it pinned at a maximum risk-on vote on 70% of days since
@@ -192,6 +203,8 @@ function whyKind(kind, value) {
       return `HY OAS ${fmt(v)}%`;
     case "bbb":
       return `BBB OAS ${fmt(v)}%`;
+    case "baa10y":
+      return `Baa over 10s ${fmt(v, 2)}pp — 2.1 is the 40-year median, 3.3 is crisis`;
     case "nfci":
       return `NFCI ${fmt(v, 2)}`;
     case "sofr_spread":

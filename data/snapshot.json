@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T04:16:08.833Z",
+  "generatedAt": "2026-09-06T04:24:15.452Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -30,7 +30,7 @@
     {
       "id": "risk",
       "label": "Risk",
-      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress.",
+      "blurb": "Vol, credit spreads, financial conditions \u2014 fear and funding stress.",
       "role": "street"
     },
     {
@@ -70,7 +70,7 @@
     {
       "id": "risk",
       "label": "Risk",
-      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress."
+      "blurb": "Vol, credit spreads, financial conditions \u2014 fear and funding stress."
     },
     {
       "id": "fx",
@@ -112,7 +112,7 @@
       "id": "assets",
       "label": "Assets",
       "role": "outputs",
-      "blurb": "Outputs — never lead with this."
+      "blurb": "Outputs \u2014 never lead with this."
     }
   ],
   "lightsMeta": [
@@ -290,7 +290,7 @@
       "id": "risk",
       "label": "Risk",
       "state": "easing",
-      "score": 0.9558333555857341,
+      "score": 0.8635256632780417,
       "n": 4,
       "nAnchor": 4,
       "words": {
@@ -302,17 +302,18 @@
         "VIX",
         "BAMLH0A0HYM2",
         "NFCI",
-        "BBB_OAS"
+        "BAA10Y"
       ],
       "impulseMembers": [
         "VIX",
         "BAMLH0A0HYM2",
         "NFCI",
+        "BAA10Y",
         "BBB_OAS"
       ],
       "impulse": {
         "horizon": "6m",
-        "score": 0.8531250000000004,
+        "score": 1.0937500000000002,
         "dir": "up"
       }
     }
@@ -345,7 +346,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -407,7 +408,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -457,7 +458,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Overnight reverse repo — cash parked at the Fed. Drained to near zero since 2023, so the level no longer says much; the direction still does.",
+      "note": "Overnight reverse repo \u2014 cash parked at the Fed. Drained to near zero since 2023, so the level no longer says much; the direction still does.",
       "sub": "Cash parked at the Fed",
       "search": "RRPONTSYD",
       "freshness": "live",
@@ -469,7 +470,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -519,7 +520,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Treasury General Account — the government's Fed checking account. Rise pulls reserves out of banks.",
+      "note": "Treasury General Account \u2014 the government's Fed checking account. Rise pulls reserves out of banks.",
       "sub": "Gov checking acct at Fed",
       "search": "WTREGEN",
       "freshness": "live",
@@ -531,7 +532,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -593,7 +594,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -655,7 +656,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -717,7 +718,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -779,7 +780,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -841,7 +842,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -903,7 +904,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -965,7 +966,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1007,7 +1008,7 @@
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
-      "units": "¥100m",
+      "units": "\u00a5100m",
       "freq": "monthly",
       "sign": 1,
       "light": null,
@@ -1027,7 +1028,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1077,7 +1078,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Secured Overnight Financing Rate — US overnight secured funding cost. Higher = tighter cash.",
+      "note": "Secured Overnight Financing Rate \u2014 US overnight secured funding cost. Higher = tighter cash.",
       "sub": "Secured overnight funding",
       "search": "SOFR",
       "freshness": "live",
@@ -1089,7 +1090,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1139,7 +1140,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Effective Federal Funds Rate — where overnight bank reserves actually trade vs the Fed target.",
+      "note": "Effective Federal Funds Rate \u2014 where overnight bank reserves actually trade vs the Fed target.",
       "sub": "Where bank reserves trade",
       "search": "DFF",
       "freshness": "live",
@@ -1151,7 +1152,7 @@
       "anchor": {
         "kind": "real_rate",
         "score": 0.21414300403382835,
-        "why": "real policy/short rate 0.29% (nominal 3.63 − core PCE 3.3)",
+        "why": "real policy/short rate 0.29% (nominal 3.63 \u2212 core PCE 3.3)",
         "votes": true
       },
       "impulse": {
@@ -1213,7 +1214,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1275,7 +1276,7 @@
       "anchor": {
         "kind": "real_rate",
         "score": -0.3305713306441144,
-        "why": "real policy/short rate 1.00% (nominal 4.34 − core PCE 3.3)",
+        "why": "real policy/short rate 1.00% (nominal 4.34 \u2212 core PCE 3.3)",
         "votes": true
       },
       "impulse": {
@@ -1325,7 +1326,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "5-year Treasury yield. Mid-curve — mix of policy path and growth/inflation views.",
+      "note": "5-year Treasury yield. Mid-curve \u2014 mix of policy path and growth/inflation views.",
       "sub": "Medium-term rate",
       "search": "DGS5",
       "freshness": "live",
@@ -1337,7 +1338,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1399,7 +1400,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1461,7 +1462,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1585,7 +1586,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1647,7 +1648,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1709,7 +1710,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1759,7 +1760,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "5-year breakeven inflation — market's expected average CPI over 5 years.",
+      "note": "5-year breakeven inflation \u2014 market's expected average CPI over 5 years.",
       "sub": "Market CPI expectation",
       "search": "T5YIE",
       "freshness": "live",
@@ -1771,7 +1772,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1821,7 +1822,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "10-year breakeven inflation — market's long-run inflation pricing.",
+      "note": "10-year breakeven inflation \u2014 market's long-run inflation pricing.",
       "sub": "Market CPI expectation",
       "search": "T10YIE",
       "freshness": "live",
@@ -1833,7 +1834,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1883,8 +1884,8 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "5y5y forward inflation — inflation expected 5–10 years out. Fed's preferred long-run gauge.",
-      "sub": "Inflation 5–10y ahead",
+      "note": "5y5y forward inflation \u2014 inflation expected 5\u201310 years out. Fed's preferred long-run gauge.",
+      "sub": "Inflation 5\u201310y ahead",
       "search": "T5YIFR",
       "freshness": "live",
       "source": "FRED",
@@ -1895,7 +1896,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -1957,7 +1958,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2007,7 +2008,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "BIS real effective USD — inflation-adjusted dollar strength vs trading partners.",
+      "note": "BIS real effective USD \u2014 inflation-adjusted dollar strength vs trading partners.",
       "sub": "Inflation-adjusted USD",
       "search": "RBUSBIS",
       "freshness": "lagged",
@@ -2019,7 +2020,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2081,7 +2082,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2143,7 +2144,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2205,7 +2206,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2255,7 +2256,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "ICE BofA MOVE — implied vol on Treasuries. Bond-market fear gauge (VIX for rates).",
+      "note": "ICE BofA MOVE \u2014 implied vol on Treasuries. Bond-market fear gauge (VIX for rates).",
       "sub": "Fear gauge for Treasuries",
       "search": "^MOVE",
       "freshness": "live",
@@ -2329,7 +2330,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2391,7 +2392,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2453,7 +2454,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2515,7 +2516,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2577,7 +2578,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2634,12 +2635,12 @@
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/AUDUSD=X",
       "latest": 0.7205129861831665,
-      "asOf": "2026-09-05",
+      "asOf": "2026-09-06",
       "n": 2603,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2651,11 +2652,11 @@
           "priorDate": "2026-08-06"
         },
         "3m": {
-          "delta": 0.007297098636627197,
+          "delta": 0.016163170337677002,
           "dir": "flat",
-          "score": 0.09121373295783997,
-          "prior": 0.7132158875465393,
-          "priorDate": "2026-06-04"
+          "score": 0.20203962922096252,
+          "prior": 0.7043498158454895,
+          "priorDate": "2026-06-07"
         },
         "6m": {
           "delta": 0.019383013248443604,
@@ -2673,7 +2674,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 0
     },
     "USDMXN": {
       "id": "USDMXN",
@@ -2701,7 +2702,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2751,7 +2752,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Atlanta Fed sticky CPI — prices that change rarely. Persistence of inflation.",
+      "note": "Atlanta Fed sticky CPI \u2014 prices that change rarely. Persistence of inflation.",
       "sub": "Prices that rarely change",
       "search": "STICKCPIM157SFRBATL",
       "freshness": "live",
@@ -2825,7 +2826,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -2875,7 +2876,7 @@
       "weight": 2,
       "marketBucket": null,
       "order": null,
-      "note": "Nonfarm payrolls — monthly jobs added. Headline labor-market print.",
+      "note": "Nonfarm payrolls \u2014 monthly jobs added. Headline labor-market print.",
       "sub": "Monthly jobs added",
       "search": "PAYEMS",
       "freshness": "live",
@@ -2999,7 +3000,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Initial jobless claims — weekly new unemployment filings. Fast labor stress tell.",
+      "note": "Initial jobless claims \u2014 weekly new unemployment filings. Fast labor stress tell.",
       "sub": "New weekly unemployment",
       "search": "ICSA",
       "freshness": "live",
@@ -3061,7 +3062,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Continuing claims — people still on unemployment. Stickier labor softening.",
+      "note": "Continuing claims \u2014 people still on unemployment. Stickier labor softening.",
       "sub": "Still on unemployment",
       "search": "CCSA",
       "freshness": "live",
@@ -3073,7 +3074,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3135,7 +3136,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3185,7 +3186,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "JOLTS quit rate. Workers' confidence quitting — high = tight labor market.",
+      "note": "JOLTS quit rate. Workers' confidence quitting \u2014 high = tight labor market.",
       "sub": "Workers leaving jobs",
       "search": "JTSQUR",
       "freshness": "live",
@@ -3197,7 +3198,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3259,7 +3260,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3321,7 +3322,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3383,7 +3384,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3433,7 +3434,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Housing starts. New residential construction — rate-sensitive growth.",
+      "note": "Housing starts. New residential construction \u2014 rate-sensitive growth.",
       "sub": "New homes begun",
       "search": "HOUST",
       "freshness": "live",
@@ -3445,7 +3446,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3507,7 +3508,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -3681,7 +3682,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Headline PCE price index — Fed's official inflation target basket.",
+      "note": "Headline PCE price index \u2014 Fed's official inflation target basket.",
       "sub": "Fed's inflation basket",
       "search": "PCEPI",
       "freshness": "live",
@@ -3867,7 +3868,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Real GDP YoY. Volume of the whole economy — the real side of growth.",
+      "note": "Real GDP YoY. Volume of the whole economy \u2014 the real side of growth.",
       "sub": "Real economy-wide growth",
       "search": "GDPC1",
       "freshness": "lagged",
@@ -3929,7 +3930,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Nominal GDP YoY. Dollar spending in the economy — growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation.",
+      "note": "Nominal GDP YoY. Dollar spending in the economy \u2014 growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation.",
       "sub": "Dollar growth of the economy",
       "search": "GDP",
       "freshness": "lagged",
@@ -3991,7 +3992,7 @@
       "weight": 1,
       "marketBucket": "metals",
       "order": 430,
-      "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy.",
+      "note": "Copper futures. \"Dr. Copper\" \u2014 industrial demand / global growth proxy.",
       "sub": "Industrial metal / growth",
       "search": "HG=F",
       "freshness": "live",
@@ -4003,7 +4004,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4053,7 +4054,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Cboe VIX — 30-day implied vol on the S&P 500. Equity fear gauge.",
+      "note": "Cboe VIX \u2014 30-day implied vol on the S&P 500. Equity fear gauge.",
       "sub": "S&P 500 fear gauge",
       "search": "^VIX",
       "freshness": "live",
@@ -4177,7 +4178,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "ICE BofA investment-grade OAS. Extra yield on IG corporates — milder credit stress.",
+      "note": "ICE BofA investment-grade OAS. Extra yield on IG corporates \u2014 milder credit stress.",
       "sub": "Extra yield on IG bonds",
       "search": "BAMLC0A0CM",
       "freshness": "live",
@@ -4189,7 +4190,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4301,7 +4302,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Adjusted NFCI — strips out economic activity so it's more about pure financial stress.",
+      "note": "Adjusted NFCI \u2014 strips out economic activity so it's more about pure financial stress.",
       "sub": "NFCI minus growth effects",
       "search": "ANFCI",
       "freshness": "live",
@@ -4313,7 +4314,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4375,7 +4376,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4437,7 +4438,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4487,7 +4488,7 @@
       "weight": 1,
       "marketBucket": "equities",
       "order": 130,
-      "note": "Russell 2000. US small-cap risk — more domestic and credit-sensitive.",
+      "note": "Russell 2000. US small-cap risk \u2014 more domestic and credit-sensitive.",
       "sub": "US small-cap equities",
       "search": "^RUT",
       "freshness": "live",
@@ -4499,7 +4500,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4549,7 +4550,7 @@
       "weight": 1,
       "marketBucket": "metals",
       "order": 410,
-      "note": "Gold futures. Real-rate / dollar / fear hedge — treat as an output, not a cause.",
+      "note": "Gold futures. Real-rate / dollar / fear hedge \u2014 treat as an output, not a cause.",
       "sub": "Monetary metal / hedge",
       "search": "GC=F",
       "freshness": "live",
@@ -4561,7 +4562,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4611,45 +4612,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 710,
-      "note": "Bitcoin. Speculative liquidity-sensitive risk asset — output, not input.",
+      "note": "Bitcoin. Speculative liquidity-sensitive risk asset \u2014 output, not input.",
       "sub": "Crypto risk asset",
       "search": "BTC-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BTC-USD",
-      "latest": 79975.1484375,
+      "latest": 79919.25,
       "asOf": "2026-09-06",
       "n": 3652,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 15094.95703125,
+          "delta": 15039.05859375,
           "dir": "up",
           "score": 1.5,
           "prior": 64880.19140625,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 16735.62890625,
+          "delta": 16679.73046875,
           "dir": "up",
           "score": 1.5,
           "prior": 63239.51953125,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 14005.3671875,
+          "delta": 13949.46875,
           "dir": "up",
           "score": 1.5,
           "prior": 65969.78125,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -30249.546875,
+          "delta": -30305.4453125,
           "dir": "down",
           "score": -1.5,
           "prior": 110224.6953125,
@@ -4685,7 +4686,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4747,7 +4748,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4797,7 +4798,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Monthly federal budget balance. Deficit (−) means more Treasury issuance ahead.",
+      "note": "Monthly federal budget balance. Deficit (\u2212) means more Treasury issuance ahead.",
       "sub": "Monthly surplus/deficit",
       "search": "MTSDS133FMS",
       "freshness": "live",
@@ -4809,7 +4810,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4871,7 +4872,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4921,7 +4922,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Fed's SOMA Treasury holdings — the QE/QT Treasury piece of the balance sheet.",
+      "note": "Fed's SOMA Treasury holdings \u2014 the QE/QT Treasury piece of the balance sheet.",
       "sub": "Treasuries in Fed's SOMA",
       "search": "TREAST",
       "freshness": "live",
@@ -4933,7 +4934,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -4995,7 +4996,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5057,7 +5058,7 @@
       "anchor": {
         "kind": "real_rate",
         "score": 0.09414300403382825,
-        "why": "real policy/short rate 0.41% (nominal 3.75 − core PCE 3.3)",
+        "why": "real policy/short rate 0.41% (nominal 3.75 \u2212 core PCE 3.3)",
         "votes": true
       },
       "impulse": {
@@ -5119,7 +5120,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5231,7 +5232,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "NY Fed ACM 10y forward term premium — extra yield for long-bond risk, beyond rate-path expectations.",
+      "note": "NY Fed ACM 10y forward term premium \u2014 extra yield for long-bond risk, beyond rate-path expectations.",
       "sub": "Extra pay for long bonds",
       "search": "THREEFFTP10",
       "freshness": "live",
@@ -5243,7 +5244,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5293,7 +5294,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "NY Fed ACM 2y forward term premium — near-term bond risk premium.",
+      "note": "NY Fed ACM 2y forward term premium \u2014 near-term bond risk premium.",
       "sub": "Extra pay for rate risk",
       "search": "THREEFFTP2",
       "freshness": "live",
@@ -5305,7 +5306,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5367,7 +5368,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5429,7 +5430,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5486,12 +5487,12 @@
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CAD=X",
       "latest": 1.3837000131607056,
-      "asOf": "2026-09-05",
+      "asOf": "2026-09-06",
       "n": 2603,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5503,11 +5504,11 @@
           "priorDate": "2026-08-06"
         },
         "3m": {
-          "delta": -0.0068999528884887695,
+          "delta": -0.010740041732788086,
           "dir": "flat",
-          "score": 0.08624941110610962,
-          "prior": 1.3905999660491943,
-          "priorDate": "2026-06-04"
+          "score": 0.13425052165985107,
+          "prior": 1.3944400548934937,
+          "priorDate": "2026-06-07"
         },
         "6m": {
           "delta": 0.01671004295349121,
@@ -5525,7 +5526,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 0
     },
     "USDBRL": {
       "id": "USDBRL",
@@ -5553,7 +5554,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5603,7 +5604,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Euro vs yen. Classic risk-on cross — rises when risk appetite improves.",
+      "note": "Euro vs yen. Classic risk-on cross \u2014 rises when risk appetite improves.",
       "sub": "Risk appetite cross",
       "search": "EURJPY=X",
       "freshness": "live",
@@ -5615,7 +5616,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5677,7 +5678,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5739,7 +5740,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5789,7 +5790,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Chicago Fed National Activity Index. Broad monthly growth factor (0 ≈ trend).",
+      "note": "Chicago Fed National Activity Index. Broad monthly growth factor (0 \u2248 trend).",
       "sub": "Broad growth index",
       "search": "CFNAI",
       "freshness": "live",
@@ -5801,7 +5802,7 @@
       "anchor": {
         "kind": "cfnai",
         "score": -0.11428571428571421,
-        "why": "activity index -0.08 (0 ≈ trend)",
+        "why": "activity index -0.08 (0 \u2248 trend)",
         "votes": true
       },
       "impulse": {
@@ -5925,7 +5926,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -5975,7 +5976,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Existing home sales. Housing turnover — rates and affordability.",
+      "note": "Existing home sales. Housing turnover \u2014 rates and affordability.",
       "sub": "Homes changing hands",
       "search": "EXHOSLUSM495S",
       "freshness": "live",
@@ -5987,7 +5988,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6049,7 +6050,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6111,7 +6112,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6173,7 +6174,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6235,7 +6236,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6297,7 +6298,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6347,7 +6348,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "CPI shelter. Housing rents/OER — big, sticky CPI weight.",
+      "note": "CPI shelter. Housing rents/OER \u2014 big, sticky CPI weight.",
       "sub": "Rents & housing in CPI",
       "search": "CUSR0000SAH1",
       "freshness": "live",
@@ -6359,7 +6360,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6409,7 +6410,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "CPI services ex energy. \"Supercore\" — services inflation the Fed watches.",
+      "note": "CPI services ex energy. \"Supercore\" \u2014 services inflation the Fed watches.",
       "sub": "Supercore services prices",
       "search": "CUSR0000SASLE",
       "freshness": "live",
@@ -6421,7 +6422,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6483,7 +6484,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6519,9 +6520,9 @@
       "status": "ok",
       "staleDays": 67
     },
-    "BBB_OAS": {
-      "id": "BBB_OAS",
-      "name": "BBB credit spread",
+    "BAA10Y": {
+      "id": "BAA10Y",
+      "name": "Baa spread over 10s",
       "layer": "risk",
       "street": "risk",
       "causal": "risk",
@@ -6533,7 +6534,69 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "BBB corporate OAS. Credit spread for the weakest IG bucket — early stress tell.",
+      "note": "Moody's Baa corporate yield minus the 10-year Treasury - the extra yield demanded to lend to a middling company. Widening means doubt that borrowers pay. FRED computes this one rather than licensing it, so it carries 40 years of history and can be scored consistently across past cycles: 2.1 is the long-run median, 3.3 is where 2011 and 2016 topped out, and the 2008 peak was 6.07.",
+      "sub": "Moody's Baa vs 10y Treasury",
+      "search": "BAA10Y",
+      "freshness": "live",
+      "source": "FRED",
+      "sourceUrl": "https://fred.stlouisfed.org/series/BAA10Y",
+      "latest": 1.57,
+      "asOf": "2026-09-03",
+      "n": 10169,
+      "anchor": {
+        "kind": "baa10y",
+        "score": 0.8153846153846153,
+        "why": "Baa over 10s 1.57pp \u2014 2.1 is the 40-year median, 3.3 is crisis",
+        "votes": true
+      },
+      "impulse": {
+        "1m": {
+          "delta": -0.06999999999999984,
+          "dir": "down",
+          "score": 0.874999999999998,
+          "prior": 1.64,
+          "priorDate": "2026-08-04"
+        },
+        "3m": {
+          "delta": 0.030000000000000027,
+          "dir": "up",
+          "score": -0.37500000000000033,
+          "prior": 1.54,
+          "priorDate": "2026-06-04"
+        },
+        "6m": {
+          "delta": -0.18999999999999995,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 1.76,
+          "priorDate": "2026-03-05"
+        },
+        "1y": {
+          "delta": -0.20999999999999996,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 1.78,
+          "priorDate": "2025-09-03"
+        }
+      },
+      "status": "ok",
+      "staleDays": 3
+    },
+    "BBB_OAS": {
+      "id": "BBB_OAS",
+      "name": "BBB credit spread",
+      "layer": "risk",
+      "street": "risk",
+      "causal": "risk",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "light": null,
+      "impulseLight": "risk",
+      "weight": 1,
+      "marketBucket": null,
+      "order": null,
+      "note": "ICE BofA BBB option-adjusted spread. FRED's open download only carries three years of this one, so the risk light votes Moody's Baa over 10s instead, which reaches back to 1986.",
       "sub": "Weakest IG bond premium",
       "search": "BAMLC0A4CBBB",
       "freshness": "live",
@@ -6607,7 +6670,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6669,7 +6732,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6719,7 +6782,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Sahm rule trigger — unemployment jump vs recent low. Recession flag when ≥0.5.",
+      "note": "Sahm rule trigger \u2014 unemployment jump vs recent low. Recession flag when \u22650.5.",
       "sub": "Jobless jump vs low",
       "search": "SAHMREALTIME",
       "freshness": "live",
@@ -6731,7 +6794,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6793,7 +6856,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6855,7 +6918,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6905,7 +6968,7 @@
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Cboe SKEW — price of S&P crash insurance (tail risk). Higher = more fear of a crash.",
+      "note": "Cboe SKEW \u2014 price of S&P crash insurance (tail risk). Higher = more fear of a crash.",
       "sub": "Price of S&P crash hedges",
       "search": "^SKEW",
       "freshness": "live",
@@ -6917,7 +6980,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -6979,7 +7042,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7041,7 +7104,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7103,7 +7166,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7165,7 +7228,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7227,7 +7290,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7289,7 +7352,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7351,7 +7414,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7413,7 +7476,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7475,7 +7538,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7513,7 +7576,7 @@
     },
     "IEF": {
       "id": "IEF",
-      "name": "7–10y Treasury ETF",
+      "name": "7\u201310y Treasury ETF",
       "layer": "markets",
       "street": "markets",
       "causal": "assets",
@@ -7525,7 +7588,7 @@
       "weight": 1,
       "marketBucket": "duration",
       "order": 320,
-      "note": "iShares 7–10 Year Treasury. Intermediate duration prices.",
+      "note": "iShares 7\u201310 Year Treasury. Intermediate duration prices.",
       "sub": "Intermediate Treasuries",
       "search": "IEF",
       "freshness": "live",
@@ -7537,7 +7600,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7575,7 +7638,7 @@
     },
     "SHY": {
       "id": "SHY",
-      "name": "1–3y Treasury ETF",
+      "name": "1\u20133y Treasury ETF",
       "layer": "markets",
       "street": "markets",
       "causal": "assets",
@@ -7587,7 +7650,7 @@
       "weight": 1,
       "marketBucket": "duration",
       "order": 310,
-      "note": "iShares 1–3 Year Treasury. Short duration / cash-like rates.",
+      "note": "iShares 1\u20133 Year Treasury. Short duration / cash-like rates.",
       "sub": "Short Treasuries",
       "search": "SHY",
       "freshness": "live",
@@ -7599,7 +7662,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7661,7 +7724,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7723,7 +7786,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7785,7 +7848,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7841,39 +7904,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ETH-USD",
-      "latest": 2507.43994140625,
+      "latest": 2502.280029296875,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 594.1605224609375,
+          "delta": 589.0006103515625,
           "dir": "up",
           "score": 1.5,
           "prior": 1913.2794189453125,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 821.043701171875,
+          "delta": 815.8837890625,
           "dir": "up",
           "score": 1.5,
           "prior": 1686.396240234375,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 570.835205078125,
+          "delta": 565.67529296875,
           "dir": "up",
           "score": 1.5,
           "prior": 1936.604736328125,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -1766.80224609375,
+          "delta": -1771.962158203125,
           "dir": "down",
           "score": -1.5,
           "prior": 4274.2421875,
@@ -7897,7 +7960,7 @@
       "weight": 1,
       "marketBucket": "equities",
       "order": 115,
-      "note": "Dow Jones Industrial Average. 30-name household US equity tape — narrower than the S&P 500.",
+      "note": "Dow Jones Industrial Average. 30-name household US equity tape \u2014 narrower than the S&P 500.",
       "sub": "US 30-name household tape",
       "search": "^DJI",
       "freshness": "live",
@@ -7909,7 +7972,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -7971,7 +8034,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8033,7 +8096,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8095,7 +8158,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8157,7 +8220,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8207,7 +8270,7 @@
       "weight": 1,
       "marketBucket": "metals",
       "order": 450,
-      "note": "Palladium futures. Auto-catalyst metal — completes the precious/industrial set.",
+      "note": "Palladium futures. Auto-catalyst metal \u2014 completes the precious/industrial set.",
       "sub": "Palladium futures",
       "search": "PA=F",
       "freshness": "live",
@@ -8219,7 +8282,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8269,7 +8332,7 @@
       "weight": 1,
       "marketBucket": "energy",
       "order": 540,
-      "note": "RBOB gasoline futures. Downstream oil — the pump-price tape.",
+      "note": "RBOB gasoline futures. Downstream oil \u2014 the pump-price tape.",
       "sub": "US gasoline futures",
       "search": "RB=F",
       "freshness": "live",
@@ -8281,7 +8344,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8331,7 +8394,7 @@
       "weight": 1,
       "marketBucket": "energy",
       "order": 550,
-      "note": "NYMEX heating oil / ULSD. Distillate — freight, heating, and the crack vs crude.",
+      "note": "NYMEX heating oil / ULSD. Distillate \u2014 freight, heating, and the crack vs crude.",
       "sub": "Diesel / distillate",
       "search": "HO=F",
       "freshness": "live",
@@ -8343,7 +8406,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8393,7 +8456,7 @@
       "weight": 1,
       "marketBucket": "energy",
       "order": 560,
-      "note": "Dutch TTF natural gas. European gas benchmark — the non-US energy shock tape.",
+      "note": "Dutch TTF natural gas. European gas benchmark \u2014 the non-US energy shock tape.",
       "sub": "Europe gas benchmark",
       "search": "TTF=F",
       "freshness": "live",
@@ -8405,7 +8468,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8447,7 +8510,7 @@
       "layer": "markets",
       "street": "markets",
       "causal": "assets",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -8467,7 +8530,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8509,7 +8572,7 @@
       "layer": "markets",
       "street": "markets",
       "causal": "assets",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -8529,7 +8592,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8571,7 +8634,7 @@
       "layer": "markets",
       "street": "markets",
       "causal": "assets",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -8579,7 +8642,7 @@
       "weight": 1,
       "marketBucket": "ag",
       "order": 630,
-      "note": "Soybean futures. Protein / crush — China demand tell.",
+      "note": "Soybean futures. Protein / crush \u2014 China demand tell.",
       "sub": "CBOT soybean futures",
       "search": "ZS=F",
       "freshness": "live",
@@ -8591,7 +8654,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -8641,45 +8704,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 730,
-      "note": "BNB. Exchange-chain crypto — liquidity-sensitive alt.",
+      "note": "BNB. Exchange-chain crypto \u2014 liquidity-sensitive alt.",
       "sub": "Binance coin",
       "search": "BNB-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BNB-USD",
-      "latest": 764.1599731445312,
+      "latest": 762.8800048828125,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 171.96282958984375,
+          "delta": 170.682861328125,
           "dir": "up",
           "score": 1.5,
           "prior": 592.1971435546875,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 160.531005859375,
+          "delta": 159.25103759765625,
           "dir": "up",
           "score": 1.5,
           "prior": 603.6289672851562,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 152.12109375,
+          "delta": 150.84112548828125,
           "dir": "up",
           "score": 1.5,
           "prior": 612.0388793945312,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -97.61212158203125,
+          "delta": -98.89208984375,
           "dir": "down",
           "score": -1.5,
           "prior": 861.7720947265625,
@@ -8703,45 +8766,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 740,
-      "note": "XRP. Cross-border payments crypto — beta to risk and regulation.",
+      "note": "XRP. Cross-border payments crypto \u2014 beta to risk and regulation.",
       "sub": "Payments crypto",
       "search": "XRP-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XRP-USD",
-      "latest": 1.423200011253357,
+      "latest": 1.4187999963760376,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 0.4019629955291748,
+          "delta": 0.39756298065185547,
           "dir": "up",
           "score": 1.5,
           "prior": 1.0212370157241821,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.26854896545410156,
+          "delta": 0.2641489505767822,
           "dir": "up",
           "score": 1.5,
           "prior": 1.1546510457992554,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.08179903030395508,
+          "delta": 0.07739901542663574,
           "dir": "up",
-          "score": 1.0224878787994385,
+          "score": 0.9674876928329468,
           "prior": 1.3414009809494019,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -1.3876549005508423,
+          "delta": -1.3920549154281616,
           "dir": "down",
           "score": -1.5,
           "prior": 2.810854911804199,
@@ -8765,45 +8828,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 750,
-      "note": "Solana. High-throughput smart-contract chain — crypto risk appetite.",
+      "note": "Solana. High-throughput smart-contract chain \u2014 crypto risk appetite.",
       "sub": "High-throughput L1",
       "search": "SOL-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SOL-USD",
-      "latest": 106.11000061035156,
+      "latest": 105.76000213623047,
       "asOf": "2026-09-06",
       "n": 2340,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 32.46734619140625,
+          "delta": 32.117347717285156,
           "dir": "up",
           "score": 1.5,
           "prior": 73.64265441894531,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 39.79936981201172,
+          "delta": 39.449371337890625,
           "dir": "up",
           "score": 1.5,
           "prior": 66.31063079833984,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 24.48541259765625,
+          "delta": 24.135414123535156,
           "dir": "up",
           "score": 1.5,
           "prior": 81.62458801269531,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -94.13630676269531,
+          "delta": -94.4863052368164,
           "dir": "down",
           "score": -1.5,
           "prior": 200.24630737304688,
@@ -8833,41 +8896,41 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TRX-USD",
-      "latest": 0.3333648145198822,
+      "latest": 0.33333340287208557,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 0.005961805582046509,
+          "delta": 0.005930393934249878,
           "dir": "flat",
-          "score": 0.07452256977558136,
+          "score": 0.07412992417812347,
           "prior": 0.3274030089378357,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.006807804107666016,
+          "delta": 0.006776392459869385,
           "dir": "flat",
-          "score": 0.0850975513458252,
+          "score": 0.08470490574836731,
           "prior": 0.3265570104122162,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.04430380463600159,
+          "delta": 0.044272392988204956,
           "dir": "up",
-          "score": 0.5537975579500198,
+          "score": 0.553404912352562,
           "prior": 0.2890610098838806,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 0.018455803394317627,
+          "delta": 0.018424391746520996,
           "dir": "flat",
-          "score": 0.23069754242897034,
+          "score": 0.23030489683151245,
           "prior": 0.3149090111255646,
           "priorDate": "2025-09-06"
         }
@@ -8889,45 +8952,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 770,
-      "note": "Hyperliquid. On-chain perp-DEX token — crypto trading-activity proxy.",
+      "note": "Hyperliquid. On-chain perp-DEX token \u2014 crypto trading-activity proxy.",
       "sub": "Perp DEX token",
       "search": "HYPE",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYPE32196-USD",
-      "latest": 86.44999694824219,
+      "latest": 86.06999969482422,
       "asOf": "2026-09-06",
       "n": 645,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 32.336299896240234,
+          "delta": 31.956302642822266,
           "dir": "up",
           "score": 1.5,
           "prior": 54.11369705200195,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 26.936405181884766,
+          "delta": 26.556407928466797,
           "dir": "up",
           "score": 1.5,
           "prior": 59.51359176635742,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 55.72608184814453,
+          "delta": 55.34608459472656,
           "dir": "up",
           "score": 1.5,
           "prior": 30.723915100097656,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 40.33047866821289,
+          "delta": 39.95048141479492,
           "dir": "up",
           "score": 1.5,
           "prior": 46.1195182800293,
@@ -8957,39 +9020,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZEC-USD",
-      "latest": 1074.97998046875,
+      "latest": 1066.3900146484375,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 563.5107116699219,
+          "delta": 554.9207458496094,
           "dir": "up",
           "score": 1.5,
           "prior": 511.4692687988281,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 634.6650695800781,
+          "delta": 626.0751037597656,
           "dir": "up",
           "score": 1.5,
           "prior": 440.3149108886719,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 877.3599548339844,
+          "delta": 868.7699890136719,
           "dir": "up",
           "score": 1.5,
           "prior": 197.62002563476562,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 1027.4086837768555,
+          "delta": 1018.818717956543,
           "dir": "up",
           "score": 1.5,
           "prior": 47.57129669189453,
@@ -9013,45 +9076,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 790,
-      "note": "Dogecoin. Meme-beta crypto — retail risk appetite.",
+      "note": "Dogecoin. Meme-beta crypto \u2014 retail risk appetite.",
       "sub": "Meme liquidity",
       "search": "DOGE-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DOGE-USD",
-      "latest": 0.09109999984502792,
+      "latest": 0.09053000062704086,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 0.021476998925209045,
+          "delta": 0.020906999707221985,
           "dir": "up",
-          "score": 0.26846248656511307,
+          "score": 0.2613374963402748,
           "prior": 0.06962300091981888,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.0050109997391700745,
+          "delta": 0.004441000521183014,
           "dir": "flat",
-          "score": 0.06263749673962593,
+          "score": 0.055512506514787674,
           "prior": 0.08608900010585785,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.0019370019435882568,
+          "delta": 0.0013670027256011963,
           "dir": "flat",
-          "score": 0.02421252429485321,
+          "score": 0.017087534070014954,
           "prior": 0.08916299790143967,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.12478599697351456,
+          "delta": -0.12535599619150162,
           "dir": "down",
           "score": -1.5,
           "prior": 0.21588599681854248,
@@ -9081,39 +9144,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XMR-USD",
-      "latest": 556.0502319335938,
+      "latest": 554.0894775390625,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 178.14761352539062,
+          "delta": 176.18685913085938,
           "dir": "up",
           "score": 1.5,
           "prior": 377.9026184082031,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 252.32626342773438,
+          "delta": 250.36550903320312,
           "dir": "up",
           "score": 1.5,
           "prior": 303.7239685058594,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 221.05416870117188,
+          "delta": 219.09341430664062,
           "dir": "up",
           "score": 1.5,
           "prior": 334.9960632324219,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 287.6666259765625,
+          "delta": 285.70587158203125,
           "dir": "up",
           "score": 1.5,
           "prior": 268.38360595703125,
@@ -9143,39 +9206,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LEO-USD",
-      "latest": 9.344764709472656,
+      "latest": 9.346203804016113,
       "asOf": "2026-09-06",
       "n": 2665,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": -0.40820884704589844,
+          "delta": -0.4067697525024414,
           "dir": "down",
           "score": -1.5,
           "prior": 9.752973556518555,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": -0.2503089904785156,
+          "delta": -0.2488698959350586,
           "dir": "down",
           "score": -1.5,
           "prior": 9.595073699951172,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.30640506744384766,
+          "delta": 0.3078441619873047,
           "dir": "up",
           "score": 1.5,
           "prior": 9.038359642028809,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.23207664489746094,
+          "delta": -0.2306375503540039,
           "dir": "down",
           "score": -1.5,
           "prior": 9.576841354370117,
@@ -9199,45 +9262,45 @@
       "weight": 1,
       "marketBucket": "crypto",
       "order": 820,
-      "note": "Chainlink. Oracle infrastructure — DeFi plumbing tape.",
+      "note": "Chainlink. Oracle infrastructure \u2014 DeFi plumbing tape.",
       "sub": "Oracle network",
       "search": "LINK-USD",
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LINK-USD",
-      "latest": 12.177000045776367,
+      "latest": 12.128000259399414,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 3.996227264404297,
+          "delta": 3.9472274780273438,
           "dir": "up",
           "score": 1.5,
           "prior": 8.18077278137207,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 4.278515815734863,
+          "delta": 4.22951602935791,
           "dir": "up",
           "score": 1.5,
           "prior": 7.898484230041504,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 3.6535634994506836,
+          "delta": 3.6045637130737305,
           "dir": "up",
           "score": 1.5,
           "prior": 8.523436546325684,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -10.028257369995117,
+          "delta": -10.07725715637207,
           "dir": "down",
           "score": -1.5,
           "prior": 22.205257415771484,
@@ -9267,39 +9330,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ADA-USD",
-      "latest": 0.22126999497413635,
+      "latest": 0.22030000388622284,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 0.02016998827457428,
-          "dir": "up",
-          "score": 0.2521248534321785,
+          "delta": 0.019199997186660767,
+          "dir": "flat",
+          "score": 0.23999996483325958,
           "prior": 0.20110000669956207,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.05629599094390869,
+          "delta": 0.05532599985599518,
           "dir": "up",
-          "score": 0.7036998867988586,
+          "score": 0.6915749981999397,
           "prior": 0.16497400403022766,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": -0.027979999780654907,
+          "delta": -0.02894999086856842,
           "dir": "down",
-          "score": -0.34974999725818634,
+          "score": -0.36187488585710526,
           "prior": 0.24924999475479126,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.5971809923648834,
+          "delta": -0.5981509834527969,
           "dir": "down",
           "score": -1.5,
           "prior": 0.8184509873390198,
@@ -9329,39 +9392,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLM-USD",
-      "latest": 0.1857600063085556,
+      "latest": 0.18543699383735657,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 0.024503007531166077,
+          "delta": 0.02417999505996704,
           "dir": "up",
-          "score": 0.30628759413957596,
+          "score": 0.302249938249588,
           "prior": 0.16125699877738953,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": -0.020095989108085632,
+          "delta": -0.020419001579284668,
           "dir": "down",
-          "score": -0.2511998638510704,
+          "score": -0.25523751974105835,
           "prior": 0.20585599541664124,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.03737901151180267,
+          "delta": 0.03705599904060364,
           "dir": "up",
-          "score": 0.4672376438975334,
+          "score": 0.46319998800754547,
           "prior": 0.14838099479675293,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.17029400169849396,
+          "delta": -0.170617014169693,
           "dir": "down",
           "score": -1.5,
           "prior": 0.35605400800704956,
@@ -9391,39 +9454,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BCH-USD",
-      "latest": 260.5199890136719,
+      "latest": 259.8399963378906,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 45.770263671875,
+          "delta": 45.09027099609375,
           "dir": "up",
           "score": 1.5,
           "prior": 214.74972534179688,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 30.685256958007812,
+          "delta": 30.005264282226562,
           "dir": "up",
           "score": 1.5,
           "prior": 229.83473205566406,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": -182.20333862304688,
+          "delta": -182.88333129882812,
           "dir": "down",
           "score": -1.5,
           "prior": 442.72332763671875,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -334.7936706542969,
+          "delta": -335.4736633300781,
           "dir": "down",
           "score": -1.5,
           "prior": 595.3136596679688,
@@ -9453,39 +9516,39 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LTC-USD",
-      "latest": 54.50899887084961,
+      "latest": 54.43600082397461,
       "asOf": "2026-09-06",
       "n": 3652,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
         "1m": {
-          "delta": 8.940914154052734,
+          "delta": 8.867916107177734,
           "dir": "up",
           "score": 1.5,
           "prior": 45.568084716796875,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 11.671077728271484,
+          "delta": 11.598079681396484,
           "dir": "up",
           "score": 1.5,
           "prior": 42.837921142578125,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 1.8725051879882812,
+          "delta": 1.7995071411132812,
           "dir": "up",
           "score": 1.5,
           "prior": 52.63649368286133,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -57.657352447509766,
+          "delta": -57.730350494384766,
           "dir": "down",
           "score": -1.5,
           "prior": 112.16635131835938,
@@ -9507,11 +9570,11 @@
       "light": null,
       "impulseLight": "liquidity",
       "weight": 2,
-      "note": "Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.",
-      "sub": "Fed assets − TGA − ON RRP",
+      "note": "Street shorthand: Fed assets \u2212 TGA \u2212 ON RRP. Rising = more cash in markets.",
+      "sub": "Fed assets \u2212 TGA \u2212 ON RRP",
       "search": "NET_LIQ",
       "freshness": "live",
-      "source": "derived (WALCL − TGA − ON RRP)",
+      "source": "derived (WALCL \u2212 TGA \u2212 ON RRP)",
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
       "latest": 5768.744000000001,
       "asOf": "2026-09-02",
@@ -9519,7 +9582,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -9566,11 +9629,11 @@
       "light": "liquidity",
       "impulseLight": null,
       "weight": 2,
-      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce — that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing.",
+      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing.",
       "sub": "Repo cost vs policy ceiling",
       "search": "SOFR_SPREAD",
       "freshness": "live",
-      "source": "derived (SOFR − fed funds target top)",
+      "source": "derived (SOFR \u2212 fed funds target top)",
       "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
       "latest": -8.999999999999986,
       "asOf": "2026-09-03",
@@ -9578,7 +9641,7 @@
       "anchor": {
         "kind": "sofr_spread",
         "score": -0.10000000000000142,
-        "why": "SOFR -9bp vs the top of the target range — 0 is where repo broke in 2019",
+        "why": "SOFR -9bp vs the top of the target range \u2014 0 is where repo broke in 2019",
         "votes": true
       },
       "impulse": {
@@ -9616,7 +9679,7 @@
     },
     "RESERVES_GDP": {
       "id": "RESERVES_GDP",
-      "name": "Reserves ÷ GDP",
+      "name": "Reserves \u00f7 GDP",
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
@@ -9630,7 +9693,7 @@
       "sub": "Bank reserves as share of GDP",
       "search": "RESERVES_GDP",
       "freshness": "live",
-      "source": "derived (bank reserves ÷ nominal GDP)",
+      "source": "derived (bank reserves \u00f7 nominal GDP)",
       "sourceUrl": "https://fred.stlouisfed.org/series/WRESBAL",
       "latest": 8.910069320181767,
       "asOf": "2026-09-02",
@@ -9638,7 +9701,7 @@
       "anchor": {
         "kind": "reserves_gdp",
         "score": -0.3633102266060776,
-        "why": "reserves 8.9% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak",
+        "why": "reserves 8.9% of GDP \u2014 6.9% in the 2019 squeeze, 16.6% at the QE peak",
         "votes": true
       },
       "impulse": {
@@ -9676,7 +9739,7 @@
     },
     "NETLIQ_GDP": {
       "id": "NETLIQ_GDP",
-      "name": "Net liquidity ÷ GDP",
+      "name": "Net liquidity \u00f7 GDP",
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
@@ -9690,7 +9753,7 @@
       "sub": "Net liquidity as share of GDP",
       "search": "NETLIQ_GDP",
       "freshness": "live",
-      "source": "derived (net liquidity ÷ nominal GDP)",
+      "source": "derived (net liquidity \u00f7 nominal GDP)",
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
       "latest": 17.75759490238061,
       "asOf": "2026-09-02",
@@ -9698,7 +9761,7 @@
       "anchor": {
         "kind": "netliq_gdp",
         "score": -0.640687170748397,
-        "why": "net liquidity 17.8% of GDP — 16.6% in the 2019 squeeze, 27.8% at the QE peak",
+        "why": "net liquidity 17.8% of GDP \u2014 16.6% in the 2019 squeeze, 27.8% at the QE peak",
         "votes": true
       },
       "impulse": {
@@ -9736,11 +9799,11 @@
     },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
-      "name": "Stock–bond correlation",
+      "name": "Stock\u2013bond correlation",
       "layer": "risk",
       "street": "risk",
       "causal": "risk",
-      "units": "ρ 60d",
+      "units": "\u03c1 60d",
       "freq": "daily",
       "sign": 0,
       "light": null,
@@ -9748,7 +9811,7 @@
       "sub": "Stocks vs bonds co-move",
       "search": "STOCK_BOND_CORR",
       "freshness": "live",
-      "source": "derived (SPX vs −ΔDGS10, 60d)",
+      "source": "derived (SPX vs \u2212\u0394DGS10, 60d)",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
       "latest": 0.41329133792027456,
       "asOf": "2026-09-04",
@@ -9756,7 +9819,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -9803,11 +9866,11 @@
       "light": null,
       "impulseLight": "liquidity",
       "weight": 2,
-      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing.",
+      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy \u2014 the private-sector impulse, not just Fed plumbing.",
       "sub": "Acceleration of bank credit",
       "search": "CREDIT_IMPULSE",
       "freshness": "live",
-      "source": "derived (Δ YoY TOTLL)",
+      "source": "derived (\u0394 YoY TOTLL)",
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
       "latest": 3.00274393222095,
       "asOf": "2026-08-26",
@@ -9815,7 +9878,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -9852,7 +9915,7 @@
     },
     "NOM_REAL_SPREAD": {
       "id": "NOM_REAL_SPREAD",
-      "name": "Nominal − real GDP",
+      "name": "Nominal \u2212 real GDP",
       "layer": "growth",
       "street": "growth",
       "causal": "labels",
@@ -9865,7 +9928,7 @@
       "sub": "Price heat in GDP",
       "search": "NOM_REAL_SPREAD",
       "freshness": "lagged",
-      "source": "derived (nominal − real GDP YoY)",
+      "source": "derived (nominal \u2212 real GDP YoY)",
       "sourceUrl": "https://fred.stlouisfed.org/series/GDP",
       "latest": 4.463880581194535,
       "asOf": "2026-04-01",
@@ -9873,7 +9936,7 @@
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "no level anchor \u2014 flow/impulse only",
         "votes": false
       },
       "impulse": {
@@ -9911,8 +9974,8 @@
   },
   "errors": [],
   "formula": {
-    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
-    "netLiquidity": "WALCL(bn) − TGA − ON RRP",
-    "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
+    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse only. Score >+0.45 / <\u22120.45 paints the word. Inflation upside = hot vs ~2%.",
+    "netLiquidity": "WALCL(bn) \u2212 TGA \u2212 ON RRP",
+    "stockBondCorr": "60d Pearson of SPX returns vs \u2212\u0394DGS10"
   }
 }
