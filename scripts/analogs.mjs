@@ -81,6 +81,27 @@ export async function buildAnalogs(todayScores) {
   }
   if (!Object.keys(stats).length) return null;
 
+  // Unconditional: every day with a forward return, not the analog set.
+  // MIN_GAP_DAYS is for analog clustering; do not apply it here.
+  const baseline = {};
+  for (const hz of Object.keys(hist.horizons)) {
+    const byAsset = {};
+    for (const a of hist.assets) {
+      const vals = hist.rows
+        .map((r) => r.fwd?.[hz]?.[a.id])
+        .filter(Number.isFinite);
+      if (!vals.length) continue;
+      byAsset[a.id] = {
+        median: Number(median(vals).toFixed(2)),
+        up: Number(
+          ((vals.filter((v) => v > 0).length / vals.length) * 100).toFixed(0)
+        ),
+        n: vals.length,
+      };
+    }
+    if (Object.keys(byAsset).length) baseline[hz] = byAsset;
+  }
+
   // How alike are these days, really? A tight cluster is worth more than the same
   // count of loose ones, and the reader should be told which they are looking at.
   const dists = picked.map((p) => p.d);
@@ -103,5 +124,6 @@ export async function buildAnalogs(todayScores) {
       .reverse()
       .slice(0, 12),
     stats,
+    baseline,
   };
 }

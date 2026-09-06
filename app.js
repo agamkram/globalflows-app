@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260930";
+import { buildMeaning } from "./meaning.js?v=20260931";
 import {
   buildLights,
   attachImpulse,
@@ -366,7 +366,9 @@ function favorBaseRate(favorId, stance) {
   const r = a.stats[hz]?.[assetId];
   if (!r) return null;
 
-  const lean = r.up >= 58 ? "up" : r.up <= 42 ? "down" : "flat";
+  const base = a.baseline?.[hz]?.[assetId] || null;
+  const lift = base ? r.up - base.up : 0;
+  const lean = lift >= 8 ? "up" : lift <= -8 ? "down" : "flat";
   // A mixed call has nothing to agree or disagree with, so report which way the
   // record leans instead of calling the history split when it plainly is not.
   let verdict = "leans";
@@ -375,7 +377,15 @@ function favorBaseRate(favorId, stance) {
   else if (stance === "out") verdict = lean === "down" ? "agrees" : "disagrees";
   // When nothing in the record sits near today, the sample is context and not
   // evidence, so the wording softens and the strip stops raising a flag over it.
-  return { ...r, hz, lean, verdict, weak: a.closeness === "distant" };
+  return {
+    ...r,
+    hz,
+    lean,
+    verdict,
+    weak: a.closeness === "distant",
+    baseUp: base?.up,
+    lift,
+  };
 }
 
 function renderFavorStrip() {
@@ -840,8 +850,8 @@ function baseRateHtml() {
   const a = REGIME?.analogs;
   if (!a?.stats) return "";
   const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
-  const rows = Object.values(a.stats[hz] || {});
-  if (!rows.length) return "";
+  const table = a.stats[hz] || {};
+  if (!Object.keys(table).length) return "";
 
   const window = { "1m": "the next month", "3m": "the next three months", "6m": "the next six months" }[hz] || `the next ${hz}`;
   const match =
@@ -851,14 +861,16 @@ function baseRateHtml() {
         ? "a loose match."
         : "only a distant match, so read this as context rather than evidence.";
 
-  const body = rows
-    .map((r) => {
+  const body = Object.entries(table)
+    .map(([id, r]) => {
       const cls = r.median > 0 ? "z-pos" : r.median < 0 ? "z-neg" : "z-mid";
       const sign = r.median > 0 ? "+" : "";
+      const baseUp = a.baseline?.[hz]?.[id]?.up;
+      const vs = Number.isFinite(baseUp) ? ` vs ${baseUp}% normally` : "";
       return `<div class="base-row">
         <span class="base-name">${escapeHtml(r.name)}</span>
         <span class="base-med ${cls}">${sign}${r.median}%</span>
-        <span class="base-up muted">${r.up}% up</span>
+        <span class="base-up muted">${r.up}% up${vs}</span>
       </div>`;
     })
     .join("");
@@ -867,6 +879,22 @@ function baseRateHtml() {
     <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five lights — ${match} Median move over ${window}, and how often it rose:</p>
     <div class="base-grid">${body}</div>
     <p class="muted tiny">Returns are total return — coupons and dividends included, which is most of the return on a bond. Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
+}
+
+function childFavorLine(child, parentWhy) {
+  const word =
+    child.stance === "in" ? "In" : child.stance === "out" ? "Out" : "Mixed";
+  const badge = `<strong data-state="${stanceState(child.stance)}">${escapeHtml(
+    child.name
+  )} ${word}</strong>`;
+  const parent = String(parentWhy ?? "").trim();
+  const why = String(child.why ?? "").trim();
+  if (why && why !== parent) {
+    return `<span class="rubric-split">${badge}<span class="muted sent-hint"> — ${escapeHtml(
+      child.why
+    )}</span></span>`;
+  }
+  return `<span class="rubric-split">${badge}</span>`;
 }
 
 function openSentence(snap) {
@@ -933,28 +961,14 @@ function openSentence(snap) {
         if (it.tenors?.length) {
           extras.push(
             it.tenors
-              .map((tn) => {
-                const tw = tn.stance === "in" ? "In" : tn.stance === "out" ? "Out" : "Mixed";
-                return `<span class="rubric-split"><strong data-state="${stanceState(
-                  tn.stance
-                )}">${escapeHtml(tn.name)} ${tw}</strong><span class="muted sent-hint"> — ${escapeHtml(
-                  tn.why
-                )}</span></span>`;
-              })
+              .map((tn) => childFavorLine(tn, it.why))
               .join("")
           );
         }
         if (it.splits?.length) {
           extras.push(
             it.splits
-              .map((sp) => {
-                const sw = sp.stance === "in" ? "In" : sp.stance === "out" ? "Out" : "Mixed";
-                return `<span class="rubric-split"><strong data-state="${stanceState(
-                  sp.stance
-                )}">${escapeHtml(sp.name)} ${sw}</strong><span class="muted sent-hint"> — ${escapeHtml(
-                  sp.why
-                )}</span></span>`;
-              })
+              .map((sp) => childFavorLine(sp, it.why))
               .join("")
           );
         }
@@ -978,7 +992,9 @@ function openSentence(snap) {
           extras.push(
             `<span class="rubric-base" data-verdict="${br.verdict}">
               <strong>${escapeHtml(verdictWord)}</strong>
-              <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time (${br.n} days).</span>
+              <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
+                Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
+              } (${br.n} days).</span>
             </span>`
           );
         }
