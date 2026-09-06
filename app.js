@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260926";
+import { buildMeaning } from "./meaning.js?v=20260927";
 import {
   buildLights,
   attachImpulse,
@@ -217,6 +217,12 @@ function fmtValue(n, units) {
       return money(n / 1000);
     case "USD bn":
       return money(n);
+    case "USD tn":
+      return `${n < 0 ? "-" : ""}$${Math.abs(n).toFixed(2)}tn`;
+    // A 12-month change is meaningless without its sign, and "3%" reads as growth
+    // when the series is actually shrinking.
+    case "% chg":
+      return `${signed(abs >= 10 ? 1 : 2)}%`;
     case "EUR mn":
       return money(n / 1000, "€");
     // Bank of Japan reports in hundred-millions of yen.

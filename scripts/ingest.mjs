@@ -558,6 +558,104 @@ async function main() {
     errors.push({ id: "RESERVES_GDP", error: String(e.message || e) });
   }
 
+  // Derived: the global money machine, in dollars.
+  //
+  // The app is called GlobalFlows but every voter was American, which made the
+  // name a promise the model did not keep. These four put the rest of the world
+  // in the lights.
+  //
+  // Adding balance sheets denominated in euro, yen and dollars requires converting
+  // them first, and the conversion has to use market rates on the day rather than a
+  // single spot rate, or the history becomes a chart of the exchange rate. FRED's
+  // daily FX runs back to 1999 (euro) and 1971 (yen) on the anonymous endpoint,
+  // deeper than the Yahoo pairs already on the tape, so it is fetched here instead.
+  try {
+    const sorted = (a) => [...(a || [])].sort((x, y) => x.date.localeCompare(y.date));
+    /** Step a forward-fill cursor to the last print on or before `date`. */
+    const fill = (pts, state, date) => {
+      while (state.i + 1 < pts.length && pts[state.i + 1].date <= date) state.i++;
+      const p = pts[state.i];
+      return p && p.date <= date ? p.value : null;
+    };
+    /** Change versus the print closest to a year earlier, in percent. */
+    const yoy = (points, tolDays) => {
+      const out = [];
+      for (let i = 0; i < points.length; i++) {
+        const t = Date.parse(points[i].date) - 365 * 86400000;
+        let best = null;
+        for (let j = i; j >= 0; j--) {
+          const d = Math.abs(Date.parse(points[j].date) - t);
+          if (best === null || d < best.d) best = { d, v: points[j].value };
+          if (Date.parse(points[j].date) < t - tolDays * 86400000) break;
+        }
+        if (!best || best.d > tolDays * 86400000 || !best.v) continue;
+        out.push({
+          date: points[i].date,
+          value: ((points[i].value - best.v) / Math.abs(best.v)) * 100,
+        });
+      }
+      return out;
+    };
+
+    const [eur, jpy] = await Promise.all([fetchFred("DEXUSEU"), fetchFred("DEXJPUS")]);
+    const usdPerEur = sorted(eur.points); // dollars per euro
+    const jpyPerUsd = sorted(jpy.points); // yen per dollar
+
+    const fed = sorted(rawPoints.WALCL); // USD mn
+    const ecb = sorted(rawPoints.ECBASSETS); // EUR mn
+    const boj = sorted(rawPoints.JPNASSETS); // hundreds of millions of yen
+    const pbc = sorted(rawPoints.TRESEGCNM052N); // USD mn
+    if (!fed.length || !ecb.length || !boj.length || !pbc.length)
+      throw new Error("missing a central bank leg");
+
+    // The Fed's weekly print is the densest of the four balance sheets, so it sets
+    // the grid and the slower legs are carried forward onto it.
+    const cur = { ecb: { i: 0 }, boj: { i: 0 }, pbc: { i: 0 }, eur: { i: 0 }, jpy: { i: 0 } };
+    const start = [ecb[0].date, boj[0].date, usdPerEur[0].date, jpyPerUsd[0].date].sort().pop();
+    const g4 = [];
+    for (const p of fed) {
+      if (p.date < start) continue;
+      const e = fill(ecb, cur.ecb, p.date);
+      const b = fill(boj, cur.boj, p.date);
+      const c = fill(pbc, cur.pbc, p.date);
+      const fx = fill(usdPerEur, cur.eur, p.date);
+      const fy = fill(jpyPerUsd, cur.jpy, p.date);
+      if ([e, b, c, fx, fy].some((v) => v == null) || !fy) continue;
+      // Everything to USD millions, then to trillions.
+      const usd = p.value + e * fx + (b * 100) / fy + c;
+      g4.push({ date: p.date, value: usd / 1e6 });
+    }
+    if (g4.length < 200) throw new Error(`thin G4 overlap (${g4.length})`);
+    await emitDerived("GLOBAL_CB", g4, "derived (Fed + ECB + BoJ + China FX reserves, in USD)");
+    await emitDerived("GLOBAL_CB_YOY", yoy(g4, 20), "derived (G4 assets, 12-month change)");
+
+    const dollar = sorted(rawPoints.DTWEXBGS);
+    if (dollar.length > 300)
+      await emitDerived("DOLLAR_YOY", yoy(dollar, 12), "derived (broad dollar, 12-month change)");
+
+    // Global long rates: only months where all three print, so the average never
+    // silently becomes a different basket.
+    const de = sorted(rawPoints.IRLTLT01DEM156N);
+    const gb = sorted(rawPoints.IRLTLT01GBM156N);
+    const jp = sorted(rawPoints.IRLTLT01JPM156N);
+    if (de.length && gb.length && jp.length) {
+      const byDate = new Map();
+      for (const [name, arr] of [["de", de], ["gb", gb], ["jp", jp]])
+        for (const p of arr) {
+          if (!byDate.has(p.date)) byDate.set(p.date, {});
+          byDate.get(p.date)[name] = p.value;
+        }
+      const g3 = [...byDate.entries()]
+        .filter(([, v]) => v.de != null && v.gb != null && v.jp != null)
+        .map(([date, v]) => ({ date, value: (v.de + v.gb + v.jp) / 3 }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+      if (g3.length > 100) await emitDerived("G3_10Y", g3, "derived (mean of DE, UK, JP 10-year)");
+    }
+  } catch (e) {
+    console.log(`  GLOBAL_CB FAIL  ${e.message}`);
+    errors.push({ id: "GLOBAL_CB", error: String(e.message || e) });
+  }
+
   // Derived: stock-bond 60d corr using SPX returns vs -DGS10 changes (approx)
   try {
     const spx = JSON.parse(await fs.readFile(path.join(HIST, "SPX.json"), "utf8"));

@@ -93,6 +93,12 @@ const KIND = {
   T10Y2Y: "curve",
   DTWEXBGS: "none",
   MOVE: "move",
+  // The rest of the world. A balance sheet level grows forever and cannot carry a
+  // band, so the G4 stock is impulse-only and its 12-month change does the voting.
+  GLOBAL_CB: "none",
+  GLOBAL_CB_YOY: "global_cb_yoy",
+  DOLLAR_YOY: "dollar_yoy",
+  G3_10Y: "g3_10y",
 };
 
 export function anchorKind(id) {
@@ -152,6 +158,23 @@ function scoreKind(kind, value) {
     // 27.8% at the QE peak.
     case "netliq_gdp":
       return bandScore(value, 16.5, 20, 26, false);
+    // G4 balance sheets, 12-month change. Neutral sits at +5% rather than zero
+    // because world nominal GDP grows around that much: balance sheets held flat
+    // are shrinking against the economy they fund, which is a mild drain and not a
+    // neutral stance. -6% is roughly the 8th percentile since 2003 and about where
+    // 2022's joint QT ran; +20% is the QE end.
+    case "global_cb_yoy":
+      return bandScore(value, -6, 5, 20, false);
+    // Broad dollar, 12-month change, inverted: most of the world borrows in dollars
+    // it cannot print, so a rising dollar tightens those balance sheets no matter
+    // what any central bank intends. +10% is the 2015 and 2022 wrecking-ball pace.
+    case "dollar_yoy":
+      return bandScore(value, -8, 1, 10, true);
+    // Mean 10-year across Germany, the UK and Japan. The band has to span an era
+    // when these yielded 8% and an era when they yielded nothing, so it is set on
+    // the 1989-2026 distribution: 0.5% is the ZIRP floor, 6% genuinely restrictive.
+    case "g3_10y":
+      return bandScore(value, 0.5, 3.0, 6.0, true);
     case "mortgage":
       return bandScore(value, 4.0, 6.0, 7.5, true);
     case "curve":
@@ -213,6 +236,12 @@ function whyKind(kind, value) {
       return `reserves ${fmt(v)}% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak`;
     case "netliq_gdp":
       return `net liquidity ${fmt(v)}% of GDP — 16.6% in the 2019 squeeze, 27.8% at the QE peak`;
+    case "global_cb_yoy":
+      return `G4 balance sheets ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m — flat is a mild drain, since world nominal GDP grows ~5%`;
+    case "dollar_yoy":
+      return `broad dollar ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m — a rising dollar tightens every borrower who owes in it`;
+    case "g3_10y":
+      return `German, UK and Japanese 10-year average ${fmt(v)}%`;
     case "mortgage":
       return `30y mortgage ${fmt(v)}%`;
     case "curve":

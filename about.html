@@ -45,15 +45,15 @@
     content="About GlobalFlows — how the five lights, So what, and the data table work."
   />
   <title>About — GlobalFlows</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260926" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260926" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260927" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260927" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260926" />
+  <link rel="stylesheet" href="styles.css?v=20260927" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -144,6 +144,57 @@
           <span><i class="swatch mid"></i> Amber — mixed, or near the middle</span>
           <span><i class="swatch tight"></i> Red — contractionary: tighter, softer, colder, risk-off</span>
         </div>
+      </section>
+
+      <section class="about-block" id="global">
+        <h2>Why “global”</h2>
+        <p>
+          Dollars are made in more than one place. The Fed is the largest single
+          source, but the European Central Bank, the Bank of Japan and China
+          together run balance sheets of comparable size, and the money they
+          create does not stay home — it competes for the same bonds, the same
+          equities and the same credit. A dashboard that watches only the Fed will
+          call liquidity tight while the rest of the world is flooding the system,
+          and be wrong for years at a time.
+        </p>
+        <p>
+          So three of the voters are deliberately not American:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>G4 balance sheets, 12-month change</strong>
+            — the Fed, ECB, Bank of Japan and China added together in dollars, and
+            measured by how fast the total is growing. A balance-sheet
+            <em>level</em> rises forever and so can never be called high or low;
+            the rate of change is the thing that eases or tightens. Note that flat
+            is not neutral here: world nominal output grows around 5% a year, so
+            balance sheets held still are quietly shrinking against the economy
+            they fund.
+          </li>
+          <li>
+            <strong>The dollar, 12-month change</strong>
+            — most of the world borrows in a currency it cannot print. When the
+            dollar rises, every one of those borrowers is squeezed at once, no
+            matter what any central bank intends. The dollar is the transmission
+            belt, which is why it votes on Liquidity rather than just sitting on
+            the tape.
+          </li>
+          <li>
+            <strong>Global long rates</strong>
+            — the average 10-year yield across Germany, the UK and Japan. Duration
+            is priced globally: when Bunds and JGBs move, Treasuries follow. A
+            Rates light built only from US yields mistakes a worldwide repricing
+            for an American one.
+          </li>
+        </ul>
+        <p>
+          One honest limit. FRED does not carry the People's Bank of China balance
+          sheet, so the China leg is Chinese FX reserves instead. That is not the
+          same number — but for <em>global dollar</em> liquidity it is arguably the
+          more relevant one, because reserves are the part that actually recycles
+          into world markets. Growth and Inflation are still measured on US data,
+          so the name is not yet fully earned; those are the next two to go global.
+        </p>
       </section>
 
       <section class="about-block" id="sowhat">
@@ -427,7 +478,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260926"></script>
+  <script type="module" src="about.js?v=20260927"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
