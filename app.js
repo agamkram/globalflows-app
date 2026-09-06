@@ -1,6 +1,14 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260904bl";
+import { buildMeaning } from "./meaning.js?v=20260917";
+import {
+  buildLights,
+  attachImpulse,
+  memberAnchorScore,
+  memberImpulseScore,
+  DEFAULT_IMPULSE,
+  IMPULSE_KEYS,
+} from "./score.js?v=20260908";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -25,8 +33,8 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** Today-vs horizon (years) for table, charts, lights, and regime story. Default 2. */
-let statHorizon = 2;
+/** Impulse clock for table, charts, chevrons, and asset classes. Lights stay on anchors. */
+let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
 /** Last prints overlaid on Markets Latest (z stays daily). */
@@ -82,16 +90,14 @@ const COMPARE_MAX = 10;
 /** Series ids flipped from the global view (tap a row’s data/chart cell). */
 const rowFlip = new Set();
 const histCache = new Map();
-const COLSPAN_DATA = 3;
+const COLSPAN_DATA = 1;
 
 function chartDuration() {
-  return `${statHorizon}y`;
+  return statHorizon;
 }
 
-function horizonStats(s, years = statHorizon) {
-  if (years === 1) return { z: s.z1y, pct: s.pct1y, label: "1y" };
-  if (years === 5) return { z: s.z5y, pct: s.pct5y, label: "5y" };
-  return { z: s.z2y, pct: s.pct2y, label: "2y" };
+function impulseOf(s, h = statHorizon) {
+  return s?.impulse?.[h] || { dir: null, delta: null, score: null };
 }
 
 function median(arr) {
@@ -101,24 +107,14 @@ function median(arr) {
   return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
 }
 
-function lightStateFromScore(score) {
-  if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };
-  if (score > 0.45) return { state: "easing", score };
-  if (score < -0.45) return { state: "tight", score };
-  return { state: "neutral", score };
-}
-
-/**
- * Active view: SNAP with lights + disagreements recomputed for statHorizon.
- * Same-window score: mean(sign×zNy, flipped Ny %ile) → club median.
- */
 function viewOf(snap) {
   if (!snap) return null;
-  const lights = buildLights(snap, statHorizon);
+  const lights = buildLights(snap);
+  attachImpulse(lights, snap, statHorizon);
   return {
     ...snap,
     lights,
-    disagreements: buildDisagreements(snap, lights, statHorizon),
+    disagreements: buildDisagreements(snap, lights),
   };
 }
 
@@ -298,35 +294,53 @@ let activeLayer = "liquidity";
 /** All-view scroll spy: which street section is in view (layer id). */
 let scrollStreet = null;
 
-function bakeLight(id, years = statHorizon) {
-  return REGIME?.horizons?.[String(years)]?.lights?.[id] || null;
+function bakeLight(id) {
+  return REGIME?.lights?.[id] || null;
 }
 
-function plainStory(snap) {
-  const div = document.createElement("div");
-  div.innerHTML = regimeStoryHtml(snap);
-  return (div.textContent || "").replace(/\s+/g, " ").trim();
+function stanceState(stance) {
+  if (stance === "in") return "easing";
+  if (stance === "out") return "tight";
+  return "neutral";
 }
 
-function renderRegimeToday() {
-  const el = $("#regimeToday");
+function renderFavorStrip() {
+  const el = $("#favorStrip");
   if (!el || !SNAP) return;
   try {
     const snap = viewOf(SNAP);
-    const verified = REGIME?.verdict === "SPOT ON";
-    const line = plainStory(snap);
-    if (!line) {
+    const favor = buildMeaning(snap, statHorizon).favor;
+    if (!favor?.items?.length) {
       el.hidden = true;
       el.innerHTML = "";
       return;
     }
     el.hidden = false;
-    const kicker = verified
-      ? `Today · ${statHorizon}y · verified`
-      : `Today · ${statHorizon}y`;
-    el.innerHTML = `<span class="regime-kicker">${escapeHtml(kicker)}</span>${escapeHtml(line)}`;
+    el.innerHTML = favor.items
+      .map((it) => {
+        const st = stanceState(it.stance);
+        const title = it.name;
+        if (it.tenors?.length) {
+          return `<span class="favor-cell favor-ust" data-state="${st}">
+            <span class="favor-title">${escapeHtml(title)}</span>
+            <span class="favor-curve">${it.tenors
+              .map(
+                (tn) =>
+                  `<span class="favor-tenor" data-state="${stanceState(tn.stance)}"><b>${escapeHtml(
+                    tn.name
+                  )}</b></span>`
+              )
+              .join("")}</span>
+          </span>`;
+        }
+        return `<span class="favor-cell" data-state="${st}">
+          <span class="favor-title">${escapeHtml(title)}</span>
+          <span class="favor-dot" aria-hidden="true"></span>
+        </span>`;
+      })
+      .join("");
   } catch (err) {
-    console.warn("renderRegimeToday failed", err);
+    console.warn("renderFavorStrip failed", err);
   }
 }
 
@@ -358,7 +372,7 @@ function openLightSheet(id) {
     return;
   }
 
-  const h = `${statHorizon}y`;
+  const h = statHorizon;
   const baked = bakeLight(id);
   const word = wordFor(L);
   const titleEl = $("#lightTitle");
@@ -374,38 +388,25 @@ function openLightSheet(id) {
     .filter(Boolean);
   const rows = members
     .map((s) => {
-      const { z } = horizonStats(s);
       return `<tr data-mid="${s.id}">
         <td>${escapeHtml(s.name)}</td>
         <td>${fmt(s.latest)}</td>
-        <td class="${zClass(z)}">${fmtZ(z)}</td>
-        <td class="muted">${fmtAsOf(s.asOf)}</td>
       </tr>`;
     })
     .join("");
-  const score =
-    L.score != null && Number.isFinite(L.score)
-      ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
-      : "—";
   const teach = baked?.teach
     ? `<p class="light-teach">${escapeHtml(baked.teach)}</p>`
     : `<p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>`;
+  const chev = L.impulse?.dir || "flat";
   bodyEl.innerHTML = `
     ${teach}
-    <p><strong>${escapeHtml(word)}</strong>
-      · score ${score}
-      · n=${L.n ?? members.length}
-      ${L.z != null ? `· agg ${h} z ${fmtZ(L.z)}` : ""}
-      ${L.pct != null ? `· agg ${h} percentile ${fmtPct(L.pct)}` : ""}
-    </p>
-    <h4>Who voted</h4>
+    <p class="light-status">${escapeHtml(word)} · ${h} ${escapeHtml(chev)}</p>
     <div class="light-members">
       <table>
-        <thead><tr><th>Name</th><th>Latest</th><th>${h} z</th><th>As-of</th></tr></thead>
-        <tbody>${rows || `<tr><td colspan="4" class="empty">no members</td></tr>`}</tbody>
+        <thead><tr><th>Name</th><th>Latest</th></tr></thead>
+        <tbody>${rows || `<tr><td colspan="2" class="empty">no members</td></tr>`}</tbody>
       </table>
     </div>
-    <p class="muted tiny">Score = median of member scores (signed ${h} z + ${h} percentile); &gt;+0.45 / &lt;−0.45 paints the word. Full formula in About.</p>
   `;
   try {
     if (!dlg.open) dlg.showModal();
@@ -430,153 +431,48 @@ function disagreement(snap, kind) {
   return (snap.disagreements || []).find((d) => d.kind === kind) || null;
 }
 
-/** Member score: sign × Ny z blended with flipped Ny %ile (same window as 1·2·5). */
-function memberLightScore(m, lid, years = statHorizon) {
-  if (!m) return null;
-  const sign = m.sign ?? 0;
-  const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-  const { z, pct } = horizonStats(m, years);
-  const parts = [];
-  if (z != null && Number.isFinite(z)) parts.push(z * s);
-  if (pct != null && Number.isFinite(pct)) {
-    const p = s < 0 ? 1 - pct : pct;
-    parts.push((p - 0.5) * 3);
-  }
-  if (!parts.length) return null;
-  return parts.reduce((a, b) => a + b, 0) / parts.length;
-}
-
-function buildLights(snap, years = statHorizon) {
-  const meta = snap.lightsMeta || [];
-  const baked = snap.lights || {};
-  const lightIds = ["liquidity", "rates", "growth", "inflation", "risk"];
-  const out = {};
-  for (const lid of lightIds) {
-    const memberIds =
-      baked[lid]?.members ||
-      Object.values(snap.series || {})
-        .filter((r) => r.light === lid && r.status === "ok")
-        .map((r) => r.id);
-    const members = memberIds
-      .map((id) => snap.series?.[id])
-      .filter((m) => m && m.status === "ok");
-    const scores = [];
-    const signedZs = [];
-    const signedPcts = [];
-    for (const m of members) {
-      const sc = memberLightScore(m, lid, years);
-      if (sc == null || !Number.isFinite(sc)) continue;
-      const w = Math.max(1, Math.round(m.weight || 1));
-      for (let i = 0; i < w; i++) scores.push(sc);
-      const sign = m.sign ?? 0;
-      const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-      const { z, pct } = horizonStats(m, years);
-      if (z != null && Number.isFinite(z)) signedZs.push(z * s);
-      if (pct != null && Number.isFinite(pct)) {
-        signedPcts.push(s < 0 ? 1 - pct : pct);
-      }
-    }
-    const score = scores.length ? median(scores) : null;
-    const { state } = lightStateFromScore(score);
-    const m = meta.find((x) => x.id === lid) || baked[lid];
-    out[lid] = {
-      id: lid,
-      label: m?.label || baked[lid]?.label || lid,
-      state,
-      score,
-      z: signedZs.length ? median(signedZs) : null,
-      pct: signedPcts.length ? median(signedPcts) : null,
-      n: members.length,
-      words: {
-        easing: m?.easing || baked[lid]?.words?.easing,
-        neutral: m?.neutral || baked[lid]?.words?.neutral,
-        tight: m?.tight || baked[lid]?.words?.tight,
-      },
-      members: memberIds,
-    };
-  }
-  return out;
-}
-
-function seriesZ(snap, id, years) {
-  const s = snap.series?.[id];
-  if (!s) return null;
-  return horizonStats(s, years).z;
-}
-
-/** Live cross-checks for the selected horizon (not the ingest-baked list). */
-function buildDisagreements(snap, lights, years = statHorizon) {
+function buildDisagreements(snap, lights) {
   const liq = lights.liquidity;
   const risk = lights.risk;
   const growth = lights.growth;
   const infl = lights.inflation;
-  const goldZ = seriesZ(snap, "GOLD", years);
-  const btcZ = seriesZ(snap, "BTC", years);
-  const headZ = seriesZ(snap, "CPIAUCSL", years);
-  const coreZ = seriesZ(snap, "CPILFESL", years);
+  const goldDir = impulseOf(snap.series?.GOLD).dir;
+  const btcDir = impulseOf(snap.series?.BTC).dir;
+  const headSc = snap.series?.CPIAUCSL?.anchor?.score;
+  const coreSc = snap.series?.CPILFESL?.anchor?.score;
   const disagreements = [];
-  if (liq?.state && goldZ != null) {
-    if (liq.state === "easing" && goldZ < -0.3) {
-      disagreements.push({
-        kind: "liquidity_vs_gold",
-        text: "Liquidity easing, gold not confirming",
-      });
+  if (liq?.state && goldDir) {
+    if (liq.state === "easing" && goldDir === "down") {
+      disagreements.push({ kind: "liquidity_vs_gold", text: "Liquidity easing, gold not confirming" });
     }
-    if (liq.state === "tight" && goldZ > 0.3) {
-      disagreements.push({
-        kind: "liquidity_vs_gold",
-        text: "Liquidity tightening, gold firm anyway",
-      });
+    if (liq.state === "tight" && goldDir === "up") {
+      disagreements.push({ kind: "liquidity_vs_gold", text: "Liquidity tightening, gold firm anyway" });
     }
   }
-  if (liq?.state && btcZ != null) {
-    if (liq.state === "easing" && btcZ < -0.3) {
-      disagreements.push({
-        kind: "liquidity_vs_btc",
-        text: "Liquidity easing, BTC not confirming",
-      });
+  if (liq?.state && btcDir) {
+    if (liq.state === "easing" && btcDir === "down") {
+      disagreements.push({ kind: "liquidity_vs_btc", text: "Liquidity easing, BTC not confirming" });
     }
-    if (liq.state === "tight" && btcZ > 0.3) {
-      disagreements.push({
-        kind: "liquidity_vs_btc",
-        text: "Liquidity tightening, BTC firm anyway",
-      });
+    if (liq.state === "tight" && btcDir === "up") {
+      disagreements.push({ kind: "liquidity_vs_btc", text: "Liquidity tightening, BTC firm anyway" });
     }
   }
   if (liq?.state === "tight" && risk?.state === "easing") {
-    disagreements.push({
-      kind: "liquidity_vs_risk",
-      text: "Liquidity tightening, risk still on",
-    });
+    disagreements.push({ kind: "liquidity_vs_risk", text: "Liquidity tightening, risk still on" });
   }
   if (liq?.state === "easing" && risk?.state === "tight") {
-    disagreements.push({
-      kind: "liquidity_vs_risk",
-      text: "Liquidity easing, risk still off",
-    });
+    disagreements.push({ kind: "liquidity_vs_risk", text: "Liquidity easing, risk still off" });
   }
-  if (headZ != null && coreZ != null && headZ > 0.45 && coreZ < -0.45) {
-    disagreements.push({
-      kind: "inflation_headline_vs_core",
-      text: "Headline CPI hot, core cold",
-    });
-  } else if (headZ != null && coreZ != null && headZ < -0.45 && coreZ > 0.45) {
-    disagreements.push({
-      kind: "inflation_headline_vs_core",
-      text: "Headline CPI cold, core hot",
-    });
+  if (headSc != null && coreSc != null && headSc > 0.45 && coreSc < -0.45) {
+    disagreements.push({ kind: "inflation_headline_vs_core", text: "Headline CPI hot, core cold" });
+  } else if (headSc != null && coreSc != null && headSc < -0.45 && coreSc > 0.45) {
+    disagreements.push({ kind: "inflation_headline_vs_core", text: "Headline CPI cold, core hot" });
   }
   if (growth?.state === "easing" && infl?.state === "tight") {
-    disagreements.push({
-      kind: "growth_vs_inflation",
-      text: "Growth strong, inflation cold",
-    });
+    disagreements.push({ kind: "growth_vs_inflation", text: "Growth strong, inflation cold" });
   }
   if (growth?.state === "tight" && infl?.state === "easing") {
-    disagreements.push({
-      kind: "growth_vs_inflation",
-      text: "Growth soft, inflation hot",
-    });
+    disagreements.push({ kind: "growth_vs_inflation", text: "Growth soft, inflation hot" });
   }
   return disagreements;
 }
@@ -586,10 +482,9 @@ function lightMemberScores(snap, lid) {
   return members
     .map((id) => {
       const m = snap.series?.[id];
-      const score = memberLightScore(m, lid);
-      const { z } = horizonStats(m || {});
+      const score = memberAnchorScore(m);
       return m && score != null && Number.isFinite(score)
-        ? { id, name: m.name, score, latest: m.latest, z }
+        ? { id, name: m.name, score, latest: m.latest, why: m.anchor?.why }
         : null;
     })
     .filter(Boolean);
@@ -618,10 +513,11 @@ function ratesClause(snap) {
   }[st];
 }
 
-function horizonPhrase(years = statHorizon) {
-  if (years === 1) return "Over the past year";
-  if (years === 5) return "Over the past five years";
-  return "Over the past two years";
+function horizonPhrase(h = statHorizon) {
+  if (h === "1m") return "Over the past month";
+  if (h === "3m") return "Over the past three months";
+  if (h === "6m") return "Over the past six months";
+  return "Over the past year";
 }
 
 /**
@@ -757,12 +653,9 @@ function regimeEvidence(snap) {
     const head = series.CPIAUCSL;
     const core = series.CPILFESL;
     const d = disagreement(snap, "inflation_headline_vs_core");
-    const headZ = horizonStats(head || {}).z;
-    const coreZ = horizonStats(core || {}).z;
-    const h = `${statHorizon}y`;
     if (/headline.*hot/i.test(d?.text || "")) {
       beats.push(
-        `Prices split: overall CPI still looks hot${headZ != null ? ` (${h} z ${fmtZ(headZ)})` : ""}; the Inflation light votes underlying/core${coreZ != null ? ` (${h} z ${fmtZ(coreZ)})` : ""}.`
+        `Prices split: overall CPI still looks hot versus ~2%; the Inflation light votes underlying/core.`
       );
     } else {
       beats.push(
@@ -857,7 +750,7 @@ function tensionTitle(d) {
 function openSentence(snap) {
   if (!snap) return;
   const baked =
-    REGIME?.verdict === "SPOT ON" ? REGIME.horizons?.[String(statHorizon)]?.lights : null;
+    REGIME?.verdict === "SPOT ON" ? REGIME.lights : null;
   const meaning = buildMeaning(snap, statHorizon);
 
   const evidence = baked
@@ -905,6 +798,55 @@ function openSentence(snap) {
           : "neutral"
     }">${escapeHtml(meaning.credit.label)}</strong>
       <span class="muted sent-hint"> — ${escapeHtml(meaning.credit.line)}</span></p></div>
+    <p class="sent-kicker">In / out of favor</p>
+    <div class="sent-explain"><p class="sent-explain-title"><strong data-state="neutral">${escapeHtml(
+      meaning.favor.pair.line
+    )}</strong>
+      <span class="muted sent-hint"> — ${escapeHtml(meaning.favor.pair.why)}</span></p></div>
+    ${meaning.favor.items
+      .map((it) => {
+        const st = stanceState(it.stance);
+        const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
+        const extras = [];
+        if (it.tenors?.length) {
+          extras.push(
+            it.tenors
+              .map((tn) => {
+                const tw = tn.stance === "in" ? "In" : tn.stance === "out" ? "Out" : "Mixed";
+                return `<span class="rubric-split"><strong data-state="${stanceState(
+                  tn.stance
+                )}">${escapeHtml(tn.name)} ${tw}</strong><span class="muted sent-hint"> — ${escapeHtml(
+                  tn.why
+                )}</span></span>`;
+              })
+              .join("")
+          );
+        }
+        if (it.splits?.length) {
+          extras.push(
+            it.splits
+              .map((sp) => {
+                const sw = sp.stance === "in" ? "In" : sp.stance === "out" ? "Out" : "Mixed";
+                return `<span class="rubric-split"><strong data-state="${stanceState(
+                  sp.stance
+                )}">${escapeHtml(sp.name)} ${sw}</strong><span class="muted sent-hint"> — ${escapeHtml(
+                  sp.why
+                )}</span></span>`;
+              })
+              .join("")
+          );
+        }
+        if (it.note) {
+          extras.push(`<span class="muted sent-hint">${escapeHtml(it.note)}</span>`);
+        }
+        return `<div class="sent-explain rubric-row"><p class="sent-explain-title">
+          <span class="rubric-name">${escapeHtml(it.name)}</span>
+          <strong data-state="${st}">${word}</strong>
+          <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
+          ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
+        </div>`;
+      })
+      .join("")}
     ${meaning.confirm
       .slice(0, 3)
       .map(
@@ -923,7 +865,7 @@ function openSentence(snap) {
 
   const verified =
     REGIME?.verdict === "SPOT ON"
-      ? `<p class="muted tiny sent-foot">Verified bake · ${statHorizon}y · tap a light for who voted.</p>`
+      ? `<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light for who voted.</p>`
       : `<p class="muted tiny sent-foot">Tap a light for who voted.</p>`;
 
   $("#sentenceBody").innerHTML = `
@@ -966,10 +908,12 @@ function renderLights(snap) {
           : "—";
       const on =
         spyLight != null ? spyLight === id : focusLight === id;
+      const chev = L.impulse?.dir || "flat";
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
       }" aria-pressed="${on ? "true" : "false"}">
         <span class="dot" aria-hidden="true"></span>
+        <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
         <span class="word">${escapeHtml(wordFor(L))}</span>
         <span class="score">${escapeHtml(score)}</span>
@@ -1343,7 +1287,7 @@ function refreshViews() {
   renderMarketBuckets();
   syncStreetSelection();
   syncCompareBtn();
-  renderRegimeToday();
+  renderFavorStrip();
   syncScrollSpy();
   // After layout — first paint can have wrong row tops.
   requestAnimationFrame(() => syncScrollSpy());
@@ -1361,7 +1305,7 @@ function syncViewControls() {
     [...g.querySelectorAll("[data-horizon]")].forEach((b) => {
       b.setAttribute(
         "aria-pressed",
-        Number(b.dataset.horizon) === statHorizon ? "true" : "false"
+        b.dataset.horizon === statHorizon ? "true" : "false"
       );
     });
   }
@@ -1371,12 +1315,12 @@ function valuesCells(s) {
   if (s.status !== "ok" || s.latest == null) {
     return `<td colspan="${COLSPAN_DATA}" class="empty">empty — ${escapeHtml(s.error || "no data")}</td>`;
   }
-  const { z, pct } = horizonStats(s);
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
-  return `<td><span class="cell-heat"${live ? ' data-live="1"' : ""}>${fmt(latest)}</span></td>
-    <td class="${zClass(z)}">${fmtZ(z)}</td>
-    <td><span class="cell-heat" style="background:${heatBg(pct)}">${fmtPct(pct)}</span></td>`;
+  const dir = impulseOf(s).dir;
+  const heat =
+    dir === "up" ? "z-pos" : dir === "down" ? "z-neg" : dir === "flat" ? "z-mid" : "";
+  return `<td><span class="cell-heat${heat ? ` ${heat}` : ""}"${live ? ' data-live="1"' : ""}>${fmt(latest)}</span></td>`;
 }
 
 function chartCell(s) {
@@ -1384,7 +1328,7 @@ function chartCell(s) {
     <div class="spark-wrap" data-spark="${s.id}">
       <canvas class="spark" width="600" height="36" aria-hidden="true"></canvas>
       <span class="spark-chg muted" aria-hidden="true"></span>
-      <span class="spark-msg muted">…</span>
+      <span class="spark-msg muted"></span>
     </div>
   </td>`;
 }
@@ -1393,21 +1337,18 @@ function renderThead(rows) {
   const thead = $("#heat thead tr");
   const colhead = $("#heatColhead");
   if (!thead) return;
-  const h = `${statHorizon}y`;
-  // Colhead follows global view mode — not whether a single row is flipped.
+  const h = statHorizon;
   const charts = globalView === "charts";
   if (charts) {
-    thead.innerHTML = `<th>Name</th><th colspan="${COLSPAN_DATA}">Chart · ${h.toUpperCase()}</th>`;
+    thead.innerHTML = `<th>Name</th><th colspan="${COLSPAN_DATA}">Chart · ${h}</th>`;
     if (colhead) {
-      colhead.innerHTML = `<span>Name</span><span class="heat-colhead-span">Chart · ${h.toUpperCase()}</span>`;
+      colhead.innerHTML = `<span>Name</span><span class="heat-colhead-span">Chart · ${h}</span>`;
       colhead.dataset.mode = "charts";
     }
   } else {
-    thead.innerHTML = `<th>Name</th>
-      <th>Latest</th><th>${h} z</th>
-      <th>${h} <span class="th-abbr">%ile</span><span class="th-full">percentile</span></th>`;
+    thead.innerHTML = `<th>Name</th><th>Latest</th>`;
     if (colhead) {
-      colhead.innerHTML = `<span>Name</span><span>Latest</span><span>${h} z</span><span>${h} %ile</span>`;
+      colhead.innerHTML = `<span>Name</span><span>Latest</span>`;
       colhead.dataset.mode = "values";
     }
   }
@@ -1525,11 +1466,10 @@ async function loadHistory(id) {
 
 function sliceDuration(points, dur) {
   if (!points?.length) return [];
-  if (dur === "max") return points;
-  const years = { "1y": 1, "2y": 2, "5y": 5, "10y": 10 }[dur] || 2;
+  const days = { "1m": 30, "3m": 91, "6m": 182, "1y": 365 }[dur] || 182;
   const last = points[points.length - 1].date;
   const end = Date.parse(last + "T00:00:00Z");
-  const start = end - years * 365.25 * 86400000;
+  const start = end - days * 86400000;
   const startIso = new Date(start).toISOString().slice(0, 10);
   return points.filter((p) => p.date >= startIso);
 }
@@ -1700,8 +1640,6 @@ function openSeries(s) {
               })
             : fmtAsOf(s.asOf)
         }</dd></div>
-        <div><dt>z</dt><dd>1y ${fmtZ(s.z1y)} · 2y ${fmtZ(s.z2y)} · 5y ${fmtZ(s.z5y)}</dd></div>
-        <div><dt>Percentile</dt><dd>1y ${fmtPct(s.pct1y)} · 2y ${fmtPct(s.pct2y)} · 5y ${fmtPct(s.pct5y)}</dd></div>
         <div><dt>Source</dt><dd>${escapeHtml(s.source || "—")}${
           s.sourceUrl
             ? ` · <a href="${s.sourceUrl}" target="_blank" rel="noopener">open</a>`
@@ -1724,12 +1662,12 @@ function openSeries(s) {
 function renderFormula(snap) {
   const el = $("#formulaBody");
   if (!el) return;
-  const h = `${statHorizon}y`;
+  const h = statHorizon;
   el.innerHTML = `
-    <p>Per light: median of member scores (each = mean of sign×${h} z and flipped ${h} percentile). The 1·2·5 control sets that window for lights, the table, and charts. Clubs are small complementary sets; Street table keeps the rest. Score &gt;+0.45 / &lt;−0.45 paints the word. Inflation upside = hot.</p>
+    <p>${escapeHtml(snap.formula?.lights || "Lights are economic levels. The 1m/3m/6m/1y row is the turn only.")}</p>
     <p><strong>Net liquidity:</strong> <code>${escapeHtml(snap.formula?.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></p>
     <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(snap.formula?.stockBondCorr || "")}</code></p>
-    <p class="muted">Per-series sign flips “higher” into easing vs tightening for that light. Inflation light treats upside as hot.</p>
+    <p class="muted">Active impulse clock: ${h}. Lights do not change when you switch it.</p>
   `;
 }
 
@@ -1773,7 +1711,7 @@ async function boot() {
   renderLights(snap);
   renderTabs(SNAP);
   renderTable(snap);
-  renderRegimeToday();
+  renderFavorStrip();
   pullMarketsLive();
   setInterval(syncMarketsLiveUi, 15000);
 
@@ -1781,7 +1719,7 @@ async function boot() {
     const rr = await fetch("./regime-today.json", { cache: "no-store" });
     if (rr.ok) {
       REGIME = await rr.json();
-      renderRegimeToday();
+      renderFavorStrip();
     }
   } catch (_) {
     /* bake optional until first npm run bake:regime */
@@ -1852,8 +1790,8 @@ async function boot() {
   $("#horizonGroup").onclick = (e) => {
     const b = e.target.closest("[data-horizon]");
     if (!b) return;
-    const next = Number(b.dataset.horizon);
-    if (![1, 2, 5].includes(next)) return;
+    const next = b.dataset.horizon;
+    if (!IMPULSE_KEYS.includes(next)) return;
     statHorizon = next;
     syncViewControls();
     refreshViews();
@@ -1869,7 +1807,7 @@ async function boot() {
     selectLight(card.dataset.id);
   });
 
-  $("#regimeToday")?.addEventListener("click", () => {
+  $("#favorStrip")?.addEventListener("click", () => {
     if (!SNAP) return;
     openSentence(viewOf(SNAP));
   });

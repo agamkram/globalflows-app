@@ -17,7 +17,6 @@ APP = ROOT / "app.js"
 
 SPOTS = {
     "index ?v=": (INDEX, r"\?v=(\d+)", "?v={n}"),
-    "index badge": (INDEX, r'(id="buildBadge"[^>]*>)(\d+)', r"\g<1>{n}"),
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
 }

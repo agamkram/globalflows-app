@@ -7,6 +7,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  seriesFacts,
+  applyRealRateAnchors,
+  buildLights,
+  attachImpulse,
+  DEFAULT_IMPULSE,
+} from "../score.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -261,83 +268,8 @@ function alignWeeklyApprox(aPts, bPts) {
   return out;
 }
 
-function computeStats(points) {
-  if (!points?.length) {
-    return {
-      latest: null,
-      asOf: null,
-      z1y: null,
-      z2y: null,
-      z5y: null,
-      pct1y: null,
-      pct2y: null,
-      pct5y: null,
-      pct10y: null,
-      change1y: null,
-    };
-  }
-  const latest = points[points.length - 1];
-  const w1pts = windowPoints(points, 1);
-  const w1 = w1pts.map((p) => p.value);
-  const w2 = windowPoints(points, 2).map((p) => p.value);
-  const w5 = windowPoints(points, 5).map((p) => p.value);
-  const w10 = windowPoints(points, 10).map((p) => p.value);
-  const yearAgo = w1pts.length > 5 ? w1pts[0].value : null;
-  const m1 = mean(w1);
-  const s1 = stdev(w1);
-  const m2 = mean(w2);
-  const s2 = stdev(w2);
-  const m5 = mean(w5);
-  const s5 = stdev(w5);
-  // Need enough history — never invent a percentile from one point
-  const z1y = w1.length >= 12 && s1 ? (latest.value - m1) / s1 : null;
-  const z2y = w2.length >= 24 && s2 ? (latest.value - m2) / s2 : null;
-  const z5y = w5.length >= 36 && s5 ? (latest.value - m5) / s5 : null;
-  const pct1y = w1.length >= 12 ? percentileRank(w1, latest.value) : null;
-  const pct2y = w2.length >= 24 ? percentileRank(w2, latest.value) : null;
-  const pct5y = w5.length >= 36 ? percentileRank(w5, latest.value) : null;
-  const pct10y = w10.length >= 60 ? percentileRank(w10, latest.value) : null;
-  return {
-    latest: latest.value,
-    asOf: latest.date,
-    z1y,
-    z2y,
-    z5y,
-    pct1y,
-    pct2y,
-    pct5y,
-    pct10y,
-    change1y:
-      yearAgo != null && yearAgo !== 0
-        ? ((latest.value - yearAgo) / Math.abs(yearAgo)) * 100
-        : yearAgo != null
-          ? latest.value - yearAgo
-          : null,
-    n: points.length,
-  };
-}
-
-function lightStateFromScore(score) {
-  if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };
-  if (score > 0.45) return { state: "easing", score };
-  if (score < -0.45) return { state: "tight", score };
-  return { state: "neutral", score };
-}
-
-/** One voter's score: signed Ny z blended with signed Ny %ile (same window). Default bake = 2y. */
-function memberLightScore(m, lid, years = 2) {
-  const sign = m.sign ?? 0;
-  const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-  const z = years === 1 ? m.z1y : years === 5 ? m.z5y : m.z2y;
-  const pct = years === 1 ? m.pct1y : years === 5 ? m.pct5y : m.pct2y;
-  const parts = [];
-  if (z != null && Number.isFinite(z)) parts.push(z * s);
-  if (pct != null && Number.isFinite(pct)) {
-    const p = s < 0 ? 1 - pct : pct;
-    parts.push((p - 0.5) * 3);
-  }
-  if (!parts.length) return null;
-  return mean(parts);
+function computeStats(points, spec = {}) {
+  return seriesFacts(points, spec);
 }
 
 function pearson(xs, ys) {
@@ -423,7 +355,7 @@ async function main() {
         JSON.stringify({ id: s.id, ...got, points, transform: s.transform || null }, null, 0)
       );
 
-      const stats = computeStats(points);
+      const stats = computeStats(points, s);
       const staleDays = daysSince(stats.asOf);
       // Discontinued mirrors (e.g. old leading index) must not drive lights
       const stale = staleDays != null && staleDays > 400;
@@ -437,6 +369,7 @@ async function main() {
         freq: s.freq,
         sign: s.sign ?? 0,
         light: stale ? null : s.light || null,
+        impulseLight: stale ? null : s.impulseLight || null,
         weight: s.weight || 1,
         marketBucket: s.marketBucket || null,
         order: s.order ?? null,
@@ -464,6 +397,7 @@ async function main() {
         freq: s.freq,
         sign: s.sign ?? 0,
         light: s.light || null,
+        impulseLight: s.impulseLight || null,
         weight: s.weight || 1,
         note: s.note || null,
         freshness: s.freshness || "live",
@@ -471,14 +405,9 @@ async function main() {
         sourceUrl: s.sourceUrl || null,
         latest: null,
         asOf: null,
-        z1y: null,
-        z2y: null,
-        z5y: null,
-        pct1y: null,
-        pct2y: null,
-        pct5y: null,
-        pct10y: null,
-        change1y: null,
+        n: 0,
+        anchor: { kind: "none", score: null, why: "empty", votes: false },
+        impulse: null,
         status: "empty",
         error: String(e.message || e),
       };
@@ -508,8 +437,8 @@ async function main() {
       path.join(HIST, "NET_LIQ.json"),
       JSON.stringify({ id: "NET_LIQ", source: "derived", points }, null, 0)
     );
-    const stats = computeStats(points);
     const meta = catalog.series.find((x) => x.id === "NET_LIQ");
+    const stats = computeStats(points, meta);
     results.NET_LIQ = {
       id: "NET_LIQ",
       name: meta.name,
@@ -519,8 +448,9 @@ async function main() {
       units: meta.units,
       freq: "weekly",
       sign: 1,
-      light: "liquidity",
-      weight: 2,
+      light: meta.light || null,
+      impulseLight: meta.impulseLight || "liquidity",
+      weight: meta.weight || 1,
       note: meta.note,
       sub: meta.sub || "WALCL−TGA−RRP",
       search: meta.search || meta.sub || "WALCL−TGA−RRP",
@@ -559,8 +489,8 @@ async function main() {
       path.join(HIST, "STOCK_BOND_CORR.json"),
       JSON.stringify({ id: "STOCK_BOND_CORR", source: "derived", points: corrPoints }, null, 0)
     );
-    const stats = computeStats(corrPoints);
     const meta = catalog.series.find((x) => x.id === "STOCK_BOND_CORR");
+    const stats = computeStats(corrPoints, meta);
     results.STOCK_BOND_CORR = {
       id: "STOCK_BOND_CORR",
       name: meta.name,
@@ -624,8 +554,8 @@ async function main() {
       path.join(HIST, "CREDIT_IMPULSE.json"),
       JSON.stringify({ id: "CREDIT_IMPULSE", source: "derived", points: impulse }, null, 0)
     );
-    const stats = computeStats(impulse);
     const meta = catalog.series.find((x) => x.id === "CREDIT_IMPULSE");
+    const stats = computeStats(impulse, meta);
     results.CREDIT_IMPULSE = {
       id: "CREDIT_IMPULSE",
       name: meta.name,
@@ -635,8 +565,9 @@ async function main() {
       units: meta.units,
       freq: "weekly",
       sign: 1,
-      light: "liquidity",
-      weight: 2,
+      light: meta.light || null,
+      impulseLight: meta.impulseLight || "liquidity",
+      weight: meta.weight || 1,
       note: meta.note,
       sub: meta.sub || "Δ bank-credit YoY",
       search: meta.search || "CREDIT_IMPULSE",
@@ -667,8 +598,8 @@ async function main() {
       path.join(HIST, "NOM_REAL_SPREAD.json"),
       JSON.stringify({ id: "NOM_REAL_SPREAD", source: "derived", points }, null, 0)
     );
-    const stats = computeStats(points);
     const meta = catalog.series.find((x) => x.id === "NOM_REAL_SPREAD");
+    const stats = computeStats(points, meta);
     results.NOM_REAL_SPREAD = {
       id: "NOM_REAL_SPREAD",
       name: meta.name,
@@ -697,85 +628,45 @@ async function main() {
     errors.push({ id: "NOM_REAL_SPREAD", error: String(e.message || e) });
   }
 
-  // Lights — complementary clubs (catalog.light); median of member scores (not mean of a crowd)
-  // Default bake = 2y same-window (z2y + pct2y). UI recomputes for 1 / 2 / 5.
-  const lightIds = ["liquidity", "rates", "growth", "inflation", "risk"];
-  const lights = {};
-  for (const lid of lightIds) {
-    const members = Object.values(results).filter(
-      (r) => r.light === lid && r.status === "ok" && (r.z2y != null || r.pct2y != null)
-    );
-    const scores = [];
-    const signedZs = [];
-    const signedPcts = [];
-    for (const m of members) {
-      const sc = memberLightScore(m, lid, 2);
-      if (sc == null || !Number.isFinite(sc)) continue;
-      const w = Math.max(1, Math.round(m.weight || 1));
-      for (let i = 0; i < w; i++) scores.push(sc);
-      const sign = m.sign ?? 0;
-      const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-      if (m.z2y != null && Number.isFinite(m.z2y)) signedZs.push(m.z2y * s);
-      if (m.pct2y != null && Number.isFinite(m.pct2y)) {
-        signedPcts.push(s < 0 ? 1 - m.pct2y : m.pct2y);
-      }
-    }
-    const score = scores.length ? median(scores) : null;
-    const { state } = lightStateFromScore(score);
-    const meta = catalog.lights.find((l) => l.id === lid);
-    lights[lid] = {
-      id: lid,
-      label: meta?.label || lid,
-      state,
-      score,
-      z2y: signedZs.length ? median(signedZs) : null,
-      pct2y: signedPcts.length ? median(signedPcts) : null,
-      n: members.length,
-      words: {
-        easing: meta?.easing,
-        neutral: meta?.neutral,
-        tight: meta?.tight,
-      },
-      members: members.map((m) => m.id),
-    };
-  }
+  applyRealRateAnchors(results);
 
-  // Disagreements — live cross-checks (not a backtest loop)
+  const lights = buildLights({
+    series: results,
+    lightsMeta: catalog.lights,
+  });
+  attachImpulse(lights, { series: results }, DEFAULT_IMPULSE);
+
   const liq = lights.liquidity;
   const risk = lights.risk;
   const growth = lights.growth;
   const infl = lights.inflation;
-  const gold = results.GOLD;
-  const btc = results.BTC;
-  const headline = results.CPIAUCSL;
-  const core = results.CPILFESL;
+  const goldDir = results.GOLD?.impulse?.[DEFAULT_IMPULSE]?.dir;
+  const btcDir = results.BTC?.impulse?.[DEFAULT_IMPULSE]?.dir;
+  const headSc = results.CPIAUCSL?.anchor?.score;
+  const coreSc = results.CPILFESL?.anchor?.score;
   const disagreements = [];
-  if (liq?.state && gold?.z2y != null) {
-    const goldOn = gold.z2y > 0.3;
-    const goldOff = gold.z2y < -0.3;
-    if (liq.state === "easing" && goldOff) {
+  if (liq?.state && goldDir) {
+    if (liq.state === "easing" && goldDir === "down") {
       disagreements.push({
         kind: "liquidity_vs_gold",
         text: "Liquidity easing, gold not confirming",
       });
     }
-    if (liq.state === "tight" && goldOn) {
+    if (liq.state === "tight" && goldDir === "up") {
       disagreements.push({
         kind: "liquidity_vs_gold",
         text: "Liquidity tightening, gold firm anyway",
       });
     }
   }
-  if (liq?.state && btc?.z2y != null) {
-    const btcOn = btc.z2y > 0.3;
-    const btcOff = btc.z2y < -0.3;
-    if (liq.state === "easing" && btcOff) {
+  if (liq?.state && btcDir) {
+    if (liq.state === "easing" && btcDir === "down") {
       disagreements.push({
         kind: "liquidity_vs_btc",
         text: "Liquidity easing, BTC not confirming",
       });
     }
-    if (liq.state === "tight" && btcOn) {
+    if (liq.state === "tight" && btcDir === "up") {
       disagreements.push({
         kind: "liquidity_vs_btc",
         text: "Liquidity tightening, BTC firm anyway",
@@ -794,22 +685,12 @@ async function main() {
       text: "Liquidity easing, risk still off",
     });
   }
-  if (
-    headline?.z2y != null &&
-    core?.z2y != null &&
-    headline.z2y > 0.45 &&
-    core.z2y < -0.45
-  ) {
+  if (headSc != null && coreSc != null && headSc > 0.45 && coreSc < -0.45) {
     disagreements.push({
       kind: "inflation_headline_vs_core",
       text: "Headline CPI hot, core cold",
     });
-  } else if (
-    headline?.z2y != null &&
-    core?.z2y != null &&
-    headline.z2y < -0.45 &&
-    core.z2y > 0.45
-  ) {
+  } else if (headSc != null && coreSc != null && headSc < -0.45 && coreSc > 0.45) {
     disagreements.push({
       kind: "inflation_headline_vs_core",
       text: "Headline CPI cold, core hot",
@@ -842,7 +723,7 @@ async function main() {
     errors,
     formula: {
       lights:
-        "Per light: median of member scores (each = mean of sign×Ny z and flipped Ny %ile for the selected 1/2/5y window). Default bake = 2y. Clubs are small complementary sets; Street table keeps the rest. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot.",
+        "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
       netLiquidity: "WALCL(bn) − TGA − ON RRP",
       stockBondCorr: "60d Pearson of SPX returns vs −ΔDGS10",
     },

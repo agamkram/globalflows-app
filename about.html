@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="page-about">
 <head>
   <meta charset="UTF-8" />
   <meta
@@ -45,15 +45,15 @@
     content="About GlobalFlows — how the five lights, So what, and the data table work."
   />
   <title>About — GlobalFlows</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260904bl" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260904bl" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260917" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260917" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260904bl" />
+  <link rel="stylesheet" href="styles.css?v=20260917" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -124,9 +124,8 @@
             — see those indicators, their scores, and a short plain-language read.
           </li>
           <li>
-            <strong>1y · 2y · 5y</strong>
-            — how far back to compare “today” against. Two years is the default.
-            One year moves faster; five years is slower.
+            <strong>1m · 3m · 6m · 1y</strong>
+            — the turn, not “is it high.” Lights stay on the economic level. Six months is the default.
           </li>
         </ul>
         <div class="about-legend" aria-label="Light colors">
@@ -139,10 +138,11 @@
       <section class="about-block" id="sowhat">
         <h2>So what</h2>
         <p>
-          Tap the summary under the lights. That opens <strong>So what</strong> —
-          what this mix usually means for two big risks, what else on the tape
-          agrees or argues, and what would change the call. The numbers are fixed
-          first; the words follow.
+          Under the five lights sit six asset classes — cash, Treasuries (5 / 10 / 30),
+          credit, equities, gold, commodities. Green, amber, and red mean in,
+          mixed, and out of favor. Tap that row for the full <strong>So what</strong>:
+          duration, credit, the curve and IG/HY split, confirm, and what would
+          change the call. Crypto follows equities unless it disagrees.
         </p>
         <div class="about-grid-2">
           <article class="about-panel">
@@ -159,6 +159,15 @@
               How worried markets are that borrowers still pay. Built from growth,
               fear gauges, credit spreads, and whether bank lending is speeding up
               or slowing down.
+            </p>
+          </article>
+          <article class="about-panel">
+            <h3>In / out of favor</h3>
+            <p>
+              The same mix, mapped onto six asset classes. Cash is bills (you get paid
+              to wait when rates are high). Treasuries split 5s, 10s, and 30s.
+              Credit is one class; IG vs HY is in the tap. Equities include the
+              crypto footnote. Gold is money/fear; commodities are the real cycle.
             </p>
           </article>
           <article class="about-panel">
@@ -179,13 +188,65 @@
         </div>
       </section>
 
+      <section class="about-block" id="method">
+        <h2>The mapping</h2>
+        <p>
+          Lights are <strong>where it is</strong> versus an economic line — 7%
+          inflation is high even if it just fell. The 1m / 3m / 6m / 1y row is
+          <strong>which way it’s going</strong>. The six asset classes use both. GDP is
+          quarterly (1m and 3m mean the latest quarter). Liquidity color is scarce
+          vs ample, not the dollar stock; the clocks show adding vs draining.
+        </p>
+        <p>
+          From the lights we score two risks. <strong>Duration</strong> asks whether
+          long coupons are taxed (hot inflation, tight real funding) — cooling this
+          window can soften that even when the level is still high.
+          <strong>Credit</strong> asks whether borrowers still look good for the
+          money. Stocks vs bonds follows that pair.
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>Cash</strong>
+            — in when rates, plumbing, or fear are tight. High rates pay you to
+            wait in bills. Out only when cash, rates, and fear are all easy.
+          </li>
+          <li>
+            <strong>Treasuries</strong>
+            — 5s follow policy, 10s follow duration, 30s follow inflation. A
+            flight to quality can help 10s and 30s if inflation isn’t hot.
+          </li>
+          <li>
+            <strong>Credit</strong>
+            — one color. IG cares about duration as well as spreads; HY cares
+            about growth and fear. If they disagree, the block is mixed.
+          </li>
+          <li>
+            <strong>Equities</strong>
+            — in when growth is firm and fear isn’t in charge. Soft growth,
+            draining cash, or risk-off takes them out. Crypto follows equities
+            unless it disagrees with the cash story.
+          </li>
+          <li>
+            <strong>Gold</strong>
+            — in for hot prices, fear, or a cash drain that isn’t a rates squeeze.
+            Cold inflation, risk-on, and high funding usually leave it out.
+          </li>
+          <li>
+            <strong>Commodities</strong>
+            — in when growth is firm and inflation is hot (copper, oil). Soft
+            growth or cold prices take the real cycle out.
+          </li>
+        </ul>
+      </section>
+
       <section class="about-block" id="read">
         <h2>How to read it</h2>
         <ol class="about-read">
-          <li><span><strong>Pick the window</strong> — 1y, 2y, or 5y.</span></li>
+          <li><span><strong>Pick the clock</strong> — 1m, 3m, 6m, or 1y for the turn.</span></li>
           <li><span><strong>Read the lights</strong> — cash → rates → growth → inflation → fear.</span></li>
+          <li><span><strong>Read the asset classes</strong> — what that mix usually favors, including 5 / 10 / 30.</span></li>
           <li><span><strong>Open a light</strong> — the indicators behind it, and the short read.</span></li>
-          <li><span><strong>Open today’s summary</strong> — duration, credit, confirm, falsify.</span></li>
+          <li><span><strong>Tap the asset classes</strong> — duration, credit, in/out, confirm, falsify.</span></li>
           <li><span><strong>Glance at Markets</strong> — last prints on open; stats from the daily pull.</span></li>
         </ol>
       </section>
@@ -226,16 +287,16 @@
         <h3 class="about-gloss-head">Reading the numbers</h3>
         <dl class="glossary">
           <div>
-            <dt id="g-pct">Percentile</dt>
-            <dd>Where today’s level sits versus the last 1, 2, or 5 years. 90th means higher than about 90% of readings in that stretch.</dd>
+            <dt id="g-level">Level</dt>
+            <dd>Where a light sits versus an economic line (2% inflation, ~4% unemployment, VIX/HY bands). High is high. Not a table column — only a few series vote this.</dd>
           </div>
           <div>
-            <dt id="g-z">z</dt>
-            <dd>z-score — how far today’s level is from the average over that same stretch, in standard deviations. +1 means one step above average. Shown as “1y z”, “2y z”, “5y z” in the table.</dd>
+            <dt id="g-impulse">Impulse</dt>
+            <dd>Up, flat, or down over 1m, 3m, 6m, or 1y. The turn. Monthly series: 1m is the last print vs the one before.</dd>
           </div>
           <div>
-            <dt id="g-125">1 · 2 · 5</dt>
-            <dd>Years of history used for the comparison. Default is 2.</dd>
+            <dt id="g-1361">1m · 3m · 6m · 1y</dt>
+            <dd>Impulse clocks. Default 6m. Does not recolor the lights.</dd>
           </div>
         </dl>
 
@@ -251,11 +312,15 @@
           </div>
           <div>
             <dt id="g-last">Last print</dt>
-            <dd>The newest market price shown when you open Markets. Age sits beside the Markets title; the circle refreshes. Listed prices can lag about 15 minutes. Percentile and z-score still come from the daily table.</dd>
+            <dd>The newest market price shown when you open Markets. Age sits beside the Markets title; the circle refreshes. Listed prices can lag about 15 minutes. The data table shows Latest; Chart view is the turn.</dd>
           </div>
           <div>
             <dt id="g-sowhat">So what</dt>
-            <dd>The panel behind today’s summary: duration risk, credit risk, what confirms, and what would falsify.</dd>
+            <dd>The six asset classes under the lights, and the panel behind a tap: duration risk, credit risk, 5/10/30, IG vs HY, what confirms, and what would falsify.</dd>
+          </div>
+          <div>
+            <dt id="g-mapping">The mapping</dt>
+            <dd>Usual in/out from the lights: level first, then the impulse clock. Duration and credit, then cash, the Treasury curve, credit, equities, gold, commodities.</dd>
           </div>
           <div>
             <dt id="g-duration">Duration risk</dt>
@@ -325,7 +390,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260904bl"></script>
+  <script type="module" src="about.js?v=20260917"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

@@ -1,50 +1,332 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-05T15:34:00.801Z",
-  "ingestAt": "2026-09-05T15:34:00.649Z",
+  "generatedAt": "2026-09-06T01:03:04.401Z",
+  "ingestAt": "2026-09-06T00:05:05.134Z",
   "verdict": "SPOT ON",
   "fails": [],
-  "defaultHorizon": 2,
-  "headline": "Cash neutral, borrowing neutral, growth strong, inflation hot, risk risk-on.",
-  "story": "Over the past two years, cash conditions have looked steady — no clear flood or drain. Borrowing has looked mixed. Real activity has looked firm. Underlying prices have still looked hot. Market fear has stayed cheap.",
+  "defaultImpulse": "6m",
+  "headline": "Cash tightening, borrowing neutral, growth mid, inflation hot, risk risk-on.",
+  "story": "Cash looks scarce on the level. Real funding looks mixed. Activity looks mixed versus trend. Prices are high versus ~2%. Fear is cheap on the gauges.",
   "meaning": {
-    "past": "Over the past two years",
-    "years": 2,
+    "past": "Over the past six months",
+    "horizon": "6m",
     "duration": {
       "dir": "rising",
       "label": "Duration risk rising",
-      "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
+      "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields are high — discount rates still bite."
     },
     "credit": {
-      "dir": "falling",
-      "label": "Credit risk falling",
-      "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
+      "dir": "rising",
+      "label": "Credit risk rising",
+      "line": "Credit risk is waking up — soft growth, wider spreads, or a weak credit impulse mean cash flows look less certain. Bank credit impulse is decelerating this window — private lending is not confirming easy plumbing."
+    },
+    "favor": {
+      "pair": {
+        "line": "Cash over stocks and long bonds",
+        "why": "Both discount-rate risk and cash-flow risk are up — get paid to wait."
+      },
+      "items": [
+        {
+          "id": "cash",
+          "name": "Cash",
+          "stance": "in",
+          "why": "High or scarce funding pays you to sit in bills; cash is the parking place."
+        },
+        {
+          "id": "treasuries",
+          "name": "Treasuries",
+          "stance": "out",
+          "why": "Discount rates still tax the 10s.",
+          "tenors": [
+            {
+              "id": "5",
+              "name": "5",
+              "stance": "out",
+              "why": "Policy/funding still taxes the 5s."
+            },
+            {
+              "id": "10",
+              "name": "10",
+              "stance": "out",
+              "why": "Discount rates still tax the 10s."
+            },
+            {
+              "id": "30",
+              "name": "30",
+              "stance": "out",
+              "why": "Hot inflation or term premium — 30s aren’t getting paid."
+            }
+          ]
+        },
+        {
+          "id": "credit",
+          "name": "Credit",
+          "stance": "out",
+          "why": "Either cash-flow doubt or rising yields — IG gets hit from one side or both.",
+          "splits": [
+            {
+              "id": "ig",
+              "name": "IG",
+              "stance": "out",
+              "why": "Either cash-flow doubt or rising yields — IG gets hit from one side or both."
+            },
+            {
+              "id": "hy",
+              "name": "HY",
+              "stance": "out",
+              "why": "Soft growth, draining cash, or rising fear — HY is the first credit to get hurt."
+            }
+          ]
+        },
+        {
+          "id": "stocks",
+          "name": "Equities",
+          "stance": "out",
+          "why": "Soft growth, draining cash, or risk-off — equities are out of favor here.",
+          "note": "Crypto follows equities unless it disagrees with the cash story."
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "stance": "in",
+          "why": "Hot prices, fear, or draining cash without a rates squeeze — gold’s usual jobs."
+        },
+        {
+          "id": "cmdty",
+          "name": "Commodities",
+          "stance": "mixed",
+          "why": "Commodities are mixed; growth and inflation aren’t both pointing the same way."
+        }
+      ]
     },
     "confirm": [
-      "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
-      "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-      "The 10y yield is high vs this window — markets are already marking duration risk up."
+      "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
+      "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
+      "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
+      "The 10y yield is rising this window — markets are already marking duration risk up."
     ],
     "falsify": [
-      "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
+      "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
     ],
     "lines": [
-      "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
-      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
-      "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
-      "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-      "The 10y yield is high vs this window — markets are already marking duration risk up.",
-      "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
+      "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields are high — discount rates still bite.",
+      "Credit risk is waking up — soft growth, wider spreads, or a weak credit impulse mean cash flows look less certain. Bank credit impulse is decelerating this window — private lending is not confirming easy plumbing.",
+      "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
+      "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
+      "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
+      "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
     ],
     "snapshot": {
-      "liquidity": "Neutral",
+      "liquidity": "Tightening",
       "rates": "Neutral",
-      "growth": "Strong",
+      "growth": "Mid",
       "inflation": "Hot",
       "risk": "Risk-on",
       "creditImpulse": 3.00274393222095,
       "nomRealSpread": 4.463880581194535,
       "stockBondCorr": 0.41329133792027456
+    }
+  },
+  "lights": {
+    "liquidity": {
+      "id": "liquidity",
+      "label": "Liquidity",
+      "state": "tight",
+      "word": "Tightening",
+      "score": -0.9465583333333334,
+      "color": "red",
+      "n": 2,
+      "teach": "Cash looks scarce on the level. Point: funding/parking say less fuel in the pipes.",
+      "voters": [
+        {
+          "id": "WTREGEN",
+          "name": "Treasury cash account",
+          "score": -0.8931166666666667,
+          "weight": 1,
+          "why": "Treasury cash 967935"
+        },
+        {
+          "id": "RRPONTSYD",
+          "name": "Overnight reverse repo",
+          "score": -1,
+          "weight": 1,
+          "why": "ON RRP 1 — high = ample parked cash"
+        }
+      ]
+    },
+    "rates": {
+      "id": "rates",
+      "label": "Rates",
+      "state": "neutral",
+      "word": "Neutral",
+      "score": 0.09414300403382825,
+      "color": "amber",
+      "n": 5,
+      "teach": "Real funding looks mixed. Split: Bond volatility (MOVE) lean easier; 30-year mortgage rate lean tighter. Point: not clearly cheap or dear.",
+      "voters": [
+        {
+          "id": "MOVE",
+          "name": "Bond volatility (MOVE)",
+          "score": 0.8966667175292968,
+          "weight": 1,
+          "why": "MOVE 73"
+        },
+        {
+          "id": "T10Y2Y",
+          "name": "2s10s curve",
+          "score": 0.12222222222222222,
+          "weight": 1,
+          "why": "2s10s 0.41 pp"
+        },
+        {
+          "id": "DFEDTARU",
+          "name": "Fed funds target (top)",
+          "score": 0.09414300403382825,
+          "weight": 1,
+          "why": "real policy/short rate 0.41% (nominal 3.75 − core PCE 3.3)"
+        },
+        {
+          "id": "DGS2",
+          "name": "US 2-year yield",
+          "score": -0.3305713306441144,
+          "weight": 1,
+          "why": "real policy/short rate 1.00% (nominal 4.34 − core PCE 3.3)"
+        },
+        {
+          "id": "MORTGAGE30US",
+          "name": "30-year mortgage rate",
+          "score": -0.47333333333333333,
+          "weight": 1,
+          "why": "30y mortgage 6.7%"
+        }
+      ]
+    },
+    "growth": {
+      "id": "growth",
+      "label": "Growth",
+      "state": "neutral",
+      "word": "Mid",
+      "score": 0.08,
+      "color": "amber",
+      "n": 6,
+      "teach": "Activity looks mixed versus trend. Point: no clean boom or bust.",
+      "voters": [
+        {
+          "id": "ICSA",
+          "name": "Initial jobless claims",
+          "score": 0.88,
+          "weight": 1,
+          "why": "206,000 initial claims"
+        },
+        {
+          "id": "WEI",
+          "name": "Weekly economic index",
+          "score": 0.53,
+          "weight": 1,
+          "why": "weekly activity 3.1"
+        },
+        {
+          "id": "UNRATE",
+          "name": "Unemployment rate",
+          "score": 0.14285714285714357,
+          "weight": 1,
+          "why": "4.1% unemployment vs ~4% full employment"
+        },
+        {
+          "id": "PAYEMS",
+          "name": "Nonfarm payrolls",
+          "score": 0.08,
+          "weight": 2,
+          "why": "162k jobs in the latest month"
+        },
+        {
+          "id": "GDPC1",
+          "name": "Real GDP",
+          "score": 0.06511436467734082,
+          "weight": 1,
+          "why": "2.1% real GDP YoY"
+        },
+        {
+          "id": "CFNAI",
+          "name": "Chicago Fed activity",
+          "score": -0.11428571428571421,
+          "weight": 1,
+          "why": "activity index -0.08 (0 ≈ trend)"
+        }
+      ]
+    },
+    "inflation": {
+      "id": "inflation",
+      "label": "Inflation",
+      "state": "easing",
+      "word": "Hot",
+      "score": 0.6720715020169141,
+      "color": "green",
+      "n": 3,
+      "teach": "Prices are high versus ~2%. Point: the level is still hot — the impulse row says if it’s cooling.",
+      "voters": [
+        {
+          "id": "MICH",
+          "name": "Inflation expectations",
+          "score": 0.8000000000000002,
+          "weight": 1,
+          "why": "4.2% household expected inflation"
+        },
+        {
+          "id": "PCEPILFE",
+          "name": "Core PCE",
+          "score": 0.6720715020169141,
+          "weight": 2,
+          "why": "3.3% YoY vs ~2% target"
+        },
+        {
+          "id": "CPILFESL",
+          "name": "Core CPI",
+          "score": 0.23325889461546323,
+          "weight": 1,
+          "why": "2.5% YoY vs ~2% target"
+        }
+      ]
+    },
+    "risk": {
+      "id": "risk",
+      "label": "Risk",
+      "state": "easing",
+      "word": "Risk-on",
+      "score": 1,
+      "color": "green",
+      "n": 4,
+      "teach": "Fear is cheap on the gauges. Point: vol and credit are quiet.",
+      "voters": [
+        {
+          "id": "BAMLH0A0HYM2",
+          "name": "High-yield spread",
+          "score": 1,
+          "weight": 1,
+          "why": "HY OAS 2.6%"
+        },
+        {
+          "id": "NFCI",
+          "name": "Financial conditions",
+          "score": 1,
+          "weight": 1,
+          "why": "NFCI -0.56"
+        },
+        {
+          "id": "BBB_OAS",
+          "name": "BBB credit spread",
+          "score": 1,
+          "weight": 1,
+          "why": "BBB OAS 1.0%"
+        },
+        {
+          "id": "VIX",
+          "name": "Equity volatility (VIX)",
+          "score": 0.9116667111714681,
+          "weight": 1,
+          "why": "VIX 14.5"
+        }
+      ]
     }
   },
   "netLiquidity": {
@@ -57,809 +339,5 @@
     "asOf": "2026-08-26",
     "units": "pp"
   },
-  "nomRealSpread": {
-    "latest": 4.463880581194535,
-    "asOf": "2026-04-01",
-    "units": "pp"
-  },
-  "horizons": {
-    "1": {
-      "years": 1,
-      "lights": {
-        "liquidity": {
-          "id": "liquidity",
-          "label": "Liquidity",
-          "state": "neutral",
-          "word": "Neutral",
-          "score": -0.2872490030891269,
-          "color": "amber",
-          "n": 7,
-          "teach": "Cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Fed assets lean easier; Credit impulse, Bank reserves at Fed lean tighter. Point: liquidity isn’t the loud driver right now.",
-          "voters": [
-            {
-              "id": "TOTLL",
-              "name": "US bank loans & leases",
-              "score": 1.5500694118149179,
-              "weight": 1
-            },
-            {
-              "id": "WALCL",
-              "name": "Fed assets",
-              "score": 1.171448442329698,
-              "weight": 1
-            },
-            {
-              "id": "RRPONTSYD",
-              "name": "Overnight reverse repo",
-              "score": 0.6482156067739562,
-              "weight": 1
-            },
-            {
-              "id": "NET_LIQ",
-              "name": "Net liquidity",
-              "score": -0.2872490030891269,
-              "weight": 2
-            },
-            {
-              "id": "CREDIT_IMPULSE",
-              "name": "Credit impulse",
-              "score": -0.5279306416356853,
-              "weight": 2
-            },
-            {
-              "id": "WRESBAL",
-              "name": "Bank reserves at Fed",
-              "score": -1.1953782153172072,
-              "weight": 1
-            },
-            {
-              "id": "WTREGEN",
-              "name": "Treasury cash account",
-              "score": -1.3427068952716283,
-              "weight": 1
-            }
-          ]
-        },
-        "rates": {
-          "id": "rates",
-          "label": "Rates",
-          "state": "tight",
-          "word": "Tight",
-          "score": -0.5820831386123592,
-          "color": "red",
-          "n": 6,
-          "teach": "Borrowing has looked expensive. Split: Fed funds target (top), Broad US dollar index lean easier; 2s10s curve, US 2-year yield lean tighter. Point: higher rates or a strong dollar are tightening the screw.",
-          "voters": [
-            {
-              "id": "DFEDTARU",
-              "name": "Fed funds target (top)",
-              "score": 1.0213214002776287,
-              "weight": 1
-            },
-            {
-              "id": "DTWEXBGS",
-              "name": "Broad US dollar index",
-              "score": 0.8955557500792416,
-              "weight": 1
-            },
-            {
-              "id": "MOVE",
-              "name": "Bond volatility (MOVE)",
-              "score": -0.06376518784567616,
-              "weight": 1
-            },
-            {
-              "id": "T10Y2Y",
-              "name": "2s10s curve",
-              "score": -1.1004010893790421,
-              "weight": 1
-            },
-            {
-              "id": "DGS2",
-              "name": "US 2-year yield",
-              "score": -1.6644033345965843,
-              "weight": 1
-            },
-            {
-              "id": "MORTGAGE30US",
-              "name": "30-year mortgage rate",
-              "score": -1.7053332715453893,
-              "weight": 1
-            }
-          ]
-        },
-        "growth": {
-          "id": "growth",
-          "label": "Growth",
-          "state": "easing",
-          "word": "Strong",
-          "score": 1.0651781042788833,
-          "color": "green",
-          "n": 7,
-          "teach": "Real activity has looked firm. Point: activity is holding up — soft prints haven’t flipped the regime.",
-          "voters": [
-            {
-              "id": "UNRATE",
-              "name": "Unemployment rate",
-              "score": 1.616025403784442,
-              "weight": 1
-            },
-            {
-              "id": "WEI",
-              "name": "Weekly economic index",
-              "score": 1.441559118885317,
-              "weight": 1
-            },
-            {
-              "id": "COPPER",
-              "name": "Copper",
-              "score": 1.3818097497655466,
-              "weight": 1
-            },
-            {
-              "id": "PAYEMS",
-              "name": "Nonfarm payrolls",
-              "score": 1.0651781042788833,
-              "weight": 2
-            },
-            {
-              "id": "RSAFS",
-              "name": "Retail sales",
-              "score": 1.0559860434640709,
-              "weight": 1
-            },
-            {
-              "id": "ICSA",
-              "name": "Initial jobless claims",
-              "score": 0.8580176615832302,
-              "weight": 1
-            },
-            {
-              "id": "CFNAI",
-              "name": "Chicago Fed activity",
-              "score": 0.03671981560268893,
-              "weight": 1
-            }
-          ]
-        },
-        "inflation": {
-          "id": "inflation",
-          "label": "Inflation",
-          "state": "neutral",
-          "word": "Mid",
-          "score": 0.23846079659807273,
-          "color": "amber",
-          "n": 3,
-          "teach": "Inflation has looked mixed. Split: Core PCE lean easier; Inflation expectations, Core CPI lean tighter. Point: some core measures cool, others don’t — no clean Cold call.",
-          "voters": [
-            {
-              "id": "PCEPILFE",
-              "name": "Core PCE",
-              "score": 1.0870338622120708,
-              "weight": 2
-            },
-            {
-              "id": "MICH",
-              "name": "Inflation expectations",
-              "score": -0.6101122690159253,
-              "weight": 1
-            },
-            {
-              "id": "CPILFESL",
-              "name": "Core CPI",
-              "score": -1.3158508879340993,
-              "weight": 1
-            }
-          ]
-        },
-        "risk": {
-          "id": "risk",
-          "label": "Risk",
-          "state": "easing",
-          "word": "Risk-on",
-          "score": 1.2644214726781657,
-          "color": "green",
-          "n": 4,
-          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
-          "voters": [
-            {
-              "id": "BAMLH0A0HYM2",
-              "name": "High-yield spread",
-              "score": 1.3686422053410099,
-              "weight": 1
-            },
-            {
-              "id": "NFCI",
-              "name": "Financial conditions",
-              "score": 1.308770149203489,
-              "weight": 1
-            },
-            {
-              "id": "VIX",
-              "name": "Equity volatility (VIX)",
-              "score": 1.2200727961528424,
-              "weight": 1
-            },
-            {
-              "id": "BBB_OAS",
-              "name": "BBB credit spread",
-              "score": -0.055854805522310494,
-              "weight": 1
-            }
-          ]
-        }
-      },
-      "meaning": {
-        "past": "Over the past year",
-        "years": 1,
-        "duration": {
-          "dir": "rising",
-          "label": "Duration risk rising",
-          "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
-        },
-        "credit": {
-          "dir": "mixed",
-          "label": "Credit risk mixed",
-          "line": "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing."
-        },
-        "confirm": [
-          "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-          "The 10y yield is high vs this window — markets are already marking duration risk up."
-        ],
-        "falsify": [],
-        "lines": [
-          "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
-          "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is decelerating — private lending is not confirming easy Fed plumbing.",
-          "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-          "The 10y yield is high vs this window — markets are already marking duration risk up."
-        ],
-        "snapshot": {
-          "liquidity": "Neutral",
-          "rates": "Tight",
-          "growth": "Strong",
-          "inflation": "Mid",
-          "risk": "Risk-on",
-          "creditImpulse": 3.00274393222095,
-          "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.41329133792027456
-        }
-      }
-    },
-    "2": {
-      "years": 2,
-      "lights": {
-        "liquidity": {
-          "id": "liquidity",
-          "label": "Liquidity",
-          "state": "neutral",
-          "word": "Neutral",
-          "score": 0.24437400882305182,
-          "color": "amber",
-          "n": 7,
-          "teach": "Cash conditions have looked steady — no clear flood or drain. Split: US bank loans & leases, Overnight reverse repo lean easier; Net liquidity, Treasury cash account lean tighter. Point: liquidity isn’t the loud driver right now.",
-          "voters": [
-            {
-              "id": "TOTLL",
-              "name": "US bank loans & leases",
-              "score": 1.6809230501049945,
-              "weight": 1
-            },
-            {
-              "id": "RRPONTSYD",
-              "name": "Overnight reverse repo",
-              "score": 1.0044017015747035,
-              "weight": 1
-            },
-            {
-              "id": "CREDIT_IMPULSE",
-              "name": "Credit impulse",
-              "score": 0.5607735882925042,
-              "weight": 2
-            },
-            {
-              "id": "WALCL",
-              "name": "Fed assets",
-              "score": 0.24437400882305182,
-              "weight": 1
-            },
-            {
-              "id": "NET_LIQ",
-              "name": "Net liquidity",
-              "score": -0.880472366667865,
-              "weight": 2
-            },
-            {
-              "id": "WTREGEN",
-              "name": "Treasury cash account",
-              "score": -1.3189018014558878,
-              "weight": 1
-            },
-            {
-              "id": "WRESBAL",
-              "name": "Bank reserves at Fed",
-              "score": -1.3930434775254534,
-              "weight": 1
-            }
-          ]
-        },
-        "rates": {
-          "id": "rates",
-          "label": "Rates",
-          "state": "neutral",
-          "word": "Neutral",
-          "score": 0.21403320562985856,
-          "color": "amber",
-          "n": 6,
-          "teach": "Borrowing has looked mixed. Split: Fed funds target (top), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: funding isn’t clearly cheap or dear — funding is split.",
-          "voters": [
-            {
-              "id": "DFEDTARU",
-              "name": "Fed funds target (top)",
-              "score": 1.3052372126752503,
-              "weight": 1
-            },
-            {
-              "id": "DTWEXBGS",
-              "name": "Broad US dollar index",
-              "score": 1.0930726500399195,
-              "weight": 1
-            },
-            {
-              "id": "MOVE",
-              "name": "Bond volatility (MOVE)",
-              "score": 0.7069431739768761,
-              "weight": 1
-            },
-            {
-              "id": "T10Y2Y",
-              "name": "2s10s curve",
-              "score": -0.278876762717159,
-              "weight": 1
-            },
-            {
-              "id": "MORTGAGE30US",
-              "name": "30-year mortgage rate",
-              "score": -0.6619694004632326,
-              "weight": 1
-            },
-            {
-              "id": "DGS2",
-              "name": "US 2-year yield",
-              "score": -1.5344369778206088,
-              "weight": 1
-            }
-          ]
-        },
-        "growth": {
-          "id": "growth",
-          "label": "Growth",
-          "state": "easing",
-          "word": "Strong",
-          "score": 1.2238243870100316,
-          "color": "green",
-          "n": 7,
-          "teach": "Real activity has looked firm. Point: activity is holding up — soft prints haven’t flipped the regime.",
-          "voters": [
-            {
-              "id": "COPPER",
-              "name": "Copper",
-              "score": 1.6306097838702382,
-              "weight": 1
-            },
-            {
-              "id": "WEI",
-              "name": "Weekly economic index",
-              "score": 1.56465617770318,
-              "weight": 1
-            },
-            {
-              "id": "RSAFS",
-              "name": "Retail sales",
-              "score": 1.4272133970815446,
-              "weight": 1
-            },
-            {
-              "id": "UNRATE",
-              "name": "Unemployment rate",
-              "score": 1.2369422557947536,
-              "weight": 1
-            },
-            {
-              "id": "ICSA",
-              "name": "Initial jobless claims",
-              "score": 1.2107065182253098,
-              "weight": 1
-            },
-            {
-              "id": "PAYEMS",
-              "name": "Nonfarm payrolls",
-              "score": 1.131394566140929,
-              "weight": 2
-            },
-            {
-              "id": "CFNAI",
-              "name": "Chicago Fed activity",
-              "score": 0.1311580068350133,
-              "weight": 1
-            }
-          ]
-        },
-        "inflation": {
-          "id": "inflation",
-          "label": "Inflation",
-          "state": "easing",
-          "word": "Hot",
-          "score": 0.6764692307702096,
-          "color": "green",
-          "n": 3,
-          "teach": "Underlying prices have still looked hot. Split: Core PCE lean easier; Core CPI lean tighter. Point: inflation pressure hasn’t rolled over — heat is still in the gauges the Fed watches.",
-          "voters": [
-            {
-              "id": "PCEPILFE",
-              "name": "Core PCE",
-              "score": 1.4841539426212855,
-              "weight": 2
-            },
-            {
-              "id": "MICH",
-              "name": "Inflation expectations",
-              "score": -0.13121548108086634,
-              "weight": 1
-            },
-            {
-              "id": "CPILFESL",
-              "name": "Core CPI",
-              "score": -1.5142917816330108,
-              "weight": 1
-            }
-          ]
-        },
-        "risk": {
-          "id": "risk",
-          "label": "Risk",
-          "state": "easing",
-          "word": "Risk-on",
-          "score": 1.1390853700271684,
-          "color": "green",
-          "n": 4,
-          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
-          "voters": [
-            {
-              "id": "NFCI",
-              "name": "Financial conditions",
-              "score": 1.3995948168582166,
-              "weight": 1
-            },
-            {
-              "id": "BAMLH0A0HYM2",
-              "name": "High-yield spread",
-              "score": 1.1693449687262585,
-              "weight": 1
-            },
-            {
-              "id": "VIX",
-              "name": "Equity volatility (VIX)",
-              "score": 1.1088257713280782,
-              "weight": 1
-            },
-            {
-              "id": "BBB_OAS",
-              "name": "BBB credit spread",
-              "score": 0.49581359093996447,
-              "weight": 1
-            }
-          ]
-        }
-      },
-      "meaning": {
-        "past": "Over the past two years",
-        "years": 2,
-        "duration": {
-          "dir": "rising",
-          "label": "Duration risk rising",
-          "line": "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite."
-        },
-        "credit": {
-          "dir": "falling",
-          "label": "Credit risk falling",
-          "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet."
-        },
-        "confirm": [
-          "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
-          "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-          "The 10y yield is high vs this window — markets are already marking duration risk up."
-        ],
-        "falsify": [
-          "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
-        ],
-        "lines": [
-          "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields sit high vs this window — discount rates still bite.",
-          "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating — private liquidity is adding fuel beyond the Fed sheet.",
-          "Strong growth with hot inflation is a classic mix that hurts long bonds — credit can still look fine until the Fed or the long end bites.",
-          "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together.",
-          "The 10y yield is high vs this window — markets are already marking duration risk up.",
-          "Falsify if Inflation flips Cold while Growth stays Strong — the duration call softens."
-        ],
-        "snapshot": {
-          "liquidity": "Neutral",
-          "rates": "Neutral",
-          "growth": "Strong",
-          "inflation": "Hot",
-          "risk": "Risk-on",
-          "creditImpulse": 3.00274393222095,
-          "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.41329133792027456
-        }
-      }
-    },
-    "5": {
-      "years": 5,
-      "lights": {
-        "liquidity": {
-          "id": "liquidity",
-          "label": "Liquidity",
-          "state": "tight",
-          "word": "Tightening",
-          "score": -0.8794952486278635,
-          "color": "red",
-          "n": 7,
-          "teach": "Cash has been leaving the system. Split: US bank loans & leases, Overnight reverse repo lean easier; Fed assets, Net liquidity lean tighter. Point: Fed plumbing is tightening — less fuel in the pipes.",
-          "voters": [
-            {
-              "id": "TOTLL",
-              "name": "US bank loans & leases",
-              "score": 1.7165713840410222,
-              "weight": 1
-            },
-            {
-              "id": "RRPONTSYD",
-              "name": "Overnight reverse repo",
-              "score": 1.2199501470083,
-              "weight": 1
-            },
-            {
-              "id": "CREDIT_IMPULSE",
-              "name": "Credit impulse",
-              "score": 0.37558715244941443,
-              "weight": 2
-            },
-            {
-              "id": "WALCL",
-              "name": "Fed assets",
-              "score": -0.8794952486278635,
-              "weight": 1
-            },
-            {
-              "id": "NET_LIQ",
-              "name": "Net liquidity",
-              "score": -1.1247742610061535,
-              "weight": 2
-            },
-            {
-              "id": "WRESBAL",
-              "name": "Bank reserves at Fed",
-              "score": -1.3726537648630721,
-              "weight": 1
-            },
-            {
-              "id": "WTREGEN",
-              "name": "Treasury cash account",
-              "score": -1.4594790811284006,
-              "weight": 1
-            }
-          ]
-        },
-        "rates": {
-          "id": "rates",
-          "label": "Rates",
-          "state": "easing",
-          "word": "Easy",
-          "score": 0.4877962372884588,
-          "color": "green",
-          "n": 6,
-          "teach": "Borrowing has looked cheap. Split: Bond volatility (MOVE), Broad US dollar index lean easier; 30-year mortgage rate, US 2-year yield lean tighter. Point: money is easy to fund with — rates/dollar aren’t fighting growth.",
-          "voters": [
-            {
-              "id": "MOVE",
-              "name": "Bond volatility (MOVE)",
-              "score": 1.1151186637865478,
-              "weight": 1
-            },
-            {
-              "id": "DTWEXBGS",
-              "name": "Broad US dollar index",
-              "score": 0.7560455660952388,
-              "weight": 1
-            },
-            {
-              "id": "T10Y2Y",
-              "name": "2s10s curve",
-              "score": 0.5378194933375782,
-              "weight": 1
-            },
-            {
-              "id": "DFEDTARU",
-              "name": "Fed funds target (top)",
-              "score": 0.4377729812393394,
-              "weight": 1
-            },
-            {
-              "id": "MORTGAGE30US",
-              "name": "30-year mortgage rate",
-              "score": -0.48116338196572195,
-              "weight": 1
-            },
-            {
-              "id": "DGS2",
-              "name": "US 2-year yield",
-              "score": -0.5914566326564383,
-              "weight": 1
-            }
-          ]
-        },
-        "growth": {
-          "id": "growth",
-          "label": "Growth",
-          "state": "neutral",
-          "word": "Mid",
-          "score": 0.2621290523141743,
-          "color": "amber",
-          "n": 7,
-          "teach": "Growth has looked mixed. Point: no clean boom or bust signal once the club is combined.",
-          "voters": [
-            {
-              "id": "COPPER",
-              "name": "Copper",
-              "score": 2.0574631353205586,
-              "weight": 1
-            },
-            {
-              "id": "RSAFS",
-              "name": "Retail sales",
-              "score": 1.59048503749717,
-              "weight": 1
-            },
-            {
-              "id": "ICSA",
-              "name": "Initial jobless claims",
-              "score": 0.9430446391073919,
-              "weight": 1
-            },
-            {
-              "id": "WEI",
-              "name": "Weekly economic index",
-              "score": 0.5760766920703112,
-              "weight": 1
-            },
-            {
-              "id": "CFNAI",
-              "name": "Chicago Fed activity",
-              "score": -0.051818587441962556,
-              "weight": 1
-            },
-            {
-              "id": "PAYEMS",
-              "name": "Nonfarm payrolls",
-              "score": -0.05752220130165252,
-              "weight": 2
-            },
-            {
-              "id": "UNRATE",
-              "name": "Unemployment rate",
-              "score": -0.19543437212522946,
-              "weight": 1
-            }
-          ]
-        },
-        "inflation": {
-          "id": "inflation",
-          "label": "Inflation",
-          "state": "neutral",
-          "word": "Mid",
-          "score": -0.2211178839174498,
-          "color": "amber",
-          "n": 3,
-          "teach": "Inflation has looked mixed. Point: some core measures cool, others don’t — no clean Cold call.",
-          "voters": [
-            {
-              "id": "MICH",
-              "name": "Inflation expectations",
-              "score": -0.18885041929423832,
-              "weight": 1
-            },
-            {
-              "id": "PCEPILFE",
-              "name": "Core PCE",
-              "score": -0.2211178839174498,
-              "weight": 2
-            },
-            {
-              "id": "CPILFESL",
-              "name": "Core CPI",
-              "score": -1.4014233727039667,
-              "weight": 1
-            }
-          ]
-        },
-        "risk": {
-          "id": "risk",
-          "label": "Risk",
-          "state": "easing",
-          "word": "Risk-on",
-          "score": 1.0709399522717804,
-          "color": "green",
-          "n": 4,
-          "teach": "Market fear has stayed cheap. Point: vol and credit are quiet — the tape isn’t priced for pain.",
-          "voters": [
-            {
-              "id": "BAMLH0A0HYM2",
-              "name": "High-yield spread",
-              "score": 1.272250637129,
-              "weight": 1
-            },
-            {
-              "id": "NFCI",
-              "name": "Financial conditions",
-              "score": 1.2143956345187543,
-              "weight": 1
-            },
-            {
-              "id": "VIX",
-              "name": "Equity volatility (VIX)",
-              "score": 0.9274842700248065,
-              "weight": 1
-            },
-            {
-              "id": "BBB_OAS",
-              "name": "BBB credit spread",
-              "score": 0.8042293182980005,
-              "weight": 1
-            }
-          ]
-        }
-      },
-      "meaning": {
-        "past": "Over the past five years",
-        "years": 5,
-        "duration": {
-          "dir": "mixed",
-          "label": "Duration risk mixed",
-          "line": "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid. Real 10y yields sit high vs this window — discount rates still bite."
-        },
-        "credit": {
-          "dir": "mixed",
-          "label": "Credit risk mixed",
-          "line": "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty."
-        },
-        "confirm": [
-          "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
-          "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
-          "Gold is strong while cash drains — not a clean plumbing confirmation; gold is doing another job.",
-          "Stock–bond correlation is elevated vs this window — diversification is weaker; duration and credit can hurt together."
-        ],
-        "falsify": [
-          "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
-        ],
-        "lines": [
-          "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid. Real 10y yields sit high vs this window — discount rates still bite.",
-          "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.",
-          "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
-          "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
-          "Gold is strong while cash drains — not a clean plumbing confirmation; gold is doing another job.",
-          "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
-        ],
-        "snapshot": {
-          "liquidity": "Tightening",
-          "rates": "Easy",
-          "growth": "Mid",
-          "inflation": "Mid",
-          "risk": "Risk-on",
-          "creditImpulse": 3.00274393222095,
-          "nomRealSpread": 4.463880581194535,
-          "stockBondCorr": 0.41329133792027456
-        }
-      }
-    }
-  },
-  "note": "Daily bake. Numbers locked before copy. Meaning = duration/credit implications."
+  "note": "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes."
 }

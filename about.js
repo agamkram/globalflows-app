@@ -25,7 +25,7 @@ function renderFormula(snap) {
   const f = snap.formula || {};
   const lights =
     f.lights ||
-    "Each light averages a small set of related indicators for the window you pick (1, 2, or 5 years). A clearly high score paints green; a clearly low score paints red; in between stays amber.";
+    "Each light is an economic level (high is high), not a score versus last year. The 1m / 3m / 6m / 1y row is only the turn. Green/red still mean clearly easy/tight on that level.";
   $("#formulaBody").innerHTML = `
     <p>${escapeHtml(lights)}</p>
     <dl class="formula-dl">
@@ -39,10 +39,8 @@ function renderFormula(snap) {
       </div>
     </dl>
     <p class="muted tiny">
-      For most lights, “higher” can mean easier or tighter depending on the indicator
-      (a rising yield is not the same story as rising bank reserves). Inflation treats
-      upside as hot. Changing 1 · 2 · 5 recalculates the lights on screen; the morning
-      update locks the written So what for the two-year read.
+      Changing the impulse clock does not recolor the lights; it changes the turn
+      and the six asset classes. The morning bake locks the written So what at 6m.
     </p>
   `;
 }

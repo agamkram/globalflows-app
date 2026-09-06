@@ -55,13 +55,14 @@
       "units": "USD mn",
       "freq": "weekly",
       "sign": 1,
-      "light": "liquidity",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
       "sub": "Bonds & MBS the Fed owns",
       "search": "WALCL",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Fed's total balance-sheet assets. Rising = more liquidity into the system."
+      "note": "Fed's total balance-sheet assets. Rising = more liquidity into the system.",
+      "impulseLight": "liquidity"
     },
     {
       "id": "WRESBAL",
@@ -72,13 +73,14 @@
       "units": "USD mn",
       "freq": "weekly",
       "sign": 1,
-      "light": "liquidity",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/WRESBAL",
       "sub": "Cash banks park at Fed",
       "search": "WRESBAL",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Cash banks hold at the Fed. Falling reserves often mean tighter money-market conditions."
+      "note": "Cash banks hold at the Fed. Falling reserves often mean tighter money-market conditions.",
+      "impulseLight": "liquidity"
     },
     {
       "id": "RRPONTSYD",
@@ -162,9 +164,10 @@
       "search": "TOTLL",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": "liquidity",
+      "light": null,
       "weight": 1,
-      "note": "Total bank loans & leases. Private credit still flowing to the real economy."
+      "note": "Total bank loans & leases. Private credit still flowing to the real economy.",
+      "impulseLight": "liquidity"
     },
     {
       "id": "CREDIT_IMPULSE",
@@ -175,14 +178,15 @@
       "units": "pp",
       "freq": "weekly",
       "sign": 1,
-      "light": "liquidity",
+      "light": null,
       "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
       "sub": "Acceleration of bank credit",
       "search": "CREDIT_IMPULSE",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing."
+      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing.",
+      "impulseLight": "liquidity"
     },
     {
       "id": "BUSLOANS",
@@ -314,14 +318,15 @@
       "units": "USD bn",
       "freq": "weekly",
       "sign": 1,
-      "light": "liquidity",
+      "light": null,
       "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
       "note": "Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.",
       "sub": "Fed assets − TGA − ON RRP",
       "search": "NET_LIQ",
       "causal": "liquidity",
-      "street": "liquidity"
+      "street": "liquidity",
+      "impulseLight": "liquidity"
     },
     {
       "id": "DGS3MO",
@@ -536,13 +541,14 @@
       "units": "index",
       "freq": "daily",
       "sign": -1,
-      "light": "rates",
+      "light": null,
       "note": "Fed broad dollar trade-weighted index. Stronger dollar = tighter USD liquidity abroad.",
       "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
       "sub": "USD vs trading partners",
       "search": "DTWEXBGS",
       "causal": "rates",
-      "street": "fx"
+      "street": "fx",
+      "impulseLight": "rates"
     },
     {
       "id": "RBUSBIS",
@@ -914,13 +920,14 @@
       "units": "USD mn",
       "freq": "monthly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/RSAFS",
       "sub": "Consumer spending",
       "search": "RSAFS",
       "causal": "labels",
       "street": "growth",
-      "note": "Advance retail sales. Consumer spending pulse (nominal)."
+      "note": "Advance retail sales. Consumer spending pulse (nominal).",
+      "impulseLight": "growth"
     },
     {
       "id": "DGORDER",
@@ -1094,7 +1101,7 @@
       "units": "% YoY",
       "freq": "quarterly",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "weight": 1,
       "transform": "yoy",
       "freshness": "lagged",
@@ -1103,7 +1110,8 @@
       "search": "GDP",
       "causal": "labels",
       "street": "growth",
-      "note": "Nominal GDP YoY. Dollar spending in the economy — growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation."
+      "note": "Nominal GDP YoY. Dollar spending in the economy — growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation.",
+      "impulseLight": "growth"
     },
     {
       "id": "NOM_REAL_SPREAD",
@@ -1132,7 +1140,7 @@
       "units": "USD/lb",
       "freq": "daily",
       "sign": 1,
-      "light": "growth",
+      "light": null,
       "sourceUrl": "https://finance.yahoo.com/quote/HG=F",
       "sub": "Industrial metal / growth",
       "search": "HG=F",
@@ -1140,7 +1148,8 @@
       "street": "growth",
       "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy.",
       "marketBucket": "metals",
-      "order": 430
+      "order": 430,
+      "impulseLight": "growth"
     },
     {
       "id": "VIX",
@@ -2608,7 +2617,7 @@
       "sub": "Privacy coin",
       "search": "ZEC-USD",
       "causal": "assets",
-      "note": "Zcash. Shielded privacy coin — risk-off crypto sleeve."
+      "note": "Zcash. Shielded privacy coin."
     },
     {
       "id": "DOGE",
@@ -2646,7 +2655,7 @@
       "sub": "Privacy coin",
       "search": "XMR-USD",
       "causal": "assets",
-      "note": "Monero. Privacy coin — crypto's untraceable sleeve."
+      "note": "Monero. Privacy coin."
     },
     {
       "id": "LEO",

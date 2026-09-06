@@ -90,18 +90,6 @@ html.pwa-standalone body {
   white-space: nowrap;
 }
 
-.build-badge {
-  flex: 0 0 auto;
-  font: 600 0.62rem var(--mono);
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1px 5px;
-  line-height: 1.2;
-}
-
 .dials-toolbar {
   display: flex;
   align-items: center;
@@ -197,40 +185,41 @@ html.pwa-standalone body {
 }
 
 .light-members {
-  overflow: hidden;
-  max-height: min(28vh, 200px);
-  margin: 6px 0 10px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  overflow: visible;
+  max-height: none;
+  margin: 4px 0 0;
+  border: none;
+  border-radius: 0;
 }
 
 .light-members table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
 }
 
 .light-members th,
 .light-members td {
-  padding: 4px 6px;
+  padding: 3px 0;
   text-align: right;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
   white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.light-members tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .light-members th:first-child,
 .light-members td:first-child {
   text-align: left;
+  padding-right: 10px;
+  white-space: normal;
 }
 
-.light-members th {
-  color: var(--muted);
-  font-weight: 500;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  position: sticky;
-  top: 0;
-  background: var(--bg2);
+.light-members thead {
+  display: none;
 }
 
 .btn {
@@ -293,7 +282,7 @@ html.pwa-standalone body {
   min-width: 0;
 }
 
-/* Brand / 1·2·5 / regime scroll away; lights → tabs → series title stick. */
+/* Brand / 1m·3m·6m·1y scroll away; lights → asset classes → tabs → series title stick. */
 .pin-stack {
   position: sticky;
   top: var(--safe-t);
@@ -320,7 +309,8 @@ html.pwa-standalone body {
   padding: 1px;
 }
 
-/* Cover notch while pin is stuck (layout-neutral). */
+/* Cover notch while pin is stuck (layout-neutral). Not on About —
+   that slab clips the page background into a black band. */
 body::before {
   content: "";
   position: fixed;
@@ -331,6 +321,11 @@ body::before {
   background: var(--bg);
   z-index: 40;
   pointer-events: none;
+}
+
+html.page-about body::before,
+body.page-about::before {
+  content: none;
 }
 
 .regime-horizon {
@@ -344,44 +339,144 @@ body::before {
   font-size: 0.78rem;
   border-radius: 7px;
   min-width: 2.1rem;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
-.regime-today {
-  display: block;
-  margin: 0;
-  padding: 6px 8px;
-  font: inherit;
-  font-size: 0.8rem;
-  line-height: 1.35;
-  text-align: left;
-  color: var(--text);
+.regime-horizon .btn.tiny-btn:focus,
+.regime-horizon .btn.tiny-btn:focus-visible {
+  outline: none;
+}
+
+.regime-horizon .btn.tiny-btn[aria-pressed="true"] {
+  border-color: var(--text);
   background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  color: var(--text);
+  box-shadow: none;
+}
+
+.favor-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
   width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
 }
 
-.regime-today:focus,
-.regime-today:focus-visible {
+.favor-strip:focus,
+.favor-strip:focus-visible {
   outline: 2px solid var(--accent, #3b82f6);
   outline-offset: 1px;
 }
 
-.regime-today[hidden] {
+.favor-strip[hidden] {
   display: none;
 }
 
-.regime-today .regime-kicker {
-  display: block;
-  font-size: 0.62rem;
+.favor-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  min-width: 0;
+  padding: 5px 2px 6px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.favor-title {
+  font-size: 0.48rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--muted);
-  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.favor-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 7px currentColor;
+}
+
+.favor-cell[data-state="easing"] .favor-dot {
+  background: var(--ease);
+  color: var(--ease);
+}
+.favor-cell[data-state="neutral"] .favor-dot {
+  background: var(--neutral);
+  color: var(--neutral);
+}
+.favor-cell[data-state="tight"] .favor-dot {
+  background: var(--tight);
+  color: var(--tight);
+}
+
+.favor-tenor[data-state="easing"] {
+  color: var(--ease);
+}
+.favor-tenor[data-state="neutral"] {
+  color: var(--neutral);
+}
+.favor-tenor[data-state="tight"] {
+  color: var(--tight);
+}
+
+.favor-curve {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.favor-tenor {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  font: 600 0.58rem var(--mono);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+
+.favor-tenor b {
+  font-weight: 600;
+  color: inherit;
+}
+
+.dlg-body .rubric-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 2px 0 0;
+  padding-left: 0;
+}
+
+.dlg-body .rubric-split {
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.3;
 }
 
 .sentence strong {
@@ -453,6 +548,29 @@ body::before {
   margin: 0 0 3px;
   box-shadow: 0 0 8px currentColor;
   flex-shrink: 0;
+}
+
+.impulse-chev {
+  font-size: 0.62rem;
+  line-height: 1;
+  font-weight: 700;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+}
+.impulse-chev[data-dir="up"]::before {
+  content: "▲";
+  color: var(--ease);
+}
+.impulse-chev[data-dir="down"]::before {
+  content: "▼";
+  color: var(--tight);
+}
+.impulse-chev[data-dir="flat"]::before {
+  content: "▶";
+  color: var(--neutral);
 }
 
 .light[data-state="easing"] .dot {
@@ -577,6 +695,23 @@ body::before {
 .dlg-body .sent-hint {
   font-weight: 400;
   font-size: 0.78rem;
+}
+
+.dlg-body .rubric-row .sent-explain-title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: baseline;
+}
+
+.dlg-body .rubric-name {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.dlg-body .rubric-row .sent-hint {
+  grid-column: 1 / -1;
 }
 
 .dlg-body .sent-explain p {
@@ -1012,7 +1147,7 @@ html {
 
 .heat-colhead {
   display: grid;
-  grid-template-columns: minmax(0, 38%) 1fr 1fr 1fr;
+  grid-template-columns: minmax(0, 38%) 1fr;
   gap: 0;
   width: 100%;
   padding: 4px 4px 6px;
@@ -1179,6 +1314,43 @@ html {
   margin-bottom: 10px;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* Light “who voted”: hug the list — do not inherit the 85dvh tap-sheet shell */
+#dlgLight.dlg-tap[open] {
+  height: max-content;
+  max-height: min(92dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 16px));
+  overflow: visible;
+}
+
+#dlgLight.dlg-tap[open] form {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  padding: 12px 14px;
+}
+
+#dlgLight.dlg-tap[open] .dlg-body {
+  flex: 0 0 auto;
+  overflow: visible;
+  min-height: 0;
+  max-height: none;
+  margin-bottom: 8px;
+}
+
+#dlgLight .light-status {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+#dlgLight .light-teach {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 body.dlg-open {
@@ -1420,7 +1592,10 @@ body.dlg-open dialog {
 }
 
 /* —— About page —— */
-/* Full-bleed document scroll; Back + mark float — no edge fades. */
+/* Full-bleed document scroll; Back + mark float — no edge fades.
+   Paint html+body so the wash reaches the status-bar edge. */
+html.page-about,
+html.page-about body,
 .page-about {
   background:
     radial-gradient(120% 80% at 10% -10%, rgba(61, 206, 167, 0.09), transparent 55%),

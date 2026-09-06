@@ -27,7 +27,7 @@ async function readJson(p) {
 }
 
 function lights2(bake) {
-  const L = bake?.horizons?.["2"]?.lights || {};
+  const L = bake?.lights || bake?.horizons?.["2"]?.lights || {};
   const out = {};
   for (const id of ["liquidity", "rates", "growth", "inflation", "risk"]) {
     const row = L[id];
