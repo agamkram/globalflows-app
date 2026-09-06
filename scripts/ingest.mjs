@@ -301,6 +301,7 @@ async function main() {
   const marketsOnly = process.env.GF_MARKETS_ONLY === "1";
   const results = {};
   const errors = [];
+  const rawPoints = {};
 
   let priorSeries = {};
   if (marketsOnly) {
@@ -347,6 +348,9 @@ async function main() {
       }
 
       let points = got.points;
+      // Keep the untransformed print: ratios like reserves/GDP need the dollar
+      // level of a series the catalog publishes as YoY.
+      rawPoints[s.id] = got.points;
       if (s.transform === "yoy") points = yoyTransform(points);
       if (s.transform === "diff") points = diffTransform(points);
 
@@ -464,6 +468,94 @@ async function main() {
   } catch (e) {
     console.log(`  NET_LIQ FAIL  ${e.message}`);
     errors.push({ id: "NET_LIQ", error: String(e.message || e) });
+  }
+
+  async function emitDerived(id, points, sourceLabel) {
+    const meta = catalog.series.find((x) => x.id === id);
+    if (!meta) throw new Error(`no catalog entry for ${id}`);
+    await fs.writeFile(
+      path.join(HIST, `${id}.json`),
+      JSON.stringify({ id, source: "derived", points }, null, 0)
+    );
+    const stats = computeStats(points, meta);
+    results[id] = {
+      id,
+      name: meta.name,
+      layer: meta.street || meta.layer,
+      street: meta.street || meta.layer,
+      causal: meta.causal || null,
+      units: meta.units,
+      freq: meta.freq,
+      sign: meta.sign ?? 0,
+      light: meta.light || null,
+      impulseLight: meta.impulseLight || null,
+      weight: meta.weight || 1,
+      note: meta.note || null,
+      sub: meta.sub || id,
+      search: meta.search || id,
+      freshness: meta.freshness || "live",
+      source: sourceLabel,
+      sourceUrl: meta.sourceUrl || null,
+      ...stats,
+      status: "ok",
+      staleDays: daysSince(stats.asOf),
+    };
+    console.log(`  ${id} (derived)… ok  asOf=${stats.asOf}  n=${stats.n}`);
+  }
+
+  // Derived: SOFR minus the top of the fed funds target, in bp. A spread against
+  // policy needs no rebasing as the balance sheet grows, so it is the one plumbing
+  // level that can carry a fixed band honestly.
+  try {
+    const sofr = JSON.parse(await fs.readFile(path.join(HIST, "SOFR.json"), "utf8"));
+    const upper = [...(rawPoints.DFEDTARU || [])].sort((a, b) => a.date.localeCompare(b.date));
+    if (!upper.length) throw new Error("no fed funds target history");
+    let ui = 0;
+    const points = [];
+    for (const p of sofr.points) {
+      while (ui + 1 < upper.length && upper[ui + 1].date <= p.date) ui++;
+      if (!upper[ui] || upper[ui].date > p.date) continue;
+      points.push({ date: p.date, value: (p.value - upper[ui].value) * 100 });
+    }
+    if (points.length < 100) throw new Error(`thin overlap (${points.length})`);
+    await emitDerived("SOFR_SPREAD", points, "derived (SOFR − fed funds target top)");
+  } catch (e) {
+    console.log(`  SOFR_SPREAD FAIL  ${e.message}`);
+    errors.push({ id: "SOFR_SPREAD", error: String(e.message || e) });
+  }
+
+  // Derived: plumbing as a share of nominal GDP. Dollar reserves grow with the
+  // economy, so only the ratio can carry a band that still means the same thing
+  // in ten years.
+  try {
+    const gdp = [...(rawPoints.GDP || [])].sort((a, b) => a.date.localeCompare(b.date));
+    if (gdp.length < 8) throw new Error("no nominal GDP level history");
+    const shareOfGdp = (points, toBn) => {
+      let gi = 0;
+      const out = [];
+      for (const p of points) {
+        while (gi + 1 < gdp.length && gdp[gi + 1].date <= p.date) gi++;
+        if (!gdp[gi] || gdp[gi].date > p.date || !gdp[gi].value) continue;
+        out.push({ date: p.date, value: ((p.value * toBn) / gdp[gi].value) * 100 });
+      }
+      return out;
+    };
+    const reserves = JSON.parse(await fs.readFile(path.join(HIST, "WRESBAL.json"), "utf8"));
+    const netliq = JSON.parse(await fs.readFile(path.join(HIST, "NET_LIQ.json"), "utf8"));
+    // WRESBAL is USD millions on FRED; NET_LIQ is already billions.
+    await emitDerived(
+      "RESERVES_GDP",
+      shareOfGdp(reserves.points, 1 / 1000),
+      "derived (bank reserves ÷ nominal GDP)"
+    );
+    await emitDerived(
+      "NETLIQ_GDP",
+      shareOfGdp(netliq.points, 1),
+      "derived (net liquidity ÷ nominal GDP)"
+    );
+  } catch (e) {
+    console.log(`  GDP-share plumbing FAIL  ${e.message}`);
+    errors.push({ id: "RESERVES_GDP", error: String(e.message || e) });
   }
 
   // Derived: stock-bond 60d corr using SPX returns vs -DGS10 changes (approx)
@@ -626,6 +718,42 @@ async function main() {
   } catch (e) {
     console.log(`  NOM_REAL_SPREAD FAIL  ${e.message}`);
     errors.push({ id: "NOM_REAL_SPREAD", error: String(e.message || e) });
+  }
+
+  // Spark bundle: the chart column only ever draws the last year, so ship a
+  // trimmed bundle instead of the full per-series history. The history folder is
+  // ~18MB and stays out of git; this is the file the deployed app actually reads.
+  try {
+    const SPARK_DAYS = 400;
+    const bundle = {};
+    let points = 0;
+    for (const s of catalog.series) {
+      let hist;
+      try {
+        hist = JSON.parse(await fs.readFile(path.join(HIST, `${s.id}.json`), "utf8"));
+      } catch {
+        continue;
+      }
+      const all = hist.points || [];
+      if (!all.length) continue;
+      const end = Date.parse(all[all.length - 1].date + "T00:00:00Z");
+      const cut = new Date(end - SPARK_DAYS * 86400000).toISOString().slice(0, 10);
+      const trimmed = all
+        .filter((p) => p.date >= cut && Number.isFinite(p.value))
+        .map((p) => ({ date: p.date, value: Number(p.value.toPrecision(6)) }));
+      if (trimmed.length < 2) continue;
+      bundle[s.id] = trimmed;
+      points += trimmed.length;
+    }
+    const out = { generatedAt: new Date().toISOString(), days: SPARK_DAYS, series: bundle };
+    await fs.writeFile(path.join(ROOT, "data", "sparks.json"), JSON.stringify(out));
+    const kb = Math.round((await fs.stat(path.join(ROOT, "data", "sparks.json"))).size / 1024);
+    console.log(
+      `  sparks.json… ok  ${Object.keys(bundle).length} series  ${points} points  ${kb}KB`
+    );
+  } catch (e) {
+    console.log(`  sparks.json FAIL  ${e.message}`);
+    errors.push({ id: "SPARKS", error: String(e.message || e) });
   }
 
   applyRealRateAnchors(results);

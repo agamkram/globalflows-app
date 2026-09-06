@@ -1,11 +1,10 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260917";
+import { buildMeaning } from "./meaning.js?v=20260919";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
-  memberImpulseScore,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
 } from "./score.js?v=20260908";
@@ -100,12 +99,6 @@ function impulseOf(s, h = statHorizon) {
   return s?.impulse?.[h] || { dir: null, delta: null, score: null };
 }
 
-function median(arr) {
-  if (!arr?.length) return null;
-  const a = [...arr].sort((x, y) => x - y);
-  const mid = Math.floor(a.length / 2);
-  return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
-}
 
 function viewOf(snap) {
   if (!snap) return null;
@@ -193,9 +186,6 @@ function pullMarketsLive(force = false) {
 function fmt(n, digits = 2) {
   if (n == null || !Number.isFinite(n)) return "—";
   const abs = Math.abs(n);
-  if (abs >= 1e12) return (n / 1e12).toFixed(2) + "T";
-  if (abs >= 1e9) return (n / 1e9).toFixed(2) + "B";
-  if (abs >= 1e6) return (n / 1e6).toFixed(2) + "M";
   if (abs >= 1000) return n.toLocaleString(undefined, { maximumFractionDigits: digits });
   return n.toLocaleString(undefined, {
     maximumFractionDigits: digits,
@@ -203,15 +193,71 @@ function fmt(n, digits = 2) {
   });
 }
 
-function fmtZ(z) {
-  if (z == null || !Number.isFinite(z)) return "—";
-  const s = (z >= 0 ? "+" : "") + z.toFixed(2);
-  return s;
+/**
+ * Render a stock of money already denominated in billions. FRED publishes most
+ * balance-sheet series in millions, so the raw print has to be scaled by its own
+ * unit before it is scaled for display — otherwise a $6.7tn balance sheet reads
+ * as "6.74M".
+ */
+function money(bn, symbol = "$") {
+  const abs = Math.abs(bn);
+  const sign = bn < 0 ? "-" : "";
+  if (abs >= 1000) return `${sign}${symbol}${(abs / 1000).toFixed(2)}tn`;
+  if (abs >= 1) return `${sign}${symbol}${abs.toFixed(abs >= 100 ? 0 : 1)}bn`;
+  return `${sign}${symbol}${(abs * 1000).toFixed(0)}mn`;
 }
 
-function fmtPct(p) {
-  if (p == null || !Number.isFinite(p)) return "—";
-  return (p * 100).toFixed(0) + "%";
+/** Format a print in the units the catalog says it is actually denominated in. */
+function fmtValue(n, units) {
+  if (n == null || !Number.isFinite(n)) return "—";
+  const abs = Math.abs(n);
+  const signed = (d) => `${n >= 0 ? "+" : ""}${n.toFixed(d)}`;
+  switch (units) {
+    case "USD mn":
+      return money(n / 1000);
+    case "USD bn":
+      return money(n);
+    case "EUR mn":
+      return money(n / 1000, "€");
+    // Bank of Japan reports in hundred-millions of yen.
+    case "¥100m":
+      return money(n / 10, "¥");
+    case "%":
+    case "% YoY":
+    case "% of GDP":
+    case "rate":
+      return `${n.toFixed(abs >= 100 ? 0 : abs >= 10 ? 1 : 2)}%`;
+    case "bp":
+      return `${signed(0)}bp`;
+    case "pp":
+      return `${signed(1)}pp`;
+    case "change":
+      return `${signed(0)}k`;
+    case "k":
+      return `${fmt(n, 0)}k`;
+    case "n":
+    case "number":
+      return fmt(n, 0);
+    case "USD":
+      return `$${fmt(n, abs >= 1000 ? 0 : 2)}`;
+    case "USD/bbl":
+    case "USD/gal":
+    case "USD/lb":
+    case "USD/mmBtu":
+    case "USD/oz":
+    case "USD/hr":
+      return `$${fmt(n, 2)}`;
+    case "EUR/MWh":
+      return `€${fmt(n, 2)}`;
+    case "¢/bu":
+      return `${fmt(n, 0)}¢`;
+    // FX crosses need four places when the rate is near parity and two when it is
+    // quoted in the hundreds, so USDJPY does not print as 147.2500.
+    case "FX":
+      return n.toFixed(abs >= 50 ? 2 : 4);
+    default:
+      return fmt(n, 2);
+  }
 }
 
 /** % change from first → last of a history slice (chosen duration). */
@@ -231,22 +277,7 @@ function fmtChg(n) {
   return `${n >= 0 ? "+" : ""}${n.toFixed(dig)}%`;
 }
 
-function zClass(z) {
-  if (z == null || !Number.isFinite(z)) return "empty";
-  if (z > 0.45) return "z-pos";
-  if (z < -0.45) return "z-neg";
-  return "z-mid";
-}
 
-function heatBg(pct) {
-  if (pct == null || !Number.isFinite(pct)) return "transparent";
-  // 0 = cool tight-ish, 1 = hot
-  const t = Math.max(0, Math.min(1, pct));
-  const r = Math.round(80 + t * 120);
-  const g = Math.round(90 + (1 - Math.abs(t - 0.5) * 2) * 40);
-  const b = Math.round(140 - t * 80);
-  return `rgba(${r},${g},${b},0.35)`;
-}
 
 function wordFor(light) {
   if (!light || light.state === "empty") return "—";
@@ -390,7 +421,7 @@ function openLightSheet(id) {
     .map((s) => {
       return `<tr data-mid="${s.id}">
         <td>${escapeHtml(s.name)}</td>
-        <td>${fmt(s.latest)}</td>
+        <td>${fmtValue(s.latest, s.units)}</td>
       </tr>`;
     })
     .join("");
@@ -604,9 +635,6 @@ function regimeStoryHtml(snap) {
   return `${horizonPhrase()}, ${s1}.${s2}`;
 }
 
-function buildSentence(snap) {
-  return regimeStoryHtml(snap);
-}
 
 function fmtLightNum(n, digits = 2) {
   if (n == null || !Number.isFinite(n)) return "—";
@@ -863,10 +891,11 @@ function openSentence(snap) {
       )
       .join("")}`;
 
+  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each light, red the contractionary end — neither is good or bad on its own.</p>`;
   const verified =
     REGIME?.verdict === "SPOT ON"
-      ? `<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light for who voted.</p>`
-      : `<p class="muted tiny sent-foot">Tap a light for who voted.</p>`;
+      ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light, then “Tap for who voted”.</p>`
+      : `${axis}<p class="muted tiny sent-foot">Tap a light, then “Tap for who voted”.</p>`;
 
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
@@ -1320,7 +1349,7 @@ function valuesCells(s) {
   const dir = impulseOf(s).dir;
   const heat =
     dir === "up" ? "z-pos" : dir === "down" ? "z-neg" : dir === "flat" ? "z-mid" : "";
-  return `<td><span class="cell-heat${heat ? ` ${heat}` : ""}"${live ? ' data-live="1"' : ""}>${fmt(latest)}</span></td>`;
+  return `<td><span class="cell-heat${heat ? ` ${heat}` : ""}"${live ? ' data-live="1"' : ""}>${fmtValue(latest, s.units)}</span></td>`;
 }
 
 function chartCell(s) {
@@ -1453,13 +1482,25 @@ function renderTable(snap) {
   paintSparks();
 }
 
+/**
+ * Sparklines never look back further than a year, so the app ships one trimmed
+ * bundle rather than the full per-series history — which is ~18MB and is not in
+ * the repo, so the old per-series fetch 404'd everywhere except a dev machine.
+ */
+let sparkBundle = null;
+function loadSparkBundle() {
+  if (!sparkBundle) {
+    sparkBundle = fetch("./data/sparks.json", { cache: "force-cache" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => j?.series || null)
+      .catch(() => null);
+  }
+  return sparkBundle;
+}
+
 async function loadHistory(id) {
   if (histCache.has(id)) return histCache.get(id);
-  const p = fetch(`./data/history/${encodeURIComponent(id)}.json`, {
-    cache: "force-cache",
-  })
-    .then((r) => (r.ok ? r.json() : null))
-    .catch(() => null);
+  const p = loadSparkBundle().then((all) => (all?.[id] ? { id, points: all[id] } : null));
   histCache.set(id, p);
   return p;
 }
@@ -1626,7 +1667,7 @@ function openSeries(s) {
       <p class="series-meta"><code>${escapeHtml(code)}</code> · ${escapeHtml(street || "")} · ${escapeHtml(s.freq || "?")}</p>
       <dl class="series-stats">
         <div><dt>Latest</dt><dd>${
-          latest == null ? "empty" : fmt(latest)
+          latest == null ? "empty" : fmtValue(latest, s.units)
         }${s.units ? ` <span class="muted">${escapeHtml(s.units)}</span>` : ""}${
           live ? ` <span class="muted">last print</span>` : ""
         }</dd></div>
@@ -1659,38 +1700,7 @@ function openSeries(s) {
   }
 }
 
-function renderFormula(snap) {
-  const el = $("#formulaBody");
-  if (!el) return;
-  const h = statHorizon;
-  el.innerHTML = `
-    <p>${escapeHtml(snap.formula?.lights || "Lights are economic levels. The 1m/3m/6m/1y row is the turn only.")}</p>
-    <p><strong>Net liquidity:</strong> <code>${escapeHtml(snap.formula?.netLiquidity || "WALCL(bn) − TGA − ON RRP")}</code></p>
-    <p><strong>Stock–bond corr:</strong> <code>${escapeHtml(snap.formula?.stockBondCorr || "")}</code></p>
-    <p class="muted">Active impulse clock: ${h}. Lights do not change when you switch it.</p>
-  `;
-}
 
-function renderAboutMeta(snap) {
-  const ingest = $("#aboutIngest");
-  const coverage = $("#aboutCoverage");
-  if (!ingest && !coverage) return;
-  const d = new Date(snap.generatedAt);
-  const when = `${d.getMonth() + 1}/${d.getDate()}/${String(d.getFullYear()).slice(2)} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  const vals = Object.values(snap.series || {});
-  const ok = vals.filter((s) => s.status === "ok").length;
-  const stale = vals.filter((s) => s.status === "stale");
-  const empty = vals.filter((s) => s.status !== "ok" && s.status !== "stale").length;
-  if (ingest) {
-    ingest.textContent = `Last ingest ${when} — when public series were last pulled (not each row’s as-of).`;
-  }
-  if (coverage) {
-    const staleNames = stale.map((s) => s.name || s.id).join(", ");
-    coverage.textContent = stale.length
-      ? `${ok} live in table · ${stale.length} stale hidden (${staleNames})${empty ? ` · ${empty} empty` : ""}`
-      : `${ok} live series${empty ? ` · ${empty} empty` : ""}`;
-  }
-}
 
 async function boot() {
   try {

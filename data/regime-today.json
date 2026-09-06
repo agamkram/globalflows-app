@@ -1,12 +1,12 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-06T01:03:04.401Z",
-  "ingestAt": "2026-09-06T00:05:05.134Z",
+  "generatedAt": "2026-09-06T03:27:36.008Z",
+  "ingestAt": "2026-09-06T03:27:34.191Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "6m",
-  "headline": "Cash tightening, borrowing neutral, growth mid, inflation hot, risk risk-on.",
-  "story": "Cash looks scarce on the level. Real funding looks mixed. Activity looks mixed versus trend. Prices are high versus ~2%. Fear is cheap on the gauges.",
+  "headline": "Cash neutral, borrowing neutral, growth mid, inflation hot, risk risk-on.",
+  "story": "Cash looks neither clearly ample nor scarce. Real funding looks mixed. Activity looks mixed versus trend. Prices are high versus ~2%. Fear is cheap on the gauges.",
   "meaning": {
     "past": "Over the past six months",
     "horizon": "6m",
@@ -29,8 +29,8 @@
         {
           "id": "cash",
           "name": "Cash",
-          "stance": "in",
-          "why": "High or scarce funding pays you to sit in bills; cash is the parking place."
+          "stance": "mixed",
+          "why": "Bills are a fine parking place, not a strong overweight."
         },
         {
           "id": "treasuries",
@@ -81,8 +81,8 @@
         {
           "id": "stocks",
           "name": "Equities",
-          "stance": "out",
-          "why": "Soft growth, draining cash, or risk-off — equities are out of favor here.",
+          "stance": "mixed",
+          "why": "Growth may look fine while funding, inflation, or fear still cap multiples.",
           "note": "Crypto follows equities unless it disagrees with the cash story."
         },
         {
@@ -100,24 +100,18 @@
       ]
     },
     "confirm": [
-      "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
-      "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
       "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
       "The 10y yield is rising this window — markets are already marking duration risk up."
     ],
-    "falsify": [
-      "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
-    ],
+    "falsify": [],
     "lines": [
       "Long bonds aren’t getting paid for the risk — inflation and/or funding are in the way, so present value stays under pressure. Real 10y yields are high — discount rates still bite.",
       "Credit risk is waking up — soft growth, wider spreads, or a weak credit impulse mean cash flows look less certain. Bank credit impulse is decelerating this window — private lending is not confirming easy plumbing.",
-      "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet.",
-      "Bitcoin is not confirming the cash drain — treat it as an output disagreement, not a liquidity vote.",
       "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
-      "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
+      "The 10y yield is rising this window — markets are already marking duration risk up."
     ],
     "snapshot": {
-      "liquidity": "Tightening",
+      "liquidity": "Neutral",
       "rates": "Neutral",
       "growth": "Mid",
       "inflation": "Hot",
@@ -131,26 +125,33 @@
     "liquidity": {
       "id": "liquidity",
       "label": "Liquidity",
-      "state": "tight",
-      "word": "Tightening",
-      "score": -0.9465583333333334,
-      "color": "red",
-      "n": 2,
-      "teach": "Cash looks scarce on the level. Point: funding/parking say less fuel in the pipes.",
+      "state": "neutral",
+      "word": "Neutral",
+      "score": -0.2316551133030395,
+      "color": "amber",
+      "n": 3,
+      "teach": "Cash looks neither clearly ample nor scarce. Point: liquidity isn’t the loud driver right now.",
       "voters": [
         {
-          "id": "WTREGEN",
-          "name": "Treasury cash account",
-          "score": -0.8931166666666667,
-          "weight": 1,
-          "why": "Treasury cash 967935"
+          "id": "SOFR_SPREAD",
+          "name": "SOFR vs target top",
+          "score": -0.10000000000000142,
+          "weight": 2,
+          "why": "SOFR -9bp vs the top of the target range — 0 is where repo broke in 2019"
         },
         {
-          "id": "RRPONTSYD",
-          "name": "Overnight reverse repo",
-          "score": -1,
+          "id": "RESERVES_GDP",
+          "name": "Reserves ÷ GDP",
+          "score": -0.3633102266060776,
           "weight": 1,
-          "why": "ON RRP 1 — high = ample parked cash"
+          "why": "reserves 8.9% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak"
+        },
+        {
+          "id": "NETLIQ_GDP",
+          "name": "Net liquidity ÷ GDP",
+          "score": -0.640687170748397,
+          "weight": 1,
+          "why": "net liquidity 17.8% of GDP — 16.6% in the 2019 squeeze, 27.8% at the QE peak"
         }
       ]
     },

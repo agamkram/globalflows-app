@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T00:05:05.134Z",
+  "generatedAt": "2026-09-06T03:27:34.191Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -156,24 +156,28 @@
     "liquidity": {
       "id": "liquidity",
       "label": "Liquidity",
-      "state": "tight",
-      "score": -0.9465583333333334,
-      "n": 2,
-      "nAnchor": 2,
+      "state": "neutral",
+      "score": -0.2316551133030395,
+      "n": 3,
+      "nAnchor": 4,
       "words": {
         "easing": "Easing",
         "neutral": "Neutral",
         "tight": "Tightening"
       },
       "members": [
-        "RRPONTSYD",
-        "WTREGEN"
+        "SOFR_SPREAD",
+        "RESERVES_GDP",
+        "NETLIQ_GDP"
       ],
       "impulseMembers": [
-        "RRPONTSYD",
-        "WTREGEN",
+        "SOFR_SPREAD",
+        "RESERVES_GDP",
+        "NETLIQ_GDP",
         "WALCL",
         "WRESBAL",
+        "RRPONTSYD",
+        "WTREGEN",
         "TOTLL",
         "NET_LIQ",
         "CREDIT_IMPULSE"
@@ -313,16 +317,7 @@
       }
     }
   },
-  "disagreements": [
-    {
-      "kind": "liquidity_vs_btc",
-      "text": "Liquidity tightening, BTC firm anyway"
-    },
-    {
-      "kind": "liquidity_vs_risk",
-      "text": "Liquidity tightening, risk still on"
-    }
-  ],
+  "disagreements": [],
   "series": {
     "WALCL": {
       "id": "WALCL",
@@ -334,6 +329,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": "liquidity",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -383,8 +379,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 4,
-      "impulseLight": "liquidity"
+      "staleDays": 4
     },
     "WRESBAL": {
       "id": "WRESBAL",
@@ -396,6 +391,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": "liquidity",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -445,8 +441,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 4,
-      "impulseLight": "liquidity"
+      "staleDays": 4
     },
     "RRPONTSYD": {
       "id": "RRPONTSYD",
@@ -457,11 +452,12 @@
       "units": "USD bn",
       "freq": "daily",
       "sign": -1,
-      "light": "liquidity",
+      "light": null,
+      "impulseLight": "liquidity",
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Overnight reverse repo — cash parked at the Fed. Rise drains money available to markets.",
+      "note": "Overnight reverse repo — cash parked at the Fed. Drained to near zero since 2023, so the level no longer says much; the direction still does.",
       "sub": "Cash parked at the Fed",
       "search": "RRPONTSYD",
       "freshness": "live",
@@ -471,10 +467,10 @@
       "asOf": "2026-09-04",
       "n": 3320,
       "anchor": {
-        "kind": "rrp",
-        "score": -1,
-        "why": "ON RRP 1 — high = ample parked cash",
-        "votes": true
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
       },
       "impulse": {
         "1m": {
@@ -507,8 +503,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "WTREGEN": {
       "id": "WTREGEN",
@@ -519,7 +514,8 @@
       "units": "USD mn",
       "freq": "weekly",
       "sign": -1,
-      "light": "liquidity",
+      "light": null,
+      "impulseLight": "liquidity",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -533,10 +529,10 @@
       "asOf": "2026-09-02",
       "n": 1238,
       "anchor": {
-        "kind": "tga",
-        "score": -0.8931166666666667,
-        "why": "Treasury cash 967935",
-        "votes": true
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
       },
       "impulse": {
         "1m": {
@@ -569,8 +565,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 4,
-      "impulseLight": null
+      "staleDays": 4
     },
     "WSHOSHO": {
       "id": "WSHOSHO",
@@ -582,6 +577,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -631,8 +627,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 4,
-      "impulseLight": null
+      "staleDays": 4
     },
     "M2SL": {
       "id": "M2SL",
@@ -644,6 +639,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -693,8 +689,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "TOTLL": {
       "id": "TOTLL",
@@ -706,6 +701,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": "liquidity",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -755,8 +751,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 11,
-      "impulseLight": "liquidity"
+      "staleDays": 11
     },
     "BUSLOANS": {
       "id": "BUSLOANS",
@@ -768,6 +763,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -817,8 +813,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "GFDEBTN": {
       "id": "GFDEBTN",
@@ -830,6 +825,7 @@
       "freq": "quarterly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -879,8 +875,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 248,
-      "impulseLight": null
+      "staleDays": 248
     },
     "TRESEGCNM052N": {
       "id": "TRESEGCNM052N",
@@ -888,10 +883,11 @@
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
-      "units": "USD",
+      "units": "USD mn",
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -941,8 +937,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97,
-      "impulseLight": null
+      "staleDays": 97
     },
     "ECBASSETS": {
       "id": "ECBASSETS",
@@ -954,6 +949,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1003,8 +999,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": null
+      "staleDays": 9
     },
     "JPNASSETS": {
       "id": "JPNASSETS",
@@ -1016,6 +1011,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1065,8 +1061,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "SOFR": {
       "id": "SOFR",
@@ -1078,6 +1073,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1127,8 +1123,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "EFFR": {
       "id": "EFFR",
@@ -1140,6 +1135,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1189,8 +1185,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DGS3MO": {
       "id": "DGS3MO",
@@ -1202,6 +1197,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1251,8 +1247,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DGS2": {
       "id": "DGS2",
@@ -1264,6 +1259,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "rates",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1313,8 +1309,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DGS5": {
       "id": "DGS5",
@@ -1326,6 +1321,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1375,8 +1371,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DGS10": {
       "id": "DGS10",
@@ -1388,6 +1383,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1437,8 +1433,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DGS30": {
       "id": "DGS30",
@@ -1450,6 +1445,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1499,8 +1495,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "T10Y2Y": {
       "id": "T10Y2Y",
@@ -1512,6 +1507,7 @@
       "freq": "daily",
       "sign": 1,
       "light": "rates",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1561,8 +1557,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "T10Y3M": {
       "id": "T10Y3M",
@@ -1574,6 +1569,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1623,8 +1619,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "DFII5": {
       "id": "DFII5",
@@ -1636,6 +1631,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1685,8 +1681,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "DFII10": {
       "id": "DFII10",
@@ -1698,6 +1693,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1747,8 +1743,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "T5YIE": {
       "id": "T5YIE",
@@ -1760,6 +1755,7 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1809,8 +1805,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "T10YIE": {
       "id": "T10YIE",
@@ -1822,6 +1817,7 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1871,8 +1867,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "T5YIFR": {
       "id": "T5YIFR",
@@ -1884,6 +1879,7 @@
       "freq": "daily",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1933,8 +1929,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "DTWEXBGS": {
       "id": "DTWEXBGS",
@@ -1946,6 +1941,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": "rates",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -1995,8 +1991,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": "rates"
+      "staleDays": 9
     },
     "RBUSBIS": {
       "id": "RBUSBIS",
@@ -2008,6 +2003,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2057,8 +2053,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "IRLTLT01DEM156N": {
       "id": "IRLTLT01DEM156N",
@@ -2070,6 +2065,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2119,8 +2115,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97,
-      "impulseLight": null
+      "staleDays": 97
     },
     "IRLTLT01GBM156N": {
       "id": "IRLTLT01GBM156N",
@@ -2132,6 +2127,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2181,8 +2177,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97,
-      "impulseLight": null
+      "staleDays": 97
     },
     "IRLTLT01JPM156N": {
       "id": "IRLTLT01JPM156N",
@@ -2194,6 +2189,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2243,8 +2239,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97,
-      "impulseLight": null
+      "staleDays": 97
     },
     "MOVE": {
       "id": "MOVE",
@@ -2256,6 +2251,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "rates",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2305,8 +2301,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "DXY": {
       "id": "DXY",
@@ -2318,6 +2313,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2367,8 +2363,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EURUSD": {
       "id": "EURUSD",
@@ -2380,6 +2375,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2429,8 +2425,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "USDJPY": {
       "id": "USDJPY",
@@ -2442,6 +2437,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2491,8 +2487,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "USDCNH": {
       "id": "USDCNH",
@@ -2504,6 +2499,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2514,7 +2510,7 @@
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/USDCNY=X",
       "latest": 6.701300144195557,
-      "asOf": "2026-09-05",
+      "asOf": "2026-09-06",
       "n": 2602,
       "anchor": {
         "kind": "none",
@@ -2531,11 +2527,11 @@
           "priorDate": "2026-08-06"
         },
         "3m": {
-          "delta": -0.07219982147216797,
+          "delta": -0.06419992446899414,
           "dir": "down",
-          "score": 0.6733751279472336,
-          "prior": 6.773499965667725,
-          "priorDate": "2026-06-04"
+          "score": 0.5987637015165816,
+          "prior": 6.765500068664551,
+          "priorDate": "2026-06-07"
         },
         "6m": {
           "delta": -0.19569969177246094,
@@ -2553,8 +2549,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 0
     },
     "GBPUSD": {
       "id": "GBPUSD",
@@ -2566,6 +2561,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2615,8 +2611,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "AUDUSD": {
       "id": "AUDUSD",
@@ -2628,6 +2623,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2677,8 +2673,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "USDMXN": {
       "id": "USDMXN",
@@ -2690,6 +2685,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2739,8 +2735,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "STICKY_CPI": {
       "id": "STICKY_CPI",
@@ -2752,6 +2747,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2801,8 +2797,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "INDPRO": {
       "id": "INDPRO",
@@ -2814,6 +2809,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2863,8 +2859,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PAYEMS": {
       "id": "PAYEMS",
@@ -2876,6 +2871,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 2,
       "marketBucket": null,
       "order": null,
@@ -2925,8 +2921,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "UNRATE": {
       "id": "UNRATE",
@@ -2938,6 +2933,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -2987,8 +2983,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "ICSA": {
       "id": "ICSA",
@@ -3000,6 +2995,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3049,8 +3045,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 8,
-      "impulseLight": null
+      "staleDays": 8
     },
     "CCSA": {
       "id": "CCSA",
@@ -3062,6 +3057,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3111,8 +3107,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 15,
-      "impulseLight": null
+      "staleDays": 15
     },
     "JTSJOL": {
       "id": "JTSJOL",
@@ -3124,6 +3119,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3173,8 +3169,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "JTSQUR": {
       "id": "JTSQUR",
@@ -3186,6 +3181,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3235,8 +3231,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "CES0500000003": {
       "id": "CES0500000003",
@@ -3248,6 +3243,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3297,8 +3293,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "RSAFS": {
       "id": "RSAFS",
@@ -3310,6 +3305,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": "growth",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3359,8 +3355,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": "growth"
+      "staleDays": 67
     },
     "DGORDER": {
       "id": "DGORDER",
@@ -3372,6 +3367,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3421,8 +3417,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "HOUST": {
       "id": "HOUST",
@@ -3434,6 +3429,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3483,8 +3479,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PERMIT": {
       "id": "PERMIT",
@@ -3496,6 +3491,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3545,8 +3541,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "CPIAUCSL": {
       "id": "CPIAUCSL",
@@ -3558,6 +3553,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3607,8 +3603,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "CPILFESL": {
       "id": "CPILFESL",
@@ -3620,6 +3615,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3669,8 +3665,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PCEPI": {
       "id": "PCEPI",
@@ -3682,6 +3677,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3731,8 +3727,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PCEPILFE": {
       "id": "PCEPILFE",
@@ -3744,6 +3739,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
+      "impulseLight": null,
       "weight": 2,
       "marketBucket": null,
       "order": null,
@@ -3793,8 +3789,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "MICH": {
       "id": "MICH",
@@ -3806,6 +3801,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": "inflation",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3855,8 +3851,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "GDPC1": {
       "id": "GDPC1",
@@ -3868,6 +3863,7 @@
       "freq": "quarterly",
       "sign": 1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3917,8 +3913,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 158,
-      "impulseLight": null
+      "staleDays": 158
     },
     "GDP": {
       "id": "GDP",
@@ -3930,6 +3925,7 @@
       "freq": "quarterly",
       "sign": 1,
       "light": null,
+      "impulseLight": "growth",
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -3979,8 +3975,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 158,
-      "impulseLight": "growth"
+      "staleDays": 158
     },
     "COPPER": {
       "id": "COPPER",
@@ -3992,6 +3987,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": "growth",
       "weight": 1,
       "marketBucket": "metals",
       "order": 430,
@@ -4041,8 +4037,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": "growth"
+      "staleDays": 2
     },
     "VIX": {
       "id": "VIX",
@@ -4054,6 +4049,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4103,8 +4099,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "BAMLH0A0HYM2": {
       "id": "BAMLH0A0HYM2",
@@ -4116,6 +4111,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4165,8 +4161,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "BAMLC0A0CM": {
       "id": "BAMLC0A0CM",
@@ -4178,6 +4173,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4227,8 +4223,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "NFCI": {
       "id": "NFCI",
@@ -4240,6 +4235,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": "risk",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4289,8 +4285,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": null
+      "staleDays": 9
     },
     "ANFCI": {
       "id": "ANFCI",
@@ -4302,6 +4297,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4351,8 +4347,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": null
+      "staleDays": 9
     },
     "SPX": {
       "id": "SPX",
@@ -4364,6 +4359,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 110,
@@ -4413,8 +4409,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "NDX": {
       "id": "NDX",
@@ -4426,6 +4421,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 120,
@@ -4475,8 +4471,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "RTY": {
       "id": "RTY",
@@ -4488,6 +4483,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 130,
@@ -4537,8 +4533,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "GOLD": {
       "id": "GOLD",
@@ -4550,6 +4545,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "metals",
       "order": 410,
@@ -4599,8 +4595,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "BTC": {
       "id": "BTC",
@@ -4612,6 +4607,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 710,
@@ -4621,7 +4617,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BTC-USD",
-      "latest": 79879.2265625,
+      "latest": 79910.1171875,
       "asOf": "2026-09-06",
       "n": 3652,
       "anchor": {
@@ -4632,28 +4628,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 14999.03515625,
+          "delta": 15029.92578125,
           "dir": "up",
           "score": 1.5,
           "prior": 64880.19140625,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 16639.70703125,
+          "delta": 16670.59765625,
           "dir": "up",
           "score": 1.5,
           "prior": 63239.51953125,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 13909.4453125,
+          "delta": 13940.3359375,
           "dir": "up",
           "score": 1.5,
           "prior": 65969.78125,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -30345.46875,
+          "delta": -30314.578125,
           "dir": "down",
           "score": -1.5,
           "prior": 110224.6953125,
@@ -4661,8 +4657,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "WTI": {
       "id": "WTI",
@@ -4674,6 +4669,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 510,
@@ -4723,8 +4719,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "BRENT": {
       "id": "BRENT",
@@ -4736,6 +4731,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 520,
@@ -4785,8 +4781,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "MTSDS133FMS": {
       "id": "MTSDS133FMS",
@@ -4798,6 +4793,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4847,8 +4843,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "ROW_UST": {
       "id": "ROW_UST",
@@ -4860,6 +4855,7 @@
       "freq": "quarterly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4909,8 +4905,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 248,
-      "impulseLight": null
+      "staleDays": 248
     },
     "TREAST": {
       "id": "TREAST",
@@ -4922,6 +4917,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -4971,8 +4967,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 4,
-      "impulseLight": null
+      "staleDays": 4
     },
     "FYGFDPUN": {
       "id": "FYGFDPUN",
@@ -4984,6 +4979,7 @@
       "freq": "quarterly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5033,8 +5029,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 248,
-      "impulseLight": null
+      "staleDays": 248
     },
     "DFEDTARU": {
       "id": "DFEDTARU",
@@ -5046,6 +5041,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "rates",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5095,8 +5091,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "DFEDTARL": {
       "id": "DFEDTARL",
@@ -5108,6 +5103,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5157,8 +5153,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "MORTGAGE30US": {
       "id": "MORTGAGE30US",
@@ -5170,6 +5165,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": "rates",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5219,8 +5215,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "THREEFFTP10": {
       "id": "THREEFFTP10",
@@ -5232,6 +5227,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5281,8 +5277,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": null
+      "staleDays": 9
     },
     "THREEFFTP2": {
       "id": "THREEFFTP2",
@@ -5294,6 +5289,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5343,8 +5339,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 9,
-      "impulseLight": null
+      "staleDays": 9
     },
     "T10YFF": {
       "id": "T10YFF",
@@ -5356,6 +5351,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5405,8 +5401,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "USDCHF": {
       "id": "USDCHF",
@@ -5418,6 +5413,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5467,8 +5463,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "USDCAD": {
       "id": "USDCAD",
@@ -5480,6 +5475,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5529,8 +5525,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "USDBRL": {
       "id": "USDBRL",
@@ -5542,6 +5537,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5591,8 +5587,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1,
-      "impulseLight": null
+      "staleDays": 1
     },
     "EURJPY": {
       "id": "EURJPY",
@@ -5604,6 +5599,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5653,8 +5649,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EMPIRE_MFG": {
       "id": "EMPIRE_MFG",
@@ -5666,6 +5661,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5715,8 +5711,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "PHILLY_MFG": {
       "id": "PHILLY_MFG",
@@ -5728,6 +5723,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5777,8 +5773,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "CFNAI": {
       "id": "CFNAI",
@@ -5790,6 +5785,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5839,8 +5835,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "WEI": {
       "id": "WEI",
@@ -5852,6 +5847,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": "growth",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5901,8 +5897,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 8,
-      "impulseLight": null
+      "staleDays": 8
     },
     "CSUSHPISA": {
       "id": "CSUSHPISA",
@@ -5914,6 +5909,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -5963,8 +5959,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97,
-      "impulseLight": null
+      "staleDays": 97
     },
     "EXHOSLUSM495S": {
       "id": "EXHOSLUSM495S",
@@ -5976,6 +5971,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6025,8 +6021,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "UMCSENT": {
       "id": "UMCSENT",
@@ -6038,6 +6033,7 @@
       "freq": "monthly",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6087,8 +6083,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PPIACO": {
       "id": "PPIACO",
@@ -6100,6 +6095,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6149,8 +6145,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "PPIFIS": {
       "id": "PPIFIS",
@@ -6162,6 +6157,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6211,8 +6207,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "MEDIAN_CPI": {
       "id": "MEDIAN_CPI",
@@ -6224,6 +6219,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6273,8 +6269,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "TRIMMED_CPI": {
       "id": "TRIMMED_CPI",
@@ -6286,6 +6281,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6335,8 +6331,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "SHELTER_CPI": {
       "id": "SHELTER_CPI",
@@ -6348,6 +6343,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6397,8 +6393,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "SUPERCORE": {
       "id": "SUPERCORE",
@@ -6410,6 +6405,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6459,8 +6455,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "CORESTICK": {
       "id": "CORESTICK",
@@ -6472,6 +6467,7 @@
       "freq": "monthly",
       "sign": 0,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6521,8 +6517,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 67,
-      "impulseLight": null
+      "staleDays": 67
     },
     "BBB_OAS": {
       "id": "BBB_OAS",
@@ -6534,6 +6529,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6583,8 +6579,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "HY_CCC_OAS": {
       "id": "HY_CCC_OAS",
@@ -6596,6 +6591,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6645,8 +6641,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "EPU": {
       "id": "EPU",
@@ -6658,6 +6653,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6707,8 +6703,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 3,
-      "impulseLight": null
+      "staleDays": 3
     },
     "SAHM": {
       "id": "SAHM",
@@ -6720,6 +6715,7 @@
       "freq": "monthly",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6769,8 +6765,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36,
-      "impulseLight": null
+      "staleDays": 36
     },
     "HYG": {
       "id": "HYG",
@@ -6782,6 +6777,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "credit",
       "order": 210,
@@ -6831,8 +6827,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "LQD": {
       "id": "LQD",
@@ -6844,6 +6839,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "credit",
       "order": 220,
@@ -6893,8 +6889,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "SKEW": {
       "id": "SKEW",
@@ -6906,6 +6901,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
@@ -6955,8 +6951,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "SILVER": {
       "id": "SILVER",
@@ -6968,6 +6963,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "metals",
       "order": 420,
@@ -7017,8 +7013,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "TLT": {
       "id": "TLT",
@@ -7030,6 +7025,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "duration",
       "order": 330,
@@ -7079,8 +7075,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EWZ": {
       "id": "EWZ",
@@ -7092,6 +7087,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 180,
@@ -7141,8 +7137,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EFA": {
       "id": "EFA",
@@ -7154,6 +7149,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 140,
@@ -7203,8 +7199,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "FEZ": {
       "id": "FEZ",
@@ -7216,6 +7211,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 145,
@@ -7265,8 +7261,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EWJ": {
       "id": "EWJ",
@@ -7278,6 +7273,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 150,
@@ -7327,8 +7323,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EEM": {
       "id": "EEM",
@@ -7340,6 +7335,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 160,
@@ -7389,8 +7385,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "FXI": {
       "id": "FXI",
@@ -7402,6 +7397,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 170,
@@ -7451,8 +7447,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "JNK": {
       "id": "JNK",
@@ -7464,6 +7459,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "credit",
       "order": 215,
@@ -7513,8 +7509,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "IEF": {
       "id": "IEF",
@@ -7526,6 +7521,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "duration",
       "order": 320,
@@ -7575,8 +7571,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "SHY": {
       "id": "SHY",
@@ -7588,6 +7583,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "duration",
       "order": 310,
@@ -7637,8 +7633,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "TIP": {
       "id": "TIP",
@@ -7650,6 +7645,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "duration",
       "order": 340,
@@ -7699,8 +7695,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "PLAT": {
       "id": "PLAT",
@@ -7712,6 +7707,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "metals",
       "order": 440,
@@ -7761,8 +7757,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "NATGAS": {
       "id": "NATGAS",
@@ -7774,6 +7769,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 530,
@@ -7823,8 +7819,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "ETH": {
       "id": "ETH",
@@ -7836,6 +7831,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 720,
@@ -7845,7 +7841,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ETH-USD",
-      "latest": 2480.31005859375,
+      "latest": 2502.14990234375,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -7856,28 +7852,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 567.0306396484375,
+          "delta": 588.8704833984375,
           "dir": "up",
           "score": 1.5,
           "prior": 1913.2794189453125,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 793.913818359375,
+          "delta": 815.753662109375,
           "dir": "up",
           "score": 1.5,
           "prior": 1686.396240234375,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 543.705322265625,
+          "delta": 565.545166015625,
           "dir": "up",
           "score": 1.5,
           "prior": 1936.604736328125,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -1793.93212890625,
+          "delta": -1772.09228515625,
           "dir": "down",
           "score": -1.5,
           "prior": 4274.2421875,
@@ -7885,8 +7881,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "DJI": {
       "id": "DJI",
@@ -7898,6 +7893,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 115,
@@ -7947,8 +7943,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EWY": {
       "id": "EWY",
@@ -7960,6 +7955,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 155,
@@ -8009,8 +8005,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "INDA": {
       "id": "INDA",
@@ -8022,6 +8017,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "equities",
       "order": 165,
@@ -8071,8 +8067,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "EMB": {
       "id": "EMB",
@@ -8084,6 +8079,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "credit",
       "order": 230,
@@ -8133,8 +8129,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "AGG": {
       "id": "AGG",
@@ -8146,6 +8141,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "duration",
       "order": 305,
@@ -8195,8 +8191,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "PALL": {
       "id": "PALL",
@@ -8208,6 +8203,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "metals",
       "order": 450,
@@ -8257,8 +8253,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "GASOLINE": {
       "id": "GASOLINE",
@@ -8270,6 +8265,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 540,
@@ -8319,8 +8315,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "HEATOIL": {
       "id": "HEATOIL",
@@ -8332,6 +8327,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 550,
@@ -8381,8 +8377,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "TTF": {
       "id": "TTF",
@@ -8394,6 +8389,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "energy",
       "order": 560,
@@ -8443,8 +8439,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "CORN": {
       "id": "CORN",
@@ -8456,6 +8451,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "ag",
       "order": 610,
@@ -8505,8 +8501,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "WHEAT": {
       "id": "WHEAT",
@@ -8518,6 +8513,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "ag",
       "order": 620,
@@ -8567,8 +8563,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "SOY": {
       "id": "SOY",
@@ -8580,6 +8575,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "ag",
       "order": 630,
@@ -8629,8 +8625,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2,
-      "impulseLight": null
+      "staleDays": 2
     },
     "BNB": {
       "id": "BNB",
@@ -8642,6 +8637,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 730,
@@ -8651,7 +8647,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BNB-USD",
-      "latest": 767.6799926757812,
+      "latest": 763.5599975585938,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -8662,28 +8658,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 175.48284912109375,
+          "delta": 171.36285400390625,
           "dir": "up",
           "score": 1.5,
           "prior": 592.1971435546875,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 164.051025390625,
+          "delta": 159.9310302734375,
           "dir": "up",
           "score": 1.5,
           "prior": 603.6289672851562,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 155.64111328125,
+          "delta": 151.5211181640625,
           "dir": "up",
           "score": 1.5,
           "prior": 612.0388793945312,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -94.09210205078125,
+          "delta": -98.21209716796875,
           "dir": "down",
           "score": -1.5,
           "prior": 861.7720947265625,
@@ -8691,8 +8687,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "XRP": {
       "id": "XRP",
@@ -8704,6 +8699,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 740,
@@ -8713,7 +8709,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XRP-USD",
-      "latest": 1.4121999740600586,
+      "latest": 1.4185999631881714,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -8724,28 +8720,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 0.39096295833587646,
+          "delta": 0.39736294746398926,
           "dir": "up",
           "score": 1.5,
           "prior": 1.0212370157241821,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.2575489282608032,
+          "delta": 0.263948917388916,
           "dir": "up",
           "score": 1.5,
           "prior": 1.1546510457992554,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.07079899311065674,
+          "delta": 0.07719898223876953,
           "dir": "up",
-          "score": 0.8849874138832092,
+          "score": 0.9649872779846191,
           "prior": 1.3414009809494019,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -1.3986549377441406,
+          "delta": -1.3922549486160278,
           "dir": "down",
           "score": -1.5,
           "prior": 2.810854911804199,
@@ -8753,8 +8749,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "SOL": {
       "id": "SOL",
@@ -8766,6 +8761,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 750,
@@ -8775,7 +8771,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SOL-USD",
-      "latest": 103.23999786376953,
+      "latest": 104.80999755859375,
       "asOf": "2026-09-06",
       "n": 2340,
       "anchor": {
@@ -8786,28 +8782,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 29.59734344482422,
+          "delta": 31.167343139648438,
           "dir": "up",
           "score": 1.5,
           "prior": 73.64265441894531,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 36.92936706542969,
+          "delta": 38.499366760253906,
           "dir": "up",
           "score": 1.5,
           "prior": 66.31063079833984,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 21.61540985107422,
+          "delta": 23.185409545898438,
           "dir": "up",
           "score": 1.5,
           "prior": 81.62458801269531,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -97.00630950927734,
+          "delta": -95.43630981445312,
           "dir": "down",
           "score": -1.5,
           "prior": 200.24630737304688,
@@ -8815,8 +8811,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "TRX": {
       "id": "TRX",
@@ -8828,6 +8823,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 760,
@@ -8837,7 +8833,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TRX-USD",
-      "latest": 0.333941251039505,
+      "latest": 0.33318719267845154,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -8848,37 +8844,36 @@
       },
       "impulse": {
         "1m": {
-          "delta": 0.0065382421016693115,
+          "delta": 0.005784183740615845,
           "dir": "flat",
-          "score": 0.0817280262708664,
+          "score": 0.07230229675769806,
           "prior": 0.3274030089378357,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.007384240627288818,
+          "delta": 0.0066301822662353516,
           "dir": "flat",
-          "score": 0.09230300784111023,
+          "score": 0.0828772783279419,
           "prior": 0.3265570104122162,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.04488024115562439,
+          "delta": 0.04412618279457092,
           "dir": "up",
-          "score": 0.5610030144453049,
+          "score": 0.5515772849321365,
           "prior": 0.2890610098838806,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 0.01903223991394043,
+          "delta": 0.018278181552886963,
           "dir": "flat",
-          "score": 0.23790299892425537,
+          "score": 0.22847726941108704,
           "prior": 0.3149090111255646,
           "priorDate": "2025-09-06"
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "HYPE": {
       "id": "HYPE",
@@ -8890,6 +8885,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 770,
@@ -8899,7 +8895,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYPE32196-USD",
-      "latest": 85.36000061035156,
+      "latest": 85.66999816894531,
       "asOf": "2026-09-06",
       "n": 645,
       "anchor": {
@@ -8910,28 +8906,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 31.24630355834961,
+          "delta": 31.55630111694336,
           "dir": "up",
           "score": 1.5,
           "prior": 54.11369705200195,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 25.84640884399414,
+          "delta": 26.15640640258789,
           "dir": "up",
           "score": 1.5,
           "prior": 59.51359176635742,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 54.636085510253906,
+          "delta": 54.946083068847656,
           "dir": "up",
           "score": 1.5,
           "prior": 30.723915100097656,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 39.240482330322266,
+          "delta": 39.550479888916016,
           "dir": "up",
           "score": 1.5,
           "prior": 46.1195182800293,
@@ -8939,8 +8935,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "ZEC": {
       "id": "ZEC",
@@ -8952,6 +8947,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 780,
@@ -8961,7 +8957,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZEC-USD",
-      "latest": 1023.9400024414062,
+      "latest": 1064.72998046875,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -8972,28 +8968,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 512.4707336425781,
+          "delta": 553.2607116699219,
           "dir": "up",
           "score": 1.5,
           "prior": 511.4692687988281,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 583.6250915527344,
+          "delta": 624.4150695800781,
           "dir": "up",
           "score": 1.5,
           "prior": 440.3149108886719,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 826.3199768066406,
+          "delta": 867.1099548339844,
           "dir": "up",
           "score": 1.5,
           "prior": 197.62002563476562,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 976.3687057495117,
+          "delta": 1017.1586837768555,
           "dir": "up",
           "score": 1.5,
           "prior": 47.57129669189453,
@@ -9001,8 +8997,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "DOGE": {
       "id": "DOGE",
@@ -9014,6 +9009,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 790,
@@ -9023,7 +9019,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DOGE-USD",
-      "latest": 0.08985999971628189,
+      "latest": 0.09074000269174576,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9034,28 +9030,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 0.020236998796463013,
+          "delta": 0.02111700177192688,
           "dir": "up",
-          "score": 0.25296248495578766,
+          "score": 0.263962522149086,
           "prior": 0.06962300091981888,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.0037709996104240417,
+          "delta": 0.004651002585887909,
           "dir": "flat",
-          "score": 0.04713749513030052,
+          "score": 0.05813753232359886,
           "prior": 0.08608900010585785,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.0006970018148422241,
+          "delta": 0.0015770047903060913,
           "dir": "flat",
-          "score": 0.008712522685527802,
+          "score": 0.01971255987882614,
           "prior": 0.08916299790143967,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.1260259971022606,
+          "delta": -0.12514599412679672,
           "dir": "down",
           "score": -1.5,
           "prior": 0.21588599681854248,
@@ -9063,8 +9059,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "XMR": {
       "id": "XMR",
@@ -9076,6 +9071,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 800,
@@ -9085,7 +9081,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XMR-USD",
-      "latest": 554.385986328125,
+      "latest": 557.3822631835938,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9096,28 +9092,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 176.48336791992188,
+          "delta": 179.47964477539062,
           "dir": "up",
           "score": 1.5,
           "prior": 377.9026184082031,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 250.66201782226562,
+          "delta": 253.65829467773438,
           "dir": "up",
           "score": 1.5,
           "prior": 303.7239685058594,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 219.38992309570312,
+          "delta": 222.38619995117188,
           "dir": "up",
           "score": 1.5,
           "prior": 334.9960632324219,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": 286.00238037109375,
+          "delta": 288.9986572265625,
           "dir": "up",
           "score": 1.5,
           "prior": 268.38360595703125,
@@ -9125,8 +9121,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "LEO": {
       "id": "LEO",
@@ -9138,6 +9133,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 810,
@@ -9147,7 +9143,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LEO-USD",
-      "latest": 9.295110702514648,
+      "latest": 9.344741821289062,
       "asOf": "2026-09-06",
       "n": 2665,
       "anchor": {
@@ -9158,28 +9154,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": -0.45786285400390625,
+          "delta": -0.4082317352294922,
           "dir": "down",
           "score": -1.5,
           "prior": 9.752973556518555,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": -0.29996299743652344,
+          "delta": -0.2503318786621094,
           "dir": "down",
           "score": -1.5,
           "prior": 9.595073699951172,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.25675106048583984,
+          "delta": 0.3063821792602539,
           "dir": "up",
           "score": 1.5,
           "prior": 9.038359642028809,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.28173065185546875,
+          "delta": -0.2320995330810547,
           "dir": "down",
           "score": -1.5,
           "prior": 9.576841354370117,
@@ -9187,8 +9183,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "LINK": {
       "id": "LINK",
@@ -9200,6 +9195,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 820,
@@ -9209,7 +9205,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LINK-USD",
-      "latest": 12.071000099182129,
+      "latest": 12.20199966430664,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9220,28 +9216,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 3.8902273178100586,
+          "delta": 4.02122688293457,
           "dir": "up",
           "score": 1.5,
           "prior": 8.18077278137207,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 4.172515869140625,
+          "delta": 4.303515434265137,
           "dir": "up",
           "score": 1.5,
           "prior": 7.898484230041504,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 3.5475635528564453,
+          "delta": 3.678563117980957,
           "dir": "up",
           "score": 1.5,
           "prior": 8.523436546325684,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -10.134257316589355,
+          "delta": -10.003257751464844,
           "dir": "down",
           "score": -1.5,
           "prior": 22.205257415771484,
@@ -9249,8 +9245,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "ADA": {
       "id": "ADA",
@@ -9262,6 +9257,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 830,
@@ -9271,7 +9267,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ADA-USD",
-      "latest": 0.21870000660419464,
+      "latest": 0.22075000405311584,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9282,28 +9278,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 0.01759999990463257,
+          "delta": 0.019649997353553772,
           "dir": "flat",
-          "score": 0.2199999988079071,
+          "score": 0.24562496691942215,
           "prior": 0.20110000669956207,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 0.05372600257396698,
+          "delta": 0.055776000022888184,
           "dir": "up",
-          "score": 0.6715750321745872,
+          "score": 0.6972000002861023,
           "prior": 0.16497400403022766,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": -0.03054998815059662,
+          "delta": -0.028499990701675415,
           "dir": "down",
-          "score": -0.38187485188245773,
+          "score": -0.3562498837709427,
           "prior": 0.24924999475479126,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.5997509807348251,
+          "delta": -0.5977009832859039,
           "dir": "down",
           "score": -1.5,
           "prior": 0.8184509873390198,
@@ -9311,8 +9307,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "XLM": {
       "id": "XLM",
@@ -9324,6 +9319,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 840,
@@ -9333,7 +9329,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLM-USD",
-      "latest": 0.18415799736976624,
+      "latest": 0.18630599975585938,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9344,28 +9340,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 0.02290099859237671,
+          "delta": 0.02504900097846985,
           "dir": "up",
-          "score": 0.28626248240470886,
+          "score": 0.3131125122308731,
           "prior": 0.16125699877738953,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": -0.021697998046875,
-          "dir": "down",
-          "score": -0.2712249755859375,
+          "delta": -0.01954999566078186,
+          "dir": "flat",
+          "score": -0.24437494575977325,
           "prior": 0.20585599541664124,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 0.035777002573013306,
+          "delta": 0.037925004959106445,
           "dir": "up",
-          "score": 0.4472125321626663,
+          "score": 0.47406256198883057,
           "prior": 0.14838099479675293,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -0.17189601063728333,
+          "delta": -0.16974800825119019,
           "dir": "down",
           "score": -1.5,
           "prior": 0.35605400800704956,
@@ -9373,8 +9369,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "BCH": {
       "id": "BCH",
@@ -9386,6 +9381,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 850,
@@ -9395,7 +9391,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BCH-USD",
-      "latest": 256.82000732421875,
+      "latest": 260.5400085449219,
       "asOf": "2026-09-06",
       "n": 3223,
       "anchor": {
@@ -9406,28 +9402,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 42.070281982421875,
+          "delta": 45.790283203125,
           "dir": "up",
           "score": 1.5,
           "prior": 214.74972534179688,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 26.985275268554688,
+          "delta": 30.705276489257812,
           "dir": "up",
           "score": 1.5,
           "prior": 229.83473205566406,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": -185.9033203125,
+          "delta": -182.18331909179688,
           "dir": "down",
           "score": -1.5,
           "prior": 442.72332763671875,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -338.49365234375,
+          "delta": -334.7736511230469,
           "dir": "down",
           "score": -1.5,
           "prior": 595.3136596679688,
@@ -9435,8 +9431,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "LTC": {
       "id": "LTC",
@@ -9448,6 +9443,7 @@
       "freq": "daily",
       "sign": 1,
       "light": null,
+      "impulseLight": null,
       "weight": 1,
       "marketBucket": "crypto",
       "order": 860,
@@ -9457,7 +9453,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LTC-USD",
-      "latest": 54.79199981689453,
+      "latest": 54.805999755859375,
       "asOf": "2026-09-06",
       "n": 3652,
       "anchor": {
@@ -9468,28 +9464,28 @@
       },
       "impulse": {
         "1m": {
-          "delta": 9.223915100097656,
+          "delta": 9.2379150390625,
           "dir": "up",
           "score": 1.5,
           "prior": 45.568084716796875,
           "priorDate": "2026-08-07"
         },
         "3m": {
-          "delta": 11.954078674316406,
+          "delta": 11.96807861328125,
           "dir": "up",
           "score": 1.5,
           "prior": 42.837921142578125,
           "priorDate": "2026-06-07"
         },
         "6m": {
-          "delta": 2.155506134033203,
+          "delta": 2.169506072998047,
           "dir": "up",
           "score": 1.5,
           "prior": 52.63649368286133,
           "priorDate": "2026-03-08"
         },
         "1y": {
-          "delta": -57.374351501464844,
+          "delta": -57.3603515625,
           "dir": "down",
           "score": -1.5,
           "prior": 112.16635131835938,
@@ -9497,8 +9493,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0,
-      "impulseLight": null
+      "staleDays": 0
     },
     "NET_LIQ": {
       "id": "NET_LIQ",
@@ -9510,6 +9505,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": "liquidity",
       "weight": 2,
       "note": "Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.",
       "sub": "Fed assets − TGA − ON RRP",
@@ -9556,8 +9552,187 @@
           "priorDate": "2025-08-27"
         }
       },
+      "status": "ok"
+    },
+    "SOFR_SPREAD": {
+      "id": "SOFR_SPREAD",
+      "name": "SOFR vs target top",
+      "layer": "liquidity",
+      "street": "liquidity",
+      "causal": "liquidity",
+      "units": "bp",
+      "freq": "daily",
+      "sign": -1,
+      "light": "liquidity",
+      "impulseLight": null,
+      "weight": 2,
+      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce — that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing.",
+      "sub": "Repo cost vs policy ceiling",
+      "search": "SOFR_SPREAD",
+      "freshness": "live",
+      "source": "derived (SOFR − fed funds target top)",
+      "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+      "latest": -8.999999999999986,
+      "asOf": "2026-09-03",
+      "n": 2105,
+      "anchor": {
+        "kind": "sofr_spread",
+        "score": -0.10000000000000142,
+        "why": "SOFR -9bp vs the top of the target range — 0 is where repo broke in 2019",
+        "votes": true
+      },
+      "impulse": {
+        "1m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": -8.999999999999986,
+          "priorDate": "2026-08-04"
+        },
+        "3m": {
+          "delta": 4.0000000000000036,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -12.99999999999999,
+          "priorDate": "2026-06-04"
+        },
+        "6m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": -8.999999999999986,
+          "priorDate": "2026-03-05"
+        },
+        "1y": {
+          "delta": 2.000000000000046,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -11.000000000000032,
+          "priorDate": "2025-09-03"
+        }
+      },
       "status": "ok",
-      "impulseLight": "liquidity"
+      "staleDays": 3
+    },
+    "RESERVES_GDP": {
+      "id": "RESERVES_GDP",
+      "name": "Reserves ÷ GDP",
+      "layer": "liquidity",
+      "street": "liquidity",
+      "causal": "liquidity",
+      "units": "% of GDP",
+      "freq": "weekly",
+      "sign": 1,
+      "light": "liquidity",
+      "impulseLight": null,
+      "weight": 1,
+      "note": "Bank reserves measured against the size of the economy. The dollar figure always looks enormous, so the ratio is what tells you whether cash is genuinely ample: 6.9% when repo seized up in 2019, 16.6% at the QE peak.",
+      "sub": "Bank reserves as share of GDP",
+      "search": "RESERVES_GDP",
+      "freshness": "live",
+      "source": "derived (bank reserves ÷ nominal GDP)",
+      "sourceUrl": "https://fred.stlouisfed.org/series/WRESBAL",
+      "latest": 8.910069320181767,
+      "asOf": "2026-09-02",
+      "n": 1238,
+      "anchor": {
+        "kind": "reserves_gdp",
+        "score": -0.3633102266060776,
+        "why": "reserves 8.9% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak",
+        "votes": true
+      },
+      "impulse": {
+        "1m": {
+          "delta": -0.2771619068926352,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.187231227074403,
+          "priorDate": "2026-07-29"
+        },
+        "3m": {
+          "delta": -0.3674529258174868,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.277522245999254,
+          "priorDate": "2026-06-03"
+        },
+        "6m": {
+          "delta": -0.5531748976408881,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.463244217822655,
+          "priorDate": "2026-03-04"
+        },
+        "1y": {
+          "delta": -1.460257388969266,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 10.370326709151033,
+          "priorDate": "2025-08-27"
+        }
+      },
+      "status": "ok",
+      "staleDays": 4
+    },
+    "NETLIQ_GDP": {
+      "id": "NETLIQ_GDP",
+      "name": "Net liquidity ÷ GDP",
+      "layer": "liquidity",
+      "street": "liquidity",
+      "causal": "liquidity",
+      "units": "% of GDP",
+      "freq": "weekly",
+      "sign": 1,
+      "light": "liquidity",
+      "impulseLight": null,
+      "weight": 1,
+      "note": "Fed assets minus the Treasury account minus reverse repo, measured against nominal GDP. Same idea as reserves over GDP but counts the whole plumbing stack: 16.6% before the 2019 squeeze, 27.8% at the QE peak.",
+      "sub": "Net liquidity as share of GDP",
+      "search": "NETLIQ_GDP",
+      "freshness": "live",
+      "source": "derived (net liquidity ÷ nominal GDP)",
+      "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
+      "latest": 17.75759490238061,
+      "asOf": "2026-09-02",
+      "n": 1230,
+      "anchor": {
+        "kind": "netliq_gdp",
+        "score": -0.640687170748397,
+        "why": "net liquidity 17.8% of GDP — 16.6% in the 2019 squeeze, 27.8% at the QE peak",
+        "votes": true
+      },
+      "impulse": {
+        "1m": {
+          "delta": -0.1726709537559863,
+          "dir": "down",
+          "score": -0.607736276735447,
+          "prior": 17.930265856136597,
+          "priorDate": "2026-07-29"
+        },
+        "3m": {
+          "delta": -0.20001190664329727,
+          "dir": "down",
+          "score": -0.7039660626299236,
+          "prior": 17.957606809023908,
+          "priorDate": "2026-06-03"
+        },
+        "6m": {
+          "delta": -0.4311164090628026,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 18.188711311443413,
+          "priorDate": "2026-03-04"
+        },
+        "1y": {
+          "delta": -1.4675540114073975,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 19.225148913788008,
+          "priorDate": "2025-08-27"
+        }
+      },
+      "status": "ok",
+      "staleDays": 4
     },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
@@ -9614,8 +9789,7 @@
           "priorDate": "2025-09-04"
         }
       },
-      "status": "ok",
-      "impulseLight": null
+      "status": "ok"
     },
     "CREDIT_IMPULSE": {
       "id": "CREDIT_IMPULSE",
@@ -9627,6 +9801,7 @@
       "freq": "weekly",
       "sign": 1,
       "light": null,
+      "impulseLight": "liquidity",
       "weight": 2,
       "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing.",
       "sub": "Acceleration of bank credit",
@@ -9673,8 +9848,7 @@
           "priorDate": "2025-08-20"
         }
       },
-      "status": "ok",
-      "impulseLight": "liquidity"
+      "status": "ok"
     },
     "NOM_REAL_SPREAD": {
       "id": "NOM_REAL_SPREAD",
@@ -9732,13 +9906,12 @@
           "priorDate": "2025-04-01"
         }
       },
-      "status": "ok",
-      "impulseLight": null
+      "status": "ok"
     }
   },
   "errors": [],
   "formula": {
-    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse. Score >+0.45 / <−0.45 paints the word.",
+    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
     "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
   }

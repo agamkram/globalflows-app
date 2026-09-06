@@ -37,16 +37,17 @@ export function bandScore(value, lo, mid, hi, invert = false) {
   return invert ? -s : s;
 }
 
-function signedForLight(rawScore, spec, lid) {
-  if (rawScore == null) return null;
-  const sign = spec.sign ?? 0;
-  const s = lid === "inflation" ? 1 : sign === 0 ? 1 : sign;
-  return rawScore * s;
-}
-
 /**
  * Anchor kind by series id. `none` = no color vote (flow or no ground truth).
  * `level` = treat the print as already in economic units and use generic bands via kind.
+ *
+ * Only score a series against a fixed band when the series is already normalised —
+ * a rate, a ratio, a spread, or a share of GDP. A raw nominal quantity (reserves in
+ * dollars, loans outstanding, a balance sheet) grows with the economy, so any band
+ * written for it goes stale and eventually pins the light to one colour. ON RRP is
+ * the cautionary tale: its band read "near zero = scarce cash", which was true in
+ * 2019 and false from 2023 on, once the facility drained into reserves. Nominal
+ * quantities belong on the impulse clock, or in a ratio, never on a fixed band.
  */
 const KIND = {
   CPIAUCSL: "cpi_yoy",
@@ -68,8 +69,13 @@ const KIND = {
   BAMLH0A0HYM2: "hy",
   NFCI: "nfci",
   BBB_OAS: "bbb",
-  RRPONTSYD: "rrp",
-  WTREGEN: "tga",
+  // Plumbing levels are normalised before they vote: a spread against policy and
+  // two shares of nominal GDP. The dollar stocks themselves are impulse-only.
+  SOFR_SPREAD: "sofr_spread",
+  RESERVES_GDP: "reserves_gdp",
+  NETLIQ_GDP: "netliq_gdp",
+  RRPONTSYD: "none",
+  WTREGEN: "none",
   WALCL: "none",
   WRESBAL: "none",
   TOTLL: "none",
@@ -116,10 +122,19 @@ function scoreKind(kind, value) {
       return bandScore(value, 1.0, 1.5, 2.5, true);
     case "nfci":
       return bandScore(value, -0.4, 0, 0.4, true);
-    case "rrp":
-      return bandScore(value, 80, 400, 1200, false);
-    case "tga":
-      return bandScore(value, 400000, 700000, 1000000, true);
+    // SOFR minus the top of the fed funds target, in bp. Deeply negative = reserves
+    // so ample that secured cash trades well inside the corridor; at or above zero =
+    // scarce, the condition that broke repo in September 2019.
+    case "sofr_spread":
+      return bandScore(value, -20, -10, 0, true);
+    // Reserves as a share of nominal GDP. 6.9% is where the 2019 repo crisis hit;
+    // the QE peak was 16.6%.
+    case "reserves_gdp":
+      return bandScore(value, 7, 10, 14, false);
+    // Net liquidity as a share of nominal GDP. 16.6% on the eve of the 2019 crisis,
+    // 27.8% at the QE peak.
+    case "netliq_gdp":
+      return bandScore(value, 16.5, 20, 26, false);
     case "mortgage":
       return bandScore(value, 4.0, 6.0, 7.5, true);
     case "curve":
@@ -165,10 +180,12 @@ function whyKind(kind, value) {
       return `BBB OAS ${fmt(v)}%`;
     case "nfci":
       return `NFCI ${fmt(v, 2)}`;
-    case "rrp":
-      return `ON RRP ${fmt(v, 0)} — high = ample parked cash`;
-    case "tga":
-      return `Treasury cash ${fmt(v, 0)}`;
+    case "sofr_spread":
+      return `SOFR ${fmt(v, 0)}bp vs the top of the target range — 0 is where repo broke in 2019`;
+    case "reserves_gdp":
+      return `reserves ${fmt(v)}% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak`;
+    case "netliq_gdp":
+      return `net liquidity ${fmt(v)}% of GDP — 16.6% in the 2019 squeeze, 27.8% at the QE peak`;
     case "mortgage":
       return `30y mortgage ${fmt(v)}%`;
     case "curve":
@@ -182,31 +199,22 @@ function whyKind(kind, value) {
   }
 }
 
+/**
+ * Every band in `scoreKind` is already written in the light's direction: its
+ * `invert` flag carries the orientation, so `spec.sign` must not be applied again
+ * here or the vote flips twice and cancels. Positive is always the reflationary
+ * side of the light — more cash, easier funding, firmer growth, hotter prices,
+ * more risk appetite.
+ */
 export function makeAnchor(spec, value) {
   const kind = spec.anchorKind || anchorKind(spec.id);
-  const raw = scoreKind(kind, value);
-  if (raw == null) {
-    return { kind, score: null, why: whyKind(kind, value), votes: false };
-  }
-  const lid = spec.light;
-  const score = signedForLight(kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich" ? raw : raw, spec, lid);
-  // inflation kinds already “higher = hot = easing”
-  let scored = raw;
-  if (lid && lid !== "inflation" && kind !== "cpi_yoy" && kind !== "pce_yoy" && kind !== "mich") {
-    const sign = spec.sign ?? 0;
-    const s = sign === 0 ? 1 : sign;
-    // bandScore already oriented for economic meaning; don't double-apply sign
-    // except series whose bands were written in native units matching the light.
-    scored = raw;
-    if (kind === "unrate" || kind === "claims" || kind === "vix" || kind === "hy" || kind === "bbb" || kind === "nfci" || kind === "mortgage" || kind === "move" || kind === "tga" || kind === "real_rate") {
-      scored = raw; // invert already in bandScore
-    } else if (kind === "rrp" || kind === "curve" || kind === "payrolls" || kind === "gdp_real" || kind === "gdp_nom" || kind === "cfnai" || kind === "wei") {
-      scored = raw;
-    } else {
-      scored = raw * s;
-    }
-  }
-  return { kind, score: scored, why: whyKind(kind, value), votes: true };
+  const score = scoreKind(kind, value);
+  return {
+    kind,
+    score,
+    why: whyKind(kind, value),
+    votes: score != null,
+  };
 }
 
 function priorPoint(points, days, freq) {

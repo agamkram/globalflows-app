@@ -112,6 +112,7 @@ jobs:
             data/snapshot.json
             regime-today.json
             data/regime-today.json
+            data/sparks.json
           )
 
           git add -- "${files[@]}"
@@ -127,6 +128,7 @@ jobs:
             -e '^data/snapshot.json$' \
             -e '^regime-today.json$' \
             -e '^data/regime-today.json$' \
+            -e '^data/sparks.json$' \
             || true)"
           if [ -n "${extra}" ]; then
             echo "::error::Refusing to commit unexpected staged files:"
