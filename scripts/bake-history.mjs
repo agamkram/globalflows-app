@@ -7,9 +7,10 @@
  * the way today is scored. Two honest limits are recorded in the output and shown
  * in the UI:
  *
- *  - FRED serves revised data, not vintages. A CPI or payroll print scored here is
- *    the number we know now, not the number the market traded on that morning. The
- *    market-priced voters (SOFR, curve, VIX, spreads) are unrevised.
+ *  - Economic voters (jobs, CPI, GDP, NFCI, …) are scored on ALFRED vintages —
+ *    the number that was public that morning. Market-priced voters (SOFR, curve,
+ *    VIX, spreads) are unrevised. If vintages were not fetched, those series
+ *    fall back to revised history and the caveat says so.
  *  - The record starts in April 2018 because that is where SOFR starts. Beginning
  *    earlier would change the liquidity light's voter composition partway through
  *    and make early analogs incomparable to late ones.
@@ -22,6 +23,7 @@ import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS } from "../sco
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const HIST = path.join(ROOT, "data", "history");
+const VINTAGE_DIR = path.join(ROOT, "data", "vintages");
 
 const START = "2018-04-02"; // first SOFR print
 const STALE_DAYS = 400;
@@ -56,6 +58,70 @@ async function readHistory(id) {
   }
 }
 
+function yoyTransform(points) {
+  const byDate = new Map(points.map((p) => [p.date, p.value]));
+  const out = [];
+  for (const p of points) {
+    const d = new Date(p.date + "T00:00:00Z");
+    d.setUTCFullYear(d.getUTCFullYear() - 1);
+    let found = null;
+    for (let k = 0; k < 25; k++) {
+      const tryD = new Date(d);
+      tryD.setUTCDate(tryD.getUTCDate() - k);
+      const key = tryD.toISOString().slice(0, 10);
+      if (byDate.has(key)) {
+        found = byDate.get(key);
+        break;
+      }
+    }
+    if (found != null && found !== 0) {
+      out.push({ date: p.date, value: (p.value / found - 1) * 100 });
+    }
+  }
+  return out;
+}
+
+function diffTransform(points) {
+  const out = [];
+  for (let i = 1; i < points.length; i++) {
+    out.push({
+      date: points[i].date,
+      value: points[i].value - points[i - 1].value,
+    });
+  }
+  return out;
+}
+
+function indexVintages(raw) {
+  const byDate = new Map();
+  for (const o of raw.observations || []) {
+    const list = byDate.get(o.date) || [];
+    list.push(o);
+    byDate.set(o.date, list);
+  }
+  const dates = [...byDate.keys()].sort();
+  return { transform: raw.transform || null, dates, byDate };
+}
+
+/** Series as it was known on `date`, after the catalog transform. */
+function vintageAsOf(index, date) {
+  const levels = [];
+  for (const obsDate of index.dates) {
+    if (obsDate > date) break;
+    const win = index.byDate.get(obsDate);
+    const hit = win.find((w) => w.rs <= date && date <= w.re);
+    if (hit) levels.push({ date: obsDate, value: hit.value });
+  }
+  let pts = levels;
+  if (index.transform === "diff") pts = diffTransform(levels);
+  if (index.transform === "yoy") pts = yoyTransform(levels);
+  for (let i = pts.length - 1; i >= 0; i--) {
+    const age = (Date.parse(date) - Date.parse(pts[i].date)) / 86400000;
+    if (age <= STALE_DAYS) return { value: pts[i].value, obsDate: pts[i].date };
+  }
+  return { value: null, obsDate: null };
+}
+
 /** Last print on or before `date`, plus how stale it is. Cursor is carried forward. */
 function asOf(points, cursor, date) {
   let i = cursor;
@@ -81,6 +147,21 @@ async function main() {
   for (const id of needed) {
     const p = await readHistory(id);
     if (p) hist[id] = p;
+  }
+  const vintages = {};
+  for (const id of [...needed, "PCEPILFE"]) {
+    try {
+      const raw = JSON.parse(await fs.readFile(path.join(VINTAGE_DIR, `${id}.json`), "utf8"));
+      if (raw.observations?.length) vintages[id] = indexVintages(raw);
+    } catch {
+      /* revised history fallback */
+    }
+  }
+  const vintageIds = Object.keys(vintages);
+  if (vintageIds.length) {
+    console.log(`  vintages for: ${vintageIds.join(", ")}`);
+  } else {
+    console.log("  no vintages — economic voters use revised history");
   }
   const missing = needed.filter((id) => !hist[id]);
   if (missing.length) console.log(`  no history for: ${missing.join(", ")}`);
@@ -115,25 +196,35 @@ async function main() {
   for (const date of grid) {
     const series = {};
     for (const spec of voters) {
-      const pts = hist[spec.id];
-      if (!pts) continue;
-      const got = asOf(pts, cursors[spec.id] || 0, date);
-      cursors[spec.id] = got.i;
-      if (got.value == null) continue;
+      let value = null;
+      if (vintages[spec.id]) {
+        value = vintageAsOf(vintages[spec.id], date).value;
+      } else {
+        const pts = hist[spec.id];
+        if (!pts) continue;
+        const got = asOf(pts, cursors[spec.id] || 0, date);
+        cursors[spec.id] = got.i;
+        value = got.value;
+      }
+      if (value == null) continue;
       series[spec.id] = {
         id: spec.id,
         light: spec.light,
         weight: spec.weight || 1,
         freq: spec.freq,
         status: "ok",
-        latest: got.value,
+        latest: value,
         asOf: date,
-        anchor: makeAnchor(spec, got.value),
+        anchor: makeAnchor(spec, value),
       };
     }
     // Real-rate anchors read core PCE off the same as-of date.
-    const pce = hist.PCEPILFE ? asOf(hist.PCEPILFE, cursors.PCEPILFE || 0, date) : { value: null };
-    if (hist.PCEPILFE) cursors.PCEPILFE = pce.i;
+    let pce = { value: null };
+    if (vintages.PCEPILFE) pce = vintageAsOf(vintages.PCEPILFE, date);
+    else if (hist.PCEPILFE) {
+      pce = asOf(hist.PCEPILFE, cursors.PCEPILFE || 0, date);
+      cursors.PCEPILFE = pce.i;
+    }
     if (pce.value != null) {
       series.PCEPILFE = series.PCEPILFE || {
         id: "PCEPILFE",
@@ -195,8 +286,9 @@ async function main() {
     assets: ASSETS,
     horizons: HORIZONS,
     caveats: {
-      revisions:
-        "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
+      revisions: vintageIds.length
+        ? `Economic voters (${vintageIds.join(", ")}) are scored on ALFRED vintages — the print that was public that morning. Market-priced voters (SOFR, curve, VIX, spreads) are unrevised.`
+        : "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
       start:
         "The record starts at the first SOFR print so the liquidity light’s voter set is comparable throughout. Five series vote now; some do not reach back to 2018, so early analogs use a thinner club.",
     },
