@@ -1,13 +1,13 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260933";
+import { buildMeaning } from "./meaning.js?v=20260938";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260933";
+} from "./score.js?v=20260938";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -975,9 +975,10 @@ function favorItemExtras(it, { withAnalog = true } = {}) {
   return extras.filter(Boolean);
 }
 
-function showSentenceDialog() {
+function showSentenceDialog({ hug = false } = {}) {
   const dlg = $("#dlgSentence");
   if (!dlg) return;
+  dlg.classList.toggle("dlg-hug", hug);
   try {
     if (!dlg.open) dlg.showModal();
     lockPageScroll();
@@ -1018,9 +1019,8 @@ function openFavorCard(id) {
       ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
     </div>
     ${watch}
-    <p class="muted tiny sent-foot">Green is in favor, red is out, amber is mixed.</p>
   `;
-  showSentenceDialog();
+  showSentenceDialog({ hug: true });
 }
 
 function openSentence(snap) {

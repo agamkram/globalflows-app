@@ -90,16 +90,6 @@ html.pwa-standalone body {
   white-space: nowrap;
 }
 
-.ver-mark {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  font-weight: 500;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
 .dials-toolbar {
   display: flex;
   align-items: center;
@@ -1446,6 +1436,23 @@ body.dlg-open dialog {
   margin-right: auto;
 }
 
+/* Instrument tap: hug the copy. Full regime keeps the tall topsheet. */
+#dlgSentence.dlg-hug[open] {
+  height: auto !important;
+  max-height: min(85dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 16px)) !important;
+}
+
+#dlgSentence.dlg-hug[open] form {
+  height: auto !important;
+  max-height: none !important;
+  flex: 0 0 auto !important;
+}
+
+#dlgSentence.dlg-hug[open] .dlg-body {
+  flex: 0 0 auto !important;
+  overflow: visible;
+}
+
 .dlg-head {
   display: flex;
   align-items: center;
@@ -1702,17 +1709,12 @@ html.page-about body,
 }
 
 .about-brand {
-  margin: 0 0 6px;
+  margin: 0 0 14px;
   font-family: Michroma, "IBM Plex Sans", system-ui, sans-serif;
   font-size: clamp(1.55rem, 6vw, 2.05rem);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.15;
-}
-
-.about-hero .ver-mark {
-  display: inline-block;
-  margin: 0 0 14px;
 }
 
 .about-lede {
@@ -2157,7 +2159,7 @@ html.page-about body,
 .favor-cell { position: relative; }
 .favor-flag {
   position: absolute;
-  top: 1px;
+  bottom: 1px;
   right: 3px;
   font-size: 13px;
   font-weight: 700;
