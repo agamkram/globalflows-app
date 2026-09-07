@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-07T19:38:32.996Z",
-  "ingestAt": "2026-09-07T19:22:19.670Z",
+  "generatedAt": "2026-09-07T19:58:20.962Z",
+  "ingestAt": "2026-09-07T19:57:52.103Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -315,7 +315,7 @@
       "label": "Risk",
       "state": "easing",
       "word": "Risk-on",
-      "score": 0.8635256632780417,
+      "score": 0.7993589584644023,
       "color": "green",
       "n": 4,
       "teach": "Fear is cheap on the gauges. Point: vol and credit are quiet.",
@@ -328,18 +328,18 @@
           "why": "HY OAS 2.6%"
         },
         {
-          "id": "VIX",
-          "name": "Equity volatility (VIX)",
-          "score": 0.9116667111714681,
-          "weight": 1,
-          "why": "VIX 14.5"
-        },
-        {
           "id": "BAA10Y",
           "name": "Baa spread over 10s",
           "score": 0.8153846153846153,
           "weight": 1,
           "why": "Baa over 10s 1.57pp — 2.1 is the 40-year median, 3.3 is crisis"
+        },
+        {
+          "id": "VIX",
+          "name": "Equity volatility (VIX)",
+          "score": 0.7833333015441895,
+          "weight": 1,
+          "why": "VIX 15.3"
         },
         {
           "id": "NFCI",
@@ -365,7 +365,7 @@
   "analogs": {
     "n": 40,
     "closeness": "loose",
-    "medianDistance": 0.548,
+    "medianDistance": 0.543,
     "windowStart": "2018-04-02",
     "windowEnd": "2026-09-04",
     "sampleDays": 2120,
@@ -376,7 +376,7 @@
     },
     "dates": [
       "2026-08-06",
-      "2026-07-06",
+      "2026-07-01",
       "2026-06-01",
       "2026-04-30",
       "2026-04-06",
@@ -393,7 +393,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 1.15,
+          "median": 1.08,
           "up": 65,
           "best": 9.8,
           "worst": -8.8
@@ -401,8 +401,8 @@
         "TLT": {
           "name": "Long Treasuries",
           "n": 40,
-          "median": -0.25,
-          "up": 48,
+          "median": -0.43,
+          "up": 45,
           "best": 6.5,
           "worst": -10.8
         },
@@ -418,7 +418,7 @@
           "name": "High yield",
           "n": 40,
           "median": 0.38,
-          "up": 73,
+          "up": 70,
           "best": 2.4,
           "worst": -3
         },
@@ -435,21 +435,21 @@
           "n": 40,
           "median": 1.41,
           "up": 60,
-          "best": 10.1,
+          "best": 10.2,
           "worst": -9.1
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": 0.21,
-          "up": 50,
+          "median": -0.42,
+          "up": 48,
           "best": 3.5,
           "worst": -4.5
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 1.24,
+          "median": 1.31,
           "up": 53,
           "best": 12.7,
           "worst": -14.2
@@ -459,7 +459,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 3.81,
+          "median": 4.03,
           "up": 73,
           "best": 13.5,
           "worst": -16.6
@@ -483,7 +483,7 @@
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 1.46,
+          "median": 1.58,
           "up": 80,
           "best": 5.9,
           "worst": -4.4
@@ -525,7 +525,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 8.19,
+          "median": 8.54,
           "up": 80,
           "best": 20.3,
           "worst": -7.6
@@ -533,9 +533,9 @@
         "TLT": {
           "name": "Long Treasuries",
           "n": 40,
-          "median": -0.42,
+          "median": -0.55,
           "up": 45,
-          "best": 19.6,
+          "best": 21.4,
           "worst": -17.4
         },
         "IEF": {
@@ -543,7 +543,7 @@
           "n": 40,
           "median": 1.83,
           "up": 70,
-          "best": 8.9,
+          "best": 9.5,
           "worst": -7.7
         },
         "HYG": {
@@ -559,13 +559,13 @@
           "n": 40,
           "median": 2.61,
           "up": 78,
-          "best": 11,
+          "best": 12,
           "worst": -6.8
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 16.13,
+          "median": 16.11,
           "up": 90,
           "best": 44.3,
           "worst": -20.6
@@ -591,7 +591,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 17.79,
+          "median": 16.86,
           "up": 98,
           "best": 36.4,
           "worst": -1.6
@@ -599,39 +599,39 @@
         "TLT": {
           "name": "Long Treasuries",
           "n": 40,
-          "median": 1.85,
-          "up": 63,
-          "best": 37.1,
+          "median": 1.62,
+          "up": 60,
+          "best": 44,
           "worst": -11.2
         },
         "IEF": {
           "name": "7–10y Treasuries",
           "n": 40,
-          "median": 5.79,
-          "up": 90,
-          "best": 16.2,
+          "median": 5.45,
+          "up": 88,
+          "best": 18.3,
           "worst": -3.6
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 7.71,
+          "median": 7.79,
           "up": 100,
           "best": 14.7,
-          "worst": 1.5
+          "worst": 0.6
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 6.52,
+          "median": 6.47,
           "up": 98,
-          "best": 16,
+          "best": 17.1,
           "worst": 0
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 30.3,
+          "median": 30.38,
           "up": 100,
           "best": 80,
           "worst": 5.6
@@ -647,10 +647,10 @@
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 12.27,
-          "up": 73,
+          "median": 11.29,
+          "up": 70,
           "best": 50.4,
-          "worst": -12.6
+          "worst": -12.8
         }
       }
     },
