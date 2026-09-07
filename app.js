@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260947";
+import { buildMeaning } from "./meaning.js?v=20260948";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260947";
+} from "./score.js?v=20260948";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1125,17 +1125,15 @@ function openFavorCard(id) {
   const st = stanceState(it.stance);
   const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
   const extras = favorItemExtras(it);
-  const clash = itemClash(it);
-  const star = clash ? " *" : "";
 
   const titleEl = $("#sentenceTitle");
-  if (titleEl) titleEl.textContent = it.name + star;
+  if (titleEl) titleEl.textContent = it.name;
   const fullBtn = $("#btnFullRegime");
   if (fullBtn) fullBtn.hidden = false;
 
   $("#sentenceBody").innerHTML = `
     <div class="sent-explain rubric-row"><p class="sent-explain-title">
-      <strong data-state="${st}">${word}${star}</strong>
+      <strong data-state="${st}">${word}</strong>
       <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
       ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
     </div>
