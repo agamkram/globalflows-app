@@ -1,8 +1,13 @@
 # Daily regime bake. Same pattern as GovDash Heat / Orbital catalog:
-# runner pulls public series → bake → sanity → commit allowlisted JSON → Vercel.
+# runner pulls public series → history → regime → sanity → allowlisted JSON → Vercel.
+#
+# `npm run refresh` is ingest + bake:history + bake:regime + sanity.
+# Ingest pipes (no extra secrets): FRED (CSV graph; FRED_API_KEY optional),
+# NY Fed, Yahoo, Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
+# Catalog / app.js / meaning.js are not bake files — they ship on ordinary pushes.
 #
 # Kickoff ~8:47 America/New_York (after typical 8:30 macro prints start
-# posting; early on purpose — 2y lights don't need mid-morning padding).
+# posting; early on purpose — lights don't need mid-morning padding).
 # Odd minute; timezone keeps ET through DST. Actions cron can still drift.
 # workflow_dispatch for manual / dry_run.
 #
@@ -38,7 +43,7 @@ jobs:
   regime:
     name: Bake regime
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       TZ: America/New_York
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
@@ -68,7 +73,12 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          npm run refresh
+          if npm run refresh; then
+            echo "Refresh succeeded."
+          else
+            echo "Refresh exited non-zero (ingest, history, bake, or sanity). Retrying once..."
+            npm run refresh
+          fi
 
       - name: Write before/after report
         id: report
