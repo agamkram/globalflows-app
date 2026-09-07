@@ -391,15 +391,15 @@ export function voteMaxAgeDays(freq) {
 
 export function isFreshEnoughToVote(m, now = Date.now()) {
   const age = printAgeDays(m?.asOf, now);
-  if (age == null) return false;
+  if (age == null) return true;
   const cap = Number.isFinite(m.voteMaxAgeDays) ? m.voteMaxAgeDays : voteMaxAgeDays(m.freq);
   return age <= cap;
 }
 
-export function memberAnchorScore(m) {
+export function memberAnchorScore(m, now = Date.now()) {
   if (!m || m.status !== "ok") return null;
   if (!m.anchor?.votes) return null;
-  if (!isFreshEnoughToVote(m)) return null;
+  if (!isFreshEnoughToVote(m, now)) return null;
   const sc = m.anchor.score;
   return sc != null && Number.isFinite(sc) ? sc : null;
 }
@@ -410,7 +410,7 @@ export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {
   return sc != null && Number.isFinite(sc) ? sc : null;
 }
 
-export function buildLights(snap) {
+export function buildLights(snap, now = Date.now()) {
   const meta = snap.lightsMeta || [];
   const baked = snap.lights || {};
   const out = {};
@@ -418,7 +418,7 @@ export function buildLights(snap) {
     const clubIds = Object.values(snap.series || {})
       .filter((r) => r.light === lid && r.status === "ok")
       .map((r) => r.id);
-    const voterIds = clubIds.filter((id) => memberAnchorScore(snap.series?.[id]) != null);
+    const voterIds = clubIds.filter((id) => memberAnchorScore(snap.series?.[id], now) != null);
     const impulseIds = [
       ...new Set([
         ...clubIds,
@@ -430,7 +430,7 @@ export function buildLights(snap) {
     const scores = [];
     for (const id of voterIds) {
       const row = snap.series?.[id];
-      const sc = memberAnchorScore(row);
+      const sc = memberAnchorScore(row, now);
       if (sc == null) continue;
       const w = Math.max(1, Math.round(row.weight || 1));
       for (let i = 0; i < w; i++) scores.push(sc);

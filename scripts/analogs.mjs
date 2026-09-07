@@ -51,22 +51,31 @@ export async function buildAnalogs(todayScores) {
     }))
     .sort((a, b) => a.d - b.d);
 
-  const picked = [];
-  for (const cand of scored) {
-    if (picked.length >= MAX_ANALOGS) break;
-    const t = Date.parse(cand.date);
-    const clash = picked.some(
-      (p) => Math.abs(Date.parse(p.date) - t) < MIN_GAP_DAYS * 86400000
-    );
-    if (!clash) picked.push(cand);
+  function pickCluster(pool) {
+    const picked = [];
+    for (const cand of pool) {
+      if (picked.length >= MAX_ANALOGS) break;
+      const t = Date.parse(cand.date);
+      const clash = picked.some(
+        (p) => Math.abs(Date.parse(p.date) - t) < MIN_GAP_DAYS * 86400000
+      );
+      if (!clash) picked.push(cand);
+    }
+    return picked;
   }
+
+  // Days like today (any forward). Used for the date list and closeness.
+  const picked = pickCluster(scored);
   if (picked.length < 8) return null;
 
   const stats = {};
   for (const hz of Object.keys(hist.horizons)) {
+    // 1y forwards only exist for days at least a year before the archive end.
+    // Pick nearest days that actually have that horizon — do not reuse the 3m set.
+    const cluster = pickCluster(scored.filter((r) => r.fwd[hz]));
     const byAsset = {};
     for (const a of hist.assets) {
-      const vals = picked.map((p) => p.fwd[hz]?.[a.id]).filter(Number.isFinite);
+      const vals = cluster.map((p) => p.fwd[hz]?.[a.id]).filter(Number.isFinite);
       if (vals.length < 8) continue;
       byAsset[a.id] = {
         name: a.name,

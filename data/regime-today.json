@@ -1,29 +1,29 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-07T17:56:34.215Z",
-  "ingestAt": "2026-09-07T17:56:33.618Z",
+  "generatedAt": "2026-09-07T18:47:57.742Z",
+  "ingestAt": "2026-09-07T17:38:55.680Z",
   "verdict": "SPOT ON",
   "fails": [],
-  "defaultImpulse": "6m",
+  "defaultImpulse": "1m",
   "headline": "Cash neutral, borrowing neutral, growth mid, inflation hot, risk risk-on.",
   "story": "Cash looks neither clearly ample nor scarce. Real funding looks mixed. Activity looks mixed versus trend. Prices are high versus ~2%. Fear is cheap on the gauges.",
   "meaning": {
-    "past": "Over the past six months",
-    "horizon": "6m",
+    "past": "Over the past month",
+    "horizon": "1m",
     "duration": {
       "dir": "rising",
       "label": "Duration risk rising",
       "line": "Long bonds aren’t getting paid — inflation is still hot and not cooling this window, so present value stays under pressure. Real 10y yields are high — discount rates still bite."
     },
     "credit": {
-      "dir": "rising",
-      "label": "Credit risk rising",
-      "line": "Bank credit impulse is slowing."
+      "dir": "mixed",
+      "label": "Credit risk mixed",
+      "line": "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is accelerating this window — private lending is adding fuel."
     },
     "favor": {
       "pair": {
-        "line": "Neither stocks nor long bonds are a clean bid",
-        "why": "Both discount-rate risk and cash-flow risk are up — wait for a cleaner mix before overweighting cash."
+        "line": "No clean stocks-versus-bonds call",
+        "why": "Duration and credit are not lined up the same way — wait for a cleaner mix."
       },
       "items": [
         {
@@ -61,20 +61,20 @@
         {
           "id": "credit",
           "name": "Credit",
-          "stance": "out",
-          "why": "IG and HY are both out — duration and cash-flow risk are both up.",
+          "stance": "mixed",
+          "why": "IG out, HY mixed — duration vs cash-flow aren’t the same trade.",
           "splits": [
             {
               "id": "ig",
               "name": "IG",
               "stance": "out",
-              "why": "Rising yields tax the duration in IG and cash-flow doubt is hitting credit."
+              "why": "Rising yields tax the duration in IG."
             },
             {
               "id": "hy",
               "name": "HY",
-              "stance": "out",
-              "why": "Bank credit impulse is slowing."
+              "stance": "mixed",
+              "why": "HY needs both growth and calm fear; only one side is helping."
             }
           ]
         },
@@ -94,24 +94,21 @@
         {
           "id": "cmdty",
           "name": "Commodities",
-          "stance": "out",
-          "why": "Soft growth or cold inflation — the real-cycle complex is out of favor."
+          "stance": "mixed",
+          "why": "Commodities are mixed; growth and inflation aren’t both pointing the same way."
         }
       ]
     },
     "confirm": [
-      "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
       "The 10y yield is rising this window — markets are already marking duration risk up."
     ],
-    "falsify": [
-      "Falsify if inflation cools this window and bank credit impulse turns up — both risk calls soften."
-    ],
+    "falsify": [],
     "lines": [
       "Long bonds aren’t getting paid — inflation is still hot and not cooling this window, so present value stays under pressure. Real 10y yields are high — discount rates still bite.",
-      "Bank credit impulse is slowing.",
-      "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together.",
-      "The 10y yield is rising this window — markets are already marking duration risk up.",
-      "Falsify if inflation cools this window and bank credit impulse turns up — both risk calls soften."
+      "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty. Bank credit impulse is accelerating this window — private lending is adding fuel.",
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
+      "The 10y yield is rising this window — markets are already marking duration risk up."
     ],
     "snapshot": {
       "liquidity": "Neutral",
@@ -177,7 +174,7 @@
       "label": "Rates",
       "state": "neutral",
       "word": "Neutral",
-      "score": -0.03270627576086367,
+      "score": -0.057845164649752576,
       "color": "amber",
       "n": 6,
       "teach": "Real funding looks mixed. Split: Bond volatility (MOVE) lean easier; 30-year mortgage rate lean tighter. Point: not clearly cheap or dear.",
@@ -206,9 +203,9 @@
         {
           "id": "G3_10Y",
           "name": "Global long rates (G3)",
-          "score": -0.1595555555555556,
+          "score": -0.2098333333333334,
           "weight": 1,
-          "why": "German, UK and Japanese 10-year average 3.5%"
+          "why": "German, UK and Japanese 10-year average 3.6%"
         },
         {
           "id": "DGS2",
@@ -318,7 +315,7 @@
       "label": "Risk",
       "state": "easing",
       "word": "Risk-on",
-      "score": 0.7993589584644023,
+      "score": 0.8635256632780417,
       "color": "green",
       "n": 4,
       "teach": "Fear is cheap on the gauges. Point: vol and credit are quiet.",
@@ -331,18 +328,18 @@
           "why": "HY OAS 2.6%"
         },
         {
+          "id": "VIX",
+          "name": "Equity volatility (VIX)",
+          "score": 0.9116667111714681,
+          "weight": 1,
+          "why": "VIX 14.5"
+        },
+        {
           "id": "BAA10Y",
           "name": "Baa spread over 10s",
           "score": 0.8153846153846153,
           "weight": 1,
           "why": "Baa over 10s 1.57pp — 2.1 is the 40-year median, 3.3 is crisis"
-        },
-        {
-          "id": "VIX",
-          "name": "Equity volatility (VIX)",
-          "score": 0.7833333015441895,
-          "weight": 1,
-          "why": "VIX 15.3"
         },
         {
           "id": "NFCI",
@@ -364,11 +361,11 @@
     "asOf": "2026-08-26",
     "units": "pp"
   },
-  "note": "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes.",
+  "note": "Anchored lights. Impulse default 1m. Meaning = duration/credit/asset classes.",
   "analogs": {
     "n": 40,
     "closeness": "loose",
-    "medianDistance": 0.539,
+    "medianDistance": 0.528,
     "windowStart": "2018-04-02",
     "windowEnd": "2026-09-04",
     "sampleDays": 2120,
@@ -386,9 +383,9 @@
       "2026-03-12",
       "2026-02-19",
       "2026-01-26",
-      "2026-01-05",
-      "2025-12-11",
-      "2025-11-05",
+      "2025-12-24",
+      "2025-12-03",
+      "2025-10-27",
       "2025-10-03"
     ],
     "stats": {
@@ -396,7 +393,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 1.16,
+          "median": 1.11,
           "up": 70,
           "best": 9.8,
           "worst": -6.3
@@ -404,8 +401,8 @@
         "TLT": {
           "name": "Long Treasuries",
           "n": 40,
-          "median": 0.01,
-          "up": 53,
+          "median": 0.08,
+          "up": 55,
           "best": 6.5,
           "worst": -5.9
         },
@@ -413,181 +410,247 @@
           "name": "7–10y Treasuries",
           "n": 40,
           "median": 0.23,
-          "up": 60,
+          "up": 57,
           "best": 4.6,
           "worst": -3.2
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 0.49,
-          "up": 80,
+          "median": 0.41,
+          "up": 78,
           "best": 2.4,
           "worst": -2.1
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.09,
-          "up": 53,
+          "median": 0.01,
+          "up": 50,
           "best": 3.9,
           "worst": -3.1
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 2.44,
-          "up": 68,
-          "best": 12.6,
+          "median": 2.7,
+          "up": 70,
+          "best": 13.4,
           "worst": -9.1
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": -0.21,
-          "up": 50,
+          "median": -0.48,
+          "up": 48,
           "best": 3.5,
           "worst": -4.7
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 0.04,
-          "up": 50,
-          "best": 16.3,
+          "median": 1.1,
+          "up": 53,
+          "best": 12.7,
           "worst": -14.2
         }
       },
       "3m": {
         "SPX": {
           "name": "S&P 500",
-          "n": 38,
-          "median": 4.05,
-          "up": 71,
+          "n": 40,
+          "median": 4.22,
+          "up": 75,
           "best": 15.7,
           "worst": -16.6
         },
         "TLT": {
           "name": "Long Treasuries",
-          "n": 38,
-          "median": -0.77,
-          "up": 42,
+          "n": 40,
+          "median": -0.99,
+          "up": 45,
           "best": 9.8,
           "worst": -15.1
         },
         "IEF": {
           "name": "7–10y Treasuries",
-          "n": 38,
-          "median": 0.45,
-          "up": 61,
+          "n": 40,
+          "median": 0.43,
+          "up": 63,
           "best": 6.5,
           "worst": -5.2
         },
         "HYG": {
           "name": "High yield",
-          "n": 38,
-          "median": 1.17,
-          "up": 82,
+          "n": 40,
+          "median": 1.34,
+          "up": 83,
           "best": 5.7,
           "worst": -2.9
         },
         "LQD": {
           "name": "Investment grade",
-          "n": 38,
-          "median": 0.6,
-          "up": 63,
+          "n": 40,
+          "median": 0.46,
+          "up": 68,
           "best": 7.3,
           "worst": -6.6
         },
         "GOLD": {
           "name": "Gold",
-          "n": 38,
+          "n": 40,
           "median": 6.71,
-          "up": 79,
-          "best": 24.4,
+          "up": 80,
+          "best": 32.5,
           "worst": -20.1
         },
         "DXY": {
           "name": "Dollar",
-          "n": 38,
-          "median": 0.65,
-          "up": 66,
+          "n": 40,
+          "median": 0.4,
+          "up": 63,
           "best": 7.3,
-          "worst": -8.1
+          "worst": -7.7
         },
         "COPPER": {
           "name": "Copper",
-          "n": 38,
-          "median": 2.48,
-          "up": 63,
-          "best": 22.3,
+          "n": 40,
+          "median": 2.31,
+          "up": 65,
+          "best": 34.3,
           "worst": -10
         }
       },
       "6m": {
         "SPX": {
           "name": "S&P 500",
-          "n": 34,
-          "median": 8.15,
-          "up": 76,
+          "n": 40,
+          "median": 7.56,
+          "up": 78,
           "best": 22.9,
-          "worst": -6.3
+          "worst": -8
         },
         "TLT": {
           "name": "Long Treasuries",
-          "n": 34,
-          "median": -0.55,
-          "up": 44,
+          "n": 40,
+          "median": 0.85,
+          "up": 53,
           "best": 13.2,
           "worst": -8.1
         },
         "IEF": {
           "name": "7–10y Treasuries",
-          "n": 34,
-          "median": 1.77,
-          "up": 76,
+          "n": 40,
+          "median": 2.71,
+          "up": 80,
           "best": 8.1,
           "worst": -2.5
         },
         "HYG": {
           "name": "High yield",
-          "n": 34,
-          "median": 3.71,
-          "up": 100,
-          "best": 6.8,
-          "worst": 0.8
+          "n": 40,
+          "median": 3.83,
+          "up": 98,
+          "best": 7,
+          "worst": -1.8
         },
         "LQD": {
           "name": "Investment grade",
-          "n": 34,
-          "median": 2.67,
-          "up": 76,
+          "n": 40,
+          "median": 2.92,
+          "up": 80,
           "best": 7.7,
           "worst": -2.8
         },
         "GOLD": {
           "name": "Gold",
-          "n": 34,
-          "median": 17.68,
-          "up": 91,
+          "n": 40,
+          "median": 16.48,
+          "up": 93,
           "best": 52.8,
           "worst": -20.5
         },
         "DXY": {
           "name": "Dollar",
-          "n": 34,
-          "median": 0.9,
-          "up": 56,
+          "n": 40,
+          "median": 0.49,
+          "up": 55,
           "best": 4.6,
           "worst": -9.8
         },
         "COPPER": {
           "name": "Copper",
-          "n": 34,
-          "median": 10.23,
-          "up": 79,
+          "n": 40,
+          "median": 9.61,
+          "up": 75,
           "best": 36.2,
-          "worst": -8.6
+          "worst": -14.7
+        }
+      },
+      "1y": {
+        "SPX": {
+          "name": "S&P 500",
+          "n": 40,
+          "median": 15.47,
+          "up": 95,
+          "best": 31.7,
+          "worst": -2.6
+        },
+        "TLT": {
+          "name": "Long Treasuries",
+          "n": 40,
+          "median": 1.43,
+          "up": 60,
+          "best": 36.7,
+          "worst": -10.1
+        },
+        "IEF": {
+          "name": "7–10y Treasuries",
+          "n": 40,
+          "median": 4.2,
+          "up": 93,
+          "best": 17.1,
+          "worst": -2.5
+        },
+        "HYG": {
+          "name": "High yield",
+          "n": 40,
+          "median": 7.9,
+          "up": 98,
+          "best": 12.8,
+          "worst": -3.7
+        },
+        "LQD": {
+          "name": "Investment grade",
+          "n": 40,
+          "median": 6.12,
+          "up": 98,
+          "best": 18.5,
+          "worst": 0
+        },
+        "GOLD": {
+          "name": "Gold",
+          "n": 40,
+          "median": 30.95,
+          "up": 100,
+          "best": 80,
+          "worst": 2.2
+        },
+        "DXY": {
+          "name": "Dollar",
+          "n": 40,
+          "median": 0.71,
+          "up": 53,
+          "best": 6.8,
+          "worst": -9.3
+        },
+        "COPPER": {
+          "name": "Copper",
+          "n": 40,
+          "median": 8.29,
+          "up": 73,
+          "best": 50.4,
+          "worst": -17.5
         }
       }
     },
@@ -716,6 +779,48 @@
           "median": 4.11,
           "up": 62,
           "n": 1994
+        }
+      },
+      "1y": {
+        "SPX": {
+          "median": 15.29,
+          "up": 84,
+          "n": 1868
+        },
+        "TLT": {
+          "median": -2.38,
+          "up": 44,
+          "n": 1868
+        },
+        "IEF": {
+          "median": 2.12,
+          "up": 57,
+          "n": 1868
+        },
+        "HYG": {
+          "median": 6.85,
+          "up": 79,
+          "n": 1868
+        },
+        "LQD": {
+          "median": 4.58,
+          "up": 76,
+          "n": 1868
+        },
+        "GOLD": {
+          "median": 18.74,
+          "up": 82,
+          "n": 1868
+        },
+        "DXY": {
+          "median": 0.5,
+          "up": 54,
+          "n": 1868
+        },
+        "COPPER": {
+          "median": 8.43,
+          "up": 65,
+          "n": 1868
         }
       }
     }

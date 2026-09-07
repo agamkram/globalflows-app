@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260944";
+import { buildMeaning } from "./meaning.js?v=20260945";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260944";
+} from "./score.js?v=20260945";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -486,7 +486,7 @@ const FAVOR_CHILD_ASSET = {
 function analogFor(assetId, stance) {
   const a = REGIME?.analogs;
   if (!a?.stats || !assetId) return null;
-  const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
+  const hz = statHorizon;
   const r = a.stats[hz]?.[assetId];
   if (!r) return null;
 
@@ -1001,11 +1001,14 @@ function tensionTitle(d) {
 function baseRateHtml() {
   const a = REGIME?.analogs;
   if (!a?.stats) return "";
-  const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
+  const hz = statHorizon;
   const table = a.stats[hz] || {};
-  if (!Object.keys(table).length) return "";
+  if (!Object.keys(table).length) {
+    return `<p class="sent-kicker">What happened last time</p>
+      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them. 1m / 3m / 6m still have a sample.</p>`;
+  }
 
-  const window = { "1m": "the next month", "3m": "the next three months", "6m": "the next six months" }[hz] || `the next ${hz}`;
+  const window = { "1m": "the next month", "3m": "the next three months", "6m": "the next six months", "1y": "the next year" }[hz] || `the next ${hz}`;
   const match =
     a.closeness === "close"
       ? "a close match."

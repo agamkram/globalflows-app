@@ -25,7 +25,7 @@ const HIST = path.join(ROOT, "data", "history");
 
 const START = "2018-04-02"; // first SOFR print
 const STALE_DAYS = 400;
-const HORIZONS = { "1m": 21, "3m": 63, "6m": 126 };
+const HORIZONS = { "1m": 21, "3m": 63, "6m": 126, "1y": 252 };
 
 /**
  * Assets we measure forward through. Bonds are ETFs rather than yields, measured
@@ -124,8 +124,10 @@ async function main() {
         id: spec.id,
         light: spec.light,
         weight: spec.weight || 1,
+        freq: spec.freq,
         status: "ok",
         latest: got.value,
+        asOf: date,
         anchor: makeAnchor(spec, got.value),
       };
     }
@@ -137,12 +139,16 @@ async function main() {
         id: "PCEPILFE",
         status: "ok",
         latest: pce.value,
+        asOf: date,
         anchor: { kind: "pce_yoy", score: null, why: "", votes: false },
       };
       applyRealRateAnchors(series);
     }
 
-    const lights = buildLights({ series, lightsMeta: catalog.lights });
+    const lights = buildLights(
+      { series, lightsMeta: catalog.lights },
+      Date.parse(date + "T12:00:00Z")
+    );
     const scores = LIGHT_IDS.map((id) => lights[id]?.score);
     if (scores.some((s) => s == null || !Number.isFinite(s))) continue;
 
