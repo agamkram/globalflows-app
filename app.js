@@ -1,13 +1,13 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260931";
+import { buildMeaning } from "./meaning.js?v=20260933";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260908";
+} from "./score.js?v=20260933";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -292,7 +292,7 @@ function wordFor(light) {
 
 const LIGHT_BLURB = {
   liquidity:
-    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Tap members to see the Fed sheet pieces that voted.",
+    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are the SOFR spread, reserves and net liquidity versus GDP, the dollar’s 12-month change, and G4 balance-sheet growth.",
   rates:
     "Borrowing costs — policy rate, short yields, mortgages, the dollar, rate volatility. Easy = cheap to fund; tight = expensive to fund or a strong dollar fighting it.",
   growth:
@@ -341,10 +341,10 @@ function stanceState(stance) {
   return "neutral";
 }
 
-/** The tradeable each asset-class call is judged against in the archive. */
+/** Parent-class proxies. Credit has none — IG and HY are judged separately. */
 const FAVOR_ASSET = {
   treasuries: "TLT",
-  credit: "HYG",
+  credit: null,
   stocks: "SPX",
   gold: "GOLD",
   cmdty: "COPPER",
@@ -353,14 +353,21 @@ const FAVOR_ASSET = {
   cash: null,
 };
 
+/** Curve / credit splits — 5s have no archive ticker. */
+const FAVOR_CHILD_ASSET = {
+  10: "IEF",
+  30: "TLT",
+  ig: "LQD",
+  hy: "HYG",
+};
+
 /**
  * How the record lines up with a call. The interesting case is disagreement: it
  * says the read depends on this cycle differing from the ones behind it, which is
  * worth knowing before you act on it.
  */
-function favorBaseRate(favorId, stance) {
+function analogFor(assetId, stance) {
   const a = REGIME?.analogs;
-  const assetId = FAVOR_ASSET[favorId];
   if (!a?.stats || !assetId) return null;
   const hz = a.stats[statHorizon] ? statHorizon : a.stats["3m"] ? "3m" : Object.keys(a.stats)[0];
   const r = a.stats[hz]?.[assetId];
@@ -388,6 +395,23 @@ function favorBaseRate(favorId, stance) {
   };
 }
 
+function favorBaseRate(favorId, stance) {
+  return analogFor(FAVOR_ASSET[favorId], stance);
+}
+
+function childAnalog(child) {
+  return analogFor(FAVOR_CHILD_ASSET[child?.id], child?.stance);
+}
+
+function itemClash(it) {
+  const checks = [];
+  const parent = favorBaseRate(it.id, it.stance);
+  if (parent) checks.push(parent);
+  for (const tn of it.tenors || []) checks.push(childAnalog(tn));
+  for (const sp of it.splits || []) checks.push(childAnalog(sp));
+  return checks.some((br) => br?.verdict === "disagrees" && !br.weak);
+}
+
 function renderFavorStrip() {
   const el = $("#favorStrip");
   if (!el || !SNAP) return;
@@ -404,19 +428,21 @@ function renderFavorStrip() {
       .map((it) => {
         const st = stanceState(it.stance);
         const title = it.name;
-        // One clash test for both layouts. Keeping it above the branch is what
-        // stops the multi-tenor cells drifting out of step with the plain ones,
-        // which is how they ended up flagging on evidence too weak to flag on.
-        const br = favorBaseRate(it.id, it.stance);
-        const clash = br?.verdict === "disagrees" && !br.weak;
+        const word = it.stance === "in" ? "in" : it.stance === "out" ? "out" : "mixed";
+        // Star the cell if any judged proxy disagrees — 10s vs IEF, 30s vs TLT,
+        // IG vs LQD, HY vs HYG — not only the parent ticker.
+        const clash = itemClash(it);
         const mark = clash
           ? '<span class="favor-flag" aria-label="history disagrees with this call">*</span>'
           : "";
         const flagAttr = clash
-          ? ` title="History disagrees with this call — see Today's regime"`
+          ? ` title="History disagrees with this call"`
           : "";
+        const aria = `aria-label="${escapeHtml(title)}, ${word}. Tap for why."`;
         if (it.tenors?.length) {
-          return `<span class="favor-cell favor-ust" data-state="${st}"${flagAttr}>
+          return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
+            it.id
+          )}" data-state="${st}" ${aria}${flagAttr}>
             <span class="favor-title">${escapeHtml(title)}</span>
             <span class="favor-curve">${it.tenors
               .map(
@@ -427,13 +453,15 @@ function renderFavorStrip() {
               )
               .join("")}</span>
             ${mark}
-          </span>`;
+          </button>`;
         }
-        return `<span class="favor-cell" data-state="${st}"${flagAttr}>
+        return `<button type="button" class="favor-cell" data-favor-id="${escapeHtml(
+          it.id
+        )}" data-state="${st}" ${aria}${flagAttr}>
           <span class="favor-title">${escapeHtml(title)}</span>
           <span class="favor-dot" aria-hidden="true"></span>
           ${mark}
-        </span>`;
+        </button>`;
       })
       .join("");
   } catch (err) {
@@ -600,7 +628,15 @@ function ratesClause(snap) {
   const st = lightState(snap, "rates");
   const split = clubSplit(snap, "rates");
   if (split) {
-    return `Borrowing is <strong data-state="neutral">split</strong>: market rates still look expensive, while policy and the dollar look easier`;
+    const tightN = split.tight.slice(0, 2);
+    const easyN = split.easy.slice(0, 2);
+    const tight = tightN.map((x) => x.name).join(", ");
+    const easy = easyN.map((x) => x.name).join(", ");
+    const lookT = tightN.length === 1 ? "looks" : "look";
+    const lookE = easyN.length === 1 ? "looks" : "look";
+    return `Borrowing is <strong data-state="neutral">split</strong>: ${escapeHtml(
+      tight
+    )} ${lookT} expensive, while ${escapeHtml(easy)} ${lookE} easier`;
   }
   return {
     easing: `Borrowing costs look <strong data-state="easing">easy</strong>`,
@@ -784,16 +820,13 @@ function regimeEvidence(snap) {
 
   const split = clubSplit(snap, "rates");
   if (split) {
-    const dgs2 = series.DGS2;
-    const ff = series.DFEDTARU;
-    const bits = [];
-    if (dgs2?.latest != null) bits.push(`2y ${fmtLightNum(dgs2.latest, 2)}%`);
-    if (ff?.latest != null) bits.push(`Fed funds ${fmtLightNum(ff.latest, 2)}%`);
-    beats.push(
-      bits.length
-        ? `Borrowing split: market rates still high (${bits.join(", ")}), while policy and the dollar lean easier.`
-        : `Borrowing split: some rate voters still look expensive, others (policy, dollar) look easier.`
-    );
+    const tightN = split.tight.slice(0, 2);
+    const easyN = split.easy.slice(0, 2);
+    const tight = tightN.map((x) => x.name).join(", ");
+    const easy = easyN.map((x) => x.name).join(", ");
+    const lookT = tightN.length === 1 ? "looks" : "look";
+    const lookE = easyN.length === 1 ? "looks" : "look";
+    beats.push(`Borrowing split: ${tight} ${lookT} expensive, while ${easy} ${lookE} easier.`);
   } else {
     const st = lightState(snap, "rates");
     if (st === "easing") {
@@ -897,6 +930,99 @@ function childFavorLine(child, parentWhy) {
   return `<span class="rubric-split">${badge}</span>`;
 }
 
+function analogHtml(br) {
+  if (!br) return "";
+  const sign = br.median > 0 ? "+" : "";
+  const verdictWord = br.weak
+    ? br.verdict === "coinflip"
+      ? "Loose history, no lean"
+      : `Loose history, ${br.verdict === "disagrees" ? "argues the other way" : `leans ${br.lean}`}`
+    : br.verdict === "agrees"
+      ? "History agrees"
+      : br.verdict === "disagrees"
+        ? "History disagrees"
+        : br.verdict === "coinflip"
+          ? "History is a coin flip"
+          : `History leans ${br.lean}`;
+  return `<span class="rubric-base" data-verdict="${br.verdict}">
+    <strong>${escapeHtml(verdictWord)}</strong>
+    <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
+      Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
+    } (${br.n} days).</span>
+  </span>`;
+}
+
+function favorItemExtras(it, { withAnalog = true } = {}) {
+  const extras = [];
+  if (it.tenors?.length) {
+    for (const tn of it.tenors) {
+      extras.push(childFavorLine(tn, it.why));
+      if (withAnalog) extras.push(analogHtml(childAnalog(tn)));
+    }
+  }
+  if (it.splits?.length) {
+    for (const sp of it.splits) {
+      extras.push(childFavorLine(sp, it.why));
+      if (withAnalog) extras.push(analogHtml(childAnalog(sp)));
+    }
+  }
+  if (it.note) {
+    extras.push(`<span class="muted sent-hint">${escapeHtml(it.note)}</span>`);
+  }
+  if (withAnalog && !it.tenors?.length && !it.splits?.length) {
+    extras.push(analogHtml(favorBaseRate(it.id, it.stance)));
+  }
+  return extras.filter(Boolean);
+}
+
+function showSentenceDialog() {
+  const dlg = $("#dlgSentence");
+  if (!dlg) return;
+  try {
+    if (!dlg.open) dlg.showModal();
+    lockPageScroll();
+  } catch (err) {
+    console.warn("showSentenceDialog: showModal failed", err);
+  }
+  requestAnimationFrame(() => {
+    dlg.scrollTop = 0;
+    const body = $("#sentenceBody");
+    if (body) body.scrollTop = 0;
+  });
+}
+
+function openFavorCard(id) {
+  if (!SNAP || !id) return;
+  const snap = viewOf(SNAP);
+  const meaning = buildMeaning(snap, statHorizon);
+  const it = meaning.favor.items.find((x) => x.id === id);
+  if (!it) return;
+
+  const st = stanceState(it.stance);
+  const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
+  const extras = favorItemExtras(it);
+  const watch = meaning.falsify[0]
+    ? `<div class="sent-explain sent-explain-flag"><p class="sent-explain-title"><strong data-state="neutral">Watch</strong>
+        <span class="muted sent-hint"> — ${escapeHtml(meaning.falsify[0])}</span></p></div>`
+    : "";
+
+  const titleEl = $("#sentenceTitle");
+  if (titleEl) titleEl.textContent = it.name;
+  const fullBtn = $("#btnFullRegime");
+  if (fullBtn) fullBtn.hidden = false;
+
+  $("#sentenceBody").innerHTML = `
+    <div class="sent-explain rubric-row"><p class="sent-explain-title">
+      <strong data-state="${st}">${word}</strong>
+      <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
+      ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
+    </div>
+    ${watch}
+    <p class="muted tiny sent-foot">Green is in favor, red is out, amber is mixed.</p>
+  `;
+  showSentenceDialog();
+}
+
 function openSentence(snap) {
   if (!snap) return;
   const baked =
@@ -957,47 +1083,7 @@ function openSentence(snap) {
       .map((it) => {
         const st = stanceState(it.stance);
         const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
-        const extras = [];
-        if (it.tenors?.length) {
-          extras.push(
-            it.tenors
-              .map((tn) => childFavorLine(tn, it.why))
-              .join("")
-          );
-        }
-        if (it.splits?.length) {
-          extras.push(
-            it.splits
-              .map((sp) => childFavorLine(sp, it.why))
-              .join("")
-          );
-        }
-        if (it.note) {
-          extras.push(`<span class="muted sent-hint">${escapeHtml(it.note)}</span>`);
-        }
-        const br = favorBaseRate(it.id, it.stance);
-        if (br) {
-          const sign = br.median > 0 ? "+" : "";
-          const verdictWord = br.weak
-            ? br.verdict === "coinflip"
-              ? "Loose history, no lean"
-              : `Loose history, ${br.verdict === "disagrees" ? "argues the other way" : `leans ${br.lean}`}`
-            : br.verdict === "agrees"
-              ? "History agrees"
-              : br.verdict === "disagrees"
-                ? "History disagrees"
-                : br.verdict === "coinflip"
-                  ? "History is a coin flip"
-                  : `History leans ${br.lean}`;
-          extras.push(
-            `<span class="rubric-base" data-verdict="${br.verdict}">
-              <strong>${escapeHtml(verdictWord)}</strong>
-              <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
-                Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
-              } (${br.n} days).</span>
-            </span>`
-          );
-        }
+        const extras = favorItemExtras(it, { withAnalog: true });
         return `<div class="sent-explain rubric-row"><p class="sent-explain-title">
           <span class="rubric-name">${escapeHtml(it.name)}</span>
           <strong data-state="${st}">${word}</strong>
@@ -1029,6 +1115,11 @@ function openSentence(snap) {
       ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light, then “Tap for who voted”.</p>`
       : `${axis}<p class="muted tiny sent-foot">Tap a light, then “Tap for who voted”.</p>`;
 
+  const titleEl = $("#sentenceTitle");
+  if (titleEl) titleEl.textContent = "Today’s regime";
+  const fullBtn = $("#btnFullRegime");
+  if (fullBtn) fullBtn.hidden = true;
+
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
     ${soWhat}
@@ -1038,19 +1129,7 @@ function openSentence(snap) {
     ${watch}
     ${verified}
   `;
-  const dlg = $("#dlgSentence");
-  if (!dlg) return;
-  try {
-    if (!dlg.open) dlg.showModal();
-    lockPageScroll();
-  } catch (err) {
-    console.warn("openSentence: showModal failed", err);
-  }
-  requestAnimationFrame(() => {
-    dlg.scrollTop = 0;
-    const body = $("#sentenceBody");
-    if (body) body.scrollTop = 0;
-  });
+  showSentenceDialog();
 }
 
 function renderLights(snap) {
@@ -1950,7 +2029,12 @@ async function boot() {
     selectLight(card.dataset.id);
   });
 
-  $("#favorStrip")?.addEventListener("click", () => {
+  $("#favorStrip")?.addEventListener("click", (e) => {
+    const cell = e.target.closest?.("[data-favor-id]");
+    if (!cell || !SNAP) return;
+    openFavorCard(cell.dataset.favorId);
+  });
+  $("#btnFullRegime")?.addEventListener("click", () => {
     if (!SNAP) return;
     openSentence(viewOf(SNAP));
   });

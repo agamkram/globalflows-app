@@ -90,6 +90,16 @@ html.pwa-standalone body {
   white-space: nowrap;
 }
 
+.ver-mark {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 .dials-toolbar {
   display: flex;
   align-items: center;
@@ -368,18 +378,7 @@ body.page-about::before {
   padding: 0;
   border: none;
   background: transparent;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  font: inherit;
-  color: inherit;
   text-align: center;
-}
-
-.favor-strip:focus,
-.favor-strip:focus-visible {
-  outline: 2px solid var(--accent, #3b82f6);
-  outline-offset: 1px;
 }
 
 .favor-strip[hidden] {
@@ -397,6 +396,17 @@ body.page-about::before {
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 8px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.favor-cell:focus,
+.favor-cell:focus-visible {
+  outline: 2px solid var(--accent, #3b82f6);
+  outline-offset: 1px;
 }
 
 .favor-title {
@@ -1429,6 +1439,11 @@ body.dlg-open dialog {
 #dlgSentence[open] .dlg-actions {
   flex: 0 0 auto;
   padding: 10px 18px calc(14px + var(--safe-b));
+  justify-content: flex-end;
+}
+
+#btnFullRegime:not([hidden]) {
+  margin-right: auto;
 }
 
 .dlg-head {
@@ -1687,12 +1702,17 @@ html.page-about body,
 }
 
 .about-brand {
-  margin: 0 0 14px;
+  margin: 0 0 6px;
   font-family: Michroma, "IBM Plex Sans", system-ui, sans-serif;
   font-size: clamp(1.55rem, 6vw, 2.05rem);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.15;
+}
+
+.about-hero .ver-mark {
+  display: inline-block;
+  margin: 0 0 14px;
 }
 
 .about-lede {

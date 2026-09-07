@@ -192,7 +192,7 @@ async function main() {
       revisions:
         "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
       start:
-        "The record starts at the first SOFR print so the liquidity light has the same three voters throughout.",
+        "The record starts at the first SOFR print so the liquidity light’s voter set is comparable throughout. Five series vote now; some do not reach back to 2018, so early analogs use a thinner club.",
     },
     rows: rows.map((r) => ({ date: r.date, s: r.s, st: r.st, fwd: r.fwd })),
   };
