@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260948";
+import { buildMeaning } from "./meaning.js?v=20260949";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260948";
+} from "./score.js?v=20260949";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -260,6 +260,21 @@ function money(bn, symbol = "$") {
   return `${sign}${symbol}${(abs * 1000).toFixed(0)}mn`;
 }
 
+/** Live or baked FX print for converting CB balance sheets to dollars. */
+function fxPrint(id) {
+  const live = liveQuotes[id];
+  if (live && Number.isFinite(live.price) && live.price > 0) return live.price;
+  const s = SNAP?.series?.[id];
+  const p = s?.latest;
+  return Number.isFinite(p) && p > 0 ? p : null;
+}
+
+/** Native money print plus a dollar equivalent when the FX tape is available. */
+function moneyNativeAndUsd(nativeText, usdBn) {
+  if (usdBn == null || !Number.isFinite(usdBn)) return nativeText;
+  return `${nativeText}  (~${money(usdBn)})`;
+}
+
 /** Format a print in the units the catalog says it is actually denominated in. */
 function fmtValue(n, units) {
   if (n == null || !Number.isFinite(n)) return "—";
@@ -276,11 +291,21 @@ function fmtValue(n, units) {
     // when the series is actually shrinking.
     case "% chg":
       return `${signed(abs >= 10 ? 1 : 2)}%`;
-    case "EUR mn":
-      return money(n / 1000, "€");
+    case "EUR mn": {
+      const native = money(n / 1000, "€");
+      const eurusd = fxPrint("EURUSD");
+      return moneyNativeAndUsd(native, eurusd != null ? (n / 1000) * eurusd : null);
+    }
     // Bank of Japan reports in hundred-millions of yen.
-    case "¥100m":
-      return money(n / 10, "¥");
+    case "¥100m": {
+      const native = money(n / 10, "¥");
+      const usdjpy = fxPrint("USDJPY");
+      // n × ¥100m = yen; ÷ USDJPY = dollars.
+      return moneyNativeAndUsd(
+        native,
+        usdjpy != null ? (n * 1e8) / usdjpy / 1e9 : null
+      );
+    }
     case "%":
     case "% YoY":
     case "% of GDP":
@@ -367,7 +392,7 @@ function fmtWindowChange(points, units) {
       units === "USD tn" ||
       units === "EUR mn" ||
       units === "¥100m") &&
-    (first < 0 || last < 0)
+    (first < 0 || last < 0 || units === "EUR mn" || units === "¥100m")
   ) {
     const bn =
       units === "USD mn" || units === "EUR mn"
@@ -378,7 +403,15 @@ function fmtWindowChange(points, units) {
             ? delta * 1000
             : delta;
     const symbol = units === "EUR mn" ? "€" : units === "¥100m" ? "¥" : "$";
-    return { text: moneyDelta(bn, symbol), dir };
+    let text = moneyDelta(bn, symbol);
+    if (units === "EUR mn") {
+      const eurusd = fxPrint("EURUSD");
+      if (eurusd != null) text = moneyNativeAndUsd(text, (delta / 1000) * eurusd);
+    } else if (units === "¥100m") {
+      const usdjpy = fxPrint("USDJPY");
+      if (usdjpy != null) text = moneyNativeAndUsd(text, (delta * 1e8) / usdjpy / 1e9);
+    }
+    return { text, dir };
   }
   if (units === "change" || units === "k") {
     return { text: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}k`, dir };
