@@ -406,10 +406,12 @@ body.page-about::before {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   line-height: 1.15;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  hyphens: manual;
+  overflow-wrap: break-word;
   max-width: 100%;
+  min-height: 2.3em;
 }
 
 .favor-dot {

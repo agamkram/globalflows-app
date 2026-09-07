@@ -369,9 +369,37 @@ export function applyRealRateAnchors(results) {
   }
 }
 
+/** Calendar days from the print date to now. Observation-month dating, not release date. */
+export function printAgeDays(asOf, now = Date.now()) {
+  if (!asOf) return null;
+  const t = Date.parse(String(asOf).slice(0, 10) + "T00:00:00Z");
+  if (!Number.isFinite(t)) return null;
+  return Math.floor((now - t) / 86400000);
+}
+
+/**
+ * How old a level vote may be. Monthly prints are dated the 1st of the observation
+ * month, so ~80 days still covers a late release of last month; it does not cover
+ * an OECD print from two months ago. Daily allows a long weekend plus a week.
+ */
+export function voteMaxAgeDays(freq) {
+  if (freq === "quarterly") return 190;
+  if (freq === "monthly") return 85;
+  if (freq === "weekly") return 21;
+  return 14;
+}
+
+export function isFreshEnoughToVote(m, now = Date.now()) {
+  const age = printAgeDays(m?.asOf, now);
+  if (age == null) return false;
+  const cap = Number.isFinite(m.voteMaxAgeDays) ? m.voteMaxAgeDays : voteMaxAgeDays(m.freq);
+  return age <= cap;
+}
+
 export function memberAnchorScore(m) {
   if (!m || m.status !== "ok") return null;
   if (!m.anchor?.votes) return null;
+  if (!isFreshEnoughToVote(m)) return null;
   const sc = m.anchor.score;
   return sc != null && Number.isFinite(sc) ? sc : null;
 }
@@ -387,23 +415,24 @@ export function buildLights(snap) {
   const baked = snap.lights || {};
   const out = {};
   for (const lid of LIGHT_IDS) {
-    const memberIds = Object.values(snap.series || {})
+    const clubIds = Object.values(snap.series || {})
       .filter((r) => r.light === lid && r.status === "ok")
       .map((r) => r.id);
+    const voterIds = clubIds.filter((id) => memberAnchorScore(snap.series?.[id]) != null);
     const impulseIds = [
       ...new Set([
-        ...memberIds,
+        ...clubIds,
         ...Object.values(snap.series || {})
           .filter((r) => r.impulseLight === lid && r.status === "ok")
           .map((r) => r.id),
       ]),
     ];
-    const members = memberIds.map((id) => snap.series?.[id]).filter((m) => m && m.status === "ok");
     const scores = [];
-    for (const m of members) {
-      const sc = memberAnchorScore(m);
+    for (const id of voterIds) {
+      const row = snap.series?.[id];
+      const sc = memberAnchorScore(row);
       if (sc == null) continue;
-      const w = Math.max(1, Math.round(m.weight || 1));
+      const w = Math.max(1, Math.round(row.weight || 1));
       for (let i = 0; i < w; i++) scores.push(sc);
     }
     const score = scores.length ? median(scores) : null;
@@ -414,14 +443,14 @@ export function buildLights(snap) {
       label: m?.label || baked[lid]?.label || lid,
       state,
       score,
-      n: members.length,
+      n: voterIds.length,
       nAnchor: scores.length,
       words: {
         easing: m?.easing || baked[lid]?.words?.easing,
         neutral: m?.neutral || baked[lid]?.words?.neutral,
         tight: m?.tight || baked[lid]?.words?.tight,
       },
-      members: memberIds,
+      members: voterIds,
       impulseMembers: impulseIds,
     };
   }

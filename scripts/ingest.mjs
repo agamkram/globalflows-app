@@ -73,12 +73,29 @@ function parseFredCsv(text) {
   return out;
 }
 
-async function fetchFred(seriesId) {
-  // Unauthenticated CSV graph endpoint — full history for public series
-  const url = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}`;
-  const text = await fetchText(url);
-  const points = parseFredCsv(text);
+function medianGapDays(points, n = 6) {
+  if (!points || points.length < n + 1) return null;
+  const gaps = [];
+  for (let i = points.length - n; i < points.length; i++) {
+    const a = Date.parse(points[i - 1].date + "T00:00:00Z");
+    const b = Date.parse(points[i].date + "T00:00:00Z");
+    if (Number.isFinite(a) && Number.isFinite(b)) gaps.push((b - a) / 86400000);
+  }
+  return gaps.length ? median(gaps) : null;
+}
+
+async function fetchFred(seriesId, spec) {
+  // Unauthenticated CSV graph endpoint — full history for public series.
+  // A long weekly series (BUSLOANS from 1947) gets downsampled to monthly
+  // unless we ask for weekly explicitly.
+  const base = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}`;
+  const pull = async (url) => parseFredCsv(await fetchText(url));
+  let points = await pull(base);
   if (!points.length) throw new Error(`FRED empty: ${seriesId}`);
+  if (spec?.freq === "weekly" && (medianGapDays(points) ?? 0) >= 24) {
+    const weekly = await pull(`${base}&fq=${encodeURIComponent("Weekly")}`);
+    if (weekly.length && (medianGapDays(weekly) ?? 99) < 24) points = weekly;
+  }
   return {
     points,
     source: "FRED",
@@ -347,7 +364,7 @@ async function main() {
         if (!s.fred) throw new Error("missing fred id");
         got = apiKey
           ? await fetchFredApi(s.fred, apiKey)
-          : await fetchFred(s.fred);
+          : await fetchFred(s.fred, s);
       } else if (s.pipe === "nyfed") {
         got = await fetchNyfedSofr();
       } else if (s.pipe === "yahoo") {

@@ -1,13 +1,13 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260938";
+import { buildMeaning } from "./meaning.js?v=20260940";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260938";
+} from "./score.js?v=20260940";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -266,14 +266,78 @@ function fmtValue(n, units) {
   }
 }
 
-/** % change from first → last of a history slice (chosen duration). */
-function windowPctChange(points) {
+function windowDelta(points) {
   if (!points || points.length < 2) return null;
   const first = points[0].value;
   const last = points[points.length - 1].value;
   if (!Number.isFinite(first) || !Number.isFinite(last)) return null;
-  if (first === 0) return null;
-  return ((last - first) / Math.abs(first)) * 100;
+  return { first, last, delta: last - first };
+}
+
+function moneyDelta(bn, symbol = "$") {
+  const abs = Math.abs(bn);
+  const sign = bn < 0 ? "-" : "+";
+  if (abs >= 1000) return `${sign}${symbol}${(abs / 1000).toFixed(2)}tn`;
+  if (abs >= 1) return `${sign}${symbol}${abs.toFixed(abs >= 100 ? 0 : 1)}bn`;
+  return `${sign}${symbol}${(abs * 1000).toFixed(0)}mn`;
+}
+
+function isRateUnit(units) {
+  return (
+    units === "%" ||
+    units === "% YoY" ||
+    units === "% of GDP" ||
+    units === "% chg" ||
+    units === "pp" ||
+    units === "rate" ||
+    units === "bp"
+  );
+}
+
+/** Chart-window change in units a reader can trust. Rates get points, not % of %. */
+function fmtWindowChange(points, units) {
+  const w = windowDelta(points);
+  if (!w) return { text: "—", dir: null };
+  const { first, last, delta } = w;
+  const dir = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+  if (units === "bp") {
+    return { text: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}bp`, dir };
+  }
+  if (isRateUnit(units)) {
+    const abs = Math.abs(delta);
+    const dig = abs >= 10 ? 1 : 2;
+    return { text: `${delta >= 0 ? "+" : ""}${delta.toFixed(dig)}pp`, dir };
+  }
+  if (
+    (units === "USD mn" ||
+      units === "USD bn" ||
+      units === "USD tn" ||
+      units === "EUR mn" ||
+      units === "¥100m") &&
+    (first < 0 || last < 0)
+  ) {
+    const bn =
+      units === "USD mn" || units === "EUR mn"
+        ? delta / 1000
+        : units === "¥100m"
+          ? delta / 10
+          : units === "USD tn"
+            ? delta * 1000
+            : delta;
+    const symbol = units === "EUR mn" ? "€" : units === "¥100m" ? "¥" : "$";
+    return { text: moneyDelta(bn, symbol), dir };
+  }
+  if (units === "change" || units === "k") {
+    return { text: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}k`, dir };
+  }
+  if (first === 0) return { text: "—", dir: null };
+  const pct = (delta / Math.abs(first)) * 100;
+  const abs = Math.abs(pct);
+  const dig = abs >= 100 ? 0 : 1;
+  return {
+    text: `${pct >= 0 ? "+" : ""}${pct.toFixed(dig)}%`,
+    dir: pct > 0 ? "up" : pct < 0 ? "down" : "flat",
+  };
 }
 
 function fmtChg(n) {
@@ -439,11 +503,13 @@ function renderFavorStrip() {
           ? ` title="History disagrees with this call"`
           : "";
         const aria = `aria-label="${escapeHtml(title)}, ${word}. Tap for why."`;
+        const titleHtml =
+          it.id === "cmdty" ? "Commodi&shy;ties" : escapeHtml(title);
         if (it.tenors?.length) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
             it.id
           )}" data-state="${st}" ${aria}${flagAttr}>
-            <span class="favor-title">${escapeHtml(title)}</span>
+            <span class="favor-title">${titleHtml}</span>
             <span class="favor-curve">${it.tenors
               .map(
                 (tn) =>
@@ -458,7 +524,7 @@ function renderFavorStrip() {
         return `<button type="button" class="favor-cell" data-favor-id="${escapeHtml(
           it.id
         )}" data-state="${st}" ${aria}${flagAttr}>
-          <span class="favor-title">${escapeHtml(title)}</span>
+          <span class="favor-title">${titleHtml}</span>
           <span class="favor-dot" aria-hidden="true"></span>
           ${mark}
         </button>`;
@@ -510,7 +576,7 @@ function openLightSheet(id) {
   titleEl.textContent = `${L.label || id} · ${word}`;
   const members = (L.members || [])
     .map((mid) => snap.series?.[mid])
-    .filter(Boolean);
+    .filter((s) => s && memberAnchorScore(s) != null);
   const rows = members
     .map((s) => {
       return `<tr data-mid="${s.id}">
@@ -1002,10 +1068,6 @@ function openFavorCard(id) {
   const st = stanceState(it.stance);
   const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
   const extras = favorItemExtras(it);
-  const watch = meaning.falsify[0]
-    ? `<div class="sent-explain sent-explain-flag"><p class="sent-explain-title"><strong data-state="neutral">Watch</strong>
-        <span class="muted sent-hint"> — ${escapeHtml(meaning.falsify[0])}</span></p></div>`
-    : "";
 
   const titleEl = $("#sentenceTitle");
   if (titleEl) titleEl.textContent = it.name;
@@ -1018,7 +1080,6 @@ function openFavorCard(id) {
       <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
       ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
     </div>
-    ${watch}
   `;
   showSentenceDialog({ hug: true });
 }
@@ -1655,7 +1716,10 @@ function renderTable(snap) {
       const view = rowView(s.id);
       const data =
         view === "charts" ? chartCell(s) : valuesCells(s);
-      const voter = s.light || "";
+      const voter =
+        s.light && (snap.lights?.[s.light]?.members || []).includes(s.id)
+          ? s.light
+          : "";
       const picked = compareList.includes(s.id);
       const street = s.layer || s.street || "";
       return `<tr data-id="${s.id}" data-view="${view}"${
@@ -1821,14 +1885,13 @@ async function paintSparks() {
         return;
       }
       drawSpark(canvas, sliced);
-      const chg = windowPctChange(sliced);
+      const series = SNAP?.series?.[id];
+      const chg = fmtWindowChange(sliced, series?.units);
       if (chgEl) {
-        chgEl.textContent = fmtChg(chg);
+        chgEl.textContent = chg.text;
         chgEl.title = `${dur} change`;
-        if (chg == null || !Number.isFinite(chg)) chgEl.removeAttribute("data-dir");
-        else if (chg > 0) chgEl.dataset.dir = "up";
-        else if (chg < 0) chgEl.dataset.dir = "down";
-        else chgEl.dataset.dir = "flat";
+        if (!chg.dir) chgEl.removeAttribute("data-dir");
+        else chgEl.dataset.dir = chg.dir;
       }
     })
   );
@@ -1854,7 +1917,7 @@ function openSeries(s) {
   if (!s) return;
   $("#seriesTitle").textContent = s.name;
   const code = s.search || s.fred || s.yahoo || s.id;
-  const voter = s.light || null;
+  const voter = memberAnchorScore(s) != null ? s.light || null : null;
   const home = voter ? LIGHT_TO_TAB[voter] : null;
   const street = s.street || s.layer || "";
   const cross = voter && home && street && street !== home;

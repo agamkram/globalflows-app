@@ -366,12 +366,17 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   let creditLabel = "Credit risk mixed";
   let creditLine = "";
 
+  // Impulse slowing is a note, not a witness. HY at cycle tights with a still-
+  // positive impulse is not "credit risk rising" just because lending cooled a bit.
   const creditUpParts = [];
   if (G === "tight") creditUpParts.push("growth is soft");
   if (R === "tight") creditUpParts.push("fear is expensive");
   if (Gimp === "down") creditUpParts.push("activity is rolling over this window");
-  if (creditFlow.dir === "down") creditUpParts.push("bank credit impulse is slowing");
   if (hyImp.dir === "up") creditUpParts.push("HY spreads are widening this window");
+  const impulseSlow = creditFlow.dir === "down";
+  if (impulseSlow && creditUpParts.length) {
+    creditUpParts.push("bank credit impulse is slowing");
+  }
 
   const creditUp = creditUpParts.length > 0;
   const creditDown =
@@ -387,6 +392,11 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     creditLabel = "Credit risk falling";
     creditLine =
       "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible.";
+  } else if (impulseSlow && !creditUp) {
+    creditDir = "mixed";
+    creditLabel = "Credit risk mixed";
+    creditLine =
+      "Bank credit impulse is cooling from a still-easy level — not enough on its own to call credit risk up.";
   } else {
     creditDir = "mixed";
     creditLabel = "Credit risk mixed";

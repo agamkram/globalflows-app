@@ -40,7 +40,7 @@ function renderFormula(snap) {
     </dl>
     <p class="muted tiny">
       Changing the impulse clock does not recolor the lights; it changes the turn
-      and the six asset classes. The morning bake locks the written So what at 6m.
+      and the six asset classes.
     </p>
   `;
 }

@@ -195,17 +195,17 @@
       "name": "Business bank loans",
       "layer": "liquidity",
       "pipe": "fred",
-      "fred": "BUSLOANS",
+      "fred": "TOTCI",
       "units": "USD bn",
       "freq": "weekly",
       "sign": 1,
-      "sourceUrl": "https://fred.stlouisfed.org/series/BUSLOANS",
+      "sourceUrl": "https://fred.stlouisfed.org/series/TOTCI",
       "sub": "C&I lending to firms",
-      "search": "BUSLOANS",
+      "search": "TOTCI",
       "causal": "liquidity",
       "street": "liquidity",
       "light": null,
-      "note": "Bank lending to businesses. Soft = firms borrowing less or banks tightening."
+      "note": "H.8 weekly C&I loans (FRED TOTCI). FRED’s BUSLOANS ticker is monthly; this is the weekly print."
     },
     {
       "id": "GFDEBTN",
@@ -633,13 +633,14 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
+      "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-      "sub": "Bund risk-free rate",
+      "sub": "Bund risk-free rate · OECD monthly",
       "search": "IRLTLT01DEM156N",
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "German 10-year Bund yield. Euro risk-free long rate."
+      "note": "German 10-year Bund yield, OECD monthly average. FRED has no daily Bund; this line is the official print, not the live tape."
     },
     {
       "id": "IRLTLT01GBM156N",
@@ -650,13 +651,14 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
+      "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01GBM156N",
-      "sub": "Gilt risk-free rate",
+      "sub": "Gilt risk-free rate · OECD monthly",
       "search": "IRLTLT01GBM156N",
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "UK 10-year Gilt yield. UK risk-free long rate."
+      "note": "UK 10-year Gilt yield, OECD monthly average. FRED has no daily Gilt; this line is the official print, not the live tape."
     },
     {
       "id": "IRLTLT01JPM156N",
@@ -667,13 +669,14 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
+      "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01JPM156N",
-      "sub": "JGB risk-free rate",
+      "sub": "JGB risk-free rate · OECD monthly",
       "search": "IRLTLT01JPM156N",
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "Japan 10-year JGB yield. Global duration and BoJ policy pulse."
+      "note": "Japan 10-year JGB yield, OECD monthly average. FRED has no daily JGB; this line is the official print, not the live tape."
     },
     {
       "id": "MOVE",
@@ -816,17 +819,17 @@
       "name": "Sticky CPI",
       "layer": "inflation",
       "pipe": "fred",
-      "fred": "STICKCPIM157SFRBATL",
-      "units": "%",
+      "fred": "STICKCPIM159SFRBATL",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 0,
       "light": null,
-      "sourceUrl": "https://fred.stlouisfed.org/series/STICKCPIM157SFRBATL",
-      "sub": "Prices that rarely change",
-      "search": "STICKCPIM157SFRBATL",
+      "sourceUrl": "https://fred.stlouisfed.org/series/STICKCPIM159SFRBATL",
+      "sub": "Prices that rarely change, 12m",
+      "search": "STICKCPIM159SFRBATL",
       "causal": "labels",
       "street": "inflation",
-      "note": "Atlanta Fed sticky CPI — prices that change rarely. Persistence of inflation."
+      "note": "Atlanta Fed sticky CPI, 12-month change. M157 is the month-ago print (~0.3%) and must not be scored as YoY."
     },
     {
       "id": "INDPRO",
@@ -2909,14 +2912,15 @@
       "units": "%",
       "freq": "monthly",
       "sign": -1,
+      "freshness": "lagged",
       "light": "rates",
       "weight": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-      "sub": "German, UK and Japanese 10-year",
+      "sub": "German, UK and Japanese 10-year · OECD monthly",
       "search": "G3_10Y",
       "causal": "rates",
       "street": "rates",
-      "note": "The average 10-year yield across Germany, the UK and Japan. Duration is priced globally: when Bunds and JGBs move, Treasuries follow, and a rates light built only from US yields mistakes a worldwide repricing for an American one."
+      "note": "Average 10-year across Germany, the UK and Japan from OECD monthly averages. FRED and Yahoo do not carry a daily Bund/Gilt/JGB yield, so this voter sits out when the print is older than the monthly age cap rather than treating a two-month-old OECD number as live."
     }
   ],
   "lights": [
