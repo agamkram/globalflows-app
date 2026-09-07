@@ -71,7 +71,7 @@ class Handler(SimpleHTTPRequestHandler):
                 ["node", str(ROOT / "scripts" / "markets-live.mjs")],
                 cwd=str(ROOT),
                 capture_output=True,
-                timeout=25,
+                timeout=45,
                 check=False,
             )
         except Exception as e:

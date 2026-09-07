@@ -1,13 +1,15 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260943";
+import { buildMeaning } from "./meaning.js?v=20260944";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
+  seriesFacts,
+  applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260943";
+} from "./score.js?v=20260944";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -41,6 +43,8 @@ let liveQuotes = {};
 let livePulledAt = null;
 let liveState = "idle";
 let liveInflight = null;
+/** id → spark points with live last bar patched in. */
+const sparkLive = {};
 /**
  * Compare flow:
  *   off  — normal book; saved m1–m3 sit left of Compare
@@ -142,17 +146,63 @@ function fmtLiveAge(pulledAt) {
 
 function syncMarketsLiveUi() {
   const cluster = $("#marketsLive");
-  const onMarkets = activeLayer === "markets" && comparePhase === "off";
-  if (cluster) cluster.hidden = !onMarkets;
+  const show = comparePhase === "off" && (livePulledAt || liveState === "loading");
+  if (cluster) cluster.hidden = !show;
   const age = $("#marketsAge");
   if (age) {
-    age.textContent = onMarkets ? fmtLiveAge(livePulledAt) : "";
+    age.textContent = show ? fmtLiveAge(livePulledAt) : "";
   }
   const refresh = $("#btnMarketsLive");
   if (refresh) {
     refresh.disabled = liveState === "loading";
     refresh.classList.toggle("is-loading", liveState === "loading");
   }
+}
+
+function specFromRow(s) {
+  return {
+    id: s.id,
+    freq: s.freq,
+    sign: s.sign ?? 0,
+    light: s.light,
+    weight: s.weight || 1,
+    units: s.units,
+  };
+}
+
+function patchSparkLast(id, price, asOf) {
+  const pts = sparkLive[id];
+  if (!pts?.length || price == null || !asOf) return;
+  const last = pts[pts.length - 1];
+  if (last.date === asOf) last.value = price;
+  else if (asOf > last.date) pts.push({ date: asOf, value: price });
+  histCache.delete(id);
+}
+
+async function applyLiveQuotes(quotes) {
+  if (!SNAP?.series || !quotes) return;
+  const all = await loadSparkBundle();
+  for (const [id, q] of Object.entries(quotes)) {
+    if (!q || !Number.isFinite(q.price)) continue;
+    const s = SNAP.series[id];
+    if (!s || s.status !== "ok") continue;
+    if (!sparkLive[id] && all?.[id]) {
+      sparkLive[id] = all[id].map((pt) => ({ ...pt }));
+    }
+    const asOf = q.asOf || s.asOf;
+    s.latest = q.price;
+    if (asOf) s.asOf = asOf;
+    s.freshness = "live";
+    patchSparkLast(id, q.price, asOf);
+    const pts = sparkLive[id];
+    if (pts?.length >= 2) {
+      const facts = seriesFacts(pts, specFromRow(s));
+      s.anchor = facts.anchor;
+      s.impulse = facts.impulse;
+      s.n = facts.n;
+    }
+  }
+  applyRealRateAnchors(SNAP.series);
 }
 
 function pullMarketsLive(force = false) {
@@ -171,8 +221,11 @@ function pullMarketsLive(force = false) {
       const t = Date.parse(data.pulledAt);
       livePulledAt = Number.isFinite(t) ? t : Date.now();
       liveState = "ok";
-      if (SNAP) refreshViews();
-      else syncMarketsLiveUi();
+      await applyLiveQuotes(liveQuotes);
+      if (SNAP) {
+        refreshViews();
+        if (globalView === "charts" || [...rowFlip].length) paintSparks();
+      } else syncMarketsLiveUi();
     } catch (_) {
       liveState = livePulledAt ? "ok" : "err";
       syncMarketsLiveUi();
@@ -1776,7 +1829,12 @@ function loadSparkBundle() {
 
 async function loadHistory(id) {
   if (histCache.has(id)) return histCache.get(id);
-  const p = loadSparkBundle().then((all) => (all?.[id] ? { id, points: all[id] } : null));
+  const p = loadSparkBundle().then((all) => {
+    const base = all?.[id];
+    if (!base) return null;
+    if (!sparkLive[id]) sparkLive[id] = base.map((pt) => ({ ...pt }));
+    return { id, points: sparkLive[id] };
+  });
   histCache.set(id, p);
   return p;
 }

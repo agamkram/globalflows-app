@@ -1,4 +1,4 @@
-import { fetchMarketsLive } from "../scripts/markets-live.mjs";
+import { fetchTapeLive } from "../scripts/markets-live.mjs";
 
 const CACHE_MS = 15_000;
 let cache = null;
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     return;
   }
   try {
-    const body = await fetchMarketsLive();
+    const body = await fetchTapeLive();
     cache = { t: now, body };
     res.statusCode = 200;
     res.end(JSON.stringify(body));

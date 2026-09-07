@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260943" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260943" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260944" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260944" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260943" />
+  <link rel="stylesheet" href="styles.css?v=20260944" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -353,9 +353,12 @@
       <section class="about-block" id="data">
         <h2>Where the numbers come from</h2>
         <p>
-          Public sources: FRED, the New York Fed’s markets data, and Yahoo Finance
-          charts. A morning job refreshes the full table. Markets last prices can
-          update again when you open the app.
+          Public sources: FRED, the New York Fed, Yahoo Finance, Bundesbank,
+          Bank of England, and Japan’s Ministry of Finance. A morning job bakes
+          the full book. On open, last prints that can move — Yahoo tape, official
+          dailies, G3 / SOFR spread / dollar 12m — refresh again. Weekly, monthly,
+          and quarterly lines stay on the last official release. Analog history
+          stays the morning snapshot.
         </p>
         <div class="about-status" id="aboutStatus">
           <div>
@@ -411,7 +414,7 @@
           </div>
           <div>
             <dt id="g-last">Last print</dt>
-            <dd>The newest market price shown when you open Markets. Age sits beside the Markets title; the circle refreshes. Listed prices can lag about 15 minutes. The data table shows Latest; Chart view is the turn.</dd>
+            <dd>Newest print for series that can move between bakes. Age sits by the street title; the circle refreshes. Listed names can lag about 15 minutes. Chart uses the same last bar. Weekly/monthly/quarterly stay on the morning bake.</dd>
           </div>
           <div>
             <dt id="g-sowhat">So what</dt>
@@ -489,7 +492,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260943"></script>
+  <script type="module" src="about.js?v=20260944"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
