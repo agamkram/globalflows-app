@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * GlobalFlows ingest — public pipes only.
- * FRED CSV graph (no key required), NY Fed Markets API, Yahoo chart API.
+ * FRED CSV graph (no key required), NY Fed Markets API, Yahoo chart API,
+ * Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
  * Empty cell > fake. Writes data/snapshot.json + data/history/*.json
  */
 import fs from "node:fs/promises";
@@ -100,6 +101,156 @@ async function fetchFred(seriesId, spec) {
     points,
     source: "FRED",
     sourceUrl: `https://fred.stlouisfed.org/series/${seriesId}`,
+  };
+}
+
+function parseSdmxCsv(text, dateCol = "TIME_PERIOD", valueCol = "OBS_VALUE") {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const header = lines[0].replace(/^\uFEFF/, "").split(";");
+  const di = header.indexOf(dateCol);
+  const vi = header.indexOf(valueCol);
+  if (di < 0 || vi < 0) return [];
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(";");
+    const date = (cols[di] || "").trim();
+    const raw = (cols[vi] || "").trim();
+    if (!date || raw === "" || raw === ".") continue;
+    const value = Number(raw.replace(",", "."));
+    if (!Number.isFinite(value)) continue;
+    out.push({ date, value });
+  }
+  return out;
+}
+
+async function fetchBundesbank(key) {
+  // key is FLOW/SERIES.KEY e.g. BBSIS/D.I.ZAR.…
+  const slash = key.indexOf("/");
+  if (slash < 0) throw new Error("bundesbank key must be FLOW/SERIES");
+  const flow = key.slice(0, slash);
+  const series = key.slice(slash + 1);
+  const url =
+    `https://api.statistiken.bundesbank.de/rest/data/${encodeURIComponent(flow)}/${series}` +
+    `?detail=dataonly&startPeriod=1997-01-01`;
+  const text = await fetchText(url, {
+    headers: { Accept: "application/vnd.sdmx.data+csv;version=1.0.0" },
+  });
+  const points = parseSdmxCsv(text);
+  if (!points.length) throw new Error(`Bundesbank empty: ${key}`);
+  return {
+    points,
+    source: "Deutsche Bundesbank",
+    sourceUrl: `https://api.statistiken.bundesbank.de/rest/data/${flow}/${series}`,
+  };
+}
+
+const BOE_MONTHS = {
+  Jan: "01",
+  Feb: "02",
+  Mar: "03",
+  Apr: "04",
+  May: "05",
+  Jun: "06",
+  Jul: "07",
+  Aug: "08",
+  Sep: "09",
+  Oct: "10",
+  Nov: "11",
+  Dec: "12",
+};
+
+function parseBoeDate(s) {
+  const m = String(s).trim().match(/^(\d{1,2}) ([A-Za-z]{3}) (\d{4})$/);
+  if (!m) return null;
+  const mon = BOE_MONTHS[m[2]];
+  if (!mon) return null;
+  return `${m[3]}-${mon}-${m[1].padStart(2, "0")}`;
+}
+
+async function fetchBoe(code) {
+  const url =
+    "https://www.bankofengland.co.uk/boeapps/database/_iadb-fromshowcolumns.asp?csv.x=yes" +
+    `&Datefrom=01/Jan/1998&Dateto=now&SeriesCodes=${encodeURIComponent(code)}` +
+    "&CSVF=TN&UsingCodes=Y&VPD=Y&VFD=N";
+  const text = await fetchText(url);
+  const lines = text.trim().split(/\r?\n/);
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const comma = line.indexOf(",");
+    if (comma < 0) continue;
+    const date = parseBoeDate(line.slice(0, comma));
+    const raw = line.slice(comma + 1).trim();
+    if (!date || raw === "" || raw === ".") continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value)) continue;
+    out.push({ date, value });
+  }
+  if (!out.length) throw new Error(`BoE empty: ${code}`);
+  return {
+    points: out,
+    source: "Bank of England",
+    sourceUrl: `https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp?SeriesCodes=${encodeURIComponent(code)}&UsingCodes=Y`,
+  };
+}
+
+function parseMofDate(s) {
+  const m = String(s).trim().match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if (!m) return null;
+  return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
+}
+
+function parseMofJgbCsv(text) {
+  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/);
+  let header = null;
+  let tenorIdx = -1;
+  const out = [];
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = line.split(",");
+    if (!header) {
+      if (cols[0] && cols[0].trim() === "Date") {
+        header = cols.map((c) => c.trim());
+        tenorIdx = header.indexOf("10Y");
+      }
+      continue;
+    }
+    if (tenorIdx < 0) break;
+    const date = parseMofDate(cols[0]);
+    const raw = (cols[tenorIdx] || "").trim();
+    if (!date || raw === "" || raw === "-") continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value)) continue;
+    out.push({ date, value });
+  }
+  return out;
+}
+
+async function fetchMofJgb() {
+  const histUrl =
+    "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv";
+  const liveUrl =
+    "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv";
+  const hist = parseMofJgbCsv(await fetchText(histUrl));
+  let live = [];
+  try {
+    live = parseMofJgbCsv(await fetchText(liveUrl));
+  } catch {
+    live = [];
+  }
+  const byDate = new Map();
+  for (const p of hist) byDate.set(p.date, p.value);
+  for (const p of live) byDate.set(p.date, p.value);
+  const points = [...byDate.entries()]
+    .map(([date, value]) => ({ date, value }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (points.length < 200) throw new Error("MOF JGB thin");
+  return {
+    points,
+    source: "Japan Ministry of Finance",
+    sourceUrl: histUrl,
   };
 }
 
@@ -329,14 +480,21 @@ async function main() {
   const errors = [];
   const rawPoints = {};
 
+  const only = (process.env.INGEST_ONLY || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
   let priorSeries = {};
-  if (marketsOnly) {
+  if (marketsOnly || only.length) {
     try {
       const prev = JSON.parse(await fs.readFile(path.join(ROOT, "snapshot.json"), "utf8"));
       priorSeries = prev.series || {};
-      console.log(`Markets-only refresh — keeping ${Object.keys(priorSeries).length} prior series…`);
+      console.log(
+        `${marketsOnly ? "Markets-only" : "Partial"} refresh — keeping ${Object.keys(priorSeries).length} prior series…`
+      );
     } catch {
-      console.log("Markets-only refresh — no prior snapshot, full pull for selected…");
+      console.log("Partial refresh — no prior snapshot, full pull for selected…");
     }
   }
 
@@ -357,6 +515,10 @@ async function main() {
       if (priorSeries[s.id]) results[s.id] = priorSeries[s.id];
       continue;
     }
+    if (only.length && !only.includes(s.id)) {
+      if (priorSeries[s.id]) results[s.id] = priorSeries[s.id];
+      continue;
+    }
     process.stdout.write(`  ${s.id} (${s.pipe})… `);
     try {
       let got;
@@ -369,6 +531,14 @@ async function main() {
         got = await fetchNyfedSofr();
       } else if (s.pipe === "yahoo") {
         got = await fetchYahoo(s.yahoo);
+      } else if (s.pipe === "bundesbank") {
+        if (!s.bundesbank) throw new Error("missing bundesbank key");
+        got = await fetchBundesbank(s.bundesbank);
+      } else if (s.pipe === "boe") {
+        if (!s.boe) throw new Error("missing boe code");
+        got = await fetchBoe(s.boe);
+      } else if (s.pipe === "mof_jgb") {
+        got = await fetchMofJgb();
       } else {
         throw new Error(`unknown pipe ${s.pipe}`);
       }
@@ -658,28 +828,47 @@ async function main() {
     const dollar = sorted(rawPoints.DTWEXBGS);
     if (dollar.length > 300)
       await emitDerived("DOLLAR_YOY", yoy(dollar, 12), "derived (broad dollar, 12-month change)");
-
-    // Global long rates: only months where all three print, so the average never
-    // silently becomes a different basket.
-    const de = sorted(rawPoints.IRLTLT01DEM156N);
-    const gb = sorted(rawPoints.IRLTLT01GBM156N);
-    const jp = sorted(rawPoints.IRLTLT01JPM156N);
-    if (de.length && gb.length && jp.length) {
-      const byDate = new Map();
-      for (const [name, arr] of [["de", de], ["gb", gb], ["jp", jp]])
-        for (const p of arr) {
-          if (!byDate.has(p.date)) byDate.set(p.date, {});
-          byDate.get(p.date)[name] = p.value;
-        }
-      const g3 = [...byDate.entries()]
-        .filter(([, v]) => v.de != null && v.gb != null && v.jp != null)
-        .map(([date, v]) => ({ date, value: (v.de + v.gb + v.jp) / 3 }))
-        .sort((a, b) => a.date.localeCompare(b.date));
-      if (g3.length > 100) await emitDerived("G3_10Y", g3, "derived (mean of DE, UK, JP 10-year)");
-    }
   } catch (e) {
     console.log(`  GLOBAL_CB FAIL  ${e.message}`);
     errors.push({ id: "GLOBAL_CB", error: String(e.message || e) });
+  }
+
+  try {
+    const sorted = (a) => [...(a || [])].sort((x, y) => x.date.localeCompare(y.date));
+    const fill = (pts, state, date) => {
+      while (state.i + 1 < pts.length && pts[state.i + 1].date <= date) state.i++;
+      const p = pts[state.i];
+      return p && p.date <= date ? p.value : null;
+    };
+    // Daily Bund (Bundesbank), gilt (BoE) and JGB (MOF). Carry each last print
+    // forward onto the union calendar so holidays don't drop a country.
+    const de = sorted(rawPoints.DE10Y);
+    const gb = sorted(rawPoints.GB10Y);
+    const jp = sorted(rawPoints.JP10Y);
+    if (de.length && gb.length && jp.length) {
+      const dates = [...new Set([...de, ...gb, ...jp].map((p) => p.date))].sort();
+      const cur = { de: { i: 0 }, gb: { i: 0 }, jp: { i: 0 } };
+      const g3 = [];
+      for (const date of dates) {
+        const d = fill(de, cur.de, date);
+        const g = fill(gb, cur.gb, date);
+        const j = fill(jp, cur.jp, date);
+        if (d == null || g == null || j == null) continue;
+        g3.push({ date, value: (d + g + j) / 3 });
+      }
+      if (g3.length > 200)
+        await emitDerived(
+          "G3_10Y",
+          g3,
+          "derived (mean of daily Bund, gilt and JGB 10-year)"
+        );
+      else console.log(`  G3_10Y skip  thin overlap (${g3.length})`);
+    } else {
+      console.log("  G3_10Y skip  missing a daily 10-year leg");
+    }
+  } catch (e) {
+    console.log(`  G3_10Y FAIL  ${e.message}`);
+    errors.push({ id: "G3_10Y", error: String(e.message || e) });
   }
 
   // Derived: stock-bond 60d corr using SPX returns vs -DGS10 changes (approx)
@@ -881,6 +1070,10 @@ async function main() {
   }
 
   applyRealRateAnchors(results);
+
+  for (const [id, row] of Object.entries(priorSeries)) {
+    if (!results[id]) results[id] = row;
+  }
 
   const lights = buildLights({
     series: results,

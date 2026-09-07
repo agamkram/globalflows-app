@@ -1,13 +1,13 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260940";
+import { buildMeaning } from "./meaning.js?v=20260941";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260940";
+} from "./score.js?v=20260941";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 

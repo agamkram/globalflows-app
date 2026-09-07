@@ -640,7 +640,7 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "German 10-year Bund yield, OECD monthly average. FRED has no daily Bund; this line is the official print, not the live tape."
+      "note": "German 10-year Bund yield, OECD monthly average. Slow official print; the live tape is Bund 10-year (Bundesbank daily)."
     },
     {
       "id": "IRLTLT01GBM156N",
@@ -658,7 +658,7 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "UK 10-year Gilt yield, OECD monthly average. FRED has no daily Gilt; this line is the official print, not the live tape."
+      "note": "UK 10-year Gilt yield, OECD monthly average. Slow official print; the live tape is Gilt 10-year (BoE daily)."
     },
     {
       "id": "IRLTLT01JPM156N",
@@ -676,7 +676,57 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "Japan 10-year JGB yield, OECD monthly average. FRED has no daily JGB; this line is the official print, not the live tape."
+      "note": "Japan 10-year JGB yield, OECD monthly average. Slow official print; the live tape is JGB 10-year (MOF daily)."
+    },
+    {
+      "id": "DE10Y",
+      "name": "Bund 10-year",
+      "layer": "rates",
+      "pipe": "bundesbank",
+      "bundesbank": "BBSIS/D.I.ZAR.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "sourceUrl": "https://www.bundesbank.de/en/statistics/money-and-capital-markets/interest-rates-and-yields/daily-term-structure-on-listed-federal-securities-651570",
+      "sub": "German 10-year · Bundesbank daily",
+      "search": "DE10Y Bund",
+      "causal": "rates",
+      "street": "rates",
+      "light": null,
+      "note": "Constant-maturity 10-year Bund yield from the Bundesbank term structure. Daily official print."
+    },
+    {
+      "id": "GB10Y",
+      "name": "Gilt 10-year",
+      "layer": "rates",
+      "pipe": "boe",
+      "boe": "IUDSNPY",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "sourceUrl": "https://www.bankofengland.co.uk/statistics/yield-curves",
+      "sub": "UK 10-year · BoE daily par yield",
+      "search": "GB10Y gilt",
+      "causal": "rates",
+      "street": "rates",
+      "light": null,
+      "note": "Bank of England daily 10-year nominal par yield on gilts (IUDSNPY)."
+    },
+    {
+      "id": "JP10Y",
+      "name": "JGB 10-year",
+      "layer": "rates",
+      "pipe": "mof_jgb",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/index.htm",
+      "sub": "Japan 10-year · MOF daily",
+      "search": "JP10Y JGB",
+      "causal": "rates",
+      "street": "rates",
+      "light": null,
+      "note": "Japan Ministry of Finance daily 10-year JGB par yield."
     },
     {
       "id": "MOVE",
@@ -2910,17 +2960,16 @@
       "pipe": "derived",
       "derive": "g3_10y",
       "units": "%",
-      "freq": "monthly",
+      "freq": "daily",
       "sign": -1,
-      "freshness": "lagged",
       "light": "rates",
       "weight": 1,
-      "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-      "sub": "German, UK and Japanese 10-year · OECD monthly",
+      "sourceUrl": "https://www.bundesbank.de/en/statistics/money-and-capital-markets/interest-rates-and-yields/daily-term-structure-on-listed-federal-securities-651570",
+      "sub": "Mean of daily Bund, gilt and JGB 10-year",
       "search": "G3_10Y",
       "causal": "rates",
       "street": "rates",
-      "note": "Average 10-year across Germany, the UK and Japan from OECD monthly averages. FRED and Yahoo do not carry a daily Bund/Gilt/JGB yield, so this voter sits out when the print is older than the monthly age cap rather than treating a two-month-old OECD number as live."
+      "note": "Average 10-year across Germany, the UK and Japan from official daily prints: Bundesbank Bund term structure, Bank of England gilt par yield, Japan MOF JGB. Duration is priced globally — when Bunds and JGBs move, Treasuries follow."
     }
   ],
   "lights": [
