@@ -1,9 +1,14 @@
-# Daily regime bake. Same pattern as GovDash Heat / Orbital catalog:
-# runner pulls public series → history → regime → sanity → allowlisted JSON → Vercel.
+# Daily regime bake. Same path as a pasted `do #1`:
+#   npm run refresh = ingest → vintages → history → regime → sanity
+# then commit allowlisted JSON → Vercel.
 #
-# `npm run refresh` is ingest + bake:history + bake:regime + sanity.
-# Ingest pipes (no extra secrets): FRED (CSV graph; FRED_API_KEY optional),
-# NY Fed, Yahoo, Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
+# Vintages (ALFRED) are gitignored. The runner restores a cache so a failed
+# vintage pull still scores analog on yesterday's vintages instead of revised
+# history. When FRED_API_KEY is set, fetch:vintages still runs every morning
+# so today's payroll/CPI revisions land in the analog archive.
+#
+# Ingest pipes: FRED (CSV; API when FRED_API_KEY is set), NY Fed, Yahoo,
+# Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
 # Catalog / app.js / meaning.js are not bake files — they ship on ordinary pushes.
 #
 # Kickoff ~8:47 America/New_York (after typical 8:30 macro prints start
@@ -17,7 +22,7 @@
 #   BAKE_SMTP_PORT   587
 #   BAKE_SMTP_USER   SMTP login (usually the Gmail address)
 #   BAKE_SMTP_PASS   app password (not the normal Gmail password)
-# Optional: FRED_API_KEY for the JSON API path (CSV graph works without it).
+# FRED_API_KEY: analog vintages. Without it, analog falls back to revised history.
 # Without mail secrets the bake still ships; before/after is always in the job summary.
 name: Regime bake
 
@@ -65,6 +70,14 @@ jobs:
       - name: Install dependencies
         run: npm install --no-fund --no-audit
 
+      - name: Restore vintage cache
+        uses: actions/cache@v4
+        with:
+          path: data/vintages
+          key: vintages-${{ github.run_id }}
+          restore-keys: |
+            vintages-
+
       - name: Snapshot before
         run: node scripts/bake-report.mjs --snapshot-before /tmp/regime-before.json
 
@@ -76,7 +89,7 @@ jobs:
           if npm run refresh; then
             echo "Refresh succeeded."
           else
-            echo "Refresh exited non-zero (ingest, history, bake, or sanity). Retrying once..."
+            echo "Refresh exited non-zero (ingest, vintages, history, bake, or sanity). Retrying once..."
             npm run refresh
           fi
 
