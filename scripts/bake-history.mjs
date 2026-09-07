@@ -87,8 +87,8 @@ async function main() {
 
   // A voter whose history starts after the archive does silently changes a light's
   // composition partway through the record, which makes early analogs incomparable
-  // to late ones. FRED's unauthenticated CSV truncates the ICE BofA spreads to
-  // three years, so this fires unless FRED_API_KEY is set at ingest.
+  // to late ones. As of April 2026 FRED only publishes three years of ICE BofA
+  // OAS (even with an API key). Early analog days score Risk without HY.
   const shortCoverage = voters
     .filter((s) => hist[s.id] && hist[s.id][0].date > START)
     .map((s) => `${s.id} (${s.light}, from ${hist[s.id][0].date})`);

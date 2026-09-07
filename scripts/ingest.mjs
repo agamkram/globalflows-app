@@ -449,6 +449,25 @@ function computeStats(points, spec = {}) {
   return seriesFacts(points, spec);
 }
 
+async function loadDotEnv(dir) {
+  try {
+    const text = await fs.readFile(path.join(dir, ".env"), "utf8");
+    for (const line of text.split(/\r?\n/)) {
+      const t = line.trim();
+      if (!t || t.startsWith("#")) continue;
+      const eq = t.indexOf("=");
+      if (eq < 1) continue;
+      const k = t.slice(0, eq).trim();
+      let v = t.slice(eq + 1).trim();
+      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'")))
+        v = v.slice(1, -1);
+      if (k && process.env[k] == null) process.env[k] = v;
+    }
+  } catch {
+    /* no .env */
+  }
+}
+
 function pearson(xs, ys) {
   const n = Math.min(xs.length, ys.length);
   if (n < 10) return null;
@@ -471,6 +490,7 @@ function pearson(xs, ys) {
 }
 
 async function main() {
+  await loadDotEnv(ROOT);
   const catalog = JSON.parse(await fs.readFile(CATALOG, "utf8"));
   await fs.mkdir(HIST, { recursive: true });
 
