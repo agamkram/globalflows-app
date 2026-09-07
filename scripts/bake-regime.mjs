@@ -196,7 +196,7 @@ async function main() {
     creditImpulse: impulse
       ? { latest: impulse.latest, asOf: impulse.asOf, units: impulse.units }
       : null,
-    note: "Anchored lights. Impulse default 6m. Meaning = duration/credit/asset classes.",
+    note: `Anchored lights. Impulse default ${DEFAULT_IMPULSE}. Meaning = duration/credit/asset classes.`,
   };
 
   const analogs = await buildAnalogs(

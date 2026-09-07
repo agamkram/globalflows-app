@@ -5,7 +5,7 @@
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 export const IMPULSE_KEYS = ["1m", "3m", "6m", "1y"];
-export const DEFAULT_IMPULSE = "6m";
+export const DEFAULT_IMPULSE = "1m";
 
 const DAYS = { "1m": 30, "3m": 91, "6m": 182, "1y": 365 };
 
