@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T16:37:56.466Z",
+  "generatedAt": "2026-09-07T17:38:55.680Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -18,13 +18,13 @@
     {
       "id": "growth",
       "label": "Growth",
-      "blurb": "Labor, activity, housing, copper.",
+      "blurb": "Labor, activity, housing, copper. Euro and Japan unemployment on the book.",
       "role": "street"
     },
     {
       "id": "inflation",
       "label": "Inflation",
-      "blurb": "CPI, PCE, sticky, expectations.",
+      "blurb": "CPI, PCE, sticky, expectations. Euro HICP on the book.",
       "role": "street"
     },
     {
@@ -3178,6 +3178,130 @@
       },
       "status": "ok",
       "staleDays": 36
+    },
+    "EA_UNRATE": {
+      "id": "EA_UNRATE",
+      "name": "Euro area unemployment",
+      "layer": "growth",
+      "street": "growth",
+      "causal": "labels",
+      "units": "%",
+      "freq": "monthly",
+      "sign": -1,
+      "light": null,
+      "impulseLight": null,
+      "weight": 1,
+      "marketBucket": null,
+      "order": null,
+      "note": "Harmonized unemployment rate for the euro area. On the book, does not vote the Growth light.",
+      "sub": "Euro area jobless rate",
+      "search": "LRHUTTTTATM156S",
+      "freshness": "live",
+      "source": "FRED",
+      "sourceUrl": "https://fred.stlouisfed.org/series/LRHUTTTTATM156S",
+      "latest": 5.7,
+      "asOf": "2026-06-01",
+      "n": 402,
+      "anchor": {
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
+      },
+      "impulse": {
+        "1m": {
+          "delta": -0.09999999999999964,
+          "dir": "down",
+          "score": 1.0964912280701715,
+          "prior": 5.8,
+          "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 5.7,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": -0.09999999999999964,
+          "dir": "down",
+          "score": 1.0964912280701715,
+          "prior": 5.8,
+          "priorDate": "2025-12-01"
+        },
+        "1y": {
+          "delta": -0.2999999999999998,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 6,
+          "priorDate": "2025-06-01"
+        }
+      },
+      "status": "ok",
+      "staleDays": 98
+    },
+    "JP_UNRATE": {
+      "id": "JP_UNRATE",
+      "name": "Japan unemployment",
+      "layer": "growth",
+      "street": "growth",
+      "causal": "labels",
+      "units": "%",
+      "freq": "monthly",
+      "sign": -1,
+      "light": null,
+      "impulseLight": null,
+      "weight": 1,
+      "marketBucket": null,
+      "order": null,
+      "note": "Harmonized unemployment rate for Japan. On the book, does not vote the Growth light.",
+      "sub": "Japan jobless rate",
+      "search": "LRHUTTTTJPM156S",
+      "freshness": "live",
+      "source": "FRED",
+      "sourceUrl": "https://fred.stlouisfed.org/series/LRHUTTTTJPM156S",
+      "latest": 2.5,
+      "asOf": "2026-06-01",
+      "n": 858,
+      "anchor": {
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
+      },
+      "impulse": {
+        "1m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 2.5,
+          "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": -0.20000000000000018,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 2.7,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": -0.10000000000000009,
+          "dir": "down",
+          "score": 1.250000000000001,
+          "prior": 2.6,
+          "priorDate": "2025-12-01"
+        },
+        "1y": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 2.5,
+          "priorDate": "2025-06-01"
+        }
+      },
+      "status": "ok",
+      "staleDays": 98
     },
     "ICSA": {
       "id": "ICSA",
@@ -6713,6 +6837,68 @@
       "status": "ok",
       "staleDays": 67
     },
+    "EA_HICP": {
+      "id": "EA_HICP",
+      "name": "Euro area HICP",
+      "layer": "inflation",
+      "street": "inflation",
+      "causal": "labels",
+      "units": "% YoY",
+      "freq": "monthly",
+      "sign": 0,
+      "light": null,
+      "impulseLight": null,
+      "weight": 1,
+      "marketBucket": null,
+      "order": null,
+      "note": "Euro area HICP all-items, 12-month change. On the book, does not vote the Inflation light. Eurostat's old annual-rate series ended with 2025; this is the live index.",
+      "sub": "Euro area consumer prices, 12m",
+      "search": "CP0000EZ19M086NEST",
+      "freshness": "live",
+      "source": "FRED",
+      "sourceUrl": "https://fred.stlouisfed.org/series/CP0000EZ19M086NEST",
+      "latest": 2.9317909852413226,
+      "asOf": "2026-07-01",
+      "n": 344,
+      "anchor": {
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
+      },
+      "impulse": {
+        "1m": {
+          "delta": 0.19889651087467985,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.732894474366643,
+          "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -0.06760913473469188,
+          "dir": "down",
+          "score": -0.8451141841836485,
+          "prior": 2.9994001199760145,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 1.2961108064340587,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1.635680178807264,
+          "priorDate": "2026-01-01"
+        },
+        "1y": {
+          "delta": 0.917548869269802,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.0142421159715207,
+          "priorDate": "2025-07-01"
+        }
+      },
+      "status": "ok",
+      "staleDays": 68
+    },
     "BAA10Y": {
       "id": "BAA10Y",
       "name": "Baa spread over 10s",
@@ -9810,66 +9996,6 @@
       },
       "status": "ok"
     },
-    "G3_10Y": {
-      "id": "G3_10Y",
-      "name": "Global long rates (G3)",
-      "layer": "rates",
-      "street": "rates",
-      "causal": "rates",
-      "units": "%",
-      "freq": "daily",
-      "sign": -1,
-      "light": "rates",
-      "impulseLight": null,
-      "weight": 1,
-      "note": "Average 10-year across Germany, the UK and Japan from official daily prints: Bundesbank Bund term structure, Bank of England gilt par yield, Japan MOF JGB. Duration is priced globally — when Bunds and JGBs move, Treasuries follow.",
-      "sub": "Mean of daily Bund, gilt and JGB 10-year",
-      "search": "G3_10Y",
-      "freshness": "live",
-      "source": "derived (mean of daily Bund, gilt and JGB 10-year)",
-      "sourceUrl": "https://www.bundesbank.de/en/statistics/money-and-capital-markets/interest-rates-and-yields/daily-term-structure-on-listed-federal-securities-651570",
-      "latest": 3.6295,
-      "asOf": "2026-09-07",
-      "n": 7461,
-      "anchor": {
-        "kind": "g3_10y",
-        "score": -0.2098333333333334,
-        "why": "German, UK and Japanese 10-year average 3.6%",
-        "votes": true
-      },
-      "impulse": {
-        "1m": {
-          "delta": 0.15963333333333374,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 3.4698666666666664,
-          "priorDate": "2026-08-07"
-        },
-        "3m": {
-          "delta": 0.1988000000000003,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 3.4307,
-          "priorDate": "2026-06-08"
-        },
-        "6m": {
-          "delta": 0.5602333333333331,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 3.069266666666667,
-          "priorDate": "2026-03-09"
-        },
-        "1y": {
-          "delta": 0.8728000000000002,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 2.7567,
-          "priorDate": "2025-09-05"
-        }
-      },
-      "status": "ok",
-      "staleDays": 0
-    },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
       "name": "Stock–bond correlation",
@@ -10043,6 +10169,66 @@
         }
       },
       "status": "ok"
+    },
+    "G3_10Y": {
+      "id": "G3_10Y",
+      "name": "Global long rates (G3)",
+      "layer": "rates",
+      "street": "rates",
+      "causal": "rates",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "light": "rates",
+      "impulseLight": null,
+      "weight": 1,
+      "note": "Average 10-year across Germany, the UK and Japan from official daily prints: Bundesbank Bund term structure, Bank of England gilt par yield, Japan MOF JGB. Duration is priced globally — when Bunds and JGBs move, Treasuries follow.",
+      "sub": "Mean of daily Bund, gilt and JGB 10-year",
+      "search": "G3_10Y",
+      "freshness": "live",
+      "source": "derived (mean of daily Bund, gilt and JGB 10-year)",
+      "sourceUrl": "https://www.bundesbank.de/en/statistics/money-and-capital-markets/interest-rates-and-yields/daily-term-structure-on-listed-federal-securities-651570",
+      "latest": 3.6295,
+      "asOf": "2026-09-07",
+      "n": 7461,
+      "anchor": {
+        "kind": "g3_10y",
+        "score": -0.2098333333333334,
+        "why": "German, UK and Japanese 10-year average 3.6%",
+        "votes": true
+      },
+      "impulse": {
+        "1m": {
+          "delta": 0.15963333333333374,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.4698666666666664,
+          "priorDate": "2026-08-07"
+        },
+        "3m": {
+          "delta": 0.1988000000000003,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.4307,
+          "priorDate": "2026-06-08"
+        },
+        "6m": {
+          "delta": 0.5602333333333331,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.069266666666667,
+          "priorDate": "2026-03-09"
+        },
+        "1y": {
+          "delta": 0.8728000000000002,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.7567,
+          "priorDate": "2025-09-05"
+        }
+      },
+      "status": "ok",
+      "staleDays": 0
     },
     "SOFR_SPREAD": {
       "id": "SOFR_SPREAD",

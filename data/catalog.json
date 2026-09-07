@@ -17,13 +17,13 @@
     {
       "id": "growth",
       "label": "Growth",
-      "blurb": "Labor, activity, housing, copper.",
+      "blurb": "Labor, activity, housing, copper. Euro and Japan unemployment on the book.",
       "role": "street"
     },
     {
       "id": "inflation",
       "label": "Inflation",
-      "blurb": "CPI, PCE, sticky, expectations.",
+      "blurb": "CPI, PCE, sticky, expectations. Euro HICP on the book.",
       "role": "street"
     },
     {
@@ -934,6 +934,40 @@
       "street": "growth",
       "note": "Unemployment rate. Rising = labor market cooling (soft for growth).",
       "weight": 1
+    },
+    {
+      "id": "EA_UNRATE",
+      "name": "Euro area unemployment",
+      "layer": "growth",
+      "pipe": "fred",
+      "fred": "LRHUTTTTATM156S",
+      "units": "%",
+      "freq": "monthly",
+      "sign": -1,
+      "light": null,
+      "sourceUrl": "https://fred.stlouisfed.org/series/LRHUTTTTATM156S",
+      "sub": "Euro area jobless rate",
+      "search": "LRHUTTTTATM156S",
+      "causal": "labels",
+      "street": "growth",
+      "note": "Harmonized unemployment rate for the euro area. On the book, does not vote the Growth light."
+    },
+    {
+      "id": "JP_UNRATE",
+      "name": "Japan unemployment",
+      "layer": "growth",
+      "pipe": "fred",
+      "fred": "LRHUTTTTJPM156S",
+      "units": "%",
+      "freq": "monthly",
+      "sign": -1,
+      "light": null,
+      "sourceUrl": "https://fred.stlouisfed.org/series/LRHUTTTTJPM156S",
+      "sub": "Japan jobless rate",
+      "search": "LRHUTTTTJPM156S",
+      "causal": "labels",
+      "street": "growth",
+      "note": "Harmonized unemployment rate for Japan. On the book, does not vote the Growth light."
     },
     {
       "id": "ICSA",
@@ -1977,6 +2011,24 @@
       "sub": "Slow-moving core prices",
       "search": "CORESTICKM159SFRBATL",
       "note": "Atlanta Fed sticky core CPI. Core prices that are slow to change."
+    },
+    {
+      "id": "EA_HICP",
+      "name": "Euro area HICP",
+      "layer": "inflation",
+      "pipe": "fred",
+      "fred": "CP0000EZ19M086NEST",
+      "units": "% YoY",
+      "freq": "monthly",
+      "sign": 0,
+      "light": null,
+      "transform": "yoy",
+      "sourceUrl": "https://fred.stlouisfed.org/series/CP0000EZ19M086NEST",
+      "sub": "Euro area consumer prices, 12m",
+      "search": "CP0000EZ19M086NEST",
+      "causal": "labels",
+      "street": "inflation",
+      "note": "Euro area HICP all-items, 12-month change. On the book, does not vote the Inflation light. Eurostat's old annual-rate series ended with 2025; this is the live index."
     },
     {
       "id": "BAA10Y",
