@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260946";
+import { buildMeaning } from "./meaning.js?v=20260947";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260946";
+} from "./score.js?v=20260947";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1066,8 +1066,9 @@ function analogHtml(br) {
         : br.verdict === "coinflip"
           ? "History is a coin flip"
           : `History leans ${br.lean}`;
+  const star = br.verdict === "disagrees" ? "* " : "";
   return `<span class="rubric-base" data-verdict="${br.verdict}">
-    <strong>${escapeHtml(verdictWord)}</strong>
+    <strong>${star}${escapeHtml(verdictWord)}</strong>
     <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
       Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
     } (${br.n} days).</span>
@@ -1124,15 +1125,17 @@ function openFavorCard(id) {
   const st = stanceState(it.stance);
   const word = it.stance === "in" ? "In" : it.stance === "out" ? "Out" : "Mixed";
   const extras = favorItemExtras(it);
+  const clash = itemClash(it);
+  const star = clash ? " *" : "";
 
   const titleEl = $("#sentenceTitle");
-  if (titleEl) titleEl.textContent = it.name;
+  if (titleEl) titleEl.textContent = it.name + star;
   const fullBtn = $("#btnFullRegime");
   if (fullBtn) fullBtn.hidden = false;
 
   $("#sentenceBody").innerHTML = `
     <div class="sent-explain rubric-row"><p class="sent-explain-title">
-      <strong data-state="${st}">${word}</strong>
+      <strong data-state="${st}">${word}${star}</strong>
       <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
       ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
     </div>
