@@ -432,6 +432,8 @@ body.page-about::before {
 }
 .favor-cell[data-favor-id="cmdty"] .favor-title {
   font-size: 0.49rem;
+  line-height: calc(1.15 * 0.48rem);
+  min-height: calc(2.3 * 0.48rem);
   white-space: nowrap;
   letter-spacing: 0;
   overflow: visible;
