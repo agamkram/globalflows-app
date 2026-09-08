@@ -237,7 +237,7 @@ function whyKind(kind, value) {
     case "vix":
       return `VIX ${fmt(v, 1)}`;
     case "hy":
-      return `HY OAS ${fmt(v)}% — 2.5 is cycle tights, 4 is typical, 6.5 is stress`;
+      return `High-yield OAS ${fmt(v)}% — 2.5 is cycle tights, 4 is typical, 6.5 is stress`;
     case "bei_5y5y":
       return `5y5y ${fmt(v)}% — 2.3 is the CPI-equivalent of a 2% PCE target`;
     case "bbb":

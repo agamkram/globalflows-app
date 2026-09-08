@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260992" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260992" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260994" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260994" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260992" />
+  <link rel="stylesheet" href="styles.css?v=20260994" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -144,8 +144,8 @@
           commodities. Read the colours as a direction the whole machine is
           leaning, then let the asset classes below tell you who that helps.
           Inflation votes core PCE, core CPI, and the market’s 5y5y — not
-          household surveys. Risk votes VIX, HY, Baa (the long credit history),
-          and NFCI. MOVE stays on Rates as the bond-market stress gauge: a spike
+          household surveys. Risk votes VIX, high-yield and Baa spreads (the long
+          credit history), and NFCI. MOVE stays on Rates as the bond-market stress gauge: a spike
           can tighten the light and the turn; calm does not vote easy.
         </p>
         <div class="about-legend" aria-label="Light colors">
@@ -215,7 +215,7 @@
         <h2>So what</h2>
         <p>
           Under the five lights sit six asset classes — Treasuries (5 / 10 / 30),
-          credit (IG / HY), equities, crypto, gold, commodities. Green, amber, and red mean in,
+          credit (investment grade / high yield), equities, crypto, gold, commodities. Green, amber, and red mean in,
           mixed, and out of favor. Tap a class for why that call, the curve or
           credit split, and the analog. <strong>Full regime</strong> inside that card
           is the longer duration / credit / confirm sheet.
@@ -241,7 +241,7 @@
             <h3>In / out of favor</h3>
             <p>
               The same mix, mapped onto six asset classes. Treasuries split 5s, 10s,
-              and 30s. Credit shows IG and HY the same way. Crypto is the
+              and 30s. Credit shows investment grade and high yield the same way. Crypto is the
               high-beta liquidity valve (Bitcoin), not a footnote on equities. Gold
               is money/fear; commodities are the real cycle. Bills live on the
               Rates light, not as their own class.
@@ -290,10 +290,11 @@
           </li>
           <li>
             <strong>Credit</strong>
-            — IG and HY on the strip, like 5s / 10s / 30s. IG cares about
-            duration as well as spreads; HY cares about growth, fear, and
-            whether the spread pays. Cycle-tight OAS takes HY out even if fear
-            is cheap. If IG and HY disagree, the Credit title is mixed.
+            — investment grade and high yield on the strip, like 5s / 10s / 30s.
+            Investment-grade bonds care about duration as well as spreads;
+            high yield cares about growth, fear, and whether the spread pays.
+            Cycle-tight OAS takes high yield out even if fear is cheap. If the
+            two disagree, the Credit title is mixed.
           </li>
           <li>
             <strong>Equities</strong>
@@ -397,7 +398,7 @@
         <dl class="glossary">
           <div>
             <dt id="g-level">Level</dt>
-            <dd>Where a light sits versus an economic line (2% inflation, ~4% unemployment, VIX/HY bands). High is high. Not a table column — only a few series vote this.</dd>
+            <dd>Where a light sits versus an economic line (2% inflation, ~4% unemployment, VIX and high-yield bands). High is high. Not a table column — only a few series vote this.</dd>
           </div>
           <div>
             <dt id="g-impulse">Impulse</dt>
@@ -425,7 +426,7 @@
           </div>
           <div>
             <dt id="g-sowhat">So what</dt>
-            <dd>The six asset classes under the lights, and the panel behind a tap: duration risk, credit risk, 5/10/30 and IG/HY on the strip, what confirms, and what would falsify.</dd>
+            <dd>The six asset classes under the lights, and the panel behind a tap: duration risk, credit risk, 5/10/30 and investment grade / high yield on the strip, what confirms, and what would falsify.</dd>
           </div>
           <div>
             <dt id="g-mapping">The mapping</dt>
@@ -488,6 +489,14 @@
         <h3 class="about-gloss-head">Fear &amp; credit</h3>
         <dl class="glossary">
           <div>
+            <dt id="g-ig">Investment grade</dt>
+            <dd>Higher-rated corporate bonds. Extra yield over Treasuries, but much of the risk is still duration — when yields rise, prices fall.</dd>
+          </div>
+          <div>
+            <dt id="g-hy">High yield</dt>
+            <dd>Lower-rated corporate bonds, also called junk. More about whether the borrower still pays; the spread is the wage for that risk.</dd>
+          </div>
+          <div>
             <dt id="g-oas">OAS</dt>
             <dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries. Wider means more credit stress.</dd>
           </div>
@@ -499,7 +508,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260992"></script>
+  <script type="module" src="about.js?v=20260994"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

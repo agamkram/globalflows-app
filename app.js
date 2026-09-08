@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260992";
+import { buildMeaning } from "./meaning.js?v=20260994";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260992";
+} from "./score.js?v=20260994";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -521,7 +521,7 @@ function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%"></i></span></span>`;
 }
 
-/** Parent-class proxies. Credit has none — IG and HY are judged separately. */
+/** Parent-class proxies. Credit has none — investment grade and high yield are judged separately. */
 const FAVOR_ASSET = {
   treasuries: "TLT",
   credit: null,
@@ -608,7 +608,7 @@ function renderFavorStrip() {
         const title = it.name;
         const word = it.stance === "in" ? "in" : it.stance === "out" ? "out" : "mixed";
         // Star the cell if any judged proxy disagrees — 10s vs IEF, 30s vs TLT,
-        // IG vs LQD, HY vs HYG — not only the parent ticker.
+        // investment grade vs LQD, high yield vs HYG — not only the parent ticker.
         const clash = itemClash(it);
         const clashAttr = clash
           ? ` data-clash="true" title="History disagrees with this call"`
@@ -617,7 +617,7 @@ function renderFavorStrip() {
           clash ? ", history disagrees" : ""
         }. Tap for why."`;
         const titleHtml = escapeHtml(title);
-        // Treasuries: 5/10/30. Credit: IG/HY. No averaged parent needle.
+        // Treasuries: 5/10/30. Credit: investment grade / high yield. No averaged parent needle.
         const kids = it.tenors?.length ? it.tenors : it.splits?.length ? it.splits : null;
         if (kids) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
@@ -990,7 +990,7 @@ function regimeEvidence(snap) {
   if (risk === "easing") {
     beats.push(
       vix?.latest != null
-        ? `Fear: vol and credit are quiet (VIX ${fmtLightNum(vix.latest, 1)}${hy?.latest != null ? `, HY OAS ${fmtLightNum(hy.latest, 2)}` : ""}).`
+        ? `Fear: vol and credit are quiet (VIX ${fmtLightNum(vix.latest, 1)}${hy?.latest != null ? `, high-yield OAS ${fmtLightNum(hy.latest, 2)}` : ""}).`
         : `Fear: vol and credit stress are quiet — fear is cheap.`
     );
   } else if (risk === "tight") {

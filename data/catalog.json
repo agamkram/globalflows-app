@@ -1323,15 +1323,15 @@
       "sign": -1,
       "light": "risk",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
-      "sub": "Extra yield on junk bonds",
+      "sub": "Extra yield on high-yield bonds",
       "search": "BAMLH0A0HYM2",
       "causal": "risk",
       "street": "risk",
-      "note": "ICE BofA high-yield OAS. Extra yield junk bonds demand over Treasuries. FRED only publishes three years; the band is the long-run shape (2.5 tights / 4 typical / 6.5 stress), not this download. Baa over 10s is the long credit voter and carries more weight."
+      "note": "ICE BofA high-yield OAS. Extra yield high-yield bonds demand over Treasuries. FRED only publishes three years; the band is the long-run shape (2.5 tights / 4 typical / 6.5 stress), not this download. Baa over 10s is the long credit voter and carries more weight."
     },
     {
       "id": "BAMLC0A0CM",
-      "name": "IG credit spread",
+      "name": "Investment-grade credit spread",
       "layer": "risk",
       "pipe": "fred",
       "fred": "BAMLC0A0CM",
@@ -1340,11 +1340,11 @@
       "sign": -1,
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
-      "sub": "Extra yield on IG bonds",
+      "sub": "Extra yield on investment-grade bonds",
       "search": "BAMLC0A0CM",
       "causal": "risk",
       "street": "risk",
-      "note": "ICE BofA investment-grade OAS. Extra yield on IG corporates — milder credit stress."
+      "note": "ICE BofA investment-grade OAS. Extra yield on investment-grade corporates — milder credit stress."
     },
     {
       "id": "NFCI",
@@ -2062,7 +2062,7 @@
       "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
       "layer": "risk",
-      "sub": "Weakest IG bond premium",
+      "sub": "Weakest investment-grade bond premium",
       "search": "BAMLC0A4CBBB",
       "note": "ICE BofA BBB option-adjusted spread. FRED's open download only carries three years of this one, so the risk light votes Moody's Baa over 10s instead, which reaches back to 1986.",
       "impulseLight": "risk"
@@ -2079,7 +2079,7 @@
       "sign": -1,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A3HYC",
       "layer": "risk",
-      "sub": "Distressed junk premium",
+      "sub": "Distressed high-yield premium",
       "search": "BAMLH0A3HYC",
       "light": null,
       "note": "CCC high-yield OAS. Distressed credit; blows out in risk-off."
@@ -2130,16 +2130,16 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
       "layer": "risk",
-      "sub": "Junk bond price tape",
+      "sub": "High-yield bond price tape",
       "search": "HYG",
       "light": null,
-      "note": "iShares High Yield Corporate Bond ETF. Price tape for HY credit (up = easier).",
+      "note": "iShares High Yield Corporate Bond ETF. Price tape for high-yield credit (up = easier).",
       "marketBucket": "credit",
       "order": 210
     },
     {
       "id": "LQD",
-      "name": "IG bond ETF",
+      "name": "Investment-grade bond ETF",
       "street": "risk",
       "causal": "risk",
       "pipe": "yahoo",
@@ -2149,10 +2149,10 @@
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
       "layer": "risk",
-      "sub": "IG corporate bond prices",
+      "sub": "Investment-grade corporate bond prices",
       "search": "LQD",
       "light": null,
-      "note": "iShares IG Corporate Bond ETF. Price tape for investment-grade credit.",
+      "note": "iShares Investment Grade Corporate Bond ETF. Price tape for investment-grade credit.",
       "marketBucket": "credit",
       "order": 220
     },

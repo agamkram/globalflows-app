@@ -146,7 +146,7 @@ function gradeTenor(name, score, ctx, cap = 1) {
 
 /**
  * Map duration × credit (plus lights) onto six asset classes.
- * Treasuries split 5 / 10 / 30. Credit is one class (IG vs HY in the tap).
+ * Treasuries split 5 / 10 / 30. Credit shows investment grade and high yield.
  */
 function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts) {
   const L = stateOf(lights, "liquidity");
@@ -227,16 +227,21 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   };
 
   const igOutParts = [];
-  if (durationDir === "rising") igOutParts.push("rising yields tax the duration in IG");
+  if (durationDir === "rising") {
+    igOutParts.push("rising yields tax the duration in investment-grade bonds");
+  }
   if (creditDir === "rising") igOutParts.push("cash-flow doubt is hitting credit");
   const ig = instrument(
     "ig",
-    "IG",
+    "Investment grade",
     creditDir === "falling" && durationDir !== "rising",
     creditDir === "rising" || durationDir === "rising",
     "Spreads can tighten and duration is not fighting you.",
-    sentence(igOutParts, "Either cash-flow doubt or rising yields — IG gets hit from one side or both."),
-    "IG sits between duration and credit; neither side is giving a clean signal."
+    sentence(
+      igOutParts,
+      "Either cash-flow doubt or rising yields — investment-grade bonds get hit from one side or both."
+    ),
+    "Investment-grade credit sits between duration and credit risk; neither side is giving a clean signal."
   );
   ig.margin = blendMargin(
     ig.stance,
@@ -265,12 +270,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (hyTights) hyOutParts.push("spreads are at cycle tights — you are not paid");
   const hy = instrument(
     "hy",
-    "HY",
+    "High yield",
     creditDir === "falling" && L !== "tight" && R !== "tight" && !hyTights,
     creditDir === "rising" || R === "tight" || L === "tight" || G === "tight" || hyTights,
     "Growth and risk appetite still say coupons get paid.",
-    sentence(hyOutParts, "HY is the first credit to get hurt."),
-    "HY needs both growth and calm fear; only one side is helping."
+    sentence(hyOutParts, "High yield is the first credit to get hurt."),
+    "High yield needs both growth and calm fear; only one side is helping."
   );
   hy.margin = blendMargin(
     hy.stance,
@@ -290,17 +295,18 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     meanImpulse([gImp, kImp, hyImp])
   );
   let creditStance = "mixed";
-  let creditWhy = `IG ${ig.stance}, HY ${hy.stance} — duration vs cash-flow aren’t the same trade.`;
+  let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     creditStance = ig.stance;
     if (creditStance === "out") {
       creditWhy = hyTights
-        ? "IG and HY are both out — duration taxes IG and junk isn’t paying a spread."
-        : "IG and HY are both out — duration and cash-flow risk are both up.";
+        ? "Investment grade and high yield are both out — rising yields tax investment-grade bonds, and high-yield spreads are too tight to pay."
+        : "Investment grade and high yield are both out — duration and cash-flow risk are both up.";
     } else if (creditStance === "in") {
-      creditWhy = "IG and HY are both in — spreads can tighten and coupons still look collectible.";
+      creditWhy =
+        "Investment grade and high yield are both in — spreads can tighten and coupons still look collectible.";
     } else {
-      creditWhy = "IG and HY are both mixed.";
+      creditWhy = "Investment grade and high yield are both mixed.";
     }
   }
   const credit = {
@@ -510,13 +516,13 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   let creditLabel = "Credit risk mixed";
   let creditLine = "";
 
-  // Impulse slowing is a note, not a witness. HY at cycle tights with a still-
+  // Impulse slowing is a note, not a witness. High-yield at cycle tights with a still-
   // positive impulse is not "credit risk rising" just because lending cooled a bit.
   const creditUpParts = [];
   if (G === "tight") creditUpParts.push("growth is soft");
   if (R === "tight") creditUpParts.push("fear is expensive");
   if (Gimp === "down") creditUpParts.push("activity is rolling over this window");
-  if (hyImp.dir === "up") creditUpParts.push("HY spreads are widening this window");
+  if (hyImp.dir === "up") creditUpParts.push("high-yield spreads are widening this window");
   const impulseSlow = creditFlow.dir === "down";
   if (impulseSlow && creditUpParts.length) {
     creditUpParts.push("bank credit impulse is slowing");
@@ -562,7 +568,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
       "Cash is draining while fear stays cheap — the tape hasn’t priced the liquidity squeeze yet."
     );
     falsify.push(
-      "Falsify if Risk flips Risk-off or HY blows out while Liquidity stays Tightening."
+      "Falsify if Risk flips Risk-off or high-yield spreads blow out while Liquidity stays Tightening."
     );
   } else if (L === "easing" && R === "tight") {
     confirm.push(
