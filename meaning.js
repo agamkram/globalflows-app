@@ -322,6 +322,50 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (G === "tight") stocksOutParts.push("growth is soft");
   if (R === "tight") stocksOutParts.push("fear is in charge");
   if (L === "tight" && G !== "easing") stocksOutParts.push("cash is draining");
+  const cyc = instrument(
+    "cyc",
+    "Cyc",
+    G === "easing" && R !== "tight",
+    G === "tight" || R === "tight",
+    "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
+    G === "tight"
+      ? "Growth is soft — cyclicals are the first equity to get hurt."
+      : "Fear is in charge — cyclicals usually dump first.",
+    "Cyclicals want Strong growth and calm fear; only one side is helping."
+  );
+  cyc.label = "Cyclicals";
+  cyc.margin = blendMargin(
+    cyc.stance,
+    stanceMargin(
+      cyc.stance,
+      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0),
+      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0),
+      2
+    ),
+    meanImpulse([gImp, kImp])
+  );
+  const def = instrument(
+    "def",
+    "Def",
+    G === "tight" || R === "tight",
+    G === "easing" && R === "easing",
+    G === "tight"
+      ? "Growth is soft — defensives are the ballast inside equities."
+      : "Fear is expensive — defensives usually hold up better than the cycle.",
+    "Strong growth and Risk-on — defensives usually lag that mix.",
+    "Defensives want Soft growth or expensive fear; the expansion mix leaves them mixed."
+  );
+  def.label = "Defensives";
+  def.margin = blendMargin(
+    def.stance,
+    stanceMargin(
+      def.stance,
+      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0),
+      G === "easing" && R === "easing" ? 1 : 0,
+      2
+    ),
+    meanImpulse([-gImp, -kImp])
+  );
   const stocks = instrument(
     "stocks",
     "Equities",
@@ -341,6 +385,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     ),
     meanImpulse([gImp, kImp])
   );
+  // Parent stays the broad equity call. Cyc / Def are natural opposites — they
+  // show which part of the book, they do not average into the title.
+  stocks.splits = [cyc, def];
 
   const cryptoInParts = [];
   if (L === "easing") cryptoInParts.push("plumbing is feeding risk");
@@ -406,6 +453,36 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     meanImpulse([-kImp, iImp])
   );
 
+  const oil = instrument(
+    "oil",
+    "Oil",
+    I === "easing",
+    I === "tight",
+    "Inflation is Hot — oil usually gets paid in that mix.",
+    "Inflation is Cold — oil rarely leads a cooling price complex.",
+    "Oil follows the Inflation light; prices aren’t clearly Hot or Cold."
+  );
+  oil.label = "Oil";
+  oil.margin = blendMargin(
+    oil.stance,
+    stanceMargin(oil.stance, I === "easing" ? 1 : 0, I === "tight" ? 1 : 0, 1),
+    iImp
+  );
+  const copper = instrument(
+    "copper",
+    "Cu",
+    G === "easing",
+    G === "tight",
+    "Growth is Strong — copper usually gets the industrial bid.",
+    "Growth is Soft — copper is the first industrial to get hurt.",
+    "Copper follows the Growth light; activity isn’t clearly Strong or Soft."
+  );
+  copper.label = "Copper";
+  copper.margin = blendMargin(
+    copper.stance,
+    stanceMargin(copper.stance, G === "easing" ? 1 : 0, G === "tight" ? 1 : 0, 1),
+    gImp
+  );
   const cmdtyIn = G === "easing" && I === "easing";
   const cmdtyOut = G === "tight" || (I === "tight" && G !== "easing");
   const cmdty = instrument(
@@ -427,6 +504,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     ),
     meanImpulse([gImp, iImp])
   );
+  // Parent stays Growth × Inflation. Oil and copper are the traded lines under it.
+  cmdty.splits = [oil, copper];
 
   return {
     pair: { line: pairLine, why: pairWhy },

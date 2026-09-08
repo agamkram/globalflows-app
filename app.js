@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260997";
+import { buildMeaning } from "./meaning.js?v=20260998";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260997";
+} from "./score.js?v=20260998";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -521,22 +521,26 @@ function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%"></i></span></span>`;
 }
 
-/** Parent-class proxies. Credit has none — investment grade and high yield are judged separately. */
+/** Parent-class proxies. Credit / commodities judged on their splits. */
 const FAVOR_ASSET = {
   treasuries: "TLT",
   credit: null,
   stocks: "SPX",
   crypto: "BTC",
   gold: "GOLD",
-  cmdty: "COPPER",
+  cmdty: null,
 };
 
-/** Curve / credit splits — 5s have no archive ticker. */
+/** Curve / credit / equity / commodity splits — 5s have no archive ticker. */
 const FAVOR_CHILD_ASSET = {
   10: "IEF",
   30: "TLT",
   ig: "LQD",
   hy: "HYG",
+  cyc: "XLY",
+  def: "XLP",
+  oil: "WTI",
+  copper: "COPPER",
 };
 
 /**

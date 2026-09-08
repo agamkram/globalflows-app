@@ -37,6 +37,8 @@ const HORIZONS = { "1w": 5, "2w": 10, "1m": 21, "3m": 63, "6m": 126, "1y": 252 }
  */
 const ASSETS = [
   { id: "SPX", name: "S&P 500" },
+  { id: "XLY", name: "Cyclicals" },
+  { id: "XLP", name: "Defensives" },
   { id: "BTC", name: "Bitcoin" },
   { id: "TLT", name: "Long Treasuries" },
   { id: "IEF", name: "7–10y Treasuries" },
@@ -45,6 +47,7 @@ const ASSETS = [
   { id: "GOLD", name: "Gold" },
   { id: "DXY", name: "Dollar" },
   { id: "COPPER", name: "Copper" },
+  { id: "WTI", name: "Oil" },
 ];
 
 async function readHistory(id) {
