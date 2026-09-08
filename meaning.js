@@ -158,10 +158,6 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const R = stateOf(lights, "risk");
   const d = durScore(durationDir);
   const flight = R === "tight" && I !== "easing" ? 1 : 0;
-  const copperImp = hzImp(seriesOk(snap, "COPPER"), horizon);
-  const wtiImp = hzImp(seriesOk(snap, "WTI"), horizon);
-  const copperDir = copperImp.dir;
-  const wtiDir = wtiImp.dir;
   const rImp = lightImpulse(lights, "rates");
   const iImp = lightImpulse(lights, "inflation");
   const gImp = lightImpulse(lights, "growth");
@@ -415,9 +411,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const cmdty = instrument(
     "cmdty",
     "Commodities",
-    cmdtyIn || (copperDir === "up" && G === "easing"),
-    cmdtyOut || (wtiDir === "down" && G !== "easing"),
-    "Firm activity and hot prices — copper and oil usually get the bid.",
+    cmdtyIn,
+    cmdtyOut,
+    "Firm activity and hot prices — the real-cycle complex usually gets the bid.",
     "Soft growth or cold inflation — the real-cycle complex is out of favor.",
     "Commodities are mixed; growth and inflation aren’t both pointing the same way."
   );
@@ -425,13 +421,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     cmdty.stance,
     stanceMargin(
       cmdty.stance,
-      (G === "easing" ? 1 : 0) + (I === "easing" ? 1 : 0) + (copperDir === "up" && G === "easing" ? 1 : 0),
-      (G === "tight" ? 1 : 0) +
-        (I === "tight" && G !== "easing" ? 1 : 0) +
-        (wtiDir === "down" && G !== "easing" ? 1 : 0),
-      3
+      (G === "easing" ? 1 : 0) + (I === "easing" ? 1 : 0),
+      (G === "tight" ? 1 : 0) + (I === "tight" && G !== "easing" ? 1 : 0),
+      2
     ),
-    meanImpulse([gImp, iImp, impulseUnit(copperImp)])
+    meanImpulse([gImp, iImp])
   );
 
   return {
@@ -634,6 +628,40 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   }
 
   const favor = buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts);
+  const cmdtyStance = favor.items.find((x) => x.id === "cmdty")?.stance;
+  const copperDir = hzImp(seriesOk(snap, "COPPER"), horizon).dir;
+  const wtiDir = hzImp(seriesOk(snap, "WTI"), horizon).dir;
+  if (cmdtyStance === "in") {
+    if (copperDir === "down") {
+      confirm.push(
+        "Copper is soft while commodities are still in — treat it as an output disagreement, not a vote."
+      );
+    } else if (copperDir === "up") {
+      confirm.push("Copper is firm with Strong growth and Hot inflation — the real-cycle tape is confirming.");
+    }
+    if (wtiDir === "down") {
+      confirm.push(
+        "Oil is soft while commodities are still in — treat it as an output disagreement, not a vote."
+      );
+    } else if (wtiDir === "up") {
+      confirm.push("Oil is firm with Strong growth and Hot inflation — the real-cycle tape is confirming.");
+    }
+  } else if (cmdtyStance === "out") {
+    if (copperDir === "up") {
+      confirm.push(
+        "Copper is firm while commodities are out — treat it as an output disagreement, not a vote."
+      );
+    } else if (copperDir === "down") {
+      confirm.push("Copper is soft with the real cycle out — the tape is confirming.");
+    }
+    if (wtiDir === "up") {
+      confirm.push(
+        "Oil is firm while commodities are out — treat it as an output disagreement, not a vote."
+      );
+    } else if (wtiDir === "down") {
+      confirm.push("Oil is soft with the real cycle out — the tape is confirming.");
+    }
+  }
 
   const lines = [durationLine, creditLine, ...confirm.slice(0, 3), ...falsify.slice(0, 2)].filter(
     Boolean
