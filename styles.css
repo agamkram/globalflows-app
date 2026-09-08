@@ -426,6 +426,18 @@ body.page-about::before {
 .favor-cell[data-clash="true"] .favor-title {
   color: #fff;
 }
+.favor-cell[data-favor-id="cmdty"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+.favor-cell[data-favor-id="cmdty"] .favor-title {
+  font-size: 0.48rem;
+  white-space: nowrap;
+  letter-spacing: 0;
+  overflow: visible;
+  width: 100%;
+  text-align: center;
+}
 
 .favor-dot {
   width: 9px;
@@ -668,7 +680,10 @@ body.page-about::before {
 .track-sm {
   max-width: 44px;
   height: 12px;
-  margin-top: 4px;
+  margin-top: 0;
+}
+.track-sm .track-rail {
+  margin-top: 5px;
 }
 .track-xs {
   max-width: 36px;
@@ -690,17 +705,17 @@ body.page-about::before {
 .track-mid,
 .track-cut {
   position: absolute;
-  top: -6px;
+  top: -12px;
   width: 1px;
-  height: 12px;
+  height: 24px;
   background: #fff;
   transform: translateX(-50%);
   pointer-events: none;
 }
 .track-mid {
   left: 50%;
-  height: 14px;
-  top: -7px;
+  height: 28px;
+  top: -14px;
   background: #fff;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
@@ -731,18 +746,18 @@ body.page-about::before {
 }
 .track-mark {
   position: absolute;
-  top: -8px;
+  top: -16px;
   width: 3px;
-  height: 18px;
+  height: 36px;
   border-radius: 1px;
   transform: translateX(-50%);
   background: var(--neutral);
   pointer-events: none;
 }
 .track-xs .track-mark {
-  top: -6px;
+  top: -12px;
   width: 2px;
-  height: 14px;
+  height: 28px;
 }
 .track[data-state="easing"] .track-mark {
   background: var(--ease);

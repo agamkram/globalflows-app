@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260962";
+import { buildMeaning } from "./meaning.js?v=20260972";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260962";
+} from "./score.js?v=20260972";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -608,8 +608,7 @@ function renderFavorStrip() {
         const aria = `aria-label="${escapeHtml(title)}, ${word}${
           clash ? ", history disagrees" : ""
         }. Tap for why."`;
-        const titleHtml =
-          it.id === "cmdty" ? "Commodi&shy;ties" : escapeHtml(title);
+        const titleHtml = escapeHtml(title);
         if (it.tenors?.length) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
             it.id
