@@ -80,6 +80,26 @@ function teach(lid, c) {
     c.easy.length && c.tight.length
       ? ` Split: ${soft || "some"} lean easier; ${hard || "others"} lean tighter.`
       : "";
+  let inflNote = split;
+  if (lid === "inflation") {
+    const pce = c.voters.find((v) => v.id === "PCEPILFE");
+    const bei = c.voters.find((v) => v.id === "T5YIFR");
+    if (pce && bei && pce.score > 0.45 && bei.score <= 0.45 && bei.score >= -0.45) {
+      inflNote =
+        " Core PCE is still high versus ~2%; 5y5y is anchored at the CPI-equivalent of target.";
+    } else if (pce && bei && pce.score > 0.45 && bei.score < -0.45) {
+      inflNote = " Split: core PCE still hot; the bond market is pricing cold.";
+    } else if (pce && bei && pce.score < -0.45 && bei.score > 0.45) {
+      inflNote = " Split: core PCE is cold; the bond market is pricing hot.";
+    }
+  }
+  let riskNote = split;
+  if (lid === "risk") {
+    const hy = c.voters.find((v) => v.id === "BAMLH0A0HYM2");
+    if (hy && hy.score >= 0.85) {
+      riskNote = " HY OAS is at cycle tights — calm, and not paid.";
+    }
+  }
   const by = {
     liquidity: {
       easing: `Cash looks ample on the level.${split} Point: plumbing is not the scarce good.`,
@@ -97,14 +117,14 @@ function teach(lid, c) {
       tight: `Activity looks soft versus trend.${split} Point: demand/labor are under pressure.`,
     },
     inflation: {
-      easing: `Prices are high versus ~2%.${split} Point: the level is still hot — the impulse row says if it’s cooling.`,
-      neutral: `Prices are near the target band.${split} Point: no clean hot or cold call.`,
-      tight: `Prices are cold versus ~2%.${split} Point: inflation is not the tax right now.`,
+      easing: `Prices are high versus ~2%.${inflNote} Point: the level is still hot — the impulse row says if it’s cooling.`,
+      neutral: `Prices are near the target band.${inflNote} Point: no clean hot or cold call.`,
+      tight: `Prices are cold versus ~2%.${inflNote} Point: inflation is not the tax right now.`,
     },
     risk: {
-      easing: `Fear is cheap on the gauges.${split} Point: vol and credit are quiet.`,
-      neutral: `Fear gauges look mixed.${split} Point: not a clear risk-on or risk-off tape.`,
-      tight: `Markets are paying up for fear.${split} Point: vol/credit stress is elevated.`,
+      easing: `Fear is cheap on the gauges.${riskNote} Point: vol and credit are quiet.`,
+      neutral: `Fear gauges look mixed.${riskNote} Point: not a clear risk-on or risk-off tape.`,
+      tight: `Markets are paying up for fear.${riskNote} Point: vol/credit stress is elevated.`,
     },
   };
   return by[lid]?.[c.state] || `${c.word}.`;

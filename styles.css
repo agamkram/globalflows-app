@@ -90,6 +90,15 @@ html.pwa-standalone body {
   white-space: nowrap;
 }
 
+.build-mark {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 .dials-toolbar {
   display: flex;
   align-items: center;
@@ -413,6 +422,9 @@ body.page-about::before {
   max-width: 100%;
   min-height: 2.3em;
 }
+.favor-cell[data-clash="true"] .favor-title {
+  color: #fff;
+}
 
 .favor-dot {
   width: 9px;
@@ -454,17 +466,28 @@ body.page-about::before {
 }
 
 .favor-tenor {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1.35em minmax(0, 1fr);
+  align-items: center;
+  column-gap: 3px;
   background: transparent;
   font: 600 0.58rem var(--mono);
   line-height: 1.25;
   letter-spacing: 0.02em;
+  width: 100%;
+  padding: 0 3px;
 }
 
 .favor-tenor b {
   font-weight: 600;
   color: inherit;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.favor-tenor .track {
+  width: 100%;
+  max-width: none;
 }
 
 .dlg-body .rubric-extra {
@@ -604,6 +627,9 @@ body.page-about::before {
   text-overflow: ellipsis;
   max-width: 100%;
 }
+.light[data-clash="true"] .lbl {
+  color: #fff;
+}
 
 .light .word {
   font-size: 0.72rem;
@@ -627,6 +653,104 @@ body.page-about::before {
   min-width: 0;
 }
 
+/* Center-zero range: −1 left, +1 right. Ticks at 0 and ±0.45. */
+.track {
+  display: block;
+  width: 100%;
+  max-width: 52px;
+  height: 14px;
+  flex-shrink: 0;
+  margin: 1px 0 0;
+}
+.track-sm {
+  max-width: 44px;
+  height: 12px;
+  margin-top: 4px;
+}
+.track-xs {
+  max-width: 36px;
+  height: 10px;
+  margin: 0;
+}
+.track-rail {
+  display: block;
+  position: relative;
+  height: 1px;
+  margin-top: 6px;
+  background: #fff;
+  border-radius: 0;
+}
+.track-xs .track-rail {
+  margin-top: 4px;
+  height: 1px;
+}
+.track-mid,
+.track-cut {
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 7px;
+  background: #fff;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.track-mid {
+  left: 50%;
+  height: 9px;
+  top: -4px;
+  background: #fff;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .track-rail {
+    transform: scaleY(0.5);
+    transform-origin: 50% 50%;
+  }
+  .track-mid,
+  .track-cut {
+    transform: translateX(-50%) scaleX(0.5);
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
+  .track-rail {
+    transform: scaleY(0.333);
+    transform-origin: 50% 50%;
+  }
+  .track-mid,
+  .track-cut {
+    transform: translateX(-50%) scaleX(0.333);
+  }
+}
+.track-cut-lo {
+  left: 27.5%;
+}
+.track-cut-hi {
+  left: 72.5%;
+}
+.track-mark {
+  position: absolute;
+  top: -5px;
+  width: 3px;
+  height: 13px;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  background: var(--neutral);
+  pointer-events: none;
+}
+.track-xs .track-mark {
+  top: -4px;
+  width: 2px;
+  height: 10px;
+}
+.track[data-state="easing"] .track-mark {
+  background: var(--ease);
+}
+.track[data-state="tight"] .track-mark {
+  background: var(--tight);
+}
+.track[data-state="empty"] .track-mark {
+  background: #445;
+}
+
 @media (min-width: 721px) {
   .lights {
     grid-template-columns: repeat(5, 89px);
@@ -642,6 +766,10 @@ body.page-about::before {
 
   .light .score {
     font-size: 0.62rem;
+  }
+
+  .track {
+    max-width: 64px;
   }
 }
 
@@ -2155,16 +2283,4 @@ html.page-about body,
 }
 .rubric-base[data-verdict="disagrees"] > strong {
   color: #e8edf5;
-}
-
-/* A call the record argues with, footnoted on the compact strip. */
-.favor-cell { position: relative; }
-.favor-flag {
-  position: absolute;
-  bottom: 1px;
-  right: 3px;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--muted, #8b97a8);
 }

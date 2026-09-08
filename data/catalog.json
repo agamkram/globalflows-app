@@ -585,8 +585,9 @@
       "search": "T5YIFR",
       "causal": "rates",
       "street": "rates",
-      "light": null,
-      "note": "5y5y forward inflation — inflation expected 5–10 years out. Fed's preferred long-run gauge."
+      "light": "inflation",
+      "weight": 1,
+      "note": "5y5y forward inflation — inflation expected 5–10 years out. The Fed's preferred long-run gauge, and the inflation light's market voter: 2.3% is the CPI-equivalent of a 2% PCE target. Realized PCE and this print can disagree; when they do, the light says so."
     },
     {
       "id": "DTWEXBGS",
@@ -743,7 +744,7 @@
       "search": "^MOVE",
       "causal": "rates",
       "street": "rates",
-      "note": "ICE BofA MOVE — implied vol on Treasuries. Bond-market fear gauge (VIX for rates)."
+      "note": "ICE BofA MOVE — implied vol on Treasuries. The rates complex’s stress gauge: a spike taxes the Rates light (dealers won’t warehouse duration); calm does not vote easy."
     },
     {
       "id": "DXY",
@@ -1206,14 +1207,14 @@
       "units": "%",
       "freq": "monthly",
       "sign": 0,
-      "light": "inflation",
+      "light": null,
+      "impulseLight": "inflation",
       "sourceUrl": "https://fred.stlouisfed.org/series/MICH",
       "sub": "Households' 1y CPI view",
       "search": "MICH",
       "causal": "labels",
       "street": "inflation",
-      "note": "UMich 1-year inflation expectations. Household inflation psychology.",
-      "weight": 1
+      "note": "UMich 1-year inflation expectations. Household inflation psychology — on the book and the impulse clock, does not vote the Inflation light. Households run hot versus the Fed's basket."
     },
     {
       "id": "GDPC1",
@@ -1326,7 +1327,7 @@
       "search": "BAMLH0A0HYM2",
       "causal": "risk",
       "street": "risk",
-      "note": "ICE BofA high-yield OAS. Extra yield junk bonds demand over Treasuries. As of April 2026 FRED only publishes three years of this series, even with an API key. Baa over 10s is the long credit voter."
+      "note": "ICE BofA high-yield OAS. Extra yield junk bonds demand over Treasuries. FRED only publishes three years; the band is the long-run shape (2.5 tights / 4 typical / 6.5 stress), not this download. Baa over 10s is the long credit voter and carries more weight."
     },
     {
       "id": "BAMLC0A0CM",
@@ -2040,7 +2041,7 @@
       "freq": "daily",
       "sign": -1,
       "light": "risk",
-      "weight": 1,
+      "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/BAA10Y",
       "sub": "Moody's Baa vs 10y Treasury",
       "search": "BAA10Y",

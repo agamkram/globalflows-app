@@ -20,6 +20,7 @@ SPOTS = {
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
+    "index build-mark": (INDEX, r'(class="build-mark">v)(\d+)', r"\g<1>{n}"),
 }
 
 

@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260949";
+import { buildMeaning } from "./meaning.js?v=20260959";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260949";
+} from "./score.js?v=20260959";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -444,7 +444,7 @@ const LIGHT_BLURB = {
   liquidity:
     "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are the SOFR spread, reserves and net liquidity versus GDP, the dollar’s 12-month change, and G4 balance-sheet growth.",
   rates:
-    "Borrowing costs — policy rate, short yields, mortgages, the dollar, rate volatility. Easy = cheap to fund; tight = expensive to fund or a strong dollar fighting it.",
+    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light.",
   growth:
     "Real activity — jobs, claims, weekly/monthly activity, spending, copper. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
@@ -491,16 +491,36 @@ function stanceState(stance) {
   return "neutral";
 }
 
+function trackPct(score) {
+  const n = Number(score);
+  const s = Number.isFinite(n) ? Math.max(-1, Math.min(1, n)) : 0;
+  return Math.max(4, Math.min(96, ((s + 1) / 2) * 100));
+}
+
+function lightIsSplit(snap, id) {
+  const kinds = (snap?.disagreements || []).map((d) => d.kind);
+  if (id === "inflation" && kinds.some((k) => String(k).startsWith("inflation_"))) return true;
+  const voters = REGIME?.lights?.[id]?.voters;
+  if (!voters?.length) return false;
+  return voters.some((v) => v.score > 0.45) && voters.some((v) => v.score < -0.45);
+}
+
+function trackHtml(score, state, { size = "" } = {}) {
+  const pct = trackPct(score).toFixed(1);
+  const cls = size ? `track track-${size}` : "track";
+  return `<span class="${cls}" data-state="${escapeHtml(
+    state || "neutral"
+  )}" aria-hidden="true"><span class="track-rail"><i class="track-cut track-cut-lo"></i><i class="track-mid"></i><i class="track-cut track-cut-hi"></i><i class="track-mark" style="left:${pct}%"></i></span></span>`;
+}
+
 /** Parent-class proxies. Credit has none — IG and HY are judged separately. */
 const FAVOR_ASSET = {
   treasuries: "TLT",
   credit: null,
   stocks: "SPX",
+  crypto: "BTC",
   gold: "GOLD",
   cmdty: "COPPER",
-  // Cash has no price series; its return is the thing everything else is measured
-  // against, so a base rate for it would be circular.
-  cash: null,
 };
 
 /** Curve / credit splits — 5s have no archive ticker. */
@@ -582,37 +602,34 @@ function renderFavorStrip() {
         // Star the cell if any judged proxy disagrees — 10s vs IEF, 30s vs TLT,
         // IG vs LQD, HY vs HYG — not only the parent ticker.
         const clash = itemClash(it);
-        const mark = clash
-          ? '<span class="favor-flag" aria-label="history disagrees with this call">*</span>'
+        const clashAttr = clash
+          ? ` data-clash="true" title="History disagrees with this call"`
           : "";
-        const flagAttr = clash
-          ? ` title="History disagrees with this call"`
-          : "";
-        const aria = `aria-label="${escapeHtml(title)}, ${word}. Tap for why."`;
+        const aria = `aria-label="${escapeHtml(title)}, ${word}${
+          clash ? ", history disagrees" : ""
+        }. Tap for why."`;
         const titleHtml =
           it.id === "cmdty" ? "Commodi&shy;ties" : escapeHtml(title);
         if (it.tenors?.length) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
             it.id
-          )}" data-state="${st}" ${aria}${flagAttr}>
+          )}" data-state="${st}" ${aria}${clashAttr}>
             <span class="favor-title">${titleHtml}</span>
             <span class="favor-curve">${it.tenors
               .map(
                 (tn) =>
                   `<span class="favor-tenor" data-state="${stanceState(tn.stance)}"><b>${escapeHtml(
                     tn.name
-                  )}</b></span>`
+                  )}</b>${trackHtml(tn.margin, stanceState(tn.stance), { size: "xs" })}</span>`
               )
               .join("")}</span>
-            ${mark}
           </button>`;
         }
         return `<button type="button" class="favor-cell" data-favor-id="${escapeHtml(
           it.id
-        )}" data-state="${st}" ${aria}${flagAttr}>
+        )}" data-state="${st}" ${aria}${clashAttr}>
           <span class="favor-title">${titleHtml}</span>
-          <span class="favor-dot" aria-hidden="true"></span>
-          ${mark}
+          ${trackHtml(it.margin, st, { size: "sm" })}
         </button>`;
       })
       .join("");
@@ -698,7 +715,8 @@ function lightState(snap, id) {
 }
 
 /** Tensions that belong on the teach sheet when not already baked into the story. */
-const TEACH_TENSION_ORDER = ["liquidity_vs_gold", "liquidity_vs_btc"];
+/** Tensions that belong on the teach sheet when not already baked into the story. */
+const TEACH_TENSION_ORDER = ["liquidity_vs_gold", "liquidity_vs_btc", "inflation_pce_vs_5y5y"];
 
 function hasDisagreement(snap, kind) {
   return (snap.disagreements || []).some((d) => d.kind === kind);
@@ -750,6 +768,15 @@ function buildDisagreements(snap, lights) {
   }
   if (growth?.state === "tight" && infl?.state === "easing") {
     disagreements.push({ kind: "growth_vs_inflation", text: "Growth soft, inflation hot" });
+  }
+  const pceSc = snap.series?.PCEPILFE?.anchor?.score;
+  const beiSc = snap.series?.T5YIFR?.anchor?.score;
+  if (pceSc != null && beiSc != null && pceSc > 0.45 && beiSc <= 0.45 && beiSc >= -0.45) {
+    disagreements.push({ kind: "inflation_pce_vs_5y5y", text: "Core PCE hot, 5y5y anchored" });
+  } else if (pceSc != null && beiSc != null && pceSc > 0.45 && beiSc < -0.45) {
+    disagreements.push({ kind: "inflation_pce_vs_5y5y", text: "Core PCE hot, 5y5y cold" });
+  } else if (pceSc != null && beiSc != null && pceSc < -0.45 && beiSc > 0.45) {
+    disagreements.push({ kind: "inflation_pce_vs_5y5y", text: "Core PCE cold, 5y5y hot" });
   }
   return disagreements;
 }
@@ -1010,6 +1037,8 @@ function tensionTeach(d) {
       return "Gold isn’t following the cash story — treat it as an output, not an input.";
     case "liquidity_vs_btc":
       return "Bitcoin isn’t following the cash story — treat it as an output, not an input.";
+    case "inflation_pce_vs_5y5y":
+      return "The Fed’s basket is still hot; the bond market is not — duration cares about both.";
     default:
       return d.text || "";
   }
@@ -1021,6 +1050,8 @@ function tensionTitle(d) {
       return "Gold isn’t confirming";
     case "liquidity_vs_btc":
       return "Bitcoin isn’t confirming";
+    case "inflation_pce_vs_5y5y":
+      return "PCE and 5y5y disagree";
     default:
       return (d.text || "").replace(/\.$/, "").trim();
   }
@@ -1099,9 +1130,8 @@ function analogHtml(br) {
         : br.verdict === "coinflip"
           ? "History is a coin flip"
           : `History leans ${br.lean}`;
-  const star = br.verdict === "disagrees" ? "* " : "";
   return `<span class="rubric-base" data-verdict="${br.verdict}">
-    <strong>${star}${escapeHtml(verdictWord)}</strong>
+    <strong>${escapeHtml(verdictWord)}</strong>
     <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
       Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
     } (${br.n} days).</span>
@@ -1301,14 +1331,17 @@ function renderLights(snap) {
       const on =
         spyLight != null ? spyLight === id : focusLight === id;
       const chev = L.impulse?.dir || "flat";
+      const split = lightIsSplit(snap, id);
+      const word = wordFor(L);
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
-      }" aria-pressed="${on ? "true" : "false"}">
-        <span class="dot" aria-hidden="true"></span>
+      }" data-clash="${split ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}" aria-label="${escapeHtml(
+        `${L.label || id}, ${word}, ${score}${split ? ", voters disagree" : ""}`
+      )}">
         <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
-        <span class="word">${escapeHtml(wordFor(L))}</span>
-        <span class="score">${escapeHtml(score)}</span>
+        <span class="word">${escapeHtml(word)}</span>
+        ${trackHtml(L.score, L.state || "empty")}
       </button>`;
     })
     .join("");
@@ -2017,6 +2050,7 @@ function openSeries(s) {
   const street = s.street || s.layer || "";
   const cross = voter && home && street && street !== home;
   const lightLabel = SNAP?.lights?.[voter]?.label || voter;
+  const clubLabel = SNAP?.lights?.[s.light]?.label || s.light;
   const voteLine = voter
     ? `<p class="series-vote">Votes the <strong>${escapeHtml(
         lightLabel
@@ -2027,7 +2061,11 @@ function openSeries(s) {
             )}`
           : ""
       }</p>`
-    : `<p class="series-vote muted">Does not vote a regime light — book / output line.</p>`;
+    : s.light && s.anchor?.kind === "move"
+      ? `<p class="series-vote">On the <strong>${escapeHtml(
+          clubLabel
+        )}</strong> shelf — votes only when bond vol spikes; calm does not ease the light.</p>`
+      : `<p class="series-vote muted">Does not vote a regime light — book / output line.</p>`;
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
   $("#seriesBody").innerHTML = `

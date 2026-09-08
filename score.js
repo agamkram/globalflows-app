@@ -99,6 +99,7 @@ const KIND = {
   GLOBAL_CB_YOY: "global_cb_yoy",
   DOLLAR_YOY: "dollar_yoy",
   G3_10Y: "g3_10y",
+  T5YIFR: "bei_5y5y",
 };
 
 export function anchorKind(id) {
@@ -126,10 +127,17 @@ function scoreKind(kind, value) {
       return bandScore(value, -0.7, 0, 0.7, false);
     case "wei":
       return bandScore(value, 0, 2.0, 4.0, false);
+    // Last ten years: 12 is the 10th percentile, 17 the median, 28 the 90th.
+    // Floor at 14 left VIX near maximum calm whenever it sat in the teens.
     case "vix":
-      return bandScore(value, 14, 20, 28, true);
+      return bandScore(value, 12, 17, 28, true);
+    // ICE HY OAS. FRED only publishes three years, all of them cycle-tights, so
+    // this band is the long-run shape not the sample: 2.5 is this-cycle tights
+    // (the ICE print's min is 2.59), 4.0 is typical, 6.5 is stress. The old floor
+    // at 3.2 sat inside this download's 75th percentile and pinned 68% of days
+    // at maximum risk-on — a constant, not a signal.
     case "hy":
-      return bandScore(value, 3.2, 4.2, 6.0, true);
+      return bandScore(value, 2.5, 4.0, 6.5, true);
     case "bbb":
       return bandScore(value, 1.0, 1.5, 2.5, true);
     // Calibrated on the full 1986-2026 record: 1.45 is the 5th percentile, 2.10 the
@@ -175,6 +183,11 @@ function scoreKind(kind, value) {
     // the 1989-2026 distribution: 0.5% is the ZIRP floor, 6% genuinely restrictive.
     case "g3_10y":
       return bandScore(value, 0.5, 3.0, 6.0, true);
+    // 5y5y forward inflation (CPI). 1.7 is the 5th percentile of the 2003–2026
+    // record, 2.3 the median and the CPI-equivalent of a 2% PCE target, 2.8
+    // where 2022 stopped looking anchored.
+    case "bei_5y5y":
+      return bandScore(value, 1.7, 2.3, 2.8, false);
     case "mortgage":
       return bandScore(value, 4.0, 6.0, 7.5, true);
     case "curve":
@@ -183,6 +196,7 @@ function scoreKind(kind, value) {
     // it stuck at maximum calm for most of a decade and unable to tell quiet from
     // silent. Drop the floor to the quarter-percentile of the last ten years; the
     // stress end is unchanged, since 140 is still where bond vol hurts.
+    // The band stays two-sided for audit. The vote is one-way: see makeAnchor.
     case "move":
       return bandScore(value, 55, 100, 140, true);
     // Deliberately left straddling zero. This voter sits at the ceiling on 45% of
@@ -223,7 +237,9 @@ function whyKind(kind, value) {
     case "vix":
       return `VIX ${fmt(v, 1)}`;
     case "hy":
-      return `HY OAS ${fmt(v)}%`;
+      return `HY OAS ${fmt(v)}% — 2.5 is cycle tights, 4 is typical, 6.5 is stress`;
+    case "bei_5y5y":
+      return `5y5y ${fmt(v)}% — 2.3 is the CPI-equivalent of a 2% PCE target`;
     case "bbb":
       return `BBB OAS ${fmt(v)}%`;
     case "baa10y":
@@ -247,7 +263,9 @@ function whyKind(kind, value) {
     case "curve":
       return `2s10s ${fmt(v, 2)} pp`;
     case "move":
-      return `MOVE ${fmt(v, 0)}`;
+      return v > 100
+        ? `MOVE ${fmt(v, 0)} — elevated, taxes the rates complex`
+        : `MOVE ${fmt(v, 0)} — calm, so it doesn’t vote (only a spike taxes Rates)`;
     case "real_rate":
       return `real policy/short rate ${fmt(v, 2)}%`;
     default:
@@ -265,11 +283,15 @@ function whyKind(kind, value) {
 export function makeAnchor(spec, value) {
   const kind = spec.anchorKind || anchorKind(spec.id);
   const score = scoreKind(kind, value);
+  // MOVE is the rates complex’s stress gauge: a spike means duration is
+  // unownable, so it can tighten the light. Calm is not cheap money — keep the
+  // band score for audit, but do not let silence vote “easy.”
+  const votes = kind === "move" ? score != null && score < 0 : score != null;
   return {
     kind,
     score,
     why: whyKind(kind, value),
-    votes: score != null,
+    votes,
   };
 }
 
@@ -301,7 +323,7 @@ function priorPoint(points, days, freq) {
 
 function impulseDeadband(spec, latest) {
   const kind = anchorKind(spec.id);
-  if (kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich") return 0.08;
+  if (kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich" || kind === "bei_5y5y") return 0.08;
   if (kind === "unrate") return 0.05;
   if (kind === "vix") return 0.8;
   if (kind === "hy" || kind === "bbb") return 0.08;

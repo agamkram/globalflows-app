@@ -44,6 +44,49 @@ function sentence(parts, fallback) {
   return capped.endsWith(".") ? capped : `${capped}.`;
 }
 
+function clampMargin(n) {
+  if (n == null || !Number.isFinite(n)) return 0;
+  return Math.max(-1, Math.min(1, n));
+}
+
+/**
+ * Stance is still in / mixed / out. Margin is how many doors fired, on −1..+1.
+ * Out uses only out-doors (so a single overlay cannot be cancelled by unused
+ * in-doors). Mixed can lean a little when some in-doors are open.
+ */
+function stanceMargin(stance, inFired, outFired, cap) {
+  const c = Math.max(cap, 1);
+  if (stance === "out") return clampMargin(-Math.max(outFired, 1) / c);
+  if (stance === "in") return clampMargin(Math.max(inFired, 1) / c);
+  return clampMargin((((inFired || 0) - (outFired || 0)) / c) * 0.5);
+}
+
+function impulseUnit(imp) {
+  const sc = imp?.score;
+  if (sc == null || !Number.isFinite(sc)) return 0;
+  return clampMargin(sc / 1.5);
+}
+
+function lightImpulse(lights, id) {
+  return impulseUnit(lights?.[id]?.impulse);
+}
+
+function meanImpulse(parts) {
+  const a = (parts || []).filter((x) => Number.isFinite(x));
+  if (!a.length) return 0;
+  return a.reduce((s, x) => s + x, 0) / a.length;
+}
+
+/**
+ * Doors own the word. The clock may crawl the mark (0.28), not flip in/out.
+ */
+function blendMargin(stance, door, impulse) {
+  const m = clampMargin(0.72 * clampMargin(door) + 0.28 * clampMargin(impulse));
+  if (stance === "out") return Math.min(m, -0.05);
+  if (stance === "in") return Math.max(m, 0.05);
+  return m;
+}
+
 function instrument(id, name, inOn, outOn, whyIn, whyOut, whyMix) {
   let stance = "mixed";
   let why = whyMix;
@@ -88,14 +131,15 @@ function tenorWhy(stance, tenor, ctx = {}) {
       ? "Hot inflation — 30s aren’t getting paid."
       : "Term premium or duration risk — 30s aren’t getting paid.";
   }
-  if (tenor === "5") return "5s sit between policy and duration — not a clean bid.";
+  if (tenor === "5") return "Policy isn’t tight or easy — 5s are a parking place, not the trade.";
   if (tenor === "10") return "10s are split; duration isn’t a clean overweight or avoid.";
   return "30s are split — inflation and duration aren’t telling the same story.";
 }
 
-function gradeTenor(name, score, ctx) {
+function gradeTenor(name, score, ctx, cap = 1) {
   const stance = scoreStance(score);
-  return { id: name, name, stance, why: tenorWhy(stance, name, ctx) };
+  const margin = cap > 1 ? clampMargin(score / cap) : clampMargin(score);
+  return { id: name, name, stance, why: tenorWhy(stance, name, ctx), margin };
 }
 
 /**
@@ -110,22 +154,18 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const R = stateOf(lights, "risk");
   const d = durScore(durationDir);
   const flight = R === "tight" && I !== "easing" ? 1 : 0;
-  const copperDir = hzImp(seriesOk(snap, "COPPER"), horizon).dir;
-  const wtiDir = hzImp(seriesOk(snap, "WTI"), horizon).dir;
+  const copperImp = hzImp(seriesOk(snap, "COPPER"), horizon);
+  const wtiImp = hzImp(seriesOk(snap, "WTI"), horizon);
+  const copperDir = copperImp.dir;
+  const wtiDir = wtiImp.dir;
+  const rImp = lightImpulse(lights, "rates");
+  const iImp = lightImpulse(lights, "inflation");
+  const gImp = lightImpulse(lights, "growth");
+  const lImp = lightImpulse(lights, "liquidity");
+  const kImp = lightImpulse(lights, "risk");
+  const hyImp = impulseUnit(hzImp(seriesOk(snap, "BAMLH0A0HYM2"), horizon));
 
-  const cashInParts = [];
-  if (T === "tight") cashInParts.push("high funding pays you to sit in bills");
-  if (L === "tight") cashInParts.push("scarce plumbing pays you to wait");
-  if (R === "tight") cashInParts.push("fear pays you to wait in bills");
-  const cash = instrument(
-    "cash",
-    "Cash",
-    cashInParts.length > 0,
-    T === "easing" && L === "easing" && R === "easing",
-    sentence(cashInParts, "High or scarce funding pays you to sit in bills."),
-    "Easy cash, easy rates, and calm fear — cash is the leftover, not the trade.",
-    "Funding, plumbing, and fear are not all tight — bills are a parking place, not the trade."
-  );
+  const billsPay = T === "tight" || L === "tight" || R === "tight";
 
   let pairLine = "No clean stocks-versus-bonds call";
   let pairWhy =
@@ -138,7 +178,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     pairLine = "Long Treasuries over stocks";
     pairWhy = "Duration can work; the problem is whether borrowers still pay.";
   } else if (durationDir === "rising" && creditDir === "rising") {
-    if (cash.stance === "in") {
+    if (billsPay) {
       pairLine = "Cash over stocks and long bonds";
       pairWhy =
         "Both discount-rate risk and cash-flow risk are up — get paid to wait.";
@@ -153,13 +193,20 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   }
 
   const tenorCtx = { T, I };
-  const t5 = gradeTenor("5", d + (T === "easing" ? 1 : T === "tight" ? -1 : 0), tenorCtx);
-  const t10 = gradeTenor("10", d + flight + (I === "easing" ? -1 : 0), tenorCtx);
+  // 5s follow policy, not the duration score — they are the front-end sleeve now
+  // that cash is not a cell. Dragging them out whenever 30s are taxed left no
+  // place to sit in bills-like duration while inflation is still hot.
+  const t5 = gradeTenor("5", T === "easing" ? 1 : T === "tight" ? -1 : 0, tenorCtx, 1);
+  const t10 = gradeTenor("10", d + flight + (I === "easing" ? -1 : 0), tenorCtx, 2);
   const t30 = gradeTenor(
     "30",
     d + flight + (I === "easing" ? -1 : I === "tight" ? 1 : 0),
-    tenorCtx
+    tenorCtx,
+    2
   );
+  t5.margin = blendMargin(t5.stance, t5.margin, rImp);
+  t10.margin = blendMargin(t10.stance, t10.margin, meanImpulse([rImp, -iImp]));
+  t30.margin = blendMargin(t30.stance, t30.margin, -iImp);
   const tenorSet = new Set([t5.stance, t10.stance, t30.stance]);
   const ustStance = tenorSet.size === 1 ? t10.stance : "mixed";
   let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
@@ -173,6 +220,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     name: "Treasuries",
     stance: ustStance,
     why: ustWhy,
+    margin: clampMargin((t5.margin + t10.margin + t30.margin) / 3),
     tenors: [t5, t10, t30],
   };
 
@@ -188,6 +236,16 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     sentence(igOutParts, "Either cash-flow doubt or rising yields — IG gets hit from one side or both."),
     "IG sits between duration and credit; neither side is giving a clean signal."
   );
+  ig.margin = blendMargin(
+    ig.stance,
+    stanceMargin(
+      ig.stance,
+      (creditDir === "falling" ? 1 : 0) + (durationDir !== "rising" ? 1 : 0),
+      (creditDir === "rising" ? 1 : 0) + (durationDir === "rising" ? 1 : 0),
+      2
+    ),
+    meanImpulse([rImp, -iImp, kImp])
+  );
   const hyOutParts = [];
   if (creditDir === "rising") {
     const named = (creditUpParts || []).filter(Boolean);
@@ -200,21 +258,43 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (L === "tight" && !hyOutParts.includes("cash is draining")) {
     hyOutParts.push("cash is draining");
   }
+  const hyPrint = seriesOk(snap, "BAMLH0A0HYM2");
+  const hyTights = hyPrint?.anchor?.score != null && hyPrint.anchor.score >= 0.85;
+  if (hyTights) hyOutParts.push("spreads are at cycle tights — you are not paid");
   const hy = instrument(
     "hy",
     "HY",
-    creditDir === "falling" && L !== "tight" && R !== "tight",
-    creditDir === "rising" || R === "tight" || L === "tight" || G === "tight",
+    creditDir === "falling" && L !== "tight" && R !== "tight" && !hyTights,
+    creditDir === "rising" || R === "tight" || L === "tight" || G === "tight" || hyTights,
     "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "HY is the first credit to get hurt."),
     "HY needs both growth and calm fear; only one side is helping."
+  );
+  hy.margin = blendMargin(
+    hy.stance,
+    stanceMargin(
+      hy.stance,
+      (creditDir === "falling" ? 1 : 0) +
+        (L !== "tight" ? 1 : 0) +
+        (R !== "tight" ? 1 : 0) +
+        (!hyTights ? 1 : 0),
+      (creditDir === "rising" ? 1 : 0) +
+        (R === "tight" ? 1 : 0) +
+        (L === "tight" ? 1 : 0) +
+        (G === "tight" ? 1 : 0) +
+        (hyTights ? 1 : 0),
+      5
+    ),
+    meanImpulse([gImp, kImp, hyImp])
   );
   let creditStance = "mixed";
   let creditWhy = `IG ${ig.stance}, HY ${hy.stance} — duration vs cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     creditStance = ig.stance;
     if (creditStance === "out") {
-      creditWhy = "IG and HY are both out — duration and cash-flow risk are both up.";
+      creditWhy = hyTights
+        ? "IG and HY are both out — duration taxes IG and junk isn’t paying a spread."
+        : "IG and HY are both out — duration and cash-flow risk are both up.";
     } else if (creditStance === "in") {
       creditWhy = "IG and HY are both in — spreads can tighten and coupons still look collectible.";
     } else {
@@ -226,6 +306,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     name: "Credit",
     stance: creditStance,
     why: creditWhy,
+    margin: clampMargin((ig.margin + hy.margin) / 2),
     splits: [ig, hy],
   };
 
@@ -242,7 +323,42 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     sentence(stocksOutParts, "Equities are out of favor here."),
     "Growth isn’t firm enough for a clean overweight, and nothing has taken them out."
   );
-  stocks.note = "Crypto follows equities unless it disagrees with the cash story.";
+  stocks.margin = blendMargin(
+    stocks.stance,
+    stanceMargin(
+      stocks.stance,
+      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0) + (L !== "tight" ? 1 : 0),
+      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0) + (L === "tight" && G !== "easing" ? 1 : 0),
+      3
+    ),
+    meanImpulse([gImp, kImp])
+  );
+
+  const cryptoInParts = [];
+  if (L === "easing") cryptoInParts.push("plumbing is feeding risk");
+  if (R === "easing") cryptoInParts.push("fear is cheap");
+  const cryptoOutParts = [];
+  if (L === "tight") cryptoOutParts.push("cash is draining");
+  if (R === "tight") cryptoOutParts.push("fear is in charge");
+  const crypto = instrument(
+    "crypto",
+    "Crypto",
+    L === "easing" && R !== "tight",
+    L === "tight" || R === "tight",
+    sentence(cryptoInParts, "Easy plumbing and calm fear — Bitcoin is the high-beta valve."),
+    sentence(cryptoOutParts, "Draining cash or expensive fear — the high-beta valve usually dumps first."),
+    "Crypto wants easy plumbing and calm fear; only one side is helping."
+  );
+  crypto.margin = blendMargin(
+    crypto.stance,
+    stanceMargin(
+      crypto.stance,
+      (L === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0),
+      (L === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0),
+      2
+    ),
+    meanImpulse([lImp, kImp])
+  );
 
   const goldFear = R === "tight";
   const goldDrain = L === "tight" && T !== "tight";
@@ -252,9 +368,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (goldDrain) goldInParts.push("cash is draining without a rates squeeze");
   if (goldHotEasy) goldInParts.push("prices are hot and funding is easy");
   let goldMix = "Gold has no clean job right now.";
+  const bei = seriesOk(snap, "T5YIFR");
+  const beiAnchored =
+    bei?.anchor?.score != null && Math.abs(bei.anchor.score) <= 0.45;
   if (I === "easing" && !goldHotEasy && !goldFear && !goldDrain) {
-    goldMix =
-      "Inflation is hot, but gold has no second job — funding isn’t easy and fear isn’t paying.";
+    goldMix = beiAnchored
+      ? "PCE is still hot, but 5y5y is anchored and funding isn’t easy — gold has no second job."
+      : "Inflation is hot, but gold has no second job — funding isn’t easy and fear isn’t paying.";
   } else if (!goldFear && !goldDrain && !goldHotEasy) {
     goldMix = "Gold is doing more than one job; don’t treat it as a liquidity vote.";
   }
@@ -266,6 +386,16 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     sentence(goldInParts, "Hot prices, fear, or a cash drain — gold’s usual jobs."),
     "Cold inflation, risk-on, and high real funding — gold rarely leads that mix.",
     goldMix
+  );
+  gold.margin = blendMargin(
+    gold.stance,
+    stanceMargin(
+      gold.stance,
+      (goldFear ? 1 : 0) + (goldDrain ? 1 : 0) + (goldHotEasy ? 1 : 0),
+      I === "tight" && R === "easing" && T === "tight" ? 1 : 0,
+      3
+    ),
+    meanImpulse([-kImp, iImp])
   );
 
   const cmdtyIn = G === "easing" && I === "easing";
@@ -279,10 +409,22 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Soft growth or cold inflation — the real-cycle complex is out of favor.",
     "Commodities are mixed; growth and inflation aren’t both pointing the same way."
   );
+  cmdty.margin = blendMargin(
+    cmdty.stance,
+    stanceMargin(
+      cmdty.stance,
+      (G === "easing" ? 1 : 0) + (I === "easing" ? 1 : 0) + (copperDir === "up" && G === "easing" ? 1 : 0),
+      (G === "tight" ? 1 : 0) +
+        (I === "tight" && G !== "easing" ? 1 : 0) +
+        (wtiDir === "down" && G !== "easing" ? 1 : 0),
+      3
+    ),
+    meanImpulse([gImp, iImp, impulseUnit(copperImp)])
+  );
 
   return {
     pair: { line: pairLine, why: pairWhy },
-    items: [cash, treasuries, credit, stocks, gold, cmdty],
+    items: [treasuries, credit, stocks, crypto, gold, cmdty],
   };
 }
 

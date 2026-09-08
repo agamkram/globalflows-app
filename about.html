@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260949" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260949" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260959" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20260959" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20260949" />
+  <link rel="stylesheet" href="styles.css?v=20260959" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -143,6 +143,10 @@
           prices are running hot, which is usually bad for long bonds and fine for
           commodities. Read the colours as a direction the whole machine is
           leaning, then let the asset classes below tell you who that helps.
+          Inflation votes core PCE, core CPI, and the market’s 5y5y — not
+          household surveys. Risk votes VIX, HY, Baa (the long credit history),
+          and NFCI. MOVE stays on Rates as the bond-market stress gauge: a spike
+          can tighten the light; calm does not vote easy.
         </p>
         <div class="about-legend" aria-label="Light colors">
           <span><i class="swatch ease"></i> Green — reflationary: easier, stronger, hotter, risk-on</span>
@@ -210,8 +214,8 @@
       <section class="about-block" id="sowhat">
         <h2>So what</h2>
         <p>
-          Under the five lights sit six asset classes — cash, Treasuries (5 / 10 / 30),
-          credit, equities, gold, commodities. Green, amber, and red mean in,
+          Under the five lights sit six asset classes — Treasuries (5 / 10 / 30),
+          credit, equities, crypto, gold, commodities. Green, amber, and red mean in,
           mixed, and out of favor. Tap a class for why that call, the 5/10/30 or
           IG/HY split, and the analog. <strong>Full regime</strong> inside that card
           is the longer duration / credit / confirm sheet.
@@ -236,10 +240,11 @@
           <article class="about-panel">
             <h3>In / out of favor</h3>
             <p>
-              The same mix, mapped onto six asset classes. Cash is bills (you get paid
-              to wait when rates are high). Treasuries split 5s, 10s, and 30s.
-              Credit is one class; IG vs HY is in the tap. Equities include the
-              crypto footnote. Gold is money/fear; commodities are the real cycle.
+              The same mix, mapped onto six asset classes. Treasuries split 5s, 10s,
+              and 30s. Credit is one class; IG vs HY is in the tap. Crypto is the
+              high-beta liquidity valve (Bitcoin), not a footnote on equities. Gold
+              is money/fear; commodities are the real cycle. Bills live on the
+              Rates light, not as their own class.
             </p>
           </article>
           <article class="about-panel">
@@ -278,11 +283,6 @@
         </p>
         <ul class="about-steps">
           <li>
-            <strong>Cash</strong>
-            — in when rates, plumbing, or fear are tight. High rates pay you to
-            wait in bills. Out only when cash, rates, and fear are all easy.
-          </li>
-          <li>
             <strong>Treasuries</strong>
             — 5s follow policy, 10s follow duration, 30s follow inflation. A
             flight to quality can help 10s and 30s if inflation isn’t hot.
@@ -290,13 +290,20 @@
           <li>
             <strong>Credit</strong>
             — one color. IG cares about duration as well as spreads; HY cares
-            about growth and fear. If they disagree, the block is mixed.
+            about growth, fear, and whether the spread pays. Cycle-tight OAS
+            takes HY out even if fear is cheap. If IG and HY disagree, the
+            block is mixed.
           </li>
           <li>
             <strong>Equities</strong>
             — in when growth is firm and fear isn’t in charge. Soft growth,
-            draining cash, or risk-off takes them out. Crypto follows equities
-            unless it disagrees with the cash story.
+            draining cash, or risk-off takes them out.
+          </li>
+          <li>
+            <strong>Crypto</strong>
+            — Bitcoin, the high-beta liquidity valve. In when plumbing is easy
+            and fear isn’t in charge. Out when cash is draining or risk is off.
+            It does not vote Liquidity; it confirms or falsifies it.
           </li>
           <li>
             <strong>Gold</strong>
@@ -421,7 +428,7 @@
           </div>
           <div>
             <dt id="g-mapping">The mapping</dt>
-            <dd>Usual in/out from the lights: level first, then the impulse clock. Duration and credit, then cash, the Treasury curve, credit, equities, gold, commodities. Gold needs a second job besides hot inflation — fear, a cash drain without a rates squeeze, or hot prices with easy funding.</dd>
+            <dd>Usual in/out from the lights: level first, then the impulse clock. Duration and credit, then the Treasury curve, credit, equities, crypto, gold, commodities. Crypto is the liquidity valve (Bitcoin) and does not vote a light. Gold needs a second job besides hot inflation — fear, a cash drain without a rates squeeze, or hot prices with easy funding.</dd>
           </div>
           <div>
             <dt id="g-duration">Duration risk</dt>
@@ -491,7 +498,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20260949"></script>
+  <script type="module" src="about.js?v=20260959"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

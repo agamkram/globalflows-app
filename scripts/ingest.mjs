@@ -1173,6 +1173,24 @@ async function main() {
       text: "Growth soft, inflation hot",
     });
   }
+  const pceSc = results.PCEPILFE?.anchor?.score;
+  const beiSc = results.T5YIFR?.anchor?.score;
+  if (pceSc != null && beiSc != null && pceSc > 0.45 && beiSc <= 0.45 && beiSc >= -0.45) {
+    disagreements.push({
+      kind: "inflation_pce_vs_5y5y",
+      text: "Core PCE hot, 5y5y anchored",
+    });
+  } else if (pceSc != null && beiSc != null && pceSc > 0.45 && beiSc < -0.45) {
+    disagreements.push({
+      kind: "inflation_pce_vs_5y5y",
+      text: "Core PCE hot, 5y5y cold",
+    });
+  } else if (pceSc != null && beiSc != null && pceSc < -0.45 && beiSc > 0.45) {
+    disagreements.push({
+      kind: "inflation_pce_vs_5y5y",
+      text: "Core PCE cold, 5y5y hot",
+    });
+  }
 
   const snapshot = {
     generatedAt: new Date().toISOString(),

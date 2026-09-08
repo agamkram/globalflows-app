@@ -37,6 +37,7 @@ const HORIZONS = { "1m": 21, "3m": 63, "6m": 126, "1y": 252 };
  */
 const ASSETS = [
   { id: "SPX", name: "S&P 500" },
+  { id: "BTC", name: "Bitcoin" },
   { id: "TLT", name: "Long Treasuries" },
   { id: "IEF", name: "7–10y Treasuries" },
   { id: "HYG", name: "High yield" },
