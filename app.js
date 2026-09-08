@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260995";
+import { buildMeaning } from "./meaning.js?v=20260996";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260995";
+} from "./score.js?v=20260996";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -34,7 +34,7 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** 1m/3m/6m/1y lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
+/** 1w/2w/1m/3m/6m/1y lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -540,6 +540,16 @@ const FAVOR_CHILD_ASSET = {
 };
 
 /**
+ * How far “vs normally” must move before history agrees / disagrees.
+ * Short windows are noisier — a 0.1% median must not wear a star.
+ */
+function analogLiftBar(hz) {
+  if (hz === "1w") return 15;
+  if (hz === "2w") return 12;
+  return 8;
+}
+
+/**
  * How the record lines up with a call. The interesting case is disagreement: it
  * says the read depends on this cycle differing from the ones behind it, which is
  * worth knowing before you act on it.
@@ -553,7 +563,8 @@ function analogFor(assetId, stance) {
 
   const base = a.baseline?.[hz]?.[assetId] || null;
   const lift = base ? r.up - base.up : 0;
-  const lean = lift >= 8 ? "up" : lift <= -8 ? "down" : "flat";
+  const bar = analogLiftBar(hz);
+  const lean = lift >= bar ? "up" : lift <= -bar ? "down" : "flat";
   // A mixed call has nothing to agree or disagree with, so report which way the
   // record leans instead of calling the history split when it plainly is not.
   let verdict = "leans";
@@ -838,6 +849,8 @@ function ratesClause(snap) {
 }
 
 function horizonPhrase(h = statHorizon) {
+  if (h === "1w") return "Over the past week";
+  if (h === "2w") return "Over the past two weeks";
   if (h === "1m") return "Over the past month";
   if (h === "3m") return "Over the past three months";
   if (h === "6m") return "Over the past six months";
@@ -1081,10 +1094,17 @@ function baseRateHtml() {
   const table = a.stats[hz] || {};
   if (!Object.keys(table).length) {
     return `<p class="sent-kicker">What happened last time</p>
-      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them. 1m / 3m / 6m still have a sample.</p>`;
+      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them. 1w / 2w / 1m / 3m / 6m still have a sample.</p>`;
   }
 
-  const window = { "1m": "the next month", "3m": "the next three months", "6m": "the next six months", "1y": "the next year" }[hz] || `the next ${hz}`;
+  const window = {
+    "1w": "the next week",
+    "2w": "the next two weeks",
+    "1m": "the next month",
+    "3m": "the next three months",
+    "6m": "the next six months",
+    "1y": "the next year",
+  }[hz] || `the next ${hz}`;
   const match =
     a.closeness === "close"
       ? "a close match."
@@ -1925,7 +1945,7 @@ async function loadHistory(id) {
 
 function sliceDuration(points, dur) {
   if (!points?.length) return [];
-  const days = { "1m": 30, "3m": 91, "6m": 182, "1y": 365 }[dur] || 182;
+  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182, "1y": 365 }[dur] || 182;
   const last = points[points.length - 1].date;
   const end = Date.parse(last + "T00:00:00Z");
   const start = end - days * 86400000;

@@ -1206,7 +1206,7 @@ async function main() {
     errors,
     formula: {
       lights:
-        "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
+        "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1w/2w/1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
       netLiquidity: "WALCL(bn) − TGA − ON RRP",
       stockBondCorr: "60d Pearson of SPX returns vs −ΔDGS10",
     },
