@@ -392,6 +392,7 @@ body.page-about::before {
   gap: 3px;
   min-width: 0;
   padding: 5px 2px 6px;
+  overflow: visible;
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -544,6 +545,7 @@ body.page-about::before {
   padding: 13px 5px;
   min-height: 89px;
   min-width: 0;
+  overflow: visible;
   cursor: pointer;
   text-align: center;
   background: var(--bg2);
@@ -661,6 +663,7 @@ body.page-about::before {
   height: 14px;
   flex-shrink: 0;
   margin: 1px 0 0;
+  overflow: visible;
 }
 .track-sm {
   max-width: 44px;
@@ -687,17 +690,17 @@ body.page-about::before {
 .track-mid,
 .track-cut {
   position: absolute;
-  top: -3px;
+  top: -6px;
   width: 1px;
-  height: 7px;
+  height: 12px;
   background: #fff;
   transform: translateX(-50%);
   pointer-events: none;
 }
 .track-mid {
   left: 50%;
-  height: 9px;
-  top: -4px;
+  height: 14px;
+  top: -7px;
   background: #fff;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
@@ -728,18 +731,18 @@ body.page-about::before {
 }
 .track-mark {
   position: absolute;
-  top: -5px;
+  top: -8px;
   width: 3px;
-  height: 13px;
+  height: 18px;
   border-radius: 1px;
   transform: translateX(-50%);
   background: var(--neutral);
   pointer-events: none;
 }
 .track-xs .track-mark {
-  top: -4px;
+  top: -6px;
   width: 2px;
-  height: 10px;
+  height: 14px;
 }
 .track[data-state="easing"] .track-mark {
   background: var(--ease);
