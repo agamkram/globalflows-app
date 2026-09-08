@@ -233,7 +233,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (creditDir === "rising") igOutParts.push("cash-flow doubt is hitting credit");
   const ig = instrument(
     "ig",
-    "Investment grade",
+    "IG",
     creditDir === "falling" && durationDir !== "rising",
     creditDir === "rising" || durationDir === "rising",
     "Spreads can tighten and duration is not fighting you.",
@@ -243,6 +243,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     ),
     "Investment-grade credit sits between duration and credit risk; neither side is giving a clean signal."
   );
+  ig.label = "Investment grade";
   ig.margin = blendMargin(
     ig.stance,
     stanceMargin(
@@ -270,13 +271,14 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (hyTights) hyOutParts.push("spreads are at cycle tights — you are not paid");
   const hy = instrument(
     "hy",
-    "High yield",
+    "HY",
     creditDir === "falling" && L !== "tight" && R !== "tight" && !hyTights,
     creditDir === "rising" || R === "tight" || L === "tight" || G === "tight" || hyTights,
     "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
     "High yield needs both growth and calm fear; only one side is helping."
   );
+  hy.label = "High yield";
   hy.margin = blendMargin(
     hy.stance,
     stanceMargin(

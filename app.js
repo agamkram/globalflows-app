@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260994";
+import { buildMeaning } from "./meaning.js?v=20260995";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260994";
+} from "./score.js?v=20260995";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1115,8 +1115,10 @@ function baseRateHtml() {
 function childFavorLine(child, parentWhy) {
   const word =
     child.stance === "in" ? "In" : child.stance === "out" ? "Out" : "Mixed";
+  // Strip keeps short names (IG / HY); the tap spells them out.
+  const title = child.label || child.name;
   const badge = `<strong data-state="${stanceState(child.stance)}">${escapeHtml(
-    child.name
+    title
   )} ${word}</strong>`;
   const parent = String(parentWhy ?? "").trim();
   const why = String(child.why ?? "").trim();

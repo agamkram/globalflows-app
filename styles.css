@@ -511,25 +511,11 @@ body.page-about::before {
   padding: 0 3px;
 }
 
-.favor-cell[data-favor-id="credit"] .favor-tenor {
-  grid-template-columns: minmax(0, 5.6em) minmax(0, 1fr);
-  font: 600 0.46rem var(--sans);
-  letter-spacing: 0;
-}
-
 .favor-tenor b {
   font-weight: 600;
   color: inherit;
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
-
-.favor-cell[data-favor-id="credit"] .favor-tenor b {
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-variant-numeric: normal;
 }
 
 .favor-tenor .track {
