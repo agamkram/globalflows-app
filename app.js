@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261002";
+import { buildMeaning } from "./meaning.js?v=20261003";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261002";
+} from "./score.js?v=20261003";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -34,7 +34,7 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** 1w/2w/1m/3m/6m/1y lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
+/** 1w/2w/1m lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -560,10 +560,7 @@ function analogLiftBar(hz) {
 function analogMedianBar(hz) {
   if (hz === "1w") return 0.3;
   if (hz === "2w") return 0.5;
-  if (hz === "1m") return 0.8;
-  if (hz === "3m") return 1.5;
-  if (hz === "6m") return 2.5;
-  return 4;
+  return 0.8;
 }
 
 /**
@@ -883,10 +880,7 @@ function ratesClause(snap) {
 function horizonPhrase(h = statHorizon) {
   if (h === "1w") return "Over the past week";
   if (h === "2w") return "Over the past two weeks";
-  if (h === "1m") return "Over the past month";
-  if (h === "3m") return "Over the past three months";
-  if (h === "6m") return "Over the past six months";
-  return "Over the past year";
+  return "Over the past month";
 }
 
 /**
@@ -1126,16 +1120,13 @@ function baseRateHtml() {
   const table = a.stats[hz] || {};
   if (!Object.keys(table).length) {
     return `<p class="sent-kicker">What happened last time</p>
-      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them. 1w / 2w / 1m / 3m / 6m still have a sample.</p>`;
+      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them.</p>`;
   }
 
   const window = {
     "1w": "the next week",
     "2w": "the next two weeks",
     "1m": "the next month",
-    "3m": "the next three months",
-    "6m": "the next six months",
-    "1y": "the next year",
   }[hz] || `the next ${hz}`;
   const match =
     a.closeness === "close"
@@ -1977,7 +1968,7 @@ async function loadHistory(id) {
 
 function sliceDuration(points, dur) {
   if (!points?.length) return [];
-  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182, "1y": 365 }[dur] || 182;
+  const days = { "1w": 7, "2w": 14, "1m": 30 }[dur] || 30;
   const last = points[points.length - 1].date;
   const end = Date.parse(last + "T00:00:00Z");
   const start = end - days * 86400000;

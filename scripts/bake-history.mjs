@@ -27,7 +27,7 @@ const VINTAGE_DIR = path.join(ROOT, "data", "vintages");
 
 const START = "2018-04-02"; // first SOFR print
 const STALE_DAYS = 400;
-const HORIZONS = { "1w": 5, "2w": 10, "1m": 21, "3m": 63, "6m": 126, "1y": 252 };
+const HORIZONS = { "1w": 5, "2w": 10, "1m": 21 };
 
 /**
  * Assets we measure forward through. Bonds are ETFs rather than yields, measured

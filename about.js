@@ -25,7 +25,7 @@ function renderFormula(snap) {
   const f = snap.formula || {};
   const lights =
     f.lights ||
-    "Each light is an economic level (high is high), not a score versus last year. The 1w / 2w / 1m / 3m / 6m / 1y row is only the turn. Green/red still mean clearly easy/tight on that level.";
+    "Each light is an economic level (high is high), not a score versus last year. The 1w / 2w / 1m row is only the turn. Green/red still mean clearly easy/tight on that level.";
   $("#formulaBody").innerHTML = `
     <p>${escapeHtml(lights)}</p>
     <dl class="formula-dl">
@@ -39,7 +39,7 @@ function renderFormula(snap) {
       </div>
     </dl>
     <p class="muted tiny">
-      Changing the 1w / 2w / 1m / 3m / 6m / 1y lookback does not recolor the lights; it changes the turn
+      Changing the 1w / 2w / 1m lookback does not recolor the lights; it changes the turn
       and the six asset classes.
     </p>
   `;

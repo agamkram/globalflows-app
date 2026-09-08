@@ -1,6 +1,6 @@
 /**
  * Regime → duration risk / credit risk → six asset classes (in / mixed / out).
- * Lights are levels. The 1w/2w/1m/3m/6m/1y lookback only nudges needle position.
+ * Lights are levels. The 1w/2w/1m lookback only nudges needle position.
  */
 import { DEFAULT_IMPULSE } from "./score.js";
 
@@ -25,10 +25,7 @@ function hzImp(s, horizon) {
 function pastWindow(horizon) {
   if (horizon === "1w") return "Over the past week";
   if (horizon === "2w") return "Over the past two weeks";
-  if (horizon === "1m") return "Over the past month";
-  if (horizon === "3m") return "Over the past three months";
-  if (horizon === "6m") return "Over the past six months";
-  return "Over the past year";
+  return "Over the past month";
 }
 
 function joinEnglish(parts) {
