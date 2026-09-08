@@ -426,24 +426,6 @@ body.page-about::before {
 .favor-cell[data-clash="true"] .favor-title {
   color: #fff;
 }
-.favor-cell[data-favor-id="cmdty"] {
-  padding-left: 0;
-  padding-right: 0;
-}
-.favor-cell[data-favor-id="cmdty"] .favor-title {
-  font-size: 0.49rem;
-  white-space: nowrap;
-  letter-spacing: 0;
-  overflow: visible;
-  width: 100%;
-  text-align: center;
-  margin-top: -1px;
-}
-/* Title uses the full cell; needles keep the same inset as Credit / Equities. */
-.favor-cell[data-favor-id="cmdty"] .favor-curve {
-  padding-left: 2px;
-  padding-right: 2px;
-}
 
 .favor-dot {
   width: 9px;

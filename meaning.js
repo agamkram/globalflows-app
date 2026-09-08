@@ -487,12 +487,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const cmdtyOut = G === "tight" || (I === "tight" && G !== "easing");
   const cmdty = instrument(
     "cmdty",
-    "Commodities",
+    "Commodity",
     cmdtyIn,
     cmdtyOut,
     "Firm activity and hot prices — the real-cycle complex usually gets the bid.",
     "Soft growth or cold inflation — the real-cycle complex is out of favor.",
-    "Commodities are mixed; growth and inflation aren’t both pointing the same way."
+    "Commodity is mixed; growth and inflation aren’t both pointing the same way."
   );
   cmdty.margin = blendMargin(
     cmdty.stance,
