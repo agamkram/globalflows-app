@@ -324,7 +324,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (L === "tight" && G !== "easing") stocksOutParts.push("cash is draining");
   const cyc = instrument(
     "cyc",
-    "Cyc",
+    "Cy",
     G === "easing" && R !== "tight",
     G === "tight" || R === "tight",
     "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
@@ -346,7 +346,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   );
   const def = instrument(
     "def",
-    "Def",
+    "Df",
     G === "tight" || R === "tight",
     G === "easing" && R === "easing",
     G === "tight"
@@ -385,7 +385,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     ),
     meanImpulse([gImp, kImp])
   );
-  // Parent stays the broad equity call. Cyc / Def are natural opposites — they
+  // Parent stays the broad equity call. Cy / Df are natural opposites — they
   // show which part of the book, they do not average into the title.
   stocks.splits = [cyc, def];
 
@@ -455,7 +455,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
 
   const oil = instrument(
     "oil",
-    "Oil",
+    "Oi",
     I === "easing",
     I === "tight",
     "Inflation is Hot — oil usually gets paid in that mix.",
