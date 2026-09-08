@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260990";
+import { buildMeaning } from "./meaning.js?v=20260991";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260990";
+} from "./score.js?v=20260991";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -34,7 +34,7 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** Impulse clock for table, charts, chevrons, and asset classes. Lights stay on anchors. */
+/** 1m/3m/6m/1y lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -474,7 +474,7 @@ const TAB_TO_LIGHT = {
   risk: "risk",
 };
 
-/** Tabs that remain as doors (no light owns them). */
+/** Tabs with no matching light (All / FX / Markets). */
 const STREET_TABS = new Set(["all", "fx", "markets"]);
 
 let activeLayer = "liquidity";

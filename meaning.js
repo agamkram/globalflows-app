@@ -1,6 +1,6 @@
 /**
- * Regime → duration / credit → six asset classes.
- * Lights are anchors. Impulse horizon only nudges the mapping.
+ * Regime → duration risk / credit risk → six asset classes (in / mixed / out).
+ * Lights are levels. The 1m/3m/6m/1y lookback only nudges needle position.
  */
 import { DEFAULT_IMPULSE } from "./score.js";
 
@@ -50,15 +50,16 @@ function clampMargin(n) {
 }
 
 /**
- * Stance is still in / mixed / out. Margin is how many doors fired, on −1..+1.
- * Out uses only out-doors (so a single overlay cannot be cancelled by unused
- * in-doors). Mixed can lean a little when some in-doors are open.
+ * Call is still in / mixed / out of favor. Needle position is how many of the
+ * checklist conditions hit, on −1..+1. Underweight counts only avoid-conditions
+ * (an unused own-condition cannot cancel it). Mixed can lean a little when some
+ * own-conditions are open.
  */
-function stanceMargin(stance, inFired, outFired, cap) {
+function stanceMargin(stance, ownCount, avoidCount, cap) {
   const c = Math.max(cap, 1);
-  if (stance === "out") return clampMargin(-Math.max(outFired, 1) / c);
-  if (stance === "in") return clampMargin(Math.max(inFired, 1) / c);
-  return clampMargin((((inFired || 0) - (outFired || 0)) / c) * 0.5);
+  if (stance === "out") return clampMargin(-Math.max(avoidCount, 1) / c);
+  if (stance === "in") return clampMargin(Math.max(ownCount, 1) / c);
+  return clampMargin((((ownCount || 0) - (avoidCount || 0)) / c) * 0.5);
 }
 
 function impulseUnit(imp) {
@@ -78,10 +79,11 @@ function meanImpulse(parts) {
 }
 
 /**
- * Doors own the word. The clock may crawl the mark (0.28), not flip in/out.
+ * The checklist sets in / mixed / out. The lookback may slide the needle
+ * (28% weight) but cannot flip the call.
  */
-function blendMargin(stance, door, impulse) {
-  const m = clampMargin(0.72 * clampMargin(door) + 0.28 * clampMargin(impulse));
+function blendMargin(stance, checklistScore, momentum) {
+  const m = clampMargin(0.72 * clampMargin(checklistScore) + 0.28 * clampMargin(momentum));
   if (stance === "out") return Math.min(m, -0.05);
   if (stance === "in") return Math.max(m, 0.05);
   return m;

@@ -1,6 +1,6 @@
 /**
  * One scoring model: anchor (where it is) + impulse (which way).
- * Lights read anchors only. 1m/3m/6m/1y are impulse clocks.
+ * Lights read levels only. 1m/3m/6m/1y is the lookback (the turn).
  */
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
@@ -48,7 +48,7 @@ export function bandScore(value, lo, mid, hi, invert = false) {
  * written for it goes stale and eventually pins the light to one colour. ON RRP is
  * the cautionary tale: its band read "near zero = scarce cash", which was true in
  * 2019 and false from 2023 on, once the facility drained into reserves. Nominal
- * quantities belong on the impulse clock, or in a ratio, never on a fixed band.
+ * quantities belong on the lookback, or in a ratio, never on a fixed band.
  */
 const KIND = {
   CPIAUCSL: "cpi_yoy",

@@ -1,0 +1,33 @@
+---
+description: Speak the screen’s words, not comment slang
+alwaysApply: true
+---
+
+# Speak the app’s language
+
+Comments and variable names are notes for the next editor. They are not the
+vocabulary to teach Mark. If a comment uses a nickname, translate it. Write new
+comments in the words already on the screen.
+
+Public words (About, labels, this table) win. Market English is fine when the
+screen is silent. Do not import implementer slang into chat.
+
+| Say | Do not say | What it is |
+|---|---|---|
+| light, word, needle | dial, paint job | Regime level vs an economic line |
+| chevron, the turn, lookback, 1m/3m/6m/1y | clock crawls the mark | Momentum over the chosen window |
+| in / mixed / out of favor | stance (in chat) | Asset-class call |
+| checklist, conditions | doors, in-doors, out-doors | Rules that set that call |
+| duration risk, credit risk | | The two risks behind the strip |
+
+About may say “the clock” for 1m/3m/6m/1y. That is the lookback. `.about-door`
+is a layout class on the About page, not a scoring term.
+
+```js
+// BAD — teaches a private dialect
+// Doors own the word. The clock may crawl the mark.
+
+// GOOD — same fact, screen language
+// The checklist sets in / mixed / out. The lookback may slide the needle
+// but cannot flip the call.
+```

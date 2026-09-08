@@ -39,7 +39,7 @@ function renderFormula(snap) {
       </div>
     </dl>
     <p class="muted tiny">
-      Changing the impulse clock does not recolor the lights; it changes the turn
+      Changing the 1m / 3m / 6m / 1y lookback does not recolor the lights; it changes the turn
       and the six asset classes.
     </p>
   `;
