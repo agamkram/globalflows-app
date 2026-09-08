@@ -479,6 +479,15 @@ body.page-about::before {
   width: 100%;
 }
 
+.favor-cell.favor-ust {
+  padding-bottom: 1px;
+  gap: 2px;
+}
+
+.favor-ust .favor-curve {
+  gap: 3px;
+}
+
 .favor-tenor {
   display: grid;
   grid-template-columns: 1.35em minmax(0, 1fr);
