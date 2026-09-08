@@ -439,6 +439,11 @@ body.page-about::before {
   text-align: center;
   margin-top: -1px;
 }
+/* Title uses the full cell; needles keep the same inset as Credit / Equities. */
+.favor-cell[data-favor-id="cmdty"] .favor-curve {
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
 .favor-dot {
   width: 9px;
