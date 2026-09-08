@@ -481,11 +481,21 @@ body.page-about::before {
 
 .favor-cell.favor-ust {
   padding-bottom: 1px;
+  padding-left: 2px;
   gap: 2px;
 }
 
 .favor-ust .favor-curve {
   gap: 3px;
+}
+
+.favor-ust .favor-tenor {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.favor-ust .favor-tenor b {
+  text-align: left;
 }
 
 .favor-tenor {
