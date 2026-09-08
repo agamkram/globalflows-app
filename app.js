@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261001";
+import { buildMeaning } from "./meaning.js?v=20261002";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261001";
+} from "./score.js?v=20261002";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -544,8 +544,8 @@ const FAVOR_CHILD_ASSET = {
 };
 
 /**
- * How far “vs normally” must move before history agrees / disagrees.
- * Short windows are noisier — a 0.1% median must not wear a star.
+ * How far hit rate “vs normally” must move before history leans.
+ * Short windows are noisier — a tiny lift must not wear a star.
  */
 function analogLiftBar(hz) {
   if (hz === "1w") return 15;
@@ -554,9 +554,25 @@ function analogLiftBar(hz) {
 }
 
 /**
+ * How far the median return “vs normally” must move (percentage points).
+ * Hit rate alone can lean on a +0.1% win — size has to clear this too.
+ */
+function analogMedianBar(hz) {
+  if (hz === "1w") return 0.3;
+  if (hz === "2w") return 0.5;
+  if (hz === "1m") return 0.8;
+  if (hz === "3m") return 1.5;
+  if (hz === "6m") return 2.5;
+  return 4;
+}
+
+/**
  * How the record lines up with a call. The interesting case is disagreement: it
  * says the read depends on this cycle differing from the ones behind it, which is
  * worth knowing before you act on it.
+ *
+ * Both how-often (hit rate vs normally) and how-much (median vs normally) must
+ * point the same way. One without the other is a coin flip.
  */
 function analogFor(assetId, stance) {
   const a = REGIME?.analogs;
@@ -567,8 +583,18 @@ function analogFor(assetId, stance) {
 
   const base = a.baseline?.[hz]?.[assetId] || null;
   const lift = base ? r.up - base.up : 0;
-  const bar = analogLiftBar(hz);
-  const lean = lift >= bar ? "up" : lift <= -bar ? "down" : "flat";
+  const medLift =
+    base && Number.isFinite(base.median) ? r.median - base.median : r.median;
+  const freqLean =
+    lift >= analogLiftBar(hz) ? "up" : lift <= -analogLiftBar(hz) ? "down" : "flat";
+  const sizeLean =
+    medLift >= analogMedianBar(hz)
+      ? "up"
+      : medLift <= -analogMedianBar(hz)
+        ? "down"
+        : "flat";
+  const lean =
+    freqLean !== "flat" && freqLean === sizeLean ? freqLean : "flat";
   // A mixed call has nothing to agree or disagree with, so report which way the
   // record leans instead of calling the history split when it plainly is not.
   let verdict = "leans";
@@ -584,7 +610,9 @@ function analogFor(assetId, stance) {
     verdict,
     weak: a.closeness === "distant",
     baseUp: base?.up,
+    baseMedian: base?.median,
     lift,
+    medLift,
   };
 }
 
