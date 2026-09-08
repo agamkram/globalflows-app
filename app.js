@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260961";
+import { buildMeaning } from "./meaning.js?v=20260960";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260961";
+} from "./score.js?v=20260960";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -620,7 +620,7 @@ function renderFavorStrip() {
                 (tn) =>
                   `<span class="favor-tenor" data-state="${stanceState(tn.stance)}"><b>${escapeHtml(
                     tn.name
-                  )}</b>${trackHtml(tn.margin, stanceState(tn.stance), { size: "sm" })}</span>`
+                  )}</b>${trackHtml(tn.margin, stanceState(tn.stance), { size: "xs" })}</span>`
               )
               .join("")}</span>
           </button>`;

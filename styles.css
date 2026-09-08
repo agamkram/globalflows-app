@@ -385,11 +385,11 @@ body.page-about::before {
 }
 
 .favor-cell {
-  display: grid;
-  grid-template-rows: 2.3em auto;
-  align-items: stretch;
-  justify-items: center;
-  gap: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
   min-width: 0;
   padding: 5px 2px 6px;
   overflow: visible;
@@ -421,12 +421,7 @@ body.page-about::before {
   hyphens: manual;
   overflow-wrap: break-word;
   max-width: 100%;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  text-align: center;
+  min-height: 2.3em;
 }
 .favor-cell[data-clash="true"] .favor-title {
   color: #fff;
@@ -464,6 +459,13 @@ body.page-about::before {
   color: var(--tight);
 }
 
+.favor-curve {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
 .favor-tenor {
   display: grid;
   grid-template-columns: 1.35em minmax(0, 1fr);
@@ -487,8 +489,6 @@ body.page-about::before {
 .favor-tenor .track {
   width: 100%;
   max-width: none;
-  height: 14px;
-  margin: 0;
 }
 
 .dlg-body .rubric-extra {
@@ -666,21 +666,9 @@ body.page-about::before {
   overflow: visible;
 }
 .track-sm {
-  max-width: 48px;
-  height: 14px;
-  margin-top: 0;
-}
-.favor-cell > .track {
-  justify-self: center;
-  margin-top: 2px;
-}
-.favor-curve {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  width: 100%;
-  justify-self: stretch;
-  margin-top: 2px;
+  max-width: 44px;
+  height: 12px;
+  margin-top: 4px;
 }
 .track-xs {
   max-width: 36px;
