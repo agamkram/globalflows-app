@@ -428,6 +428,8 @@ export function memberAnchorScore(m, now = Date.now()) {
 
 export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {
   if (!m || m.status !== "ok") return null;
+  // MOVE: calm does not vote easy on the light or the turn — same gate.
+  if (m.anchor?.kind === "move" && !m.anchor?.votes) return null;
   const sc = m.impulse?.[horizon]?.score;
   return sc != null && Number.isFinite(sc) ? sc : null;
 }

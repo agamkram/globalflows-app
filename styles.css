@@ -632,7 +632,7 @@ body.page-about::before {
   color: var(--tight);
 }
 .impulse-chev[data-dir="flat"]::before {
-  content: "▶";
+  content: "–";
   color: var(--neutral);
 }
 
@@ -691,7 +691,7 @@ body.page-about::before {
   min-width: 0;
 }
 
-/* Center-zero range: −1 left, +1 right. Ticks at 0 and ±0.45. */
+/* Center-zero range: −1 left, +1 right. Lights tick 0 and ±0.45; assets only 0. */
 .track {
   display: block;
   width: 100%;

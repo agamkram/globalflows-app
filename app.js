@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20260991";
+import { buildMeaning } from "./meaning.js?v=20260992";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20260991";
+} from "./score.js?v=20260992";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -444,7 +444,7 @@ const LIGHT_BLURB = {
   liquidity:
     "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are the SOFR spread, reserves and net liquidity versus GDP, the dollar’s 12-month change, and G4 balance-sheet growth.",
   rates:
-    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light.",
+    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light or the turn.",
   growth:
     "Real activity — jobs, claims, weekly/monthly activity, spending, copper. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
@@ -505,12 +505,20 @@ function lightIsSplit(snap, id) {
   return voters.some((v) => v.score > 0.45) && voters.some((v) => v.score < -0.45);
 }
 
-function trackHtml(score, state, { size = "" } = {}) {
+/**
+ * Gauge rail. Lights keep ±0.45 ticks (where the word flips). Asset needles
+ * only mark center — in/out is the color, not a light threshold.
+ */
+function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   const pct = trackPct(score).toFixed(1);
   const cls = size ? `track track-${size}` : "track";
+  const ticks =
+    cuts === "favor"
+      ? `<i class="track-mid"></i>`
+      : `<i class="track-cut track-cut-lo"></i><i class="track-mid"></i><i class="track-cut track-cut-hi"></i>`;
   return `<span class="${cls}" data-state="${escapeHtml(
     state || "neutral"
-  )}" aria-hidden="true"><span class="track-rail"><i class="track-cut track-cut-lo"></i><i class="track-mid"></i><i class="track-cut track-cut-hi"></i><i class="track-mark" style="left:${pct}%"></i></span></span>`;
+  )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%"></i></span></span>`;
 }
 
 /** Parent-class proxies. Credit has none — IG and HY are judged separately. */
@@ -609,17 +617,22 @@ function renderFavorStrip() {
           clash ? ", history disagrees" : ""
         }. Tap for why."`;
         const titleHtml = escapeHtml(title);
-        if (it.tenors?.length) {
+        // Treasuries: 5/10/30. Credit: IG/HY. No averaged parent needle.
+        const kids = it.tenors?.length ? it.tenors : it.splits?.length ? it.splits : null;
+        if (kids) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
             it.id
           )}" data-state="${st}" ${aria}${clashAttr}>
             <span class="favor-title">${titleHtml}</span>
-            <span class="favor-curve">${it.tenors
+            <span class="favor-curve">${kids
               .map(
-                (tn) =>
-                  `<span class="favor-tenor" data-state="${stanceState(tn.stance)}"><b>${escapeHtml(
-                    tn.name
-                  )}</b>${trackHtml(tn.margin, stanceState(tn.stance), { size: "xs" })}</span>`
+                (kid) =>
+                  `<span class="favor-tenor" data-state="${stanceState(kid.stance)}"><b>${escapeHtml(
+                    kid.name
+                  )}</b>${trackHtml(kid.margin, stanceState(kid.stance), {
+                    size: "xs",
+                    cuts: "favor",
+                  })}</span>`
               )
               .join("")}</span>
           </button>`;
@@ -628,7 +641,7 @@ function renderFavorStrip() {
           it.id
         )}" data-state="${st}" ${aria}${clashAttr}>
           <span class="favor-title">${titleHtml}</span>
-          ${trackHtml(it.margin, st, { size: "sm" })}
+          ${trackHtml(it.margin, st, { size: "sm", cuts: "favor" })}
         </button>`;
       })
       .join("");

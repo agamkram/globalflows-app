@@ -378,7 +378,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       ? "PCE is still hot, but 5y5y is anchored and funding isn’t easy — gold has no second job."
       : "Inflation is hot, but gold has no second job — funding isn’t easy and fear isn’t paying.";
   } else if (!goldFear && !goldDrain && !goldHotEasy) {
-    goldMix = "Gold is doing more than one job; don’t treat it as a liquidity vote.";
+    goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
   const gold = instrument(
     "gold",
