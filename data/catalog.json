@@ -384,7 +384,25 @@
       "search": "SOFR_SPREAD",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Overnight funding minus the top of the fed funds target, in bp. From 2018-04-02 that is SOFR; before then EFFR versus DFEDTAR / DFEDTARU on the same band so the funding ballot covers the full archive. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019."
+      "note": "Overnight funding minus the top of the fed funds target, in bp. From 2018-04-02 that is SOFR; before then EFFR versus DFEDTAR / DFEDTARU on the same band so the funding ballot covers the full archive. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019. Reads reserve abundance, which is not the same as easy funding: in a crisis the Fed floods reserves *because* funding broke, so this print goes deeply negative at the worst moment. CPFF is the ballot that catches that."
+    },
+    {
+      "id": "CPFF",
+      "name": "Commercial paper stress",
+      "layer": "liquidity",
+      "pipe": "fred",
+      "fred": "CPFF",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "light": "liquidity",
+      "weight": 1,
+      "sourceUrl": "https://fred.stlouisfed.org/series/CPFF",
+      "sub": "3-month commercial paper vs fed funds",
+      "search": "CPFF",
+      "causal": "liquidity",
+      "street": "liquidity",
+      "note": "90-day AA financial commercial paper minus the fed funds rate \u2014 what it costs a bank or a large company to roll unsecured short-term debt, over the policy rate. The price of funding rather than the quantity of reserves, which is why it stays honest in a crisis: 242bp at the October 2008 peak and 197bp in March 2020, against 22bp today. Daily from 1997, so it covers the whole 2003 archive. Band is the measured 2003-2026 distribution: 3bp is the 25th percentile, 21bp the 75th, 75bp roughly the 97th \u2014 normal variation reads neutral and only genuine stress reads tight."
     },
     {
       "id": "DFEDTAR",

@@ -14,7 +14,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS, fitLightDist, fitOutputScale, calibrateLightScore, lightStateFromScore, LIGHT_CALIB_SD } from "../score.js";
+import { makeAnchor, anchorKind, isTrailingKind, trailingNorm, applyRealRateAnchors, buildLights, LIGHT_IDS, fitLightDist, fitOutputScale, calibrateLightScore, lightStateFromScore, LIGHT_CALIB_SD } from "../score.js";
 import { loadLightDist } from "./load-light-dist.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -439,6 +439,11 @@ async function main() {
     const series = {};
     for (const spec of voters) {
       let value = null;
+      // Trailing-norm voters need the window as it stood on this date, never the
+      // one that includes their own future. Track which array and index the
+      // as-of print came from so the norm is built from that prefix only.
+      let normPts = null;
+      let normIdx = -1;
 
       if (spec.id === "SOFR_SPREAD") {
         const sofrHist = hist.SOFR_SPREAD;
@@ -447,10 +452,14 @@ async function main() {
           const got = asOf(sofrHist, cursors.SOFR_SPREAD || 0, date);
           cursors.SOFR_SPREAD = got.i;
           value = got.value;
+          normPts = sofrHist;
+          normIdx = got.i;
         } else if (fundingSpread) {
           const got = asOf(fundingSpread, fundingCursor.i, date);
           fundingCursor.i = got.i;
           value = got.value;
+          normPts = fundingSpread;
+          normIdx = got.i;
         }
       } else if (vintages[spec.id]) {
         value = vintageAsOf(vintages[spec.id], date).value;
@@ -467,8 +476,14 @@ async function main() {
         const got = asOf(pts, cursors[spec.id] || 0, date);
         cursors[spec.id] = got.i;
         value = got.value;
+        normPts = pts;
+        normIdx = got.i;
       }
       if (value == null) continue;
+      const norm =
+        isTrailingKind(anchorKind(spec.id)) && normPts
+          ? trailingNorm(normPts, normIdx, spec.freq)
+          : null;
       series[spec.id] = {
         id: spec.id,
         light: spec.light,
@@ -477,7 +492,8 @@ async function main() {
         status: "ok",
         latest: value,
         asOf: date,
-        anchor: makeAnchor(spec, value),
+        ...(norm ? { norm } : {}),
+        anchor: makeAnchor(spec, value, norm),
       };
     }
 

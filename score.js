@@ -61,9 +61,15 @@ export const VOTE_FAMILIES = {
   },
   // Two Fed-balance-sheet/GDP ratios share one ballot. China credit/GDP is its
   // own half-weight seat — a slow stock must not flatten the global ballot.
+  // Quantity and price get separate ballots and must not be averaged together:
+  // reserve abundance and funding stress both peak in a crisis, so folding them
+  // into one ballot cancels the only voter that was right. In October 2008 the
+  // funding spread read maximum easy (EFFR 71bp under target, because the Fed was
+  // flooding reserves) while commercial paper was 242bp over fed funds.
   liquidity: {
     fed: ["RESERVES_GDP", "NETLIQ_GDP"],
     funding: ["SOFR_SPREAD"],
+    stress: ["CPFF"],
     global: ["GLOBAL_CB_YOY", "DOLLAR_YOY"],
     china: { ids: ["CHINA_CREDIT_GDP"], weight: 0.5 },
   },
@@ -267,9 +273,36 @@ export function buildBallots(lid, voters) {
 export function aggregateVotes(lid, voters, opts = {}) {
   const ballots = buildBallots(lid, voters);
   if (!ballots.length) return null;
-  const raw = weightedTrimmedMean(ballots);
+  const raw = applyStressFloor(lid, weightedTrimmedMean(ballots), ballots);
   if (opts.calibrate === false) return raw;
   return calibrateLightScore(lid, raw, opts.dist || null);
+}
+
+/**
+ * Liquidity is the worst of its channels, not the average of them. Cash can be
+ * abundant in aggregate and still unreachable: in October 2008 reserves were
+ * three standard deviations above normal *because* the Fed was flooding a market
+ * where commercial paper cost 242bp over fed funds. Averaging five ballots let
+ * that surge outvote the one gauge that was right, and the light read neutral
+ * through the GFC.
+ *
+ * So when a funding-price ballot says the plumbing is broken, the light is held
+ * at least that tight and the quantity ballots cannot talk it back up. This is
+ * one-directional: easy funding never floors the light upward, the same way MOVE
+ * can tighten Rates but calm cannot loosen it.
+ */
+const STRESS_BALLOTS = { liquidity: ["family:funding", "family:stress"] };
+const STRESS_TRIGGER = -0.5;
+
+export function applyStressFloor(lid, score, ballots) {
+  const names = STRESS_BALLOTS[lid];
+  if (!names || score == null || !Number.isFinite(score)) return score;
+  let worst = null;
+  for (const b of ballots || []) {
+    if (!names.includes(b.id) || !Number.isFinite(b.score)) continue;
+    if (b.score <= STRESS_TRIGGER && (worst == null || b.score < worst)) worst = b.score;
+  }
+  return worst == null ? score : Math.min(score, worst);
 }
 
 function clamp(n, lo, hi) {
@@ -338,6 +371,7 @@ const KIND = {
   // Plumbing levels are normalised before they vote: a spread against policy and
   // two shares of nominal GDP. The dollar stocks themselves are impulse-only.
   SOFR_SPREAD: "sofr_spread",
+  CPFF: "cp_ff",
   RESERVES_GDP: "reserves_gdp",
   NETLIQ_GDP: "netliq_gdp",
   RRPONTSYD: "none",
@@ -370,6 +404,82 @@ const KIND = {
 
 export function anchorKind(id) {
   return KIND[id] || "none";
+}
+
+/**
+ * Some series changed meaning when the plumbing changed, so no fixed band can
+ * describe them across the archive. Reserves were 0.1% of GDP through 2003-2007
+ * because the pre-2008 Fed paid no interest on them, and overnight funding sat
+ * *at* the target because that is how a corridor works — neither was a squeeze,
+ * but a band written on post-QE levels calls both "scarce" for five straight
+ * years, then calls the whole QE era "ample" no matter what breaks. The 2022
+ * drain reads easy on the same band because reserves were still historically
+ * high while they were falling fast.
+ *
+ * These score against their own recent normal instead: two standard deviations
+ * from where the system has been operating reaches the rail. Trailing only —
+ * never the full sample — so a 2005 print is judged on 2000-2005, not on a
+ * distribution that includes its own future.
+ */
+const TRAILING_KINDS = new Set(["reserves_gdp", "netliq_gdp", "sofr_spread"]);
+/** High = tight, as with the band's `invert`. */
+const TRAILING_INVERT = new Set(["sofr_spread"]);
+const TRAILING_YEARS = 5;
+const PER_YEAR = { daily: 252, weekly: 52, monthly: 12, quarterly: 4 };
+
+export function isTrailingKind(kind) {
+  return TRAILING_KINDS.has(kind);
+}
+
+/**
+ * Mean and sd of the window ending at `endIndex` inclusive. Needs about two
+ * years before it will judge what normal is; below that it returns null and the
+ * voter abstains rather than guessing off a band that does not fit its era.
+ */
+export function trailingNorm(points, endIndex, freq, years = TRAILING_YEARS) {
+  if (!points?.length) return null;
+  const end = Number.isInteger(endIndex) ? Math.min(endIndex, points.length - 1) : points.length - 1;
+  if (end < 0) return null;
+  const per = PER_YEAR[freq] || 252;
+  const want = Math.max(24, Math.round(per * years));
+  const need = Math.max(24, Math.round(per * 2));
+  const start = Math.max(0, end - want + 1);
+  const n = end - start + 1;
+  if (n < need) return null;
+  let sum = 0;
+  for (let i = start; i <= end; i++) sum += points[i].value;
+  const mean = sum / n;
+  let acc = 0;
+  for (let i = start; i <= end; i++) {
+    const d = points[i].value - mean;
+    acc += d * d;
+  }
+  const sd = Math.sqrt(acc / n);
+  return sd > 0 ? { mean, sd, n } : null;
+}
+
+function trailingScore(kind, value, norm) {
+  if (value == null || !Number.isFinite(value)) return null;
+  if (!norm || !(norm.sd > 0) || !Number.isFinite(norm.mean)) return null;
+  const s = clamp((value - norm.mean) / norm.sd / 2, -1, 1);
+  return TRAILING_INVERT.has(kind) ? -s : s;
+}
+
+function whyTrailing(kind, value, norm) {
+  if (value == null || !Number.isFinite(value)) return "no print";
+  if (!norm || !(norm.sd > 0)) return "not enough history yet to judge its own normal";
+  const z = (value - norm.mean) / norm.sd;
+  const way = Math.abs(z) < 0.5 ? "about normal" : z > 0 ? "above normal" : "below normal";
+  switch (kind) {
+    case "reserves_gdp":
+      return `reserves ${value.toFixed(1)}% of GDP — ${way} for this system (5y average ${norm.mean.toFixed(1)}%, ${z >= 0 ? "+" : ""}${z.toFixed(1)}σ)`;
+    case "netliq_gdp":
+      return `net liquidity ${value.toFixed(1)}% of GDP — ${way} for this system (5y average ${norm.mean.toFixed(1)}%, ${z >= 0 ? "+" : ""}${z.toFixed(1)}σ)`;
+    case "sofr_spread":
+      return `funding ${value.toFixed(0)}bp vs the policy ceiling — ${way} (5y average ${norm.mean.toFixed(0)}bp, ${z >= 0 ? "+" : ""}${z.toFixed(1)}σ); above normal means cash is getting scarce`;
+    default:
+      return `${value} — ${way} versus its own 5-year normal`;
+  }
 }
 
 function scoreKind(kind, value) {
@@ -469,6 +579,14 @@ function scoreKind(kind, value) {
     // scarce, the condition that broke repo in September 2019.
     case "sofr_spread":
       return bandScore(value, -20, -10, 0, true);
+    // 90-day AA financial commercial paper over fed funds, in percent. The price of
+    // funding, not the quantity of reserves — so it stays honest when the Fed is
+    // injecting reserves into a broken market. Band is the measured 2003-2026
+    // distribution: 0.03 is the 25th percentile, 0.21 the 75th, 0.75 about the 97th.
+    // Set wide on the tight side on purpose: normal variation should read neutral,
+    // and only 2008 (2.42) and 2020 (1.97) should reach the floor.
+    case "cp_ff":
+      return bandScore(value, 0.03, 0.21, 0.75, true);
     // Reserves as a share of nominal GDP. 6.9% is where the 2019 repo crisis hit;
     // the QE peak was 16.6%.
     case "reserves_gdp":
@@ -578,6 +696,8 @@ function whyKind(kind, value) {
       return `NFCI ${fmt(v, 2)}`;
     case "sofr_spread":
       return `funding ${fmt(v, 0)}bp vs the policy ceiling — 0 is where repo broke in 2019`;
+    case "cp_ff":
+      return `commercial paper ${fmt(v * 100, 0)}bp over fed funds — 21bp is typical, 242bp was October 2008`;
     case "reserves_gdp":
       return `reserves ${fmt(v)}% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak`;
     case "netliq_gdp":
@@ -612,9 +732,11 @@ function whyKind(kind, value) {
  * side of the light — more cash, easier funding, firmer growth, hotter prices,
  * more risk appetite.
  */
-export function makeAnchor(spec, value) {
+export function makeAnchor(spec, value, norm = null) {
   const kind = spec.anchorKind || anchorKind(spec.id);
-  const score = scoreKind(kind, value);
+  const trailing = TRAILING_KINDS.has(kind);
+  const nm = norm || spec.norm || null;
+  const score = trailing ? trailingScore(kind, value, nm) : scoreKind(kind, value);
   // MOVE is the rates complex’s stress gauge: a spike means duration is
   // unownable, so it can tighten the light. Calm is not cheap money — keep the
   // band score for audit, but do not let silence vote “easy.”
@@ -622,7 +744,7 @@ export function makeAnchor(spec, value) {
   return {
     kind,
     score,
-    why: whyKind(kind, value),
+    why: trailing ? whyTrailing(kind, value, nm) : whyKind(kind, value),
     votes,
   };
 }
@@ -697,11 +819,17 @@ export function seriesFacts(points, spec) {
     };
   }
   const last = points[points.length - 1];
+  // Frozen at ingest alongside the anchor, so a consumer holding only the row
+  // (calibrate-lights, the browser) scores it the same way the bake did.
+  const norm = TRAILING_KINDS.has(spec.anchorKind || anchorKind(spec.id))
+    ? trailingNorm(points, points.length - 1, spec.freq)
+    : null;
   return {
     latest: last.value,
     asOf: last.date,
     n: points.length,
-    anchor: makeAnchor(spec, last.value),
+    ...(norm ? { norm } : {}),
+    anchor: makeAnchor(spec, last.value, norm),
     impulse: makeImpulse(points, spec),
   };
 }

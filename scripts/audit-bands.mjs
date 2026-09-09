@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import {
   makeAnchor,
   anchorKind,
+  trailingNorm,
   LIGHT_IDS,
   VOTE_FAMILIES,
   familyIds,
@@ -198,7 +199,8 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
     const kind = anchorKind(id);
     const isReal = kind === "pending_real";
     const scored = [];
-    for (const p of pts) {
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
       if (p.date < LIGHT_SINCE) continue;
       let a;
       if (isReal) {
@@ -206,7 +208,7 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
         if (c == null) continue;
         a = makeAnchor({ ...spec, anchorKind: "real_rate" }, p.value - c);
       } else {
-        a = makeAnchor(spec, p.value);
+        a = makeAnchor(spec, p.value, trailingNorm(pts, i, spec.freq));
       }
       if (a.score != null && Number.isFinite(a.score)) scored.push({ date: p.date, score: a.score });
     }
@@ -349,14 +351,18 @@ async function main() {
       }
 
       const scores = [];
-      for (const p of use) {
+      // Index into the full series, not `use`: a trailing-norm voter judges each
+      // print against the window before it, which reaches back past SINCE.
+      const offset = pts.length - use.length;
+      for (let k = 0; k < use.length; k++) {
+        const p = use[k];
         let a;
         if (isReal) {
           const c = coreAt(p.date);
           if (c == null) continue;
           a = makeAnchor({ ...spec, anchorKind: "real_rate" }, p.value - c);
         } else {
-          a = makeAnchor(spec, p.value);
+          a = makeAnchor(spec, p.value, trailingNorm(pts, offset + k, spec.freq));
         }
         if (a.score != null && Number.isFinite(a.score)) scores.push(a.score);
       }
