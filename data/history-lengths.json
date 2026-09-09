@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T05:53:39.119Z",
+  "updatedAt": "2026-09-09T06:10:46.991Z",
   "note": "High-water mark of data/history point counts. Sanity fails if any series shrinks below its mark. Updated by npm run ingest.",
   "series": {
     "ADA": {
@@ -866,6 +866,11 @@
       "n": 9577,
       "first": "1982-09-27",
       "last": "2008-12-15"
+    },
+    "GOLD_COT": {
+      "n": 1777,
+      "first": "1992-06-30",
+      "last": "2026-09-01"
     }
   }
 }

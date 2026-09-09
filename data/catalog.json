@@ -1376,6 +1376,24 @@
       "note": "Cboe VIX \u2014 30-day implied vol on the S&P 500. Equity fear gauge."
     },
     {
+      "id": "GOLD_COT",
+      "name": "Gold speculative positioning",
+      "layer": "risk",
+      "pipe": "derived",
+      "derive": "gold_cot",
+      "units": "index",
+      "freq": "weekly",
+      "sign": -1,
+      "light": "risk",
+      "weight": 1,
+      "sourceUrl": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm",
+      "sub": "CFTC gold non-commercial net, 156w index",
+      "search": "GOLD_COT",
+      "causal": "risk",
+      "street": "risk",
+      "note": "156-week COT index of CFTC gold futures non-commercial net as a share of open interest. Crowded speculative longs are a hedge \u2014 same side as expensive fear on the Risk light. Raw contract counts drift with open interest, so the index is what carries the band."
+    },
+    {
       "id": "BAMLH0A0HYM2",
       "name": "High-yield spread",
       "layer": "risk",

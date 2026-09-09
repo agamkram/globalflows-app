@@ -1362,6 +1362,51 @@ async function main() {
     errors.push({ id: "EQUITY_ERP", error: String(e.message || e) });
   }
 
+  // Derived: CFTC gold non-commercial net % of OI as a 156-week COT index (0–100).
+  // FuturesBench republishes the legacy futures-only report; contract counts drift
+  // with open interest, so only the lookback index carries a fixed band.
+  try {
+    const url = "https://futuresbench.com/data/cot/gold.csv";
+    const res = await fetch(url, {
+      headers: { "User-Agent": "GlobalFlows/0.1 (+https://markmaga.com)", Accept: "text/csv" },
+    });
+    if (!res.ok) throw new Error(`FuturesBench gold COT ${res.status}`);
+    const text = await res.text();
+    const rows = [];
+    for (const line of text.trim().split(/\r?\n/).slice(1)) {
+      const parts = line.split(",");
+      if (parts.length < 6) continue;
+      const date = parts[0].trim();
+      const pct = Number(parts[5]);
+      if (!date || !Number.isFinite(pct)) continue;
+      rows.push({ date, value: pct });
+    }
+    rows.sort((a, b) => a.date.localeCompare(b.date));
+    if (rows.length < 200) throw new Error(`thin gold COT (${rows.length})`);
+    const WIN = 156; // ~3y of weekly prints
+    const points = [];
+    for (let i = 0; i < rows.length; i++) {
+      const from = Math.max(0, i - WIN + 1);
+      const window = rows.slice(from, i + 1).map((p) => p.value);
+      const lo = Math.min(...window);
+      const hi = Math.max(...window);
+      const span = hi - lo;
+      const idx = span > 1e-9 ? ((rows[i].value - lo) / span) * 100 : 50;
+      points.push({ date: rows[i].date, value: idx });
+    }
+    // Index needs a full window before it means anything.
+    const ready = points.slice(WIN - 1);
+    if (ready.length < 100) throw new Error(`thin gold COT index (${ready.length})`);
+    await emitDerived(
+      "GOLD_COT",
+      ready,
+      "derived (CFTC gold NC % OI, 156w COT index via FuturesBench)"
+    );
+  } catch (e) {
+    console.log(`  GOLD_COT FAIL  ${e.message}`);
+    errors.push({ id: "GOLD_COT", error: String(e.message || e) });
+  }
+
   // Spark bundle: the chart column only ever draws the last year, so ship a
   // trimmed bundle instead of the full per-series history. The history folder is
   // ~18MB and stays out of git; this is the file the deployed app actually reads.

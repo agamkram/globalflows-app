@@ -35,6 +35,9 @@ export const VOTE_FAMILIES = {
   risk: {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
+    // Speculative gold longs crowd when hedging — same side as expensive fear.
+    // Half weight: one weekly print must not outvote VIX + the credit sleeve.
+    cot: { ids: ["GOLD_COT"], weight: 0.5 },
   },
   // Labor and output each cast one ballot — six coincident prints in one family
   // were cancelling each other (quiet sd). Leading housing/orders/openings and
@@ -43,7 +46,9 @@ export const VOTE_FAMILIES = {
   growth: {
     labor: ["PAYEMS", "UNRATE", "ICSA"],
     output: ["GDPC1", "CFNAI", "WEI"],
-    leading: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"],
+    // Leading sleeve is the turn — full weight plus a bump so lagging labor/
+    // output cannot keep the light Mid when permits/orders/openings flip.
+    leading: { ids: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"], weight: 1.5 },
     survey: ["EMPIRE_MFG", "PHILLY_MFG"],
   },
   // Realized core weight 2 so low-variance expectations cannot cap Hot.
@@ -93,12 +98,14 @@ export function weightedMean(items) {
   return den ? num / den : null;
 }
 
-/** Drop the highest and lowest score once when there are enough ballots. */
+/** Drop the highest and lowest score once when there are enough ballots.
+ * Need ≥5 seats — with 3–4 (Growth after the labor/output split, Rates) trim
+ * throws away the only Strong/Soft votes and pins the light Mid. */
 export function weightedTrimmedMean(items) {
   const ok = (items || []).filter(
     (it) => Number.isFinite(it?.score) && Number.isFinite(it?.weight) && it.weight > 0
   );
-  if (ok.length < 3) return weightedMean(ok);
+  if (ok.length < 5) return weightedMean(ok);
   const sorted = [...ok].sort((a, b) => a.score - b.score);
   return weightedMean(sorted.slice(1, -1));
 }
@@ -273,6 +280,7 @@ const KIND = {
   RSAFS: "none",
   COPPER: "none",
   VIX: "vix",
+  GOLD_COT: "gold_cot",
   BAMLH0A0HYM2: "hy",
   NFCI: "nfci",
   // Moody's Baa over 10s. FRED computes it rather than licensing it from ICE, so
@@ -372,6 +380,11 @@ function scoreKind(kind, value) {
     // Floor at 14 left VIX near maximum calm whenever it sat in the teens.
     case "vix":
       return bandScore(value, 12, 17, 28, true);
+    // 156-week COT index of gold non-commercial net % of OI (0–100). Crowded
+    // speculative longs are a hedge — same side as expensive fear. Soft / mid /
+    // crowded from the 2003–2026 p10 / p50 / p90 of the index itself (23 / 68 / 93).
+    case "gold_cot":
+      return bandScore(value, 23, 68, 93, true);
     // ICE HY OAS. FRED only publishes three years, all of them cycle-tights, so
     // this band is the long-run shape not the sample: 2.5 is this-cycle tights
     // (the ICE print's min is 2.59), 4.0 is typical, 6.5 is stress. The old floor
@@ -496,6 +509,8 @@ function whyKind(kind, value) {
       return `Philly manufacturing ${fmt(v, 1)}`;
     case "vix":
       return `VIX ${fmt(v, 1)}`;
+    case "gold_cot":
+      return `gold speculative positioning ${fmt(v, 0)} (156w index) — 93 is crowded long (p90), a hedge`;
     case "hy":
       return `High-yield OAS ${fmt(v)}% — 2.5 is cycle tights, 4 is typical, 6.5 is stress`;
     case "bei_5y5y":

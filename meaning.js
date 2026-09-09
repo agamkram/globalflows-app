@@ -405,15 +405,16 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (spreadZ < -0.35 && easeW(rSc) > 0.4) hyOutParts.push("spreads are tight — you are not paid");
   if (tightW(rSc) > 0.55) hyOutParts.push("fear is already expensive — the easy out call is late");
   const calm = easeW(rSc);
-  // Credit “out” only while fear is still calm — risk-off outs are bounce days.
-  // Spread level is two-sided: tight docks, wide adds.
+  // Credit on 1m: wide spreads + collectible coupons pay; tight spreads into calm
+  // fear are not paid (late). Soft growth into calm is the other out.
   const hyNet =
-    (creditDir === "falling" ? 0.55 : 0) -
+    (creditDir === "falling" ? 0.5 : 0) -
     (creditDir === "rising" ? 0.4 * Math.max(calm, 0.35) : 0) +
-    0.35 * easeW(gSc) -
+    0.3 * easeW(gSc) -
     0.5 * tightW(gSc) * calm -
     0.2 * tightW(lSc) * calm +
-    0.45 * spreadZ * Math.max(calm, 0.35);
+    0.5 * spreadZ -
+    0.25 * Math.max(0, -spreadZ) * calm;
   const hy = instrumentFromNet(
     "hy",
     "HY",
@@ -423,13 +424,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       : "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
     "High yield needs both growth and calm fear; only one side is helping.",
-    0.28,
-    -0.28
+    0.26,
+    -0.26
   );
   hy.label = "High yield";
   hy.margin = blendMargin(hy.stance, hy.net, meanImpulse([gImp, kImp, hyImp]));
 
-  let creditStance = netCall((ig.net + hy.net) / 2, 0.26, -0.28);
+  let creditStance = netCall((ig.net + hy.net) / 2, 0.24, -0.26);
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
@@ -530,31 +531,40 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   stocks.margin = blendMargin(stocks.stance, stocks.net, meanImpulse([gImp, kImp]));
   stocks.splits = [cyc, def];
 
+  // Crypto on 1m: easy plumbing into cheap fear is late (dump). Drain into fear
+  // is the bounce. Keep a mild easy-plumbing bid when fear is already paid.
   const cryptoOutParts = [];
-  if (tightW(lSc) > 0.55) cryptoOutParts.push("cash is draining");
-  if (dolStrong) cryptoOutParts.push("the dollar is rising");
-  if (realZ > 0.35 && easeW(rSc) > 0.4) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
-  if (tightW(rSc) > 0.55) cryptoOutParts.push("fear is already expensive — the easy dump call is late");
+  if (easeW(lSc) > 0.55 && calmRisk > 0.55) {
+    cryptoOutParts.push("plumbing is easy while fear is still cheap — late to the liquidity bid");
+  }
+  if (dolStrong && calmRisk > 0.45) cryptoOutParts.push("the dollar is rising into calm fear");
+  if (realZ > 0.45 && calmRisk > 0.45) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
   const cryptoInParts = [];
-  if (easeW(lSc) > 0.55) cryptoInParts.push("plumbing is feeding risk");
-  if (easeW(rSc) > 0.55 && easeW(lSc) > 0.4) cryptoInParts.push("fear is cheap with easy plumbing");
-  if (realZ < -0.35) cryptoInParts.push("real yields are low — the discount rate helps the high-beta valve");
+  if (tightW(lSc) > 0.45 && fearW > 0.35) {
+    cryptoInParts.push("cash is draining into paid fear — the bounce sample");
+  }
+  if (easeW(lSc) > 0.55 && fearW > 0.45) {
+    cryptoInParts.push("plumbing is easy while fear is already paid");
+  }
+  if (realZ < -0.35 && fearW > 0.3) {
+    cryptoInParts.push("real yields are low while fear is paid — discount rate helps the valve");
+  }
   const cryptoNet =
-    0.5 * easeW(lSc) -
-    0.5 * tightW(lSc) +
-    0.15 * easeW(rSc) -
-    0.1 * tightW(rSc) -
-    0.25 * realZ * calmRisk -
-    (dolStrong ? 0.45 : 0);
+    0.45 * tightW(lSc) * Math.max(fearW, 0.25) +
+    0.35 * easeW(lSc) * fearW -
+    0.75 * easeW(lSc) * calmRisk -
+    0.3 * realZ * calmRisk -
+    (dolStrong ? 0.35 : 0) * Math.max(calmRisk, 0.3) +
+    0.2 * fearW;
   const crypto = instrumentFromNet(
     "crypto",
     "Crypto",
     cryptoNet,
-    sentence(cryptoInParts, "Easy plumbing and calm fear — Bitcoin is the high-beta valve."),
-    sentence(cryptoOutParts, "Draining cash or a rising dollar — the high-beta valve usually dumps first."),
-    "Crypto wants easy plumbing; fear alone is a late signal.",
-    0.32,
-    -0.32
+    sentence(cryptoInParts, "Drain into fear — Bitcoin is the high-beta bounce valve."),
+    sentence(cryptoOutParts, "Easy plumbing into cheap fear — the high-beta valve usually dumps."),
+    "Crypto wants paid fear or a clean drain; complacent easy plumbing is late.",
+    0.14,
+    -0.24
   );
   crypto.margin = blendMargin(crypto.stance, crypto.net, meanImpulse([lImp, kImp]));
 
@@ -605,50 +615,74 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   gold.margin = blendMargin(gold.stance, gold.net, meanImpulse([-kImp, iImp]));
 
   const wtiImp = hzImp(seriesOk(snap, "WTI"), horizon);
+  const wtiMom = wtiImp.score != null ? impulseUnit(wtiImp) : 0;
+  // Continuous dollar: DOLLAR_YOY anchor is inverted (rising $ → negative score).
+  const dolZ = (() => {
+    const d = seriesOk(snap, "DOLLAR_YOY");
+    if (d?.anchor?.score != null && Number.isFinite(d.anchor.score)) return -d.anchor.score;
+    return dolStrong ? 0.7 : dolSoft ? -0.7 : 0;
+  })();
+  // Cmdty on 1m: firm growth into calm fear is late for oil/copper (same as equities).
+  // Soft growth into fear is the bounce. Dollar taxes continuously; WTI lookback
+  // sits in the oil net, not only the why text.
   const oilInParts = [];
-  if (easeW(gSc) > 0.55) oilInParts.push("growth is firm");
-  if (!dolStrong) oilInParts.push("the dollar isn’t taxing dollar oil");
+  if (tightW(gSc) > 0.55 && fearW > 0.4) oilInParts.push("growth is soft into expensive fear — the bounce sample");
+  if (dolZ < -0.35) oilInParts.push("the dollar isn’t taxing dollar oil");
+  if (easeW(iSc) > 0.55) oilInParts.push("inflation is hot — crude’s price bid");
   if (wtiImp.dir === "up") oilInParts.push("crude is firm this window");
   const oilOutParts = [];
-  if (tightW(gSc) > 0.55) oilOutParts.push("growth is soft");
-  if (dolStrong) oilOutParts.push("the dollar is rising");
+  if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
+    oilOutParts.push("growth is firm while fear is still cheap — late to the industrial bid");
+  }
+  if (dolZ > 0.35) oilOutParts.push("the dollar is rising");
+  if (tightW(iSc) > 0.55) oilOutParts.push("inflation is cold — crude rarely leads");
   if (wtiImp.dir === "down") oilOutParts.push("crude is soft this window");
   const oilNet =
-    0.5 * easeW(gSc) - 0.5 * tightW(gSc) - (dolStrong ? 0.45 : 0) + (dolSoft ? 0.2 : 0);
+    0.45 * tightW(gSc) * fearW -
+    0.55 * easeW(gSc) * calmRisk -
+    0.4 * dolZ +
+    0.3 * easeW(iSc) -
+    0.15 * tightW(iSc) +
+    0.25 * wtiMom +
+    0.2 * easeW(gSc) * (1 - calmRisk);
   const oil = instrumentFromNet(
     "oil",
     "Oi",
     oilNet,
-    sentence(oilInParts, "Firm growth without a dollar squeeze — oil usually gets paid."),
-    sentence(oilOutParts, "Soft growth or a rising dollar — oil rarely leads."),
-    "Oil wants firm growth and a cooperative dollar; only one side is helping."
+    sentence(oilInParts, "Soft growth into fear or a cooperative dollar — oil usually gets paid."),
+    sentence(oilOutParts, "Firm growth into cheap fear or a rising dollar — oil rarely leads."),
+    "Oil wants paid fear or a soft dollar; complacent strength is late.",
+    0.12,
+    -0.22
   );
   oil.label = "Oil";
-  oil.margin = blendMargin(
-    oil.stance,
-    oil.net,
-    meanImpulse([gImp, wtiImp.score != null ? impulseUnit(wtiImp) : 0])
-  );
-  const copperNet = easeW(gSc) - tightW(gSc);
+  oil.margin = blendMargin(oil.stance, oil.net, meanImpulse([gImp, wtiMom]));
+  const copperNet =
+    0.4 * tightW(gSc) * fearW -
+    0.55 * easeW(gSc) * calmRisk -
+    0.3 * dolZ +
+    0.2 * easeW(gSc) * (1 - calmRisk);
   const copper = instrumentFromNet(
     "copper",
     "Cu",
     copperNet,
-    "Growth is Strong — copper usually gets the industrial bid.",
-    "Growth is Soft — copper is the first industrial to get hurt.",
-    "Copper follows the Growth light; activity isn’t clearly Strong or Soft."
+    "Soft growth into fear — copper’s bounce sample.",
+    "Firm growth into cheap fear — copper is late to that industrial bid.",
+    "Copper wants paid fear or soft growth; complacent strength leaves it mixed.",
+    0.12,
+    -0.22
   );
   copper.label = "Copper";
   copper.margin = blendMargin(copper.stance, copper.net, gImp);
 
-  let cmdtyStance = netCall((oil.net + copper.net) / 2, 0.35, -0.35);
+  let cmdtyStance = netCall((oil.net + copper.net) / 2, 0.12, -0.22);
   let cmdtyWhy = `Oil ${oil.stance}, copper ${copper.stance} — growth and the dollar aren’t the same trade as the industrial metal.`;
   if (oil.stance === copper.stance) {
     cmdtyWhy =
       cmdtyStance === "in"
-        ? "Oil and copper are both in — firm growth and a cooperative dollar."
+        ? "Oil and copper are both in — soft growth into fear or a cooperative dollar."
         : cmdtyStance === "out"
-          ? "Oil and copper are both out — soft growth or a rising dollar."
+          ? "Oil and copper are both out — firm growth into cheap fear or a rising dollar."
           : "Oil and copper are both mixed.";
   } else if (cmdtyStance === "in") {
     cmdtyWhy = `Commodities lean in — oil ${oil.stance}, copper ${copper.stance}.`;
