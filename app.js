@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261005";
+import { buildMeaning } from "./meaning.js?v=20261006";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261005";
+} from "./score.js?v=20261006";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -523,7 +523,7 @@ function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
 
 /** Parent-class proxies. Credit / commodities judged on their splits. */
 const FAVOR_ASSET = {
-  treasuries: "TLT",
+  treasuries: "UST10",
   credit: null,
   stocks: "SPX",
   crypto: "BTC",
@@ -531,10 +531,11 @@ const FAVOR_ASSET = {
   cmdty: null,
 };
 
-/** Curve / credit / equity / commodity splits — 5s have no archive ticker. */
+/** Curve / credit / equity / commodity splits — 5s/10s/30s are synthetic UST. */
 const FAVOR_CHILD_ASSET = {
-  10: "IEF",
-  30: "TLT",
+  5: "UST5",
+  10: "UST10",
+  30: "UST30",
   ig: "LQD",
   hy: "HYG",
   cyc: "XLY",
@@ -647,8 +648,8 @@ function renderFavorStrip() {
         const st = stanceState(it.stance);
         const title = it.name;
         const word = it.stance === "in" ? "in" : it.stance === "out" ? "out" : "mixed";
-        // Star the cell if any judged proxy disagrees — 10s vs IEF, 30s vs TLT,
-        // investment grade vs LQD, high yield vs HYG — not only the parent ticker.
+        // Star the cell if any judged proxy disagrees — 5s/10s/30s vs synthetic
+        // UST, investment grade vs LQD, high yield vs HYG — not only the parent.
         const clash = itemClash(it);
         const clashAttr = clash
           ? ` data-clash="true" title="History disagrees with this call"`

@@ -31,7 +31,7 @@ const WORD = {
 
 /** Parent class → archive ticker(s). Multiple tickers average into one return. */
 const CLASS_ASSETS = {
-  treasuries: ["TLT"],
+  treasuries: ["UST5", "UST10", "UST30"],
   credit: ["HYG", "LQD"],
   stocks: ["SPX"],
   crypto: ["BTC"],

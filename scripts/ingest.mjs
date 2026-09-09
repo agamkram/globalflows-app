@@ -317,9 +317,13 @@ async function fetchNyfedSofr() {
 }
 
 async function fetchYahoo(symbol) {
-  // range=max — still capped by Yahoo, and some symbols only return ~10y.
-  // Append-only merge below keeps anything older already on disk.
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=max&interval=1d&includePrePost=false`;
+  // Explicit period1/period2 — range=max downsamples long history to quarterly
+  // and silently truncates the archive the bake needs back to 2003.
+  const period1 = Math.floor(Date.parse("1980-01-01T00:00:00Z") / 1000);
+  const period2 = Math.floor(Date.now() / 1000);
+  const url =
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}` +
+    `?period1=${period1}&period2=${period2}&interval=1d&includePrePost=false`;
   let json;
   for (let attempt = 0; attempt < 4; attempt++) {
     try {

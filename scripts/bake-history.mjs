@@ -2,18 +2,14 @@
  * Replay the light model over stored history so the app can answer "when did it
  * look like this before, and what happened next".
  *
- * This is the same code path the live bake uses — makeAnchor, applyRealRateAnchors
- * and buildLights are imported, not reimplemented — so an analog is scored exactly
- * the way today is scored. Two honest limits are recorded in the output and shown
- * in the UI:
+ * Same code path as the live bake — makeAnchor, applyRealRateAnchors and
+ * buildLights are imported, not reimplemented.
  *
- *  - Economic voters (jobs, CPI, GDP, NFCI, …) are scored on ALFRED vintages —
- *    the number that was public that morning. Market-priced voters (SOFR, curve,
- *    VIX, spreads) are unrevised. If vintages were not fetched, those series
- *    fall back to revised history and the caveat says so.
- *  - The record starts in April 2018 because that is where SOFR starts. Beginning
- *    earlier would change the liquidity light's voter composition partway through
- *    and make early analogs incomparable to late ones.
+ * Archive starts 2003-01-02 (real yields, TIPS breakevens, Fed assets, ON RRP).
+ * Pre-SOFR liquidity uses EFFR minus the fed funds target (bp) in the
+ * SOFR_SPREAD slot so the voter set stays comparable. ICE HY OAS only covers
+ * ~3 years on FRED; BAA10Y (already weight 2 on Risk) carries credit across
+ * the full window.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -25,31 +21,39 @@ const ROOT = path.resolve(__dirname, "..");
 const HIST = path.join(ROOT, "data", "history");
 const VINTAGE_DIR = path.join(ROOT, "data", "vintages");
 
-const START = "2018-04-02"; // first SOFR print
+const START = "2003-01-02";
+const SOFR_START = "2018-04-02";
 const STALE_DAYS = 400;
 // Calendar months ≈ 21 trading days. One month is noise for a regime signal;
 // 3m / 6m / 12m are the horizons that can actually grade a macro call.
 const HORIZONS = { "1w": 5, "2w": 10, "1m": 21, "3m": 63, "6m": 126, "12m": 252 };
 
 /**
- * Assets we measure forward through. Bonds are ETFs rather than yields, measured
- * on adjusted closes so a coupon counts as the return it is — the raw price of a
- * bond fund drifts down as it pays out, which made every duration and credit
- * base rate look worse than the trade actually was.
+ * Forward-return assets. Treasuries are synthetic total-return indices from
+ * DGS5/DGS10/DGS30 (ret ≈ y/252 − D·Δy) so the archive grades the same 5s/10s/30s
+ * the strip talks about, without the 2002 ETF floor. Credit uses HYG/LQD when
+ * the ETF exists; gold and crypto are labeled thin where history is short.
  */
 const ASSETS = [
   { id: "SPX", name: "S&P 500" },
   { id: "XLY", name: "Cyclicals" },
   { id: "XLP", name: "Defensives" },
-  { id: "BTC", name: "Bitcoin" },
-  { id: "TLT", name: "Long Treasuries" },
-  { id: "IEF", name: "7–10y Treasuries" },
-  { id: "HYG", name: "High yield" },
+  { id: "BTC", name: "Bitcoin", thinFrom: "2014-09-17" },
+  { id: "UST5", name: "5y Treasuries", synthetic: true },
+  { id: "UST10", name: "10y Treasuries", synthetic: true },
+  { id: "UST30", name: "30y Treasuries", synthetic: true },
+  { id: "HYG", name: "High yield", from: "2007-04-11" },
   { id: "LQD", name: "Investment grade" },
-  { id: "GOLD", name: "Gold" },
+  { id: "GOLD", name: "Gold", from: "2000-08-30" },
   { id: "DXY", name: "Dollar" },
   { id: "COPPER", name: "Copper" },
   { id: "WTI", name: "Oil" },
+];
+
+const UST_SPECS = [
+  { id: "UST5", yieldId: "DGS5", duration: 4.5 },
+  { id: "UST10", yieldId: "DGS10", duration: 8.5 },
+  { id: "UST30", yieldId: "DGS30", duration: 18 },
 ];
 
 async function readHistory(id) {
@@ -62,6 +66,46 @@ async function readHistory(id) {
   } catch {
     return null;
   }
+}
+
+/** Public FRED CSV — used for support series (e.g. DFEDTAR) not in the catalog. */
+async function fetchFredCsv(seriesId) {
+  const url = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}`;
+  const res = await fetch(url, {
+    headers: { "User-Agent": "GlobalFlows/0.1 (+https://markmaga.com)", Accept: "*/*" },
+  });
+  if (!res.ok) throw new Error(`FRED ${seriesId} ${res.status}`);
+  const text = await res.text();
+  const out = [];
+  for (const line of text.trim().split(/\r?\n/).slice(1)) {
+    const comma = line.indexOf(",");
+    if (comma < 0) continue;
+    const date = line.slice(0, comma).trim();
+    const raw = line.slice(comma + 1).trim();
+    if (!date || raw === "." || raw === "") continue;
+    const value = Number(raw);
+    if (Number.isFinite(value)) out.push({ date, value });
+  }
+  return out;
+}
+
+async function ensureSupportHistory(id, fredId) {
+  let pts = await readHistory(id);
+  if (pts?.length) return pts;
+  console.log(`  fetching support series ${id} (${fredId})…`);
+  pts = await fetchFredCsv(fredId);
+  if (pts.length < 100) throw new Error(`${id} thin (${pts.length})`);
+  await fs.mkdir(HIST, { recursive: true });
+  await fs.writeFile(
+    path.join(HIST, `${id}.json`),
+    JSON.stringify({
+      id,
+      source: "FRED",
+      sourceUrl: `https://fred.stlouisfed.org/series/${fredId}`,
+      points: pts,
+    }, null, 0)
+  );
+  return pts;
 }
 
 function yoyTransform(points) {
@@ -142,10 +186,120 @@ function pctChange(a, b) {
   return ((b - a) / Math.abs(a)) * 100;
 }
 
+/**
+ * Constant-duration Treasury total-return index from a yield series.
+ * Daily return ≈ y/252 − D·Δy, with y and Δy in percent.
+ */
+function buildBondIndex(yieldPts, duration) {
+  if (!yieldPts?.length) return null;
+  const out = [{ date: yieldPts[0].date, value: 100 }];
+  for (let i = 1; i < yieldPts.length; i++) {
+    const y = yieldPts[i - 1].value;
+    const dy = yieldPts[i].value - yieldPts[i - 1].value;
+    if (!Number.isFinite(y) || !Number.isFinite(dy)) {
+      out.push({ date: yieldPts[i].date, value: out[out.length - 1].value });
+      continue;
+    }
+    const retPct = y / 252 - duration * dy;
+    out.push({
+      date: yieldPts[i].date,
+      value: out[out.length - 1].value * (1 + retPct / 100),
+    });
+  }
+  return out;
+}
+
+/**
+ * Pre-SOFR funding spread: EFFR minus the target top, in bp — same units and
+ * band as SOFR_SPREAD. Target is DFEDTARU when it exists, else DFEDTAR.
+ */
+function buildFundingSpread(effr, targetUpper, targetLegacy) {
+  if (!effr?.length) return null;
+  const upper = targetUpper || [];
+  const legacy = targetLegacy || [];
+  let ui = 0;
+  let li = 0;
+  const out = [];
+  for (const p of effr) {
+    while (ui + 1 < upper.length && upper[ui + 1].date <= p.date) ui++;
+    while (li + 1 < legacy.length && legacy[li + 1].date <= p.date) li++;
+    let target = null;
+    if (upper[ui] && upper[ui].date <= p.date) target = upper[ui].value;
+    else if (legacy[li] && legacy[li].date <= p.date) target = legacy[li].value;
+    if (target == null || !Number.isFinite(p.value)) continue;
+    out.push({ date: p.date, value: (p.value - target) * 100 });
+  }
+  return out.length ? out : null;
+}
+
+/**
+ * Baa-based high-yield total-return proxy for 2003 until HYG lists.
+ * Yield ≈ DGS10 + BAA10Y; duration ~5.5.
+ */
+function buildBaaCreditIndex(dgs10, baa10y, duration = 5.5) {
+  if (!dgs10?.length || !baa10y?.length) return null;
+  let bi = 0;
+  const yld = [];
+  for (const p of dgs10) {
+    while (bi + 1 < baa10y.length && baa10y[bi + 1].date <= p.date) bi++;
+    if (!baa10y[bi] || baa10y[bi].date > p.date) continue;
+    yld.push({ date: p.date, value: p.value + baa10y[bi].value });
+  }
+  return buildBondIndex(yld, duration);
+}
+
+/**
+ * Prefer ETF levels when present; before that, walk the synthetic index so
+ * forward returns stay defined across 2003–2007.
+ */
+function splicePriceSeries(synth, etf, etfStart) {
+  if (!etf?.length && !synth?.length) return null;
+  if (!synth?.length) return etf;
+  if (!etf?.length) return synth;
+  const out = [];
+  let si = 0;
+  let ei = 0;
+  const dates = [
+    ...new Set([
+      ...synth.map((p) => p.date),
+      ...etf.map((p) => p.date),
+    ]),
+  ].sort();
+  let level = 100;
+  let lastSynth = null;
+  let lastEtf = null;
+  let useEtf = false;
+  for (const date of dates) {
+    while (si + 1 < synth.length && synth[si + 1].date <= date) si++;
+    while (ei + 1 < etf.length && etf[ei + 1].date <= date) ei++;
+    const s = synth[si] && synth[si].date <= date ? synth[si].value : null;
+    const e = etf[ei] && etf[ei].date <= date ? etf[ei].value : null;
+    if (etfStart && date >= etfStart && e != null) {
+      if (!useEtf) {
+        useEtf = true;
+        lastEtf = e;
+        out.push({ date, value: level });
+        continue;
+      }
+      if (lastEtf != null && lastEtf !== 0) {
+        level *= e / lastEtf;
+      }
+      lastEtf = e;
+      out.push({ date, value: level });
+    } else if (s != null) {
+      if (lastSynth != null && lastSynth !== 0) {
+        level *= s / lastSynth;
+      }
+      lastSynth = s;
+      out.push({ date, value: level });
+    }
+  }
+  return out.length ? out : null;
+}
+
 async function main() {
   const catalog = JSON.parse(await fs.readFile(path.join(ROOT, "data", "catalog.json"), "utf8"));
 
-  // Every series that casts a level vote, plus core PCE which the real-rate anchors need.
   const voters = catalog.series.filter((s) => s.light);
   const needed = [...new Set([...voters.map((s) => s.id), "PCEPILFE"])];
 
@@ -154,6 +308,25 @@ async function main() {
     const p = await readHistory(id);
     if (p) hist[id] = p;
   }
+
+  // Support series for the pre-SOFR funding-spread substitute and UST synthetics.
+  hist.DFEDTAR = await ensureSupportHistory("DFEDTAR", "DFEDTAR");
+  for (const id of ["EFFR", "DFEDTARU", "DGS5", "DGS10", "DGS30", "BAA10Y"]) {
+    if (!hist[id]) {
+      const p = await readHistory(id);
+      if (p) hist[id] = p;
+    }
+  }
+
+  const fundingSpread = buildFundingSpread(hist.EFFR, hist.DFEDTARU, hist.DFEDTAR);
+  if (fundingSpread) {
+    console.log(
+      `  funding-spread proxy: ${fundingSpread[0].date} → ${fundingSpread.at(-1).date} (EFFR − target, bp)`
+    );
+  } else {
+    console.log("  ! no funding-spread proxy — pre-SOFR liquidity loses SOFR_SPREAD");
+  }
+
   const vintages = {};
   for (const id of [...needed, "PCEPILFE"]) {
     try {
@@ -169,42 +342,90 @@ async function main() {
   } else {
     console.log("  no vintages — economic voters use revised history");
   }
-  const missing = needed.filter((id) => !hist[id]);
+
+  // Vintage start dates that matter for the 2003 window (ALFRED coverage).
+  const vintageStarts = {};
+  for (const id of vintageIds) {
+    vintageStarts[id] = vintages[id].dates[0] || null;
+  }
+
+  const missing = needed.filter((id) => !hist[id] && id !== "SOFR_SPREAD");
   if (missing.length) console.log(`  no history for: ${missing.join(", ")}`);
 
-  // A voter whose history starts after the archive does silently changes a light's
-  // composition partway through the record, which makes early analogs incomparable
-  // to late ones. As of April 2026 FRED only publishes three years of ICE BofA
-  // OAS (even with an API key). Early analog days score Risk without HY.
   const shortCoverage = voters
-    .filter((s) => hist[s.id] && hist[s.id][0].date > START)
+    .filter((s) => {
+      if (s.id === "SOFR_SPREAD") return false; // substituted pre-2018
+      if (s.id === "BAMLH0A0HYM2") return false; // BAA10Y carries credit
+      return hist[s.id] && hist[s.id][0].date > START;
+    })
     .map((s) => `${s.id} (${s.light}, from ${hist[s.id][0].date})`);
   if (shortCoverage.length) {
     console.log(`  ! voters that do not cover ${START}:`);
     for (const s of shortCoverage) console.log(`      ${s}`);
-    console.log(`    lights above lose these voters early in the record.`);
   }
 
   const assetHist = {};
   for (const a of ASSETS) {
+    if (a.synthetic) continue;
     const p = await readHistory(a.id);
     if (p) assetHist[a.id] = p;
   }
 
-  // Trading-day grid from the deepest equity series.
-  const grid = (assetHist.SPX || []).map((p) => p.date).filter((d) => d >= START);
-  if (grid.length < 500) throw new Error(`grid too short (${grid.length})`);
+  for (const spec of UST_SPECS) {
+    const yld = hist[spec.yieldId] || (await readHistory(spec.yieldId));
+    const idx = buildBondIndex(yld, spec.duration);
+    if (idx) {
+      assetHist[spec.id] = idx.filter((p) => p.date >= START);
+      console.log(
+        `  ${spec.id}: synthetic from ${spec.yieldId} (D≈${spec.duration}) n=${assetHist[spec.id].length}`
+      );
+    }
+  }
+
+  // HY: Baa synth through HYG inception, then ETF total return.
+  const baaCredit = buildBaaCreditIndex(hist.DGS10, hist.BAA10Y, 5.5);
+  const hyEtf = assetHist.HYG || null;
+  const hySpliced = splicePriceSeries(baaCredit, hyEtf, "2007-04-11");
+  if (hySpliced) {
+    assetHist.HYG = hySpliced.filter((p) => p.date >= START);
+    console.log(`  HYG: Baa synth → ETF splice n=${assetHist.HYG.length}`);
+  }
+
+  // Trading-day grid from SPX (daily back through 2003 after period1 ingest).
+  const grid = (assetHist.SPX || [])
+    .map((p) => p.date)
+    .filter((d) => d >= START);
+  if (grid.length < 1000) throw new Error(`grid too short (${grid.length})`);
 
   const cursors = {};
   const assetCursors = {};
+  const fundingCursor = { i: 0 };
   const rows = [];
 
   for (const date of grid) {
     const series = {};
     for (const spec of voters) {
       let value = null;
-      if (vintages[spec.id]) {
+
+      if (spec.id === "SOFR_SPREAD") {
+        if (date >= SOFR_START && hist.SOFR_SPREAD) {
+          const got = asOf(hist.SOFR_SPREAD, cursors.SOFR_SPREAD || 0, date);
+          cursors.SOFR_SPREAD = got.i;
+          value = got.value;
+        } else if (fundingSpread) {
+          const got = asOf(fundingSpread, fundingCursor.i, date);
+          fundingCursor.i = got.i;
+          value = got.value;
+        }
+      } else if (vintages[spec.id]) {
         value = vintageAsOf(vintages[spec.id], date).value;
+        // ALFRED pulls here start ~2016. Before that window, use revised history
+        // so the 2003–2015 archive is not an empty Growth light.
+        if (value == null && hist[spec.id]) {
+          const got = asOf(hist[spec.id], cursors[spec.id] || 0, date);
+          cursors[spec.id] = got.i;
+          value = got.value;
+        }
       } else {
         const pts = hist[spec.id];
         if (!pts) continue;
@@ -224,10 +445,11 @@ async function main() {
         anchor: makeAnchor(spec, value),
       };
     }
+
     // Real-rate anchors read core PCE off the same as-of date.
     let pce = { value: null };
     if (vintages.PCEPILFE) pce = vintageAsOf(vintages.PCEPILFE, date);
-    else if (hist.PCEPILFE) {
+    if (pce.value == null && hist.PCEPILFE) {
       pce = asOf(hist.PCEPILFE, cursors.PCEPILFE || 0, date);
       cursors.PCEPILFE = pce.i;
     }
@@ -266,7 +488,6 @@ async function main() {
     });
   }
 
-  // Forward returns, measured on the same trading-day grid.
   const idxOf = new Map(rows.map((r, i) => [r.date, i]));
   for (const r of rows) {
     r.fwd = {};
@@ -283,6 +504,10 @@ async function main() {
     }
   }
 
+  const revisedOnlyEarly = ["ICSA", "CFNAI", "NFCI", "WEI"].filter(
+    (id) => !vintageIds.includes(id) || (vintageStarts[id] && vintageStarts[id] > "2011-01-01")
+  );
+
   const out = {
     generatedAt: new Date().toISOString(),
     start: rows[0]?.date || null,
@@ -292,11 +517,28 @@ async function main() {
     assets: ASSETS,
     horizons: HORIZONS,
     caveats: {
-      revisions: vintageIds.length
-        ? `Economic voters (${vintageIds.join(", ")}) are scored on ALFRED vintages — the print that was public that morning. Market-priced voters (SOFR, curve, VIX, spreads) are unrevised.`
-        : "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
       start:
-        "The record starts at the first SOFR print so the liquidity light’s voter set is comparable throughout. Five series vote now; some do not reach back to 2018, so early analogs use a thinner club.",
+        "Archive starts 2003-01-02 — first common date for DFII5/DFII10 and T5YIFR, with WALCL from 2002-12-18 and ON RRP from 2003-02-07. The 1990–2003 tier (no real yields, no breakevens, no net liquidity) is skipped on purpose.",
+      funding:
+        `Before ${SOFR_START}, the SOFR_SPREAD liquidity voter is EFFR minus the fed funds target top (DFEDTAR, then DFEDTARU), in bp on the same band. From ${SOFR_START} it is SOFR − target.`,
+      creditVoter:
+        "ICE BofA HY OAS (BAMLH0A0HYM2) is a rolling ~3-year FRED license. BAA10Y (weight 2 on Risk, from 1986) carries the credit read across the full archive; HY OAS joins when FRED has it.",
+      revisions: vintageIds.length
+        ? `ALFRED vintages for ${vintageIds.join(", ")}. Market-priced voters (curve, VIX, spreads, funding) are unrevised.`
+        : "Economic voters are scored on revised data, not the vintage that was public on the day. Market-priced voters are unrevised.",
+      vintageGaps:
+        "Long vintage coverage in principle: PAYEMS (1955), UNRATE (1960), GDPC1 (1991), CPILFESL (1996-12), PCEPILFE (2000-08). This repo’s ALFRED pull currently begins around 2016 — days before that use revised history for those series. ICSA (~2009), CFNAI (~2011), NFCI (~2011) and WEI (2020) are revised-only across early 2003–2011 even with a full vintage pull." +
+        (revisedOnlyEarly.length
+          ? ` Currently thin/missing vintage files: ${revisedOnlyEarly.join(", ")}.`
+          : ""),
+      treasuries:
+        "Treasury forwards are synthetic total returns from DGS5/DGS10/DGS30 (daily ≈ y/252 − D·Δy), not TLT/IEF — so the grade matches the 5s/10s/30s the strip names.",
+      creditReturns:
+        "HYG lists 2007-04-11. Before that, high-yield forwards use a Baa (DGS10+BAA10Y) constant-duration total-return proxy spliced into HYG. LQD covers investment-grade from 2002. Treat pre-2007 HY as model-based, not traded.",
+      gold:
+        "Gold forwards use Yahoo GC=F from 2000-08-30 (LBMA/FRED GOLDAMGBD228NLBM is discontinued).",
+      crypto:
+        "Bitcoin forwards start 2014-09-17. Crypto base rates are a thin post-2014 sample — do not read them beside multi-decade Treasury or equity rates as equals.",
     },
     rows: rows.map((r) => ({ date: r.date, s: r.s, st: r.st, fwd: r.fwd })),
   };
@@ -312,12 +554,15 @@ async function main() {
     const k = r.st.join("/");
     tally[k] = (tally[k] || 0) + 1;
   }
-  const top = Object.entries(tally).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const top = Object.entries(tally)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6);
   console.log(`  ${Object.keys(tally).length} distinct light combinations; most common:`);
   for (const [k, n] of top) console.log(`    ${String(n).padStart(4)}  ${k}`);
 }
 
 main().catch((e) => {
   console.error(`bake-history failed: ${e.message}`);
+  console.error(e.stack);
   process.exit(1);
 });
