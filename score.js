@@ -36,12 +36,13 @@ export const VOTE_FAMILIES = {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
   },
-  // Labor and output share one coincident ballot. Four ballots averaged the
-  // light quiet (raw sd 0.45 → 0.38). Leading housing/orders/openings keep a
-  // bump so lagging coincident cannot hold Mid when the turn flips. Survey is
-  // a full ballot: the old 0.5 weight was a scale patch calibration now handles.
+  // Labor and output share one coincident ballot. Six prints in that seat still
+  // peak Mid: amber sat 7pp over the floor implied by sd 0.53. Half weight so
+  // leading (the turn) and survey can move the light. Leading keeps the bump.
+  // Survey is a full ballot: the old 0.5 weight was a scale patch calibration
+  // now handles.
   growth: {
-    coincident: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"],
+    coincident: { ids: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"], weight: 0.5 },
     leading: { ids: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"], weight: 1.5 },
     survey: ["EMPIRE_MFG", "PHILLY_MFG"],
   },
