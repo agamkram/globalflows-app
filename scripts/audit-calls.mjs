@@ -78,6 +78,33 @@ const WINDOWS = [
 /** Primary grade horizon — one month matches the evidence that opened this work. */
 const PRIMARY_HZ = "1m";
 const MIN_STANCE_N = 50;
+const MIN_INDEP_WINDOWS = 12;
+/** Calendar days each horizon's forward return spans, for overlap counting. */
+const HZ_SPAN_DAYS = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182, "12m": 365 };
+
+/**
+ * Days are not trials. A stance held across 58 consecutive days and graded on a
+ * one-month forward return is about two independent bets on one episode, not 58
+ * — every window overlaps almost entirely with its neighbours. Counting days
+ * let a single stretch clear a sample-size gate of 50 and then fail the median
+ * comparison as though it were evidence, which is how a 26bp gap on one 2023
+ * commodity episode came to look like a broken signal.
+ *
+ * Greedy non-overlapping count: take a window, skip everything it covers.
+ */
+function independentWindows(dates, hz) {
+  const span = (HZ_SPAN_DAYS[hz] || 30) * 86400000;
+  let n = 0;
+  let free = -Infinity;
+  for (const d of [...dates].sort()) {
+    const t = Date.parse(d);
+    if (t >= free) {
+      n++;
+      free = t + span;
+    }
+  }
+  return n;
+}
 const MAX_MIXED_SHARE = 0.5;
 /** Soft (warn, not fail) when the window cannot discriminate: too few days,
  *  one-way returns, or an in/out call that never printed. Window names do not
@@ -251,7 +278,7 @@ async function main() {
     `fail when: in-favor median < out-favor median by more than ${INV_TOL}% (${PRIMARY_HZ}); any stance n < ${MIN_STANCE_N}; mixed share > ${Math.round(MAX_MIXED_SHARE * 100)}% unless in still beats out`
   );
   console.log(
-    `warn (not fail) when the window cannot discriminate (<${SOFT_MIN_DAYS} days, one-way returns ≥${Math.round(ONE_WAY_UP * 100)}% in one direction, an in/out call with n < ${MIN_STANCE_N}, or the class misses the first ${SOFT_MIN_DAYS} days of the window)`
+    `warn (not fail) when the window cannot discriminate (<${SOFT_MIN_DAYS} days, one-way returns ≥${Math.round(ONE_WAY_UP * 100)}% in one direction, an in/out call with n < ${MIN_STANCE_N} or fewer than ${MIN_INDEP_WINDOWS} non-overlapping windows, or the class misses the first ${SOFT_MIN_DAYS} days of the window)`
   );
   const nRows = hist.rows?.length || 1;
   console.log(
@@ -278,6 +305,7 @@ async function main() {
       for (const cls of CLASS_ORDER) {
         const assets = CLASS_ASSETS[cls];
         const byStance = { in: [], mixed: [], out: [] };
+        const datesByStance = { in: [], mixed: [], out: [] };
         const all = [];
         for (const r of days) {
           const ret = classReturn(r.fwd[hz], assets);
@@ -285,6 +313,7 @@ async function main() {
           const st = r.stance[cls];
           if (!byStance[st]) continue;
           byStance[st].push(ret);
+          datesByStance[st].push(r.date);
           all.push(ret);
         }
 
@@ -301,8 +330,10 @@ async function main() {
             r.median != null && base.median != null
               ? r.median - base.median
               : null;
+          const eff = independentWindows(datesByStance[r.st], hz);
           console.log(
-            `      ${pad(r.st, 6)}  med ${fmtPct(r.median)}  mean ${fmtPct(r.mean)}  up ${fmtUp(r.up)}  n=${String(r.n).padStart(4)}  lift ${fmtPct(lift)}`
+            `      ${pad(r.st, 6)}  med ${fmtPct(r.median)}  mean ${fmtPct(r.mean)}  up ${fmtUp(r.up)}  n=${String(r.n).padStart(4)}` +
+              `  indep ${String(eff).padStart(3)}  lift ${fmtPct(lift)}`
           );
         }
 
@@ -311,6 +342,8 @@ async function main() {
         if (hz === PRIMARY_HZ) {
           const innN = byStance.in.length;
           const outN = byStance.out.length;
+          const effIn = independentWindows(datesByStance.in, hz);
+          const effOut = independentWindows(datesByStance.out, hz);
           const oneWay =
             base.up != null && (base.up >= ONE_WAY_UP || base.up <= 1 - ONE_WAY_UP);
           const winFrom = labeled.find((r) => win.keep(r.date))?.date;
@@ -324,6 +357,8 @@ async function main() {
             oneWay ||
             innN < MIN_STANCE_N ||
             outN < MIN_STANCE_N ||
+            effIn < MIN_INDEP_WINDOWS ||
+            effOut < MIN_INDEP_WINDOWS ||
             lateCover;
           const bucket = soft ? warns : fails;
           const inn = stats(byStance.in);
