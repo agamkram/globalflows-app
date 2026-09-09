@@ -35,19 +35,13 @@ export const VOTE_FAMILIES = {
   risk: {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
-    // Speculative gold longs crowd when hedging — same side as expensive fear.
-    // Half weight: one weekly print must not outvote VIX + the credit sleeve.
-    cot: { ids: ["GOLD_COT"], weight: 0.5 },
   },
-  // Labor and output each cast one ballot — six coincident prints in one family
-  // were cancelling each other (quiet sd). Leading housing/orders/openings and
-  // regional surveys keep their own seats. Survey is a full ballot again: the
-  // old 0.5 weight was a scale patch that light calibration now handles.
+  // Labor and output share one coincident ballot. Four ballots averaged the
+  // light quiet (raw sd 0.45 → 0.38). Leading housing/orders/openings keep a
+  // bump so lagging coincident cannot hold Mid when the turn flips. Survey is
+  // a full ballot: the old 0.5 weight was a scale patch calibration now handles.
   growth: {
-    labor: ["PAYEMS", "UNRATE", "ICSA"],
-    output: ["GDPC1", "CFNAI", "WEI"],
-    // Leading sleeve is the turn — full weight plus a bump so lagging labor/
-    // output cannot keep the light Mid when permits/orders/openings flip.
+    coincident: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"],
     leading: { ids: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"], weight: 1.5 },
     survey: ["EMPIRE_MFG", "PHILLY_MFG"],
   },
@@ -65,11 +59,13 @@ export const VOTE_FAMILIES = {
     curve: ["T10Y2Y"],
     vol: ["MOVE"],
   },
-  // Two Fed-balance-sheet/GDP ratios share one ballot.
+  // Two Fed-balance-sheet/GDP ratios share one ballot. China credit/GDP is its
+  // own half-weight seat — a slow stock must not flatten the global ballot.
   liquidity: {
     fed: ["RESERVES_GDP", "NETLIQ_GDP"],
     funding: ["SOFR_SPREAD"],
     global: ["GLOBAL_CB_YOY", "DOLLAR_YOY"],
+    china: { ids: ["CHINA_CREDIT_GDP"], weight: 0.5 },
   },
 };
 
@@ -99,7 +95,7 @@ export function weightedMean(items) {
 }
 
 /** Drop the highest and lowest score once when there are enough ballots.
- * Need ≥5 seats — with 3–4 (Growth after the labor/output split, Rates) trim
+ * Need ≥5 seats — with 3–4 (Growth coincident/leading/survey, Rates) trim
  * throws away the only Strong/Soft votes and pins the light Mid. */
 export function weightedTrimmedMean(items) {
   const ok = (items || []).filter(
@@ -117,23 +113,31 @@ export function weightedTrimmedMean(items) {
  */
 let LIGHT_DIST = null;
 let LIGHT_REF_SD = 0.5307;
+let LIGHT_OUTPUT_SCALE = null;
+/** Shared pooled sd after expanding-window calib so ±0.45 is one percentile. */
+export const LIGHT_CALIB_SD = 0.5307;
 
-/** Install a dist object `{ lights, refSd }` or a bare lights map. */
+/** Install a dist object `{ lights, refSd, outputScale }` or a bare lights map. */
 export function setLightDist(dist) {
   if (!dist) {
     LIGHT_DIST = null;
+    LIGHT_OUTPUT_SCALE = null;
     return;
   }
   if (dist.lights) {
     LIGHT_DIST = dist.lights;
     if (Number.isFinite(dist.refSd) && dist.refSd > 0) LIGHT_REF_SD = dist.refSd;
+    LIGHT_OUTPUT_SCALE = dist.outputScale || null;
   } else {
     LIGHT_DIST = dist;
+    LIGHT_OUTPUT_SCALE = null;
   }
 }
 
 export function getLightDist() {
-  return LIGHT_DIST ? { lights: LIGHT_DIST, refSd: LIGHT_REF_SD } : null;
+  return LIGHT_DIST
+    ? { lights: LIGHT_DIST, refSd: LIGHT_REF_SD, outputScale: LIGHT_OUTPUT_SCALE }
+    : null;
 }
 
 /** Fit mean/sd per light and median sd as REF from parallel raw score arrays. */
@@ -171,6 +175,43 @@ export function fitLightDist(rawByLight, meta = {}) {
   };
 }
 
+function stdevOf(vals) {
+  const a = (vals || []).filter(Number.isFinite);
+  if (a.length < 2) return 0;
+  const m = a.reduce((s, v) => s + v, 0) / a.length;
+  return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / a.length);
+}
+
+/**
+ * One scale per light so expanding-window z × refSd shares a pooled sd.
+ * Uses only the scores already produced — no new look-ahead into levels.
+ */
+export function fitOutputScale(scoreByLight, targetSd = null) {
+  const outputSd = {};
+  const sdList = [];
+  for (const lid of LIGHT_IDS) {
+    const sd = stdevOf(scoreByLight[lid]);
+    outputSd[lid] = sd;
+    if (sd > 1e-9) sdList.push(sd);
+  }
+  sdList.sort((a, b) => a - b);
+  const target =
+    Number.isFinite(targetSd) && targetSd > 0
+      ? targetSd
+      : sdList[Math.floor(sdList.length / 2)] || 0.53;
+  const outputScale = {};
+  for (const lid of LIGHT_IDS) {
+    outputScale[lid] = outputSd[lid] > 1e-9 ? Number((target / outputSd[lid]).toFixed(4)) : 1;
+  }
+  return {
+    outputScale,
+    targetSd: Number(target.toFixed(4)),
+    outputSd: Object.fromEntries(
+      LIGHT_IDS.map((id) => [id, Number(outputSd[id].toFixed(4))])
+    ),
+  };
+}
+
 /** Map raw composite → calibrated score. Optional per-call dist (expanding window). */
 export function calibrateLightScore(lid, raw, dist = null) {
   if (raw == null || !Number.isFinite(raw)) return raw;
@@ -179,7 +220,12 @@ export function calibrateLightScore(lid, raw, dist = null) {
   const d = table?.[lid];
   if (!d || !(d.sd > 0) || !(ref > 0)) return raw;
   const z = (raw - d.mean) / d.sd;
-  return Math.max(-1.5, Math.min(1.5, z * ref));
+  // A passed dist without outputScale (expanding window) must not inherit the
+  // live file's scale — bake:history applies that scale once, after the loop.
+  const scaleTable = dist ? dist.outputScale : LIGHT_OUTPUT_SCALE;
+  const adj = scaleTable?.[lid];
+  const scale = Number.isFinite(adj) && adj > 0 ? adj : 1;
+  return Math.max(-1.5, Math.min(1.5, z * ref * scale));
 }
 
 /** Family / ungrouped ballots before the trimmed mean (for audits). */
@@ -301,7 +347,7 @@ const KIND = {
   TOTLL: "none",
   NET_LIQ: "none",
   CREDIT_IMPULSE: "none",
-  CHINA_CREDIT_GDP: "none",
+  CHINA_CREDIT_GDP: "china_credit_gdp",
   CHINA_CREDIT_IMPULSE: "none",
   DGS2: "pending_real",
   // Market TIPS real yields — the Rates light's primary real-rate voters.
@@ -381,10 +427,17 @@ function scoreKind(kind, value) {
     case "vix":
       return bandScore(value, 12, 17, 28, true);
     // 156-week COT index of gold non-commercial net % of OI (0–100). Crowded
-    // speculative longs are a hedge — same side as expensive fear. Soft / mid /
-    // crowded from the 2003–2026 p10 / p50 / p90 of the index itself (23 / 68 / 93).
+    // speculative longs tax the Gold box (rich positioning), they do not vote
+    // the Risk light. Soft / mid / crowded from 2003–2026 p10 / p50 / p90
+    // of the index itself (23 / 68 / 93).
     case "gold_cot":
       return bandScore(value, 23, 68, 93, true);
+    // BIS China private credit / GDP. p10 / p50 / p90 of 2003–2026 quarterly
+    // prints (111 / 169 / 194). High = more credit in the system (easing). The
+    // four-quarter impulse stays on the lookback — a nominal flow cannot carry
+    // this band.
+    case "china_credit_gdp":
+      return bandScore(value, 111, 169, 194, false);
     // ICE HY OAS. FRED only publishes three years, all of them cycle-tights, so
     // this band is the long-run shape not the sample: 2.5 is this-cycle tights
     // (the ICE print's min is 2.59), 4.0 is typical, 6.5 is stress. The old floor
@@ -510,7 +563,9 @@ function whyKind(kind, value) {
     case "vix":
       return `VIX ${fmt(v, 1)}`;
     case "gold_cot":
-      return `gold speculative positioning ${fmt(v, 0)} (156w index) — 93 is crowded long (p90), a hedge`;
+      return `gold speculative positioning ${fmt(v, 0)} (156w index) — 93 is crowded long (p90)`;
+    case "china_credit_gdp":
+      return `China credit ${fmt(v, 0)}% of GDP — 111 is the 2003–06 floor, 169 the median, 194 the post-2016 plateau`;
     case "hy":
       return `High-yield OAS ${fmt(v)}% — 2.5 is cycle tights, 4 is typical, 6.5 is stress`;
     case "bei_5y5y":

@@ -19,6 +19,7 @@ import {
 } from "../score.js";
 import { buildMeaning } from "../meaning.js";
 import { loadLightDist } from "./load-light-dist.mjs";
+import { loadValCenter } from "./load-val-center.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
@@ -69,6 +70,11 @@ async function main() {
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
   // File wins over whatever ingest embedded — calibrate:lights runs after ingest.
   if (lightDist) snap.lightDist = lightDist;
+  try {
+    snap.valCenter = await loadValCenter();
+  } catch {
+    /* optional until calibrate:val */
+  }
   if (!snap.lightDist) {
     try {
       snap.lightDist = JSON.parse(

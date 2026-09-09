@@ -770,6 +770,7 @@ async function main() {
         light: stale ? null : s.light || null,
         impulseLight: stale ? null : s.impulseLight || null,
         weight: s.weight || 1,
+        voteMaxAgeDays: s.voteMaxAgeDays || undefined,
         marketBucket: s.marketBucket || null,
         order: s.order ?? null,
         note: s.note || null,

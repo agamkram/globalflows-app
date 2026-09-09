@@ -204,9 +204,10 @@
       "search": "QCNPAM770A",
       "causal": "liquidity",
       "street": "liquidity",
-      "light": null,
+      "light": "liquidity",
       "weight": 1,
-      "note": "BIS total credit to China\u2019s private non-financial sector as a share of GDP (break-adjusted). The free 2003+ China credit stock — monthly TSF is not on FRED and the public MOFCOM feed only starts in 2015."
+      "voteMaxAgeDays": 400,
+      "note": "BIS total credit to China\u2019s private non-financial sector as a share of GDP (break-adjusted). The free 2003+ China credit stock — monthly TSF is not on FRED and the public MOFCOM feed only starts in 2015. Votes Liquidity (half-weight seat). Band is 2003–2026 p10 / p50 / p90 (111 / 169 / 194). The four-quarter impulse only moves the lookback. BIS prints lag two to three quarters, so the vote may be up to ~13 months old."
     },
     {
       "id": "CHINA_CREDIT_IMPULSE",
@@ -1378,20 +1379,20 @@
     {
       "id": "GOLD_COT",
       "name": "Gold speculative positioning",
-      "layer": "risk",
+      "layer": "markets",
       "pipe": "derived",
       "derive": "gold_cot",
       "units": "index",
       "freq": "weekly",
       "sign": -1,
-      "light": "risk",
+      "light": null,
       "weight": 1,
       "sourceUrl": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm",
       "sub": "CFTC gold non-commercial net, 156w index",
       "search": "GOLD_COT",
-      "causal": "risk",
-      "street": "risk",
-      "note": "156-week COT index of CFTC gold futures non-commercial net as a share of open interest. Crowded speculative longs are a hedge \u2014 same side as expensive fear on the Risk light. Raw contract counts drift with open interest, so the index is what carries the band."
+      "causal": "assets",
+      "street": "markets",
+      "note": "156-week COT index of CFTC gold futures non-commercial net as a share of open interest. Crowded speculative longs tax the Gold box (rich positioning). Does not vote the Risk light. Raw contract counts drift with open interest, so the index is what carries the band."
     },
     {
       "id": "BAMLH0A0HYM2",

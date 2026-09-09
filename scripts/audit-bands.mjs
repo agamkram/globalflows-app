@@ -43,6 +43,9 @@ const PIN_WARN = 0.5; // flag a voter pinned on more than half the days
 const FLAT_WARN = 0.15; // flag a voter whose score barely moves
 const AMBER_WARN = 0.6; // light stuck amber most days — scale or voters too quiet
 const QUIET_SD_FRAC = 0.75; // flag light sd more than ~25% below the median light
+const OUT_SD_TOL = 0.05; // calibrated output sds must match — else ±0.45 is a different percentile
+const CALIB_SKIP = 252; // first year of archive is raw, before expanding-window calib
+const VAL_MEAN_TOL = 0.08;
 
 /**
  * A voter measured over a short window is measured over one regime, and one
@@ -148,9 +151,10 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
   const rawSds = LIGHT_IDS.map((id) => RAW_SD[id]).sort((a, b) => a - b);
   const medianRawSd = rawSds[Math.floor(rawSds.length / 2)];
 
+  const scored = rows.length > CALIB_SKIP ? rows.slice(CALIB_SKIP) : rows;
   const byLight = {};
   for (let i = 0; i < LIGHT_IDS.length; i++) {
-    const vals = rows.map((r) => r.s[i]).filter(Number.isFinite);
+    const vals = scored.map((r) => r.s[i]).filter(Number.isFinite);
     const green = vals.filter((v) => lightStateFromScore(v).state === "easing").length / vals.length;
     const amber = vals.filter((v) => lightStateFromScore(v).state === "neutral").length / vals.length;
     const red = vals.filter((v) => lightStateFromScore(v).state === "tight").length / vals.length;
@@ -162,6 +166,22 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
       rawSd: RAW_SD[LIGHT_IDS[i]],
       n: vals.length,
     };
+  }
+  // Calibrated output sds must match. Input-centre drift can pass while
+  // expanding-window z × refSd quietly gives each light a different percentile.
+  const outSds = LIGHT_IDS.map((id) => byLight[id].sd).filter((s) => s > 0);
+  outSds.sort((a, b) => a - b);
+  const medianOutSd = outSds[Math.floor(outSds.length / 2)] || 0;
+  if (medianOutSd > 0) {
+    for (const lid of LIGHT_IDS) {
+      const sd = byLight[lid].sd;
+      if (Math.abs(sd - medianOutSd) > OUT_SD_TOL) {
+        fails.push(
+          `${lid} calibrated sd ${sd.toFixed(3)} vs median ${medianOutSd.toFixed(3)} ` +
+            `(tol ${OUT_SD_TOL}) — ±0.45 is no longer the same percentile; rebake history`
+        );
+      }
+    }
   }
   // Family ballot sds: weekly asof over the same window (raw voter scale).
   const specById = Object.fromEntries(catalog.series.map((s) => [s.id, s]));
@@ -238,6 +258,55 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
       }
       console.log(`    family:${pad(fname, 12)} sd ${stdev(ballot).toFixed(3)}  n=${ballot.length}`);
     }
+  }
+  console.log("");
+}
+
+async function auditValCenters(problems, fails) {
+  const VAL_FILE = path.join(ROOT, "data", "val-center.json");
+  let stored;
+  try {
+    stored = JSON.parse(await fs.readFile(VAL_FILE, "utf8"));
+  } catch {
+    fails.push("val-center.json missing — run npm run calibrate:val");
+    return;
+  }
+  const centers = stored.centers || stored;
+  const ids = Object.keys(centers);
+  if (!ids.length) {
+    fails.push("val-center.json has no centres");
+    return;
+  }
+  console.log(`VALUATION CENTRES — archive medians vs stored (${SINCE}+)\n`);
+  for (const id of ids) {
+    const expect = centers[id];
+    const pts = await readPoints(id);
+    const use = (pts || []).filter((p) => p.date >= LIGHT_SINCE);
+    if (!use.length) {
+      problems.push(`val/${id}: no history`);
+      console.log(`  ${pad(id, 16)} no history`);
+      continue;
+    }
+    const vals = use.map((p) => p.value).filter(Number.isFinite).sort((a, b) => a - b);
+    const mid = vals[Math.floor((vals.length - 1) / 2)];
+    const source = expect.source || "archive-median";
+    const flags = [];
+    if (source === "band-mid") {
+      // HY: do not let the short ICE download overwrite the long-run typical.
+      if (Math.abs(Number(expect.median) - 4.0) > 0.01) {
+        flags.push(`band-mid median ${expect.median} drifted from 4.0`);
+      }
+    } else if (Math.abs(mid - Number(expect.median)) > VAL_MEAN_TOL) {
+      flags.push(`median ${mid.toFixed(4)} vs stored ${expect.median} (tol ${VAL_MEAN_TOL})`);
+    }
+    if (flags.length) {
+      fails.push(`${id} VAL_CENTER drift: ${flags.join("; ")} — run calibrate:val`);
+    }
+    console.log(
+      `  ${pad(id, 16)} stored ${Number(expect.median).toFixed(4)}  archive ${mid.toFixed(4)}` +
+        `  scale ${expect.scale}  n=${vals.length}  ${source}` +
+        (flags.length ? `   <-- ${flags.join(" ")}` : "")
+    );
   }
   console.log("");
 }
@@ -342,6 +411,7 @@ async function main() {
   }
 
   await auditLightComposites(catalog, coreAt, problems, fails);
+  await auditValCenters(problems, fails);
 
   if (fails.length) {
     console.log(`FAIL — ${fails.length} light-dist problem(s):`);

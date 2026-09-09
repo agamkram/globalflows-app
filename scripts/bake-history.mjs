@@ -14,7 +14,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS, fitLightDist, calibrateLightScore, lightStateFromScore } from "../score.js";
+import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS, fitLightDist, fitOutputScale, calibrateLightScore, lightStateFromScore, LIGHT_CALIB_SD } from "../score.js";
 import { loadLightDist } from "./load-light-dist.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -540,6 +540,32 @@ async function main() {
     });
   }
 
+  // Expanding-window z × that day's refSd does not share a pooled sd — quiet
+  // lights sit near their expanding mean. One scale per light, from the
+  // calibrated window only, restores a shared ±0.45 percentile without putting
+  // future means into 2004.
+  const calibratedRows = rows.slice(EXPAND_MIN);
+  const scoreByLight = Object.fromEntries(LIGHT_IDS.map((id) => [id, []]));
+  for (const r of calibratedRows) {
+    LIGHT_IDS.forEach((id, i) => scoreByLight[id].push(r.s[i]));
+  }
+  const outFit = fitOutputScale(scoreByLight, LIGHT_CALIB_SD);
+  for (const r of calibratedRows) {
+    r.s = r.s.map((v, i) => {
+      const sc = v * (outFit.outputScale[LIGHT_IDS[i]] || 1);
+      return Number(Math.max(-1.5, Math.min(1.5, sc)).toFixed(4));
+    });
+    r.st = r.s.map((sc) => lightStateFromScore(sc).state);
+  }
+  console.log(
+    `  output scale → target sd ${outFit.targetSd}  (first ${EXPAND_MIN} days stay raw)`
+  );
+  for (const id of LIGHT_IDS) {
+    console.log(
+      `    ${id}: pre-sd ${outFit.outputSd[id]}  scale ${outFit.outputScale[id]}`
+    );
+  }
+
   const expandFinal = fitLightDist(rawAccum);
   if (liveDist?.lights) {
     console.log("  light calib — expanding (archive) vs full-sample (live):");
@@ -585,6 +611,9 @@ async function main() {
     lights: LIGHT_IDS,
     assets: ASSETS,
     horizons: HORIZONS,
+    outputScale: outFit.outputScale,
+    outputSd: outFit.outputSd,
+    outputTargetSd: outFit.targetSd,
     caveats: {
       start:
         "Archive starts 2003-01-02 — first common date for DFII5/DFII10 and T5YIFR, with WALCL from 2002-12-18 and ON RRP from 2003-02-07. The 1990–2003 tier (no real yields, no breakevens, no net liquidity) is skipped on purpose.",

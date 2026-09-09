@@ -21,8 +21,9 @@ function seriesOk(snap, id) {
  * 2003–2026 centres for signed valuation. Rich (above centre for yields /
  * below for spreads that pay you) subtracts; cheap adds. HY uses the long-run
  * typical (band mid) — FRED’s ICE print is only ~3y of cycle tights.
+ * Live path prefers snap.valCenter (data/val-center.json via ingest/calibrate:val).
  */
-const VAL_CENTER = {
+const VAL_CENTER_DEFAULT = {
   THREEFFTP10: { median: 1.06, scale: 0.75 },
   DFII10: { median: 1.05, scale: 0.8 },
   BAMLH0A0HYM2: { median: 4.0, scale: 1.5 },
@@ -31,6 +32,21 @@ const VAL_CENTER = {
   EQUITY_ERP: { median: 3.71, scale: 1.5 },
   SPX_EY: { median: 4.47, scale: 1.0 },
 };
+
+let VAL_CENTER = { ...VAL_CENTER_DEFAULT };
+
+/** Install archive-fitted centres `{ id: { median, scale } }`. */
+export function setValCenter(table) {
+  if (!table) {
+    VAL_CENTER = { ...VAL_CENTER_DEFAULT };
+    return;
+  }
+  VAL_CENTER = { ...VAL_CENTER_DEFAULT, ...table };
+}
+
+function centerOf(snap, id) {
+  return snap?.valCenter?.[id] || VAL_CENTER[id] || VAL_CENTER_DEFAULT[id];
+}
 
 /** (value − median) / scale, clamped to −1..+1. */
 function valZ(value, median, scale) {
@@ -41,7 +57,7 @@ function valZ(value, median, scale) {
 function seriesValZ(snap, id, fallbackId = null) {
   const s = seriesOk(snap, id) || (fallbackId ? seriesOk(snap, fallbackId) : null);
   if (!s || s.latest == null || !Number.isFinite(s.latest)) return 0;
-  const cfg = VAL_CENTER[s.id] || VAL_CENTER[id];
+  const cfg = centerOf(snap, s.id) || centerOf(snap, id);
   if (!cfg) return 0;
   return valZ(s.latest, cfg.median, cfg.scale);
 }
@@ -525,8 +541,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     erpZ > 0.35 && calmRisk > 0.55
       ? "Earnings yield is wide, but fear is still cheap — not a clean overweight."
       : "Neither paid fear nor late-expansion complacency is loud enough for a clean call.",
-    0.15,
-    -0.28
+    0.1,
+    -0.18
   );
   stocks.margin = blendMargin(stocks.stance, stocks.net, meanImpulse([gImp, kImp]));
   stocks.splits = [cyc, def];
@@ -570,10 +586,16 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
 
   const goldDrain = tightW(lSc) > 0.55 && tightW(tSc) < 0.45;
   const goldCrisis = tightW(lSc) > 0.45 && tightW(rSc) > 0.45;
+  const cotS = seriesOk(snap, "GOLD_COT");
+  const cotZ =
+    cotS?.anchor?.score != null && Number.isFinite(cotS.anchor.score)
+      ? clampMargin(cotS.anchor.score)
+      : 0;
   // Gold on 1m: bare low reals were half the old “in” sample and lost money.
   // Crisis / drain still pay. Inflation hedge when Hot and real yields are high.
   // Soft dollar + Cold is the deflation-fear bid. Low reals without crisis = out
   // (easy-money risk-on where gold lags). Rising dollar alone is not the out.
+  // Crowded speculative longs tax the box (rich positioning); light longs help.
   const goldInParts = [];
   if (goldCrisis) goldInParts.push("cash is draining and fear is expensive — gold’s crisis bid");
   if (goldDrain && !dolStrong) goldInParts.push("cash is draining without a dollar squeeze");
@@ -583,10 +605,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (realHigh && easeW(iSc) > 0.55) {
     goldInParts.push("inflation is hot and real yields are high — gold’s inflation wage");
   }
+  if (cotZ > 0.45) goldInParts.push("speculative longs are light — the crowding tax is off");
   const goldOutParts = [];
   if (realLow && !goldCrisis) {
     goldOutParts.push("real 10y yields are low without a crisis bid — gold lags easy-money risk-on");
   }
+  if (cotZ < -0.45) goldOutParts.push("speculative longs are crowded");
   let goldMix = "Gold has no clean job right now.";
   if (realHigh && easeW(iSc) <= 0.55 && !goldCrisis && !(goldDrain && !dolStrong)) {
     goldMix =
@@ -601,7 +625,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     (goldDrain && !dolStrong ? 0.4 : 0) +
     (dolSoft && tightW(iSc) > 0.55 ? 0.45 : 0) +
     (realHigh && easeW(iSc) > 0.55 ? 0.5 : 0) -
-    (realLow && !goldCrisis ? 0.65 : 0);
+    (realLow && !goldCrisis ? 0.65 : 0) +
+    0.35 * cotZ;
   const gold = instrumentFromNet(
     "gold",
     "Gold",
@@ -709,6 +734,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
  * @returns {{ past: string, duration: object, credit: object, favor: object, confirm: string[], falsify: string[], lines: string[] }}
  */
 export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
+  if (snap?.valCenter) setValCenter(snap.valCenter);
   const lights = snap?.lights || {};
   const L = stateOf(lights, "liquidity");
   const T = stateOf(lights, "rates");

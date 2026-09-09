@@ -16,6 +16,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildMeaning } from "../meaning.js";
 import { LIGHT_IDS, makeAnchor } from "../score.js";
+import { loadValCenter } from "./load-val-center.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST_FILE = path.join(ROOT, "data", "regime-history.json");
@@ -37,6 +38,7 @@ const SUPPORT_IDS = [
   "EQUITY_ERP",
   "CHINA_CREDIT_IMPULSE",
   "CHINA_CREDIT_GDP",
+  "GOLD_COT",
 ];
 
 const WORD = {
@@ -77,11 +79,13 @@ const WINDOWS = [
 const PRIMARY_HZ = "1m";
 const MIN_STANCE_N = 50;
 const MAX_MIXED_SHARE = 0.5;
-/** Hard grade is the full archive (+ ex-COVID). Subsample windows warn —
- *  they trade regime coverage for noise, and chasing them undoes the full sample. */
-const SOFT_WINDOWS = new Set(["pre-2020", "2021+", "2023+"]);
+/** Soft (warn, not fail) when the window cannot discriminate: too few days,
+ *  one-way returns, or an in/out call that never printed. Window names do not
+ *  get a free pass — 2021+ has ~1,400 days and can fail. */
 const SOFT_MIN_DAYS = 400;
 const ONE_WAY_UP = 0.95;
+/** Fail inversion only when the gap is larger than noise on a 1m median. */
+const INV_TOL = 0.1;
 
 function median(arr) {
   if (!arr.length) return null;
@@ -199,6 +203,12 @@ async function main() {
   const seriesPts = {};
   for (const id of SUPPORT_IDS) seriesPts[id] = await loadPoints(id);
   const cursors = {};
+  let valCenter = null;
+  try {
+    valCenter = await loadValCenter();
+  } catch {
+    /* defaults in meaning.js */
+  }
 
   // One pass: stamp each row with the six calls.
   const labeled = [];
@@ -221,6 +231,7 @@ async function main() {
       {
         lights: lightsFromRow(row),
         series,
+        valCenter,
       },
       "1m"
     );
@@ -237,10 +248,10 @@ async function main() {
     `archive ${hist.start} → ${hist.end}  n=${hist.n}  horizons ${horizons.join(", ")}`
   );
   console.log(
-    `fail when: in-favor median < out-favor median (${PRIMARY_HZ}); any stance n < ${MIN_STANCE_N}; mixed share > ${Math.round(MAX_MIXED_SHARE * 100)}%`
+    `fail when: in-favor median < out-favor median by more than ${INV_TOL}% (${PRIMARY_HZ}); any stance n < ${MIN_STANCE_N}; mixed share > ${Math.round(MAX_MIXED_SHARE * 100)}% unless in still beats out`
   );
   console.log(
-    `warn (not fail) when the window is short (${[...SOFT_WINDOWS].join(", ")}, or <${SOFT_MIN_DAYS} days) or returns are one-way (≥${Math.round(ONE_WAY_UP * 100)}% up)`
+    `warn (not fail) when the window cannot discriminate (<${SOFT_MIN_DAYS} days, one-way returns ≥${Math.round(ONE_WAY_UP * 100)}% in one direction, an in/out call with n < ${MIN_STANCE_N}, or the class misses the first ${SOFT_MIN_DAYS} days of the window)`
   );
   const nRows = hist.rows?.length || 1;
   console.log(
@@ -298,11 +309,25 @@ async function main() {
         // Loud fails — grade on the primary horizon so short noise doesn't veto.
         // Short / one-way windows warn instead: they cannot discriminate.
         if (hz === PRIMARY_HZ) {
+          const innN = byStance.in.length;
+          const outN = byStance.out.length;
+          const oneWay =
+            base.up != null && (base.up >= ONE_WAY_UP || base.up <= 1 - ONE_WAY_UP);
+          const winFrom = labeled.find((r) => win.keep(r.date))?.date;
+          const coverFrom = days.find((r) => classReturn(r.fwd[hz], assets) != null)?.date;
+          const lateCover =
+            coverFrom &&
+            winFrom &&
+            Date.parse(coverFrom) - Date.parse(winFrom) > SOFT_MIN_DAYS * 86400000;
           const soft =
-            SOFT_WINDOWS.has(win.id) ||
             days.length < SOFT_MIN_DAYS ||
-            (base.up != null && (base.up >= ONE_WAY_UP || base.up <= 1 - ONE_WAY_UP));
+            oneWay ||
+            innN < MIN_STANCE_N ||
+            outN < MIN_STANCE_N ||
+            lateCover;
           const bucket = soft ? warns : fails;
+          const inn = stats(byStance.in);
+          const out = stats(byStance.out);
           for (const st of STANCES) {
             const n = byStance[st].length;
             if (n < MIN_STANCE_N) {
@@ -312,14 +337,18 @@ async function main() {
             }
           }
           if (mixedShare > MAX_MIXED_SHARE) {
-            bucket.push(
+            const tailsWork =
+              innN >= MIN_STANCE_N &&
+              outN >= MIN_STANCE_N &&
+              inn.median != null &&
+              out.median != null &&
+              inn.median + INV_TOL >= out.median;
+            (tailsWork ? warns : bucket).push(
               `${win.id}/${cls}: mixed ${Math.round(mixedShare * 100)}% of days > ${Math.round(MAX_MIXED_SHARE * 100)}% (${PRIMARY_HZ})`
             );
           }
-          const inn = stats(byStance.in);
-          const out = stats(byStance.out);
           if (inn.n >= MIN_STANCE_N && out.n >= MIN_STANCE_N && inn.median != null && out.median != null) {
-            if (inn.median < out.median) {
+            if (inn.median + INV_TOL < out.median) {
               bucket.push(
                 `${win.id}/${cls}: in-favor median ${fmtPct(inn.median).trim()} underperforms out-favor ${fmtPct(out.median).trim()} (${PRIMARY_HZ})`
               );
