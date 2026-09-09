@@ -157,9 +157,9 @@
       "id": "liquidity",
       "label": "Liquidity",
       "state": "neutral",
-      "score": -0.2316551133030395,
+      "score": -0.3009993493386194,
       "n": 5,
-      "nAnchor": 6,
+      "nAnchor": 5,
       "words": {
         "easing": "Easing",
         "neutral": "Neutral",
@@ -189,7 +189,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0,
+        "score": 0.0627235562724772,
         "dir": "flat"
       }
     },
@@ -197,9 +197,9 @@
       "id": "rates",
       "label": "Rates",
       "state": "tight",
-      "score": -0.7366666666666667,
+      "score": -0.6073031550177118,
       "n": 6,
-      "nAnchor": 8,
+      "nAnchor": 6,
       "words": {
         "easing": "Easy",
         "neutral": "Neutral",
@@ -225,7 +225,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": -0.2500000000000002,
+        "score": -0.4951032573983393,
         "dir": "down"
       }
     },
@@ -233,9 +233,9 @@
       "id": "growth",
       "label": "Growth",
       "state": "neutral",
-      "score": 0.08,
+      "score": 0.17959430150689687,
       "n": 6,
-      "nAnchor": 7,
+      "nAnchor": 6,
       "words": {
         "easing": "Strong",
         "neutral": "Mid",
@@ -262,17 +262,17 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.75,
+        "score": 0.32926691522547086,
         "dir": "up"
       }
     },
     "inflation": {
       "id": "inflation",
       "label": "Inflation",
-      "state": "easing",
-      "score": 0.4526651983161887,
+      "state": "neutral",
+      "score": 0.409350474662323,
       "n": 3,
-      "nAnchor": 4,
+      "nAnchor": 3,
       "words": {
         "easing": "Hot",
         "neutral": "Mid",
@@ -291,17 +291,17 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.0016516830006474414,
-        "dir": "flat"
+        "score": -0.2676313687615061,
+        "dir": "down"
       }
     },
     "risk": {
       "id": "risk",
       "label": "Risk",
       "state": "easing",
-      "score": 0.8153846153846153,
+      "score": 0.5318461271432731,
       "n": 4,
-      "nAnchor": 5,
+      "nAnchor": 4,
       "words": {
         "easing": "Risk-on",
         "neutral": "Neutral",
@@ -322,7 +322,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.15625000000000014,
+        "score": 0.07187489867210353,
         "dir": "flat"
       }
     }
@@ -12478,6 +12478,181 @@
   "formula": {
     "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
-    "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
+    "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10",
+    "summary": "Lights = weighted mean of voter anchors (correlated families first). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%."
+  },
+  "meaning": {
+    "past": "Over the past month",
+    "horizon": "1m",
+    "duration": {
+      "dir": "rising",
+      "label": "Duration risk rising",
+      "line": "Long bonds aren’t getting paid — funding is tight, so present value stays under pressure. Real 10y yields are high — discount rates still bite."
+    },
+    "credit": {
+      "dir": "falling",
+      "label": "Credit risk falling",
+      "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating this window — private lending is adding fuel."
+    },
+    "favor": {
+      "pair": {
+        "line": "Stocks over long Treasuries",
+        "why": "Cash flows still look collectible while discount rates tax long bonds."
+      },
+      "items": [
+        {
+          "id": "treasuries",
+          "name": "Treasuries",
+          "stance": "out",
+          "why": "The whole curve is taxed — policy, duration, and inflation aren’t paying.",
+          "margin": -0.6924730124232027,
+          "tenors": [
+            {
+              "id": "5",
+              "name": "5",
+              "stance": "out",
+              "why": "Policy/funding still taxes the 5s.",
+              "margin": -0.8124192747143566
+            },
+            {
+              "id": "10",
+              "name": "10",
+              "stance": "out",
+              "why": "Discount rates still tax the 10s.",
+              "margin": -0.6174712013213435
+            },
+            {
+              "id": "30",
+              "name": "30",
+              "stance": "out",
+              "why": "Term premium or duration risk — 30s aren’t getting paid.",
+              "margin": -0.647528561233908
+            }
+          ]
+        },
+        {
+          "id": "credit",
+          "name": "Credit",
+          "stance": "mixed",
+          "why": "Investment grade and high yield are both mixed.",
+          "margin": 0.08727121976497686,
+          "splits": [
+            {
+              "id": "ig",
+              "name": "IG",
+              "stance": "mixed",
+              "why": "Investment-grade credit sits between duration and credit risk; neither side is giving a clean signal.",
+              "net": 0,
+              "label": "Investment grade",
+              "margin": -0.00968159048669429
+            },
+            {
+              "id": "hy",
+              "name": "HY",
+              "stance": "mixed",
+              "why": "High yield needs both growth and calm fear; only one side is helping.",
+              "net": 0.2157988972788874,
+              "label": "High yield",
+              "margin": 0.184224030016648
+            }
+          ]
+        },
+        {
+          "id": "stocks",
+          "name": "Equities",
+          "stance": "mixed",
+          "why": "Growth isn’t a clean overweight, and real 10y yields already tax the multiple.",
+          "net": 0.003397582242017305,
+          "margin": 0.03988616184469274,
+          "splits": [
+            {
+              "id": "cyc",
+              "name": "Cy",
+              "stance": "mixed",
+              "why": "Cyclicals want Strong growth and calm fear; only one side is helping.",
+              "net": 0.2627960548893902,
+              "label": "Cyclicals",
+              "margin": 0.2266530621508012
+            },
+            {
+              "id": "def",
+              "name": "Df",
+              "stance": "mixed",
+              "why": "Defensives want Soft growth or expensive fear; the expansion mix leaves them mixed.",
+              "net": -0.2919956165437668,
+              "label": "Defensives",
+              "margin": -0.24767674654195238
+            }
+          ]
+        },
+        {
+          "id": "crypto",
+          "name": "Crypto",
+          "stance": "mixed",
+          "why": "Crypto wants easy plumbing and calm fear; only one side is helping.",
+          "net": -0.161598958941791,
+          "margin": -0.10378872797659532
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "stance": "out",
+          "why": "Real 10y yields are high.",
+          "net": -0.5,
+          "margin": -0.3916872516271369
+        },
+        {
+          "id": "cmdty",
+          "name": "Commodity",
+          "stance": "in",
+          "why": "Commodities lean in — oil mixed, copper in.",
+          "margin": 0.43145263399883405,
+          "splits": [
+            {
+              "id": "oil",
+              "name": "Oi",
+              "stance": "mixed",
+              "why": "Oil wants firm growth and a cooperative dollar; only one side is helping.",
+              "net": 0.2919956165437668,
+              "label": "Oil",
+              "margin": 0.3809684226658894
+            },
+            {
+              "id": "copper",
+              "name": "Cu",
+              "stance": "in",
+              "why": "Growth is Strong — copper usually gets the industrial bid.",
+              "net": 0.5839912330875336,
+              "label": "Copper",
+              "margin": 0.4819368453317788
+            }
+          ]
+        }
+      ]
+    },
+    "confirm": [
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
+      "The 10y yield is rising this window — markets are already marking duration risk up.",
+      "Copper is firm with Strong growth — the industrial tape is confirming.",
+      "Oil is firm with Strong growth — the crude tape is confirming."
+    ],
+    "falsify": [],
+    "lines": [
+      "Long bonds aren’t getting paid — funding is tight, so present value stays under pressure. Real 10y yields are high — discount rates still bite.",
+      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating this window — private lending is adding fuel.",
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
+      "The 10y yield is rising this window — markets are already marking duration risk up.",
+      "Copper is firm with Strong growth — the industrial tape is confirming."
+    ],
+    "snapshot": {
+      "liquidity": "Neutral",
+      "rates": "Tight",
+      "growth": "Mid",
+      "inflation": "Mid",
+      "risk": "Risk-on",
+      "creditImpulse": 3.00274393222095,
+      "nomRealSpread": 4.463880581194535,
+      "stockBondCorr": 0.41429766698804893
+    }
   }
 }

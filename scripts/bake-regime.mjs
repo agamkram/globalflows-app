@@ -14,6 +14,7 @@ import {
   attachImpulse,
   memberAnchorScore,
   lightStateFromScore,
+  aggregateVotes,
   DEFAULT_IMPULSE,
 } from "../score.js";
 
@@ -32,28 +33,19 @@ const WORD = {
 };
 const COLOR = { easing: "green", neutral: "amber", tight: "red", empty: "gray" };
 
-function median(arr) {
-  if (!arr.length) return null;
-  const a = [...arr].sort((x, y) => x - y);
-  const m = Math.floor(a.length / 2);
-  return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
-}
-
 function club(snap, lid) {
   const members = (snap.lights?.[lid]?.members || [])
     .map((id) => snap.series?.[id])
     .filter((m) => m && m.status === "ok");
-  const bag = [];
   const voters = [];
   for (const m of members) {
     const sc = memberAnchorScore(m);
     if (sc == null) continue;
-    const w = Math.max(1, Math.round(m.weight || 1));
+    const w = Math.max(1, Number(m.weight) || 1);
     voters.push({ id: m.id, name: m.name, score: sc, weight: w, why: m.anchor?.why });
-    for (let i = 0; i < w; i++) bag.push(sc);
   }
   voters.sort((a, b) => b.score - a.score);
-  const score = bag.length ? median(bag) : null;
+  const score = aggregateVotes(lid, voters);
   const state = lightStateFromScore(score).state;
   const easy = voters.filter((v) => v.score > 0.45);
   const tight = voters.filter((v) => v.score < -0.45);
@@ -181,6 +173,8 @@ async function main() {
         state: rebuilt[id].state,
         word: lights[id].word,
         words: WORD[id],
+        // Continuous checklist reads the score, not only the painted word.
+        score: lights[id].score ?? rebuilt[id].score,
         impulse: rebuilt[id].impulse,
       },
     ])

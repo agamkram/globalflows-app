@@ -13,6 +13,7 @@ import {
   lightStateFromScore,
   buildLights,
   attachImpulse,
+  aggregateVotes,
   DEFAULT_IMPULSE,
 } from "../score.js";
 import { buildMeaning } from "../meaning.js";
@@ -37,12 +38,6 @@ const COLOR = { easing: "green", neutral: "amber", tight: "red", empty: "gray" }
 const FAVOR_WORD = { in: "in", mixed: "mixed", out: "out" };
 const FAVOR_COLOR = { in: "green", mixed: "amber", out: "red" };
 
-function median(arr) {
-  if (!arr.length) return null;
-  const a = [...arr].sort((x, y) => x - y);
-  const m = Math.floor(a.length / 2);
-  return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
-}
 function fmt(n, d = 2) {
   if (n == null || !Number.isFinite(n)) return "—";
   const s = Number(n).toFixed(d);
@@ -72,7 +67,7 @@ async function main() {
   lines.push(`ingest ${snap.generatedAt || "—"}`);
   if (regime?.generatedAt) lines.push(`regime ${regime.generatedAt}`);
   lines.push("");
-  lines.push("Lights = median of voter anchors. Lookback does not recolor lights.");
+  lines.push("Lights = weighted mean of voter anchors (families first). Lookback does not recolor lights.");
   lines.push("Score > +0.45 → green · < −0.45 → red · else amber.");
   lines.push("");
 
@@ -81,15 +76,15 @@ async function main() {
     const members = (snap.lights?.[lid]?.members || [])
       .map((id) => snap.series?.[id])
       .filter((m) => m && m.status === "ok");
-    const bag = [];
+    const voters = [];
     const detail = [];
     for (const m of members) {
       const sc = memberAnchorScore(m);
       if (sc == null) continue;
       detail.push({ name: m.name || m.id, sc, why: m.anchor?.why || "" });
-      for (let i = 0; i < Math.max(1, Math.round(m.weight || 1)); i++) bag.push(sc);
+      voters.push({ id: m.id, score: sc, weight: Math.max(1, Number(m.weight) || 1) });
     }
-    const score = bag.length ? median(bag) : null;
+    const score = aggregateVotes(lid, voters);
     const state = lightStateFromScore(score).state;
     const word = WORD[lid][state];
     const color = COLOR[state];
@@ -113,7 +108,7 @@ async function main() {
   attachImpulse(view, snap, DEFAULT_IMPULSE);
   for (const lid of LIGHTS) {
     if (view[lid]?.state !== mathLights[lid].state) {
-      fails.push(`${lid}: buildLights ${view[lid]?.state} ≠ anchor median ${mathLights[lid].state}`);
+      fails.push(`${lid}: buildLights ${view[lid]?.state} ≠ aggregate ${mathLights[lid].state}`);
     }
   }
   const meaning = buildMeaning(
@@ -126,6 +121,8 @@ async function main() {
             state: mathLights[id].state,
             word: mathLights[id].word,
             words: WORD[id],
+            // Continuous checklist reads the score, not only the painted word.
+            score: mathLights[id].score ?? view[id]?.score,
             impulse: view[id]?.impulse,
           },
         ])

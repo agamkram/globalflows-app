@@ -16,11 +16,70 @@ export function lightStateFromScore(score) {
   return { state: "neutral", score };
 }
 
-function median(arr) {
-  if (!arr.length) return null;
-  const a = [...arr].sort((x, y) => x - y);
-  const m = Math.floor(a.length / 2);
-  return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+/**
+ * Correlated voters average into one family ballot before the light mean, so
+ * three credit spreads cannot outvote VIX three times over. Ungrouped voters
+ * keep their catalog weights as true multipliers (not bag-duplicates).
+ */
+const VOTE_FAMILIES = {
+  risk: {
+    credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
+    vol: ["VIX"],
+  },
+};
+
+/** Weight is influence, not a duplicate median seat. */
+export function weightedMean(items) {
+  let num = 0;
+  let den = 0;
+  for (const it of items || []) {
+    if (!Number.isFinite(it?.score) || !Number.isFinite(it?.weight) || it.weight <= 0) continue;
+    num += it.score * it.weight;
+    den += it.weight;
+  }
+  return den ? num / den : null;
+}
+
+/** Drop the highest and lowest score once when there are enough ballots. */
+export function weightedTrimmedMean(items) {
+  const ok = (items || []).filter(
+    (it) => Number.isFinite(it?.score) && Number.isFinite(it?.weight) && it.weight > 0
+  );
+  if (ok.length < 5) return weightedMean(ok);
+  const sorted = [...ok].sort((a, b) => a.score - b.score);
+  return weightedMean(sorted.slice(1, -1));
+}
+
+/**
+ * Build light (or impulse) ballots: family-average first, then weighted trimmed mean.
+ * @param {string} lid
+ * @param {{ id: string, score: number, weight?: number }[]} voters
+ */
+export function aggregateVotes(lid, voters) {
+  const list = (voters || []).filter((v) => v && Number.isFinite(v.score));
+  if (!list.length) return null;
+  const families = VOTE_FAMILIES[lid] || {};
+  const used = new Set();
+  const ballots = [];
+  for (const [fname, ids] of Object.entries(families)) {
+    const members = list.filter((v) => ids.includes(v.id));
+    if (!members.length) continue;
+    for (const m of members) used.add(m.id);
+    const fam = weightedMean(
+      members.map((m) => ({ score: m.score, weight: Math.max(1, m.weight || 1) }))
+    );
+    // One ballot per family — credit and vol sit as peers, not 3-vs-1.
+    if (fam != null) ballots.push({ id: `family:${fname}`, score: fam, weight: 1 });
+  }
+  for (const v of list) {
+    if (used.has(v.id)) continue;
+    ballots.push({
+      id: v.id,
+      score: v.score,
+      weight: Math.max(1, Number(v.weight) || 1),
+    });
+  }
+  return weightedTrimmedMean(ballots);
 }
 
 function clamp(n, lo, hi) {
@@ -458,15 +517,14 @@ export function buildLights(snap, now = Date.now()) {
           .map((r) => r.id),
       ]),
     ];
-    const scores = [];
+    const voters = [];
     for (const id of voterIds) {
       const row = snap.series?.[id];
       const sc = memberAnchorScore(row, now);
       if (sc == null) continue;
-      const w = Math.max(1, Math.round(row.weight || 1));
-      for (let i = 0; i < w; i++) scores.push(sc);
+      voters.push({ id, score: sc, weight: Math.max(1, Number(row.weight) || 1) });
     }
-    const score = scores.length ? median(scores) : null;
+    const score = aggregateVotes(lid, voters);
     const { state } = lightStateFromScore(score);
     const m = meta.find((x) => x.id === lid) || baked[lid];
     out[lid] = {
@@ -475,7 +533,7 @@ export function buildLights(snap, now = Date.now()) {
       state,
       score,
       n: voterIds.length,
-      nAnchor: scores.length,
+      nAnchor: voters.length,
       words: {
         easing: m?.easing || baked[lid]?.words?.easing,
         neutral: m?.neutral || baked[lid]?.words?.neutral,
@@ -492,15 +550,14 @@ export function attachImpulse(lights, snap, horizon = DEFAULT_IMPULSE) {
   const h = IMPULSE_KEYS.includes(horizon) ? horizon : DEFAULT_IMPULSE;
   for (const lid of Object.keys(lights || {})) {
     const ids = lights[lid].impulseMembers || lights[lid].members || [];
-    const bag = [];
+    const voters = [];
     for (const id of ids) {
       const m = snap.series?.[id];
       const sc = memberImpulseScore(m, h);
       if (sc == null) continue;
-      const w = Math.max(1, Math.round(m.weight || 1));
-      for (let i = 0; i < w; i++) bag.push(sc);
+      voters.push({ id, score: sc, weight: Math.max(1, Number(m.weight) || 1) });
     }
-    const score = bag.length ? median(bag) : null;
+    const score = aggregateVotes(lid, voters);
     let dir = "flat";
     if (score > 0.2) dir = "up";
     else if (score < -0.2) dir = "down";
