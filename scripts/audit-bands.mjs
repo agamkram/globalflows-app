@@ -45,6 +45,7 @@ const FLAT_WARN = 0.15; // flag a voter whose score barely moves
 const AMBER_WARN = 0.6; // light stuck amber most days — scale or voters too quiet
 const ONEWAY_MIN = 0.08; // a colour reached on fewer days than this is not a call
 const SKEW_MAX = 3; // green:red (or red:green) beyond this describes an era
+const CENTRE_SPAN_MIN = 0.8; // a valuation centre must span this much of the replay
 const QUIET_SD_FRAC = 0.75; // flag light sd more than ~25% below the median light
 const OUT_SD_TOL = 0.05; // calibrated output sds must match — else ±0.45 is a different percentile
 const CALIB_SKIP = 252; // first year of archive is raw, before expanding-window calib
@@ -305,7 +306,19 @@ async function auditValCenters(problems, fails) {
     fails.push("val-center.json has no centres");
     return;
   }
-  console.log(`VALUATION CENTRES — archive medians vs stored (${SINCE}+)\n`);
+  // The window audit:calls replays these centres over.
+  let replayYears = 0;
+  try {
+    const h = JSON.parse(await fs.readFile(REGIME_HIST, "utf8"));
+    if (h.start && h.end) {
+      replayYears = (Date.parse(h.end) - Date.parse(h.start)) / 31557600000;
+    }
+  } catch {
+    /* no archive yet — the span check simply cannot run */
+  }
+  console.log(
+    `VALUATION CENTRES — archive medians vs stored (${SINCE}+, replayed over ${replayYears.toFixed(1)}y)\n`
+  );
   for (const id of ids) {
     const expect = centers[id];
     const pts = await readPoints(id);
@@ -327,12 +340,26 @@ async function auditValCenters(problems, fails) {
     } else if (Math.abs(mid - Number(expect.median)) > VAL_MEAN_TOL) {
       flags.push(`median ${mid.toFixed(4)} vs stored ${expect.median} (tol ${VAL_MEAN_TOL})`);
     }
-    if (flags.length) {
-      fails.push(`${id} VAL_CENTER drift: ${flags.join("; ")} — run calibrate:val`);
+    // A centre decides whether an asset is cheap or expensive, and audit:calls
+    // applies it to every day back to 2003. Fit it on a slice of that and the
+    // replay judges 2008 against a range 2008 never saw. Judge the fitting
+    // window by the years it spans, not the count of prints: monthly ERP has 285
+    // observations covering the full archive, which read as thin next to a daily
+    // series' 5,900 and sent an earlier review chasing a problem that wasn't
+    // there. The genuinely short one is HY, and it is on the band mid for that
+    // reason.
+    const spanYears =
+      (Date.parse(use[use.length - 1].date) - Date.parse(use[0].date)) / 31557600000;
+    if (source !== "band-mid" && spanYears < replayYears * CENTRE_SPAN_MIN) {
+      fails.push(
+        `${id} valuation centre is fit on ${spanYears.toFixed(1)}y but replayed across ` +
+          `${replayYears.toFixed(1)}y — either extend the history or pin the centre ` +
+          `to a long-run typical the way HY is`
+      );
     }
     console.log(
       `  ${pad(id, 16)} stored ${Number(expect.median).toFixed(4)}  archive ${mid.toFixed(4)}` +
-        `  scale ${expect.scale}  n=${vals.length}  ${source}` +
+        `  scale ${expect.scale}  ${spanYears.toFixed(1)}y span, n=${vals.length}  ${source}` +
         (flags.length ? `   <-- ${flags.join(" ")}` : "")
     );
   }
