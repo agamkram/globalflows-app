@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261020";
+import { buildMeaning } from "./meaning.js?v=20261021";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261020";
+} from "./score.js?v=20261021";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1431,13 +1431,15 @@ function renderLights(snap) {
       const word = wordFor(L);
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
-      }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}" aria-label="${escapeHtml(
+      }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
+        nearFlip ? ` title="${escapeHtml(nearFlip)}"` : ""
+      } aria-label="${escapeHtml(
         `${L.label || id}, ${word}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
         <span class="word">${escapeHtml(word)}</span>
-        <span class="score">${escapeHtml(score)}${nearFlip ? ` · ${escapeHtml(nearFlip)}` : ""}</span>
+        <span class="score">${escapeHtml(score)}</span>
         ${trackHtml(L.score, L.state || "empty")}
       </button>`;
     })
