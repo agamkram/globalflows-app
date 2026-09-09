@@ -19,7 +19,19 @@ import { LIGHT_IDS, makeAnchor } from "../score.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST_FILE = path.join(ROOT, "data", "regime-history.json");
-const HY_FILE = path.join(ROOT, "data", "history", "BAMLH0A0HYM2.json");
+const HIST_DIR = path.join(ROOT, "data", "history");
+
+/** Series meaning.js reads for valuation / term premium / dollar / HY tights. */
+const SUPPORT_IDS = [
+  "BAMLH0A0HYM2",
+  "THREEFFTP10",
+  "DFII10",
+  "DFII5",
+  "DOLLAR_YOY",
+  "DTWEXBGS",
+  "WTI",
+  "DGS10",
+];
 
 const WORD = {
   liquidity: { easing: "Easing", neutral: "Neutral", tight: "Tightening" },
@@ -120,36 +132,37 @@ function classReturn(fwd, assetIds) {
   return mean(vals);
 }
 
-async function loadHyAsOf() {
+async function loadPoints(id) {
   try {
-    const raw = JSON.parse(await fs.readFile(HY_FILE, "utf8"));
-    const pts = (raw.points || [])
+    const raw = JSON.parse(await fs.readFile(path.join(HIST_DIR, `${id}.json`), "utf8"));
+    return (raw.points || [])
       .filter((p) => p?.date && Number.isFinite(p.value))
       .sort((a, b) => a.date.localeCompare(b.date));
-    return pts;
   } catch {
     return [];
   }
 }
 
-function hySnapAsOf(hyPts, cursor, date) {
-  let i = cursor;
-  while (i + 1 < hyPts.length && hyPts[i + 1].date <= date) i++;
-  if (!hyPts[i] || hyPts[i].date > date) return { cursor: i, series: {} };
-  const latest = hyPts[i].value;
-  const anchor = makeAnchor({ id: "BAMLH0A0HYM2", light: "risk", sign: -1 }, latest);
-  return {
-    cursor: i,
-    series: {
-      BAMLH0A0HYM2: {
-        id: "BAMLH0A0HYM2",
-        status: "ok",
-        latest,
-        asOf: hyPts[i].date,
-        anchor,
-      },
-    },
-  };
+function supportSnapAsOf(seriesPts, cursors, date) {
+  const series = {};
+  for (const id of SUPPORT_IDS) {
+    const pts = seriesPts[id];
+    if (!pts?.length) continue;
+    let i = cursors[id] || 0;
+    while (i + 1 < pts.length && pts[i + 1].date <= date) i++;
+    cursors[id] = i;
+    if (!pts[i] || pts[i].date > date) continue;
+    const latest = pts[i].value;
+    const anchor = makeAnchor({ id, sign: -1 }, latest);
+    series[id] = {
+      id,
+      status: "ok",
+      latest,
+      asOf: pts[i].date,
+      anchor,
+    };
+  }
+  return series;
 }
 
 function inWindow(row, win, hz) {
@@ -172,16 +185,18 @@ async function main() {
     process.exit(1);
   }
 
-  const hyPts = await loadHyAsOf();
-  let hyCursor = 0;
+  const seriesPts = {};
+  for (const id of SUPPORT_IDS) seriesPts[id] = await loadPoints(id);
+  const cursors = {};
 
   // One pass: stamp each row with the six calls.
   const labeled = [];
   for (const row of hist.rows) {
-    const hy = hySnapAsOf(hyPts, hyCursor, row.date);
-    hyCursor = hy.cursor;
     const meaning = buildMeaning(
-      { lights: lightsFromRow(row), series: hy.series },
+      {
+        lights: lightsFromRow(row),
+        series: supportSnapAsOf(seriesPts, cursors, row.date),
+      },
       "1m"
     );
     const stance = Object.fromEntries(

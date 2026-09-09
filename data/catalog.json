@@ -512,13 +512,14 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": null,
+      "light": "rates",
+      "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII5",
       "sub": "TIPS inflation-adjusted",
       "search": "DFII5",
       "causal": "rates",
       "street": "rates",
-      "note": "5-year TIPS real yield. Cost of real (inflation-adjusted) money for the medium term."
+      "note": "5-year TIPS real yield — the market’s real funding rate. Votes the Rates light on the real-rate band; do not replace this with nominal minus trailing core PCE."
     },
     {
       "id": "DFII10",
@@ -529,13 +530,14 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": null,
+      "light": "rates",
+      "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
       "sub": "TIPS inflation-adjusted",
       "search": "DFII10",
       "causal": "rates",
       "street": "rates",
-      "note": "10-year TIPS real yield. Higher real yields = tighter financial conditions for risk assets."
+      "note": "10-year TIPS real yield — the discount rate risk assets actually face. Votes the Rates light on the real-rate band."
     },
     {
       "id": "T5YIE",
@@ -1647,12 +1649,12 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "rates",
+      "light": null,
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARU",
       "layer": "rates",
       "sub": "Policy rate ceiling",
       "search": "DFEDTARU",
-      "note": "Top of the Fed's federal funds target range. Official policy rate ceiling."
+      "note": "Top of the Fed's federal funds target range. Used to build SOFR_SPREAD; does not vote Rates — audit:bands flagged it pinned (~54%) as a near-constant after trailing-PCE deflation."
     },
     {
       "id": "DFEDTARL",

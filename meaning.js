@@ -17,6 +17,43 @@ function seriesOk(snap, id) {
   return s && s.status === "ok" ? s : null;
 }
 
+/** Term premium compressed — long bonds are not paid for duration risk. */
+function termPremiumUnpaid(snap) {
+  const tp = seriesOk(snap, "THREEFFTP10");
+  return tp?.latest != null && Number.isFinite(tp.latest) && tp.latest < 0.75;
+}
+
+/** Market 10y real yield already high — discount rates bite. */
+function real10High(snap, thresh = 1.5) {
+  const r = seriesOk(snap, "DFII10");
+  return r?.latest != null && Number.isFinite(r.latest) && r.latest > thresh;
+}
+
+/** Market 10y real yield low/negative — gold’s usual wage from rates. */
+function real10Low(snap, thresh = 0.5) {
+  const r = seriesOk(snap, "DFII10");
+  return r?.latest != null && Number.isFinite(r.latest) && r.latest < thresh;
+}
+
+/**
+ * Broad dollar rising over 12m. DOLLAR_YOY band is inverted (rising = tight),
+ * so a negative anchor score or a print above ~+3% means the dollar is taxing
+ * dollar-priced commodities and gold.
+ */
+function dollarStrong(snap) {
+  const d = seriesOk(snap, "DOLLAR_YOY");
+  if (!d) return false;
+  if (d.anchor?.score != null && Number.isFinite(d.anchor.score)) return d.anchor.score < -0.45;
+  return d.latest != null && d.latest > 3;
+}
+
+function dollarSoft(snap) {
+  const d = seriesOk(snap, "DOLLAR_YOY");
+  if (!d) return false;
+  if (d.anchor?.score != null && Number.isFinite(d.anchor.score)) return d.anchor.score > 0.45;
+  return d.latest != null && d.latest < -3;
+}
+
 function hzImp(s, horizon) {
   const imp = s?.impulse?.[horizon];
   return { dir: imp?.dir || null, delta: imp?.delta ?? null, score: imp?.score ?? null };
@@ -162,6 +199,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const kImp = lightImpulse(lights, "risk");
   const hyImp = impulseUnit(hzImp(seriesOk(snap, "BAMLH0A0HYM2"), horizon));
 
+  const tpUnpaid = termPremiumUnpaid(snap);
+  const realHigh = real10High(snap);
+  const realLow = real10Low(snap);
+  const dolStrong = dollarStrong(snap);
+  const dolSoft = dollarSoft(snap);
+
   const billsPay = T === "tight" || L === "tight" || R === "tight";
 
   let pairLine = "No clean stocks-versus-bonds call";
@@ -190,27 +233,39 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   }
 
   const tenorCtx = { T, I };
-  // 5s follow policy, not the duration score — they are the front-end sleeve now
-  // that cash is not a cell. Dragging them out whenever 30s are taxed left no
-  // place to sit in bills-like duration while inflation is still hot.
+  // Valuation: compressed term premium means 10s/30s are not paid — dock them
+  // the way cycle-tight HY OAS docks high yield.
+  const tpTax = tpUnpaid ? -1 : 0;
   const t5 = gradeTenor("5", T === "easing" ? 1 : T === "tight" ? -1 : 0, tenorCtx, 1);
-  const t10 = gradeTenor("10", d + flight + (I === "easing" ? -1 : 0), tenorCtx, 2);
+  const t10 = gradeTenor(
+    "10",
+    d + flight + (I === "easing" ? -1 : 0) + tpTax,
+    tenorCtx,
+    2
+  );
   const t30 = gradeTenor(
     "30",
-    d + flight + (I === "easing" ? -1 : I === "tight" ? 1 : 0),
+    d + flight + (I === "easing" ? -1 : I === "tight" ? 1 : 0) + tpTax,
     tenorCtx,
     2
   );
   t5.margin = blendMargin(t5.stance, t5.margin, rImp);
   t10.margin = blendMargin(t10.stance, t10.margin, meanImpulse([rImp, -iImp]));
   t30.margin = blendMargin(t30.stance, t30.margin, -iImp);
+  if (tpUnpaid && t10.stance === "in") {
+    t10.why = (t10.why || "") + " Term premium is compressed — duration is not paid.";
+  }
   const tenorSet = new Set([t5.stance, t10.stance, t30.stance]);
   const ustStance = tenorSet.size === 1 ? t10.stance : "mixed";
   let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
   if (ustStance === "out") {
-    ustWhy = "The whole curve is taxed — policy, duration, and inflation aren’t paying.";
+    ustWhy = tpUnpaid
+      ? "The curve is taxed — term premium is compressed and duration is not paid."
+      : "The whole curve is taxed — policy, duration, and inflation aren’t paying.";
   } else if (ustStance === "in") {
     ustWhy = "The whole curve can work — policy, duration, and inflation aren’t the tax.";
+  } else if (tpUnpaid) {
+    ustWhy += " Term premium is compressed — long bonds are not paid.";
   }
   const treasuries = {
     id: "treasuries",
@@ -319,15 +374,24 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (G === "tight") stocksOutParts.push("growth is soft");
   if (R === "tight") stocksOutParts.push("fear is in charge");
   if (L === "tight" && G !== "easing") stocksOutParts.push("cash is draining");
+  // Valuation: high real 10y is a discount-rate tax (earnings yield − real 10y
+  // would be the full ERP; without an earnings series, real yields dock alone).
+  if (realHigh) stocksOutParts.push("real 10y yields are high — equities are not cheap on the discount rate");
+  const stocksIn =
+    G === "easing" && R !== "tight" && L !== "tight" && !realHigh;
+  const stocksOut =
+    G === "tight" || R === "tight" || (L === "tight" && G !== "easing") || realHigh;
   const cyc = instrument(
     "cyc",
     "Cy",
-    G === "easing" && R !== "tight",
-    G === "tight" || R === "tight",
+    G === "easing" && R !== "tight" && !realHigh,
+    G === "tight" || R === "tight" || realHigh,
     "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
     G === "tight"
       ? "Growth is soft — cyclicals are the first equity to get hurt."
-      : "Fear is in charge — cyclicals usually dump first.",
+      : realHigh
+        ? "Real yields are high — cyclicals pay more for every dollar of cash flow."
+        : "Fear is in charge — cyclicals usually dump first.",
     "Cyclicals want Strong growth and calm fear; only one side is helping."
   );
   cyc.label = "Cyclicals";
@@ -335,9 +399,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     cyc.stance,
     stanceMargin(
       cyc.stance,
-      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0),
-      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0),
-      2
+      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0) + (!realHigh ? 1 : 0),
+      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0) + (realHigh ? 1 : 0),
+      3
     ),
     meanImpulse([gImp, kImp])
   );
@@ -366,24 +430,27 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const stocks = instrument(
     "stocks",
     "Equities",
-    G === "easing" && R !== "tight" && L !== "tight",
-    G === "tight" || R === "tight" || (L === "tight" && G !== "easing"),
+    stocksIn,
+    stocksOut,
     "Activity is firm and fear is not in charge — risk assets usually get the bid.",
     sentence(stocksOutParts, "Equities are out of favor here."),
-    "Growth isn’t firm enough for a clean overweight, and nothing has taken them out."
+    realHigh
+      ? "Growth isn’t a clean overweight, and real 10y yields already tax the multiple."
+      : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out."
   );
   stocks.margin = blendMargin(
     stocks.stance,
     stanceMargin(
       stocks.stance,
-      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0) + (L !== "tight" ? 1 : 0),
-      (G === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0) + (L === "tight" && G !== "easing" ? 1 : 0),
-      3
+      (G === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0) + (L !== "tight" ? 1 : 0) + (!realHigh ? 1 : 0),
+      (G === "tight" ? 1 : 0) +
+        (R === "tight" ? 1 : 0) +
+        (L === "tight" && G !== "easing" ? 1 : 0) +
+        (realHigh ? 1 : 0),
+      4
     ),
     meanImpulse([gImp, kImp])
   );
-  // Parent stays the broad equity call. Cy / Df are natural opposites — they
-  // show which part of the book, they do not average into the title.
   stocks.splits = [cyc, def];
 
   const cryptoInParts = [];
@@ -392,11 +459,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const cryptoOutParts = [];
   if (L === "tight") cryptoOutParts.push("cash is draining");
   if (R === "tight") cryptoOutParts.push("fear is in charge");
+  if (realHigh) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
+  if (dolStrong) cryptoOutParts.push("the dollar is rising");
   const crypto = instrument(
     "crypto",
     "Crypto",
-    L === "easing" && R !== "tight",
-    L === "tight" || R === "tight",
+    L === "easing" && R !== "tight" && !realHigh && !dolStrong,
+    L === "tight" || R === "tight" || realHigh || dolStrong,
     sentence(cryptoInParts, "Easy plumbing and calm fear — Bitcoin is the high-beta valve."),
     sentence(cryptoOutParts, "Draining cash or expensive fear — the high-beta valve usually dumps first."),
     "Crypto wants easy plumbing and calm fear; only one side is helping."
@@ -406,64 +475,98 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     stanceMargin(
       crypto.stance,
       (L === "easing" ? 1 : 0) + (R !== "tight" ? 1 : 0),
-      (L === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0),
-      2
+      (L === "tight" ? 1 : 0) + (R === "tight" ? 1 : 0) + (realHigh ? 1 : 0) + (dolStrong ? 1 : 0),
+      4
     ),
     meanImpulse([lImp, kImp])
   );
 
   const goldFear = R === "tight";
   const goldDrain = L === "tight" && T !== "tight";
-  const goldHotEasy = I === "easing" && T === "easing";
+  const goldHotEasy = I === "easing" && T === "easing" && !realHigh;
+  const goldRealSoft = realLow && !dolStrong;
   const goldInParts = [];
   if (goldFear) goldInParts.push("fear is paying gold’s usual wage");
   if (goldDrain) goldInParts.push("cash is draining without a rates squeeze");
   if (goldHotEasy) goldInParts.push("prices are hot and funding is easy");
+  if (goldRealSoft) goldInParts.push("real 10y yields are low and the dollar isn’t fighting");
+  const goldOutParts = [];
+  if (realHigh) goldOutParts.push("real 10y yields are high");
+  if (dolStrong) goldOutParts.push("the dollar is rising");
+  if (I === "tight" && R === "easing" && T === "tight") {
+    goldOutParts.push("cold inflation, risk-on, and tight funding");
+  }
   let goldMix = "Gold has no clean job right now.";
   const bei = seriesOk(snap, "T5YIFR");
   const beiAnchored =
     bei?.anchor?.score != null && Math.abs(bei.anchor.score) <= 0.45;
-  if (I === "easing" && !goldHotEasy && !goldFear && !goldDrain) {
+  if (realHigh || dolStrong) {
+    goldMix = sentence(
+      goldOutParts,
+      "Real yields and the dollar are the two things that price gold — both are fighting it."
+    );
+  } else if (I === "easing" && !goldHotEasy && !goldFear && !goldDrain && !goldRealSoft) {
     goldMix = beiAnchored
-      ? "PCE is still hot, but 5y5y is anchored and funding isn’t easy — gold has no second job."
-      : "Inflation is hot, but gold has no second job — funding isn’t easy and fear isn’t paying.";
-  } else if (!goldFear && !goldDrain && !goldHotEasy) {
+      ? "PCE is still hot, but 5y5y is anchored and real yields aren’t soft — gold has no second job."
+      : "Inflation is hot, but gold has no second job — real yields and the dollar aren’t paying.";
+  } else if (!goldFear && !goldDrain && !goldHotEasy && !goldRealSoft) {
     goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
+  const goldIn = goldFear || goldDrain || goldHotEasy || goldRealSoft;
+  const goldOut =
+    (realHigh && dolStrong) ||
+    (realHigh && R === "easing") ||
+    (I === "tight" && R === "easing" && T === "tight");
   const gold = instrument(
     "gold",
     "Gold",
-    goldFear || goldDrain || goldHotEasy,
-    I === "tight" && R === "easing" && T === "tight",
-    sentence(goldInParts, "Hot prices, fear, or a cash drain — gold’s usual jobs."),
-    "Cold inflation, risk-on, and high real funding — gold rarely leads that mix.",
+    goldIn && !goldOut,
+    goldOut && !goldIn,
+    sentence(goldInParts, "Fear, a cash drain, soft real yields, or hot prices with easy funding."),
+    sentence(goldOutParts, "High real yields and a rising dollar — gold rarely leads that mix."),
     goldMix
   );
   gold.margin = blendMargin(
     gold.stance,
     stanceMargin(
       gold.stance,
-      (goldFear ? 1 : 0) + (goldDrain ? 1 : 0) + (goldHotEasy ? 1 : 0),
-      I === "tight" && R === "easing" && T === "tight" ? 1 : 0,
-      3
+      (goldFear ? 1 : 0) + (goldDrain ? 1 : 0) + (goldHotEasy ? 1 : 0) + (goldRealSoft ? 1 : 0),
+      (realHigh ? 1 : 0) + (dolStrong ? 1 : 0),
+      4
     ),
     meanImpulse([-kImp, iImp])
   );
 
+  // Oil is live and causes CPI — do not grade it off the core-PCE Inflation light.
+  // Growth + the dollar (and the turn in WTI) are what actually price crude.
+  const wtiImp = hzImp(seriesOk(snap, "WTI"), horizon);
+  const oilInParts = [];
+  if (G === "easing") oilInParts.push("growth is firm");
+  if (!dolStrong) oilInParts.push("the dollar isn’t taxing dollar oil");
+  if (wtiImp.dir === "up") oilInParts.push("crude is firm this window");
+  const oilOutParts = [];
+  if (G === "tight") oilOutParts.push("growth is soft");
+  if (dolStrong) oilOutParts.push("the dollar is rising");
+  if (wtiImp.dir === "down") oilOutParts.push("crude is soft this window");
   const oil = instrument(
     "oil",
     "Oi",
-    I === "easing",
-    I === "tight",
-    "Inflation is Hot — oil usually gets paid in that mix.",
-    "Inflation is Cold — oil rarely leads a cooling price complex.",
-    "Oil follows the Inflation light; prices aren’t clearly Hot or Cold."
+    G === "easing" && !dolStrong,
+    G === "tight" || dolStrong,
+    sentence(oilInParts, "Firm growth without a dollar squeeze — oil usually gets paid."),
+    sentence(oilOutParts, "Soft growth or a rising dollar — oil rarely leads."),
+    "Oil wants firm growth and a cooperative dollar; only one side is helping."
   );
   oil.label = "Oil";
   oil.margin = blendMargin(
     oil.stance,
-    stanceMargin(oil.stance, I === "easing" ? 1 : 0, I === "tight" ? 1 : 0, 1),
-    iImp
+    stanceMargin(
+      oil.stance,
+      (G === "easing" ? 1 : 0) + (!dolStrong ? 1 : 0),
+      (G === "tight" ? 1 : 0) + (dolStrong ? 1 : 0),
+      2
+    ),
+    meanImpulse([gImp, wtiImp.score != null ? impulseUnit(wtiImp) : 0])
   );
   const copper = instrument(
     "copper",
@@ -480,29 +583,26 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     stanceMargin(copper.stance, G === "easing" ? 1 : 0, G === "tight" ? 1 : 0, 1),
     gImp
   );
-  const cmdtyIn = G === "easing" && I === "easing";
-  const cmdtyOut = G === "tight" || (I === "tight" && G !== "easing");
-  const cmdty = instrument(
-    "cmdty",
-    "Commodity",
-    cmdtyIn,
-    cmdtyOut,
-    "Firm activity and hot prices — the real-cycle complex usually gets the bid.",
-    "Soft growth or cold inflation — the real-cycle complex is out of favor.",
-    "Commodity is mixed; growth and inflation aren’t both pointing the same way."
-  );
-  cmdty.margin = blendMargin(
-    cmdty.stance,
-    stanceMargin(
-      cmdty.stance,
-      (G === "easing" ? 1 : 0) + (I === "easing" ? 1 : 0),
-      (G === "tight" ? 1 : 0) + (I === "tight" && G !== "easing" ? 1 : 0),
-      2
-    ),
-    meanImpulse([gImp, iImp])
-  );
-  // Parent stays Growth × Inflation. Oil and copper are the traded lines under it.
-  cmdty.splits = [oil, copper];
+  // Parent follows the traded lines: agree → that call; split → mixed.
+  let cmdtyStance = "mixed";
+  let cmdtyWhy = `Oil ${oil.stance}, copper ${copper.stance} — growth and the dollar aren’t the same trade as the industrial metal.`;
+  if (oil.stance === copper.stance) {
+    cmdtyStance = oil.stance;
+    cmdtyWhy =
+      cmdtyStance === "in"
+        ? "Oil and copper are both in — firm growth and a cooperative dollar."
+        : cmdtyStance === "out"
+          ? "Oil and copper are both out — soft growth or a rising dollar."
+          : "Oil and copper are both mixed.";
+  }
+  const cmdty = {
+    id: "cmdty",
+    name: "Commodity",
+    stance: cmdtyStance,
+    why: cmdtyWhy,
+    margin: clampMargin((oil.margin + copper.margin) / 2),
+    splits: [oil, copper],
+  };
 
   return {
     pair: { line: pairLine, why: pairWhy },
@@ -547,16 +647,22 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
 
   const hotStill = I === "easing" && Iimp !== "down";
   const coolingHot = I === "easing" && Iimp === "down";
-  const durationUp = hotStill || T === "tight" || (G === "easing" && I !== "tight" && Iimp !== "down");
+  const tpUnpaid = termPremiumUnpaid(snap);
+  const durationUp =
+    hotStill ||
+    T === "tight" ||
+    tpUnpaid ||
+    (G === "easing" && I !== "tight" && Iimp !== "down");
   const durationDown =
     I === "tight" ||
-    (coolingHot && T !== "tight") ||
+    (coolingHot && T !== "tight" && !tpUnpaid) ||
     (I === "tight" && T === "easing");
 
   const durationUpParts = [];
   if (hotStill) durationUpParts.push("inflation is still hot and not cooling this window");
   if (T === "tight") durationUpParts.push("funding is tight");
-  if (G === "easing" && I !== "tight" && Iimp !== "down" && !hotStill && T !== "tight") {
+  if (tpUnpaid) durationUpParts.push("term premium is compressed — duration is not paid");
+  if (G === "easing" && I !== "tight" && Iimp !== "down" && !hotStill && T !== "tight" && !tpUnpaid) {
     durationUpParts.push("firm growth is keeping a premium in the long end");
   }
 
@@ -584,6 +690,9 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     durationLine += " Real 10y yields are high — discount rates still bite.";
   } else if (realYImp.dir === "up" && durationDir !== "falling") {
     durationLine += " Real 10y yields are rising this window — discount rates still bite.";
+  }
+  if (tpUnpaid && !durationLine.includes("term premium")) {
+    durationLine += " Term premium is compressed — you are not paid for duration risk.";
   }
 
   let creditDir = "mixed";
@@ -712,15 +821,15 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
       confirm.push(
         "Copper is soft while commodities are still in — treat it as an output disagreement, not a vote."
       );
-    } else if (copperDir === "up") {
-      confirm.push("Copper is firm with Strong growth and Hot inflation — the real-cycle tape is confirming.");
+    } else     if (copperDir === "up") {
+      confirm.push("Copper is firm with Strong growth — the industrial tape is confirming.");
     }
     if (wtiDir === "down") {
       confirm.push(
         "Oil is soft while commodities are still in — treat it as an output disagreement, not a vote."
       );
     } else if (wtiDir === "up") {
-      confirm.push("Oil is firm with Strong growth and Hot inflation — the real-cycle tape is confirming.");
+      confirm.push("Oil is firm with Strong growth — the crude tape is confirming.");
     }
   } else if (cmdtyStance === "out") {
     if (copperDir === "up") {

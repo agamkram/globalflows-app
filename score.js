@@ -88,7 +88,11 @@ const KIND = {
   NET_LIQ: "none",
   CREDIT_IMPULSE: "none",
   DGS2: "pending_real",
-  DFEDTARU: "pending_real",
+  // Market TIPS real yields — the Rates light's primary real-rate voters.
+  // Trailing-core-PCE constructs (DGS2 only) stay as at most one voter; DFEDTARU
+  // was pinned and no longer votes the light.
+  DFII5: "tips_real",
+  DFII10: "tips_real",
   MORTGAGE30US: "mortgage",
   T10Y2Y: "curve",
   DTWEXBGS: "none",
@@ -199,10 +203,9 @@ function scoreKind(kind, value) {
     // The band stays two-sided for audit. The vote is one-way: see makeAnchor.
     case "move":
       return bandScore(value, 55, 100, 140, true);
-    // Deliberately left straddling zero. This voter sits at the ceiling on 45% of
-    // days since 2015, but that is a true description of a decade in which real
-    // policy was genuinely at its easiest, not a band that the series escaped —
-    // and 0.5% is a real economic line for a neutral real rate, not a fitted one.
+    // Market TIPS real yields (DFII5/DFII10). Same economic lines as the trailing
+    // real-rate construct: below 0 easy, around 0.5 neutral, above 2 genuinely tight.
+    case "tips_real":
     case "real_rate":
       return bandScore(value, -0.5, 0.5, 2.0, true);
     default:
@@ -266,8 +269,10 @@ function whyKind(kind, value) {
       return v > 100
         ? `MOVE ${fmt(v, 0)} — elevated, taxes the rates complex`
         : `MOVE ${fmt(v, 0)} — calm, so it doesn’t vote (only a spike taxes Rates)`;
+    case "tips_real":
+      return `TIPS real yield ${fmt(v, 2)}%`;
     case "real_rate":
-      return `real policy/short rate ${fmt(v, 2)}%`;
+      return `trailing real short rate ${fmt(v, 2)}%`;
     default:
       return "no level anchor — flow/impulse only";
   }
@@ -377,7 +382,9 @@ export function seriesFacts(points, spec) {
 export function applyRealRateAnchors(results) {
   const core = results.PCEPILFE?.status === "ok" ? results.PCEPILFE.latest : null;
   if (core == null || !Number.isFinite(core)) return;
-  for (const id of ["DFEDTARU", "DGS2", "EFFR"]) {
+  // At most one trailing-core-PCE construct. Market TIPS (DFII5/DFII10) vote the
+  // real-rate band directly; DFEDTARU was a pinned constant and no longer votes.
+  for (const id of ["DGS2"]) {
     const row = results[id];
     if (!row || row.status !== "ok" || row.latest == null) continue;
     const real = row.latest - core;

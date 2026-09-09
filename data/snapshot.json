@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T00:36:04.557Z",
+  "generatedAt": "2026-09-09T01:03:47.637Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -196,10 +196,10 @@
     "rates": {
       "id": "rates",
       "label": "Rates",
-      "state": "neutral",
-      "score": -0.21261111111111117,
-      "n": 5,
-      "nAnchor": 5,
+      "state": "tight",
+      "score": -0.7366666666666667,
+      "n": 6,
+      "nAnchor": 8,
       "words": {
         "easing": "Easy",
         "neutral": "Neutral",
@@ -208,22 +208,24 @@
       "members": [
         "DGS2",
         "T10Y2Y",
-        "DFEDTARU",
+        "DFII5",
+        "DFII10",
         "MORTGAGE30US",
         "G3_10Y"
       ],
       "impulseMembers": [
         "DGS2",
         "T10Y2Y",
+        "DFII5",
+        "DFII10",
         "MOVE",
-        "DFEDTARU",
         "MORTGAGE30US",
         "G3_10Y",
         "DTWEXBGS"
       ],
       "impulse": {
         "horizon": "1m",
-        "score": -0.48286140089418716,
+        "score": -0.2500000000000002,
         "dir": "down"
       }
     },
@@ -1492,57 +1494,36 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS2",
-      "latest": 4.34,
-      "asOf": "2026-09-03",
-      "n": 9175,
+      "latest": 4.37,
+      "asOf": "2026-09-04",
+      "n": 9176,
       "anchor": {
         "kind": "real_rate",
-        "score": -0.3305713306441144,
-        "why": "real policy/short rate 1.00% (nominal 4.34 − core PCE 3.3)",
+        "score": -0.35057133064411455,
+        "why": "trailing real short rate 1.03% (nominal 4.37 − core PCE 3.3)",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.13999999999999968,
+          "delta": 0.03000000000000025,
           "dir": "up",
-          "score": -1.5,
-          "prior": 4.2,
-          "priorDate": "2026-08-27"
+          "score": -0.3750000000000031,
+          "prior": 4.34,
+          "priorDate": "2026-08-28"
         },
         "2w": {
-          "delta": 0.14999999999999947,
+          "delta": 0.1299999999999999,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.19,
-          "priorDate": "2026-08-20"
+          "prior": 4.24,
+          "priorDate": "2026-08-21"
         },
         "1m": {
-          "delta": 0.13999999999999968,
+          "delta": 0.1900000000000004,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.2,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 0.29000000000000004,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 4.05,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": 0.77,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 3.57,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 0.73,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 3.61,
-          "priorDate": "2025-09-03"
+          "prior": 4.18,
+          "priorDate": "2026-08-05"
         }
       },
       "status": "ok",
@@ -1937,68 +1918,47 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": null,
+      "light": "rates",
       "impulseLight": null,
-      "weight": 1,
+      "weight": 2,
       "marketBucket": null,
       "order": null,
-      "note": "5-year TIPS real yield. Cost of real (inflation-adjusted) money for the medium term.",
+      "note": "5-year TIPS real yield — the market’s real funding rate. Votes the Rates light on the real-rate band; do not replace this with nominal minus trailing core PCE.",
       "sub": "TIPS inflation-adjusted",
       "search": "DFII5",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII5",
-      "latest": 2.15,
-      "asOf": "2026-09-03",
-      "n": 5923,
+      "latest": 2.17,
+      "asOf": "2026-09-04",
+      "n": 5924,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "tips_real",
+        "score": -1,
+        "why": "TIPS real yield 2.17%",
+        "votes": true
       },
       "impulse": {
         "1w": {
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": 0.1250000000000029,
+          "prior": 2.18,
+          "priorDate": "2026-08-28"
+        },
+        "2w": {
           "delta": 0.08000000000000007,
           "dir": "up",
           "score": -1.0000000000000009,
-          "prior": 2.07,
-          "priorDate": "2026-08-27"
-        },
-        "2w": {
-          "delta": 0.10000000000000009,
-          "dir": "up",
-          "score": -1.250000000000001,
-          "prior": 2.05,
-          "priorDate": "2026-08-20"
+          "prior": 2.09,
+          "priorDate": "2026-08-21"
         },
         "1m": {
-          "delta": 0.009999999999999787,
-          "dir": "flat",
-          "score": -0.12499999999999734,
-          "prior": 2.14,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 0.44999999999999996,
+          "delta": 0.020000000000000018,
           "dir": "up",
-          "score": -1.5,
-          "prior": 1.7,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": 0.94,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.21,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 0.9199999999999999,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.23,
-          "priorDate": "2025-09-03"
+          "score": -0.2500000000000002,
+          "prior": 2.15,
+          "priorDate": "2026-08-05"
         }
       },
       "status": "ok",
@@ -2013,68 +1973,47 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": null,
+      "light": "rates",
       "impulseLight": null,
-      "weight": 1,
+      "weight": 2,
       "marketBucket": null,
       "order": null,
-      "note": "10-year TIPS real yield. Higher real yields = tighter financial conditions for risk assets.",
+      "note": "10-year TIPS real yield — the discount rate risk assets actually face. Votes the Rates light on the real-rate band.",
       "sub": "TIPS inflation-adjusted",
       "search": "DFII10",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
-      "latest": 2.42,
-      "asOf": "2026-09-03",
-      "n": 5923,
+      "latest": 2.43,
+      "asOf": "2026-09-04",
+      "n": 5924,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "tips_real",
+        "score": -1,
+        "why": "TIPS real yield 2.43%",
+        "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.08000000000000007,
-          "dir": "up",
-          "score": -1.0000000000000009,
-          "prior": 2.34,
-          "priorDate": "2026-08-27"
+          "delta": 0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 2.42,
+          "priorDate": "2026-08-28"
         },
         "2w": {
-          "delta": 0.06999999999999984,
+          "delta": 0.03000000000000025,
           "dir": "up",
-          "score": -0.874999999999998,
-          "prior": 2.35,
-          "priorDate": "2026-08-20"
+          "score": -0.3750000000000031,
+          "prior": 2.4,
+          "priorDate": "2026-08-21"
         },
         "1m": {
           "delta": 0.020000000000000018,
           "dir": "up",
           "score": -0.2500000000000002,
-          "prior": 2.4,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 0.31000000000000005,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 2.11,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": 0.5999999999999999,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.82,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 0.5999999999999999,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.82,
-          "priorDate": "2025-09-03"
+          "prior": 2.41,
+          "priorDate": "2026-08-05"
         }
       },
       "status": "ok",
@@ -6397,25 +6336,25 @@
       "units": "%",
       "freq": "daily",
       "sign": -1,
-      "light": "rates",
+      "light": null,
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Top of the Fed's federal funds target range. Official policy rate ceiling.",
+      "note": "Top of the Fed's federal funds target range. Used to build SOFR_SPREAD; does not vote Rates — audit:bands flagged it pinned (~54%) as a near-constant after trailing-PCE deflation.",
       "sub": "Policy rate ceiling",
       "search": "DFEDTARU",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARU",
       "latest": 3.75,
-      "asOf": "2026-09-07",
-      "n": 6475,
+      "asOf": "2026-09-08",
+      "n": 6476,
       "anchor": {
-        "kind": "real_rate",
-        "score": 0.09414300403382825,
-        "why": "real policy/short rate 0.41% (nominal 3.75 − core PCE 3.3)",
-        "votes": true
+        "kind": "none",
+        "score": null,
+        "why": "no level anchor — flow/impulse only",
+        "votes": false
       },
       "impulse": {
         "1w": {
@@ -6423,42 +6362,21 @@
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-08-31"
+          "priorDate": "2026-09-01"
         },
         "2w": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-08-24"
+          "priorDate": "2026-08-25"
         },
         "1m": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-08-08"
-        },
-        "3m": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": 3.75,
-          "priorDate": "2026-06-08"
-        },
-        "6m": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": 3.75,
-          "priorDate": "2026-03-09"
-        },
-        "1y": {
-          "delta": -0.75,
-          "dir": "down",
-          "score": 1.5,
-          "prior": 4.5,
-          "priorDate": "2025-09-07"
+          "priorDate": "2026-08-09"
         }
       },
       "status": "ok",
@@ -6636,9 +6554,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP10",
-      "latest": 1.6015,
-      "asOf": "2026-08-28",
-      "n": 9151,
+      "latest": 1.6006,
+      "asOf": "2026-09-04",
+      "n": 9156,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6647,50 +6565,29 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.020500000000000185,
+          "delta": -0.0008999999999999009,
+          "dir": "flat",
+          "score": 0.011249999999998761,
+          "prior": 1.6015,
+          "priorDate": "2026-08-28"
+        },
+        "2w": {
+          "delta": -0.021400000000000086,
           "dir": "down",
-          "score": 0.2562500000000023,
+          "score": 0.26750000000000107,
           "prior": 1.622,
           "priorDate": "2026-08-21"
         },
-        "2w": {
-          "delta": 0.017099999999999893,
-          "dir": "flat",
-          "score": -0.21374999999999866,
-          "prior": 1.5844,
-          "priorDate": "2026-08-14"
-        },
         "1m": {
-          "delta": 0.07929999999999993,
+          "delta": 0.06899999999999995,
           "dir": "up",
-          "score": -0.9912499999999991,
-          "prior": 1.5222,
-          "priorDate": "2026-07-29"
-        },
-        "3m": {
-          "delta": 0.13949999999999996,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.462,
-          "priorDate": "2026-05-29"
-        },
-        "6m": {
-          "delta": 0.38959999999999995,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.2119,
-          "priorDate": "2026-02-27"
-        },
-        "1y": {
-          "delta": 0.2862,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 1.3153,
-          "priorDate": "2025-08-28"
+          "score": -0.8624999999999994,
+          "prior": 1.5316,
+          "priorDate": "2026-08-05"
         }
       },
       "status": "ok",
-      "staleDays": 11
+      "staleDays": 5
     },
     "THREEFFTP2": {
       "id": "THREEFFTP2",
@@ -11917,6 +11814,59 @@
       },
       "status": "ok"
     },
+    "SOFR_SPREAD": {
+      "id": "SOFR_SPREAD",
+      "name": "SOFR vs target top",
+      "layer": "liquidity",
+      "street": "liquidity",
+      "causal": "liquidity",
+      "units": "bp",
+      "freq": "daily",
+      "sign": -1,
+      "light": "liquidity",
+      "impulseLight": null,
+      "weight": 2,
+      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce — that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing.",
+      "sub": "Repo cost vs policy ceiling",
+      "search": "SOFR_SPREAD",
+      "freshness": "live",
+      "source": "derived (SOFR − fed funds target top)",
+      "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
+      "latest": -8.999999999999986,
+      "asOf": "2026-09-03",
+      "n": 2105,
+      "anchor": {
+        "kind": "sofr_spread",
+        "score": -0.10000000000000142,
+        "why": "SOFR -9bp vs the top of the target range — 0 is where repo broke in 2019",
+        "votes": true
+      },
+      "impulse": {
+        "1w": {
+          "delta": 2.0000000000000018,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -10.999999999999988,
+          "priorDate": "2026-08-27"
+        },
+        "2w": {
+          "delta": 3.000000000000025,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -12.00000000000001,
+          "priorDate": "2026-08-20"
+        },
+        "1m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": -8.999999999999986,
+          "priorDate": "2026-08-04"
+        }
+      },
+      "status": "ok",
+      "staleDays": 6
+    },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
       "name": "Stock–bond correlation",
@@ -12069,80 +12019,6 @@
         }
       },
       "status": "ok"
-    },
-    "SOFR_SPREAD": {
-      "id": "SOFR_SPREAD",
-      "name": "SOFR vs target top",
-      "layer": "liquidity",
-      "street": "liquidity",
-      "causal": "liquidity",
-      "units": "bp",
-      "freq": "daily",
-      "sign": -1,
-      "light": "liquidity",
-      "impulseLight": null,
-      "weight": 2,
-      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce — that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing.",
-      "sub": "Repo cost vs policy ceiling",
-      "search": "SOFR_SPREAD",
-      "freshness": "live",
-      "source": "derived (SOFR − fed funds target top)",
-      "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
-      "latest": -8.999999999999986,
-      "asOf": "2026-09-03",
-      "n": 2105,
-      "anchor": {
-        "kind": "sofr_spread",
-        "score": -0.10000000000000142,
-        "why": "SOFR -9bp vs the top of the target range — 0 is where repo broke in 2019",
-        "votes": true
-      },
-      "impulse": {
-        "1w": {
-          "delta": 2.0000000000000018,
-          "dir": "up",
-          "score": -1.5,
-          "prior": -10.999999999999988,
-          "priorDate": "2026-08-27"
-        },
-        "2w": {
-          "delta": 3.000000000000025,
-          "dir": "up",
-          "score": -1.5,
-          "prior": -12.00000000000001,
-          "priorDate": "2026-08-20"
-        },
-        "1m": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": -8.999999999999986,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 4.0000000000000036,
-          "dir": "up",
-          "score": -1.5,
-          "prior": -12.99999999999999,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": -8.999999999999986,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 2.000000000000046,
-          "dir": "up",
-          "score": -1.5,
-          "prior": -11.000000000000032,
-          "priorDate": "2025-09-03"
-        }
-      },
-      "status": "ok",
-      "staleDays": 5
     },
     "RESERVES_GDP": {
       "id": "RESERVES_GDP",
@@ -12590,10 +12466,6 @@
     }
   },
   "errors": [
-    {
-      "id": "SOFR_SPREAD",
-      "error": "no fed funds target history"
-    },
     {
       "id": "RESERVES_GDP",
       "error": "no nominal GDP level history"
