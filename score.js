@@ -239,7 +239,11 @@ function scoreKind(kind, value) {
     case "hy":
       return bandScore(value, 2.5, 4.0, 6.5, true);
     case "bbb":
-      return bandScore(value, 1.0, 1.5, 2.5, true);
+      // ICE BBB OAS. FRED only ships ~3y of cycle tights (roughly 0.9–1.6). The old
+      // long-run band (1.0 / 1.5 / 2.5) pinned almost every day at +1 if this voted.
+      // Keep the kind for audit; do not put BBB_OAS on the Risk light until stress
+      // episodes are in the download. Soft/mid/firm from the short sample.
+      return bandScore(value, 0.95, 1.15, 1.55, true);
     // Calibrated on the full 1986-2026 record: 1.45 is the 5th percentile, 2.10 the
     // median, and 3.30 the 95th - roughly where 2011 and 2016 topped out, with the
     // GFC (6.07) and COVID (4.31) beyond it. That pins on 8% of days over 40 years,

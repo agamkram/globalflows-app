@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261009";
+import { buildMeaning } from "./meaning.js?v=20261010";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261009";
+} from "./score.js?v=20261010";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -604,6 +604,7 @@ function analogFor(assetId, stance) {
   return {
     ...r,
     hz,
+    stance,
     lean,
     verdict,
     weak: a.closeness === "distant",
@@ -1177,6 +1178,7 @@ function childFavorLine(child, parentWhy) {
 function analogHtml(br) {
   if (!br) return "";
   const sign = br.median > 0 ? "+" : "";
+  const fell = Number.isFinite(br.up) ? Math.max(0, 100 - br.up) : null;
   const verdictWord = br.weak
     ? br.verdict === "coinflip"
       ? "Loose history, no lean"
@@ -1188,11 +1190,23 @@ function analogHtml(br) {
         : br.verdict === "coinflip"
           ? "History is a coin flip"
           : `History leans ${br.lean}`;
+  let rateLine = `after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time`;
+  if (br.stance === "out" && fell != null) {
+    rateLine = `this has happened ${br.n} times; ${escapeHtml(br.name)} fell in ${fell}% of them over ${br.hz}`;
+  } else if (br.stance === "in" && Number.isFinite(br.up)) {
+    rateLine = `this has happened ${br.n} times; ${escapeHtml(br.name)} rose in ${br.up}% of them over ${br.hz}`;
+  }
+  const vs =
+    Number.isFinite(br.baseUp) && br.stance !== "in" && br.stance !== "out"
+      ? ` vs ${br.baseUp}% normally`
+      : Number.isFinite(br.baseUp) && (br.stance === "in" || br.stance === "out")
+        ? ` (normally ${br.baseUp}% up; median ${sign}${br.median}%)`
+        : "";
+  const nBit =
+    br.stance === "in" || br.stance === "out" ? "" : ` (${br.n} days)`;
   return `<span class="rubric-base" data-verdict="${br.verdict}">
     <strong>${escapeHtml(verdictWord)}</strong>
-    <span class="muted"> — after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time${
-      Number.isFinite(br.baseUp) ? ` vs ${br.baseUp}% normally` : ""
-    } (${br.n} days).</span>
+    <span class="muted"> — ${rateLine}${vs}${nBit}.</span>
   </span>`;
 }
 

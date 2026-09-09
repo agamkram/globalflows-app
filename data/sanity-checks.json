@@ -1,0 +1,184 @@
+{
+  "generatedAt": "2026-09-09T01:30:29.647Z",
+  "note": "External sanity gates: a voter fails if its asOf is older than maxAgeDays for its release cadence, or if latest sits outside [min,max]. Ranges are history p0.5–p99.5 with pad; overrides win.",
+  "defaults": {
+    "daily": 12,
+    "weekly": 21,
+    "monthly": 75,
+    "quarterly": 180,
+    "unknown": 90
+  },
+  "series": {
+    "SOFR_SPREAD": {
+      "min": -41.336,
+      "max": 28.296,
+      "maxAgeDays": 10
+    },
+    "RESERVES_GDP": {
+      "min": -5.9789,
+      "max": 23.2423,
+      "maxAgeDays": 21
+    },
+    "NETLIQ_GDP": {
+      "min": -2.2341,
+      "max": 37.2014,
+      "maxAgeDays": 21
+    },
+    "DGS2": {
+      "min": -2.8135,
+      "max": 11.4835,
+      "maxAgeDays": 10
+    },
+    "T10Y2Y": {
+      "min": -2.1075,
+      "max": 4.0975,
+      "maxAgeDays": 10
+    },
+    "DFII5": {
+      "min": -3.4378,
+      "max": 4.3717,
+      "maxAgeDays": 10
+    },
+    "DFII10": {
+      "min": -2.417,
+      "max": 4.107,
+      "maxAgeDays": 10
+    },
+    "T5YIFR": {
+      "min": 0.47,
+      "max": 3.53,
+      "maxAgeDays": 10
+    },
+    "MOVE": {
+      "min": -15.7958,
+      "max": 267.2798,
+      "maxAgeDays": 10
+    },
+    "PAYEMS": {
+      "min": -1651.239,
+      "max": 2418.459,
+      "maxAgeDays": 75
+    },
+    "UNRATE": {
+      "min": 1,
+      "max": 13.4198,
+      "maxAgeDays": 75
+    },
+    "ICSA": {
+      "min": 50000,
+      "max": 2000000,
+      "maxAgeDays": 21
+    },
+    "JTSJOL": {
+      "min": -80.7243,
+      "max": 114.0011,
+      "maxAgeDays": 75
+    },
+    "DGORDER": {
+      "min": -62.0613,
+      "max": 61.2488,
+      "maxAgeDays": 75
+    },
+    "HOUST": {
+      "min": -67.756,
+      "max": 2725.276,
+      "maxAgeDays": 75
+    },
+    "PERMIT": {
+      "min": -43.4315,
+      "max": 2802.8615,
+      "maxAgeDays": 75
+    },
+    "CPILFESL": {
+      "min": -1.321,
+      "max": 8.4459,
+      "maxAgeDays": 75
+    },
+    "PCEPILFE": {
+      "min": -0.9785,
+      "max": 7.2751,
+      "maxAgeDays": 75
+    },
+    "GDPC1": {
+      "min": -9.4325,
+      "max": 12.1567,
+      "maxAgeDays": 180
+    },
+    "VIX": {
+      "min": 5,
+      "max": 73.5735,
+      "maxAgeDays": 10
+    },
+    "BAMLH0A0HYM2": {
+      "min": 0.3,
+      "max": 8,
+      "maxAgeDays": 10
+    },
+    "BAMLC0A0CM": {
+      "min": 0.5235,
+      "max": 1.5265,
+      "maxAgeDays": 10
+    },
+    "NFCI": {
+      "min": -2.3506,
+      "max": 3.9251,
+      "maxAgeDays": 21
+    },
+    "MORTGAGE30US": {
+      "min": 0.084,
+      "max": 12.936,
+      "maxAgeDays": 21
+    },
+    "EMPIRE_MFG": {
+      "min": -65.1329,
+      "max": 63.4789,
+      "maxAgeDays": 75
+    },
+    "PHILLY_MFG": {
+      "min": -73.6809,
+      "max": 73.8714,
+      "maxAgeDays": 75
+    },
+    "CFNAI": {
+      "min": -4.9197,
+      "max": 4.5425,
+      "maxAgeDays": 75
+    },
+    "WEI": {
+      "min": -13.2901,
+      "max": 15.8401,
+      "maxAgeDays": 21
+    },
+    "BAA10Y": {
+      "min": -0.2052,
+      "max": 8,
+      "maxAgeDays": 10
+    },
+    "BBB_OAS": {
+      "min": 0.4,
+      "max": 8,
+      "maxAgeDays": 10,
+      "note": "ICE BBB OAS. FRED only ships ~3y; the whole window sits at cycle tights near 1%. Not a stuck feed — do not put this on the Risk light until the sample covers a stress episode."
+    },
+    "HY_CCC_OAS": {
+      "min": 5.6211,
+      "max": 12.2701,
+      "maxAgeDays": 10
+    },
+    "GLOBAL_CB_YOY": {
+      "min": -32.6825,
+      "max": 69.8682,
+      "maxAgeDays": 21
+    },
+    "DOLLAR_YOY": {
+      "min": -20.4072,
+      "max": 26.9495,
+      "maxAgeDays": 12
+    },
+    "G3_10Y": {
+      "min": -1.8647,
+      "max": 6.1858,
+      "maxAgeDays": 10
+    }
+  }
+}

@@ -23,6 +23,8 @@ const SNAP = path.join(ROOT, "snapshot.json");
 const REGIME = path.join(ROOT, "data", "regime-today.json");
 const HIST = path.join(ROOT, "data", "history");
 const LENGTHS = path.join(ROOT, "data", "history-lengths.json");
+const CHECKS = path.join(ROOT, "data", "sanity-checks.json");
+const CATALOG = path.join(ROOT, "data", "catalog.json");
 const OUT = path.join(ROOT, "sanity.txt");
 
 const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
@@ -52,8 +54,24 @@ function kidsOf(it) {
   return it?.tenors || it?.splits || [];
 }
 
+function ageDays(asOf, today = new Date()) {
+  if (!asOf || typeof asOf !== "string") return null;
+  const t = Date.parse(asOf.slice(0, 10) + "T00:00:00Z");
+  if (!Number.isFinite(t)) return null;
+  const end = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Math.floor((end - t) / 86400000);
+}
+
 async function main() {
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
+  const catalog = JSON.parse(await fs.readFile(CATALOG, "utf8"));
+  const bySpec = Object.fromEntries((catalog.series || []).map((s) => [s.id, s]));
+  let checks = null;
+  try {
+    checks = JSON.parse(await fs.readFile(CHECKS, "utf8"));
+  } catch {
+    checks = null;
+  }
   let regime = null;
   try {
     regime = JSON.parse(await fs.readFile(REGIME, "utf8"));
@@ -260,12 +278,72 @@ async function main() {
     }
   }
 
+  // External gates — a stuck feed or absurd print must fail even when the bake
+  // still matches the recomputed math.
+  lines.push("");
+  lines.push("External checks (staleness + plausible range)");
+  if (!checks?.series) {
+    fails.push("sanity-checks.json missing — cannot gate staleness or ranges");
+    lines.push("  FAIL  sanity-checks.json missing");
+  } else {
+    const defaults = checks.defaults || {};
+    let checked = 0;
+    let staleN = 0;
+    let rangeN = 0;
+    const ids = Object.keys(checks.series).sort();
+    for (const id of ids) {
+      const gate = checks.series[id];
+      const s = snap.series?.[id];
+      const spec = bySpec[id] || {};
+      if (!s || s.status !== "ok") {
+        // BBB_OAS and other non-voters still must be present once catalogued.
+        if (spec.light || id === "BBB_OAS") {
+          fails.push(`${id}: missing or not ok in snapshot (external check)`);
+          lines.push(`  FAIL  ${id} missing from snapshot`);
+        }
+        continue;
+      }
+      checked++;
+      const freq = spec.freq || "unknown";
+      const maxAge =
+        gate.maxAgeDays ?? defaults[freq] ?? defaults.unknown ?? 90;
+      const age = ageDays(s.asOf);
+      if (age != null && age > maxAge) {
+        staleN++;
+        fails.push(
+          `${id}: stale asOf ${s.asOf || "—"} (${age}d > ${maxAge}d ${freq})`
+        );
+      }
+      const v = Number(s.latest);
+      if (
+        Number.isFinite(v) &&
+        Number.isFinite(gate.min) &&
+        Number.isFinite(gate.max) &&
+        (v < gate.min || v > gate.max)
+      ) {
+        rangeN++;
+        fails.push(
+          `${id}: latest ${v} outside plausible [${gate.min}, ${gate.max}]`
+        );
+      }
+    }
+    if (!staleN && !rangeN) {
+      lines.push(`  ok  ${checked} series within age and range gates`);
+    } else {
+      lines.push(
+        `  FAIL  ${staleN} stale · ${rangeN} out of range (${checked} checked)`
+      );
+    }
+  }
+
   lines.push("");
   if (fails.length) {
     lines.push("FAIL");
     for (const f of fails) lines.push(`  ${f}`);
   } else {
-    lines.push("ok — all 11 boxes lock (5 lights + 6 asset classes); history lengths hold.");
+    lines.push(
+      "ok — all 11 boxes lock (5 lights + 6 asset classes); history lengths hold; external gates clear."
+    );
   }
   await fs.writeFile(OUT, lines.join("\n") + "\n");
   console.log(lines.join("\n"));

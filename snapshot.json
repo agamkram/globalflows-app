@@ -12352,7 +12352,7 @@
       "layer": "liquidity",
       "street": "liquidity",
       "causal": "liquidity",
-      "units": "% chg",
+      "units": "% YoY",
       "freq": "daily",
       "sign": -1,
       "light": "liquidity",
@@ -12364,12 +12364,12 @@
       "freshness": "live",
       "source": "derived (broad dollar, 12-month change)",
       "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
-      "latest": -1.256948515501895,
+      "latest": -1.256948515501899,
       "asOf": "2026-08-28",
       "n": 4926,
       "anchor": {
         "kind": "dollar_yoy",
-        "score": 0.25077205727798835,
+        "score": 0.2507720572779887,
         "why": "broad dollar -1.3% over 12m — a rising dollar tightens every borrower who owes in it",
         "votes": true
       },
