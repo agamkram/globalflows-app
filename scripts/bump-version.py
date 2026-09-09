@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bump the visible asset marker everywhere at once.
+"""Bump the asset cache-bust query everywhere at once.
 
 Usage:
     scripts/bump-version.py          # next version (11 -> 12)
@@ -20,7 +20,6 @@ SPOTS = {
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
-    "index build-mark": (INDEX, r'(class="build-mark">v)(\d+)', r"\g<1>{n}"),
 }
 
 
