@@ -60,6 +60,8 @@ function normalCdf(z) {
 }
 const ONEWAY_MIN = 0.08; // a colour reached on fewer days than this is not a call
 const SKEW_MAX = 3; // green:red (or red:green) beyond this describes an era
+/** A pinned valuation centre this one-sided has stopped separating days. */
+const VAL_ONESIDE_MIN = 0.1;
 const CENTRE_SPAN_MIN = 0.8; // a valuation centre must span this much of the replay
 const QUIET_SD_FRAC = 0.75; // flag light sd more than ~25% below the median light
 const OUT_SD_TOL = 0.05; // calibrated output sds must match — else ±0.45 is a different percentile
@@ -383,9 +385,40 @@ async function auditValCenters(problems, fails) {
           `to a long-run typical the way HY is`
       );
     }
+    // Does the term this centre produces actually vary, or has it been saying
+    // the same thing for years? The band audit has always asked this of voters
+    // and never of valuation, which is the other half of every asset call.
+    //
+    // The answer only means something for a centre pinned from outside. An
+    // archive-median centre is the median of the very window it is applied to,
+    // so it is forced to land near 50/50 and its balance is arithmetic, not
+    // evidence — worth stating plainly, because a row of 50/50s reads like six
+    // passing checks when five of them cannot fail. It also means those five
+    // terms can never report that a whole era was expensive: the centre
+    // absorbs the era.
+    const scale = Number(expect.scale) || 1;
+    const z = use
+      .map((p) => (p.value - Number(expect.median)) / scale)
+      .map((v) => Math.max(-1, Math.min(1, v)));
+    const posShare = z.filter((v) => v > 0).length / z.length;
+    const balance =
+      source === "archive-median"
+        ? "50/50 by construction"
+        : `${(100 * posShare).toFixed(0)}% cheap / ${(100 * (1 - posShare)).toFixed(0)}% rich`;
+    if (source !== "archive-median" && Math.min(posShare, 1 - posShare) < VAL_ONESIDE_MIN) {
+      // Not a failure. A pinned centre is meant to outlive its download window,
+      // and HY genuinely has not paid since 2023 — a term that says so for three
+      // straight years is correct, not stuck. It is listed so that nobody has to
+      // rediscover that this half of the credit call is currently a near-constant.
+      problems.push(
+        `val/${id}: term is ${balance} against a pinned centre of ${expect.median} — ` +
+          `true while the regime holds, but it is not distinguishing days right now`
+      );
+    }
     console.log(
       `  ${pad(id, 16)} stored ${Number(expect.median).toFixed(4)}  archive ${mid.toFixed(4)}` +
         `  scale ${expect.scale}  ${spanYears.toFixed(1)}y span, n=${vals.length}  ${source}` +
+        `  ${balance}` +
         (flags.length ? `   <-- ${flags.join(" ")}` : "")
     );
   }
