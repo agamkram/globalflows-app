@@ -21,6 +21,7 @@ import {
   attachImpulse,
   DEFAULT_IMPULSE,
 } from "../score.js";
+import { loadLightDist } from "./load-light-dist.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -1361,9 +1362,17 @@ async function main() {
     if (!results[id]) results[id] = row;
   }
 
+  let lightDist = null;
+  try {
+    lightDist = await loadLightDist();
+  } catch (e) {
+    console.log(`  light-dist… missing (${e.message}) — lights use uncalibrated raw until calibrate:lights`);
+  }
+
   const lights = buildLights({
     series: results,
     lightsMeta: catalog.lights,
+    lightDist,
   });
   attachImpulse(lights, { series: results }, DEFAULT_IMPULSE);
 
@@ -1466,6 +1475,7 @@ async function main() {
     street: catalog.street || catalog.layers,
     causal: catalog.causal || null,
     lightsMeta: catalog.lights,
+    lightDist,
     lights,
     disagreements,
     series: results,

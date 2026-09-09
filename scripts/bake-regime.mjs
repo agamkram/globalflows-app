@@ -18,6 +18,7 @@ import {
   aggregateVotes,
   DEFAULT_IMPULSE,
 } from "../score.js";
+import { loadLightDist } from "./load-light-dist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
@@ -138,7 +139,17 @@ function story(lights) {
 }
 
 async function main() {
+  await loadLightDist().catch(() => null);
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
+  if (!snap.lightDist) {
+    try {
+      snap.lightDist = JSON.parse(
+        await fs.readFile(path.join(ROOT, "data", "light-dist.json"), "utf8")
+      );
+    } catch {
+      /* optional */
+    }
+  }
   const fails = [];
   const rebuilt = buildLights(snap);
   attachImpulse(rebuilt, snap, DEFAULT_IMPULSE);

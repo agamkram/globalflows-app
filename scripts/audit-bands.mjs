@@ -85,7 +85,7 @@ function asof(pts, date) {
   return pts[lo];
 }
 
-async function auditLightComposites(catalog, coreAt, problems) {
+async function auditLightComposites(catalog, coreAt, problems, fails) {
   let hist;
   try {
     hist = JSON.parse(await fs.readFile(REGIME_HIST, "utf8"));
@@ -99,17 +99,52 @@ async function auditLightComposites(catalog, coreAt, problems) {
     return;
   }
 
-  console.log(`LIGHT COMPOSITES — calibrated scores from ${LIGHT_SINCE} (${rows.length} days)\n`);
+  let stored = null;
+  try {
+    stored = JSON.parse(await fs.readFile(path.join(ROOT, "data", "light-dist.json"), "utf8"));
+  } catch {
+    fails.push("light-dist.json missing — run npm run calibrate:lights");
+  }
 
-  // Quietness is judged on the raw (pre-calibrate) archive — after C3 every
-  // light’s calibrated sd matches by construction.
-  const RAW_SD = {
-    liquidity: 0.6015,
-    rates: 0.5627,
-    growth: 0.445,
-    inflation: 0.4707,
-    risk: 0.5307,
-  };
+  const withRaw = rows.filter((r) => Array.isArray(r.raw) && r.raw.length === LIGHT_IDS.length);
+  console.log(
+    `LIGHT COMPOSITES — calibrated scores from ${LIGHT_SINCE} (${rows.length} days` +
+      (withRaw.length ? `; ${withRaw.length} with raw` : "; no raw — rebake for drift check") +
+      ")\n"
+  );
+
+  // Drift check: archive raw mean/sd vs stored LIGHT_DIST (ingest freeze for lights).
+  const MEAN_TOL = 0.03;
+  const SD_TOL = 0.03;
+  if (stored?.lights && withRaw.length >= 252) {
+    for (let i = 0; i < LIGHT_IDS.length; i++) {
+      const lid = LIGHT_IDS[i];
+      const vals = withRaw.map((r) => r.raw[i]).filter(Number.isFinite);
+      const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const sd = stdev(vals);
+      const expect = stored.lights[lid];
+      if (!expect) continue;
+      const flags = [];
+      if (Math.abs(mean - expect.mean) > MEAN_TOL) {
+        flags.push(`mean ${mean.toFixed(4)} vs stored ${expect.mean} (tol ${MEAN_TOL})`);
+      }
+      if (Math.abs(sd - expect.sd) > SD_TOL) {
+        flags.push(`sd ${sd.toFixed(4)} vs stored ${expect.sd} (tol ${SD_TOL})`);
+      }
+      if (flags.length) {
+        fails.push(`${lid} LIGHT_DIST drift: ${flags.join("; ")} — run calibrate:lights`);
+      }
+    }
+  } else if (stored && withRaw.length < 252) {
+    fails.push(
+      "light composites: archive has no row.raw — rebake history so drift vs LIGHT_DIST can be checked"
+    );
+  }
+
+  // Quietness is judged on the stored raw centres — after C3 calibrated sds match.
+  const RAW_SD = Object.fromEntries(
+    LIGHT_IDS.map((id) => [id, stored?.lights?.[id]?.sd ?? 0.5])
+  );
   const rawSds = LIGHT_IDS.map((id) => RAW_SD[id]).sort((a, b) => a - b);
   const medianRawSd = rawSds[Math.floor(rawSds.length / 2)];
 
@@ -220,6 +255,7 @@ async function main() {
   };
 
   const problems = [];
+  const fails = [];
   console.log(`Band audit — scores computed from ${SINCE}\n`);
 
   for (const lid of LIGHT_IDS) {
@@ -305,14 +341,21 @@ async function main() {
     console.log("");
   }
 
-  await auditLightComposites(catalog, coreAt, problems);
+  await auditLightComposites(catalog, coreAt, problems, fails);
 
-  if (!problems.length) {
+  if (fails.length) {
+    console.log(`FAIL — ${fails.length} light-dist problem(s):`);
+    for (const f of fails) console.log(`  - ${f}`);
+  }
+  if (!problems.length && !fails.length) {
     console.log("No band problems found.");
     return;
   }
-  console.log(`${problems.length} thing(s) to look at:`);
-  for (const p of problems) console.log(`  - ${p}`);
+  if (problems.length) {
+    console.log(`${problems.length} thing(s) to look at:`);
+    for (const p of problems) console.log(`  - ${p}`);
+  }
+  if (fails.length) process.exit(1);
 }
 
 main().catch((e) => {

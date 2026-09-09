@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261013";
+import { buildMeaning } from "./meaning.js?v=20261014";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261013";
+} from "./score.js?v=20261014";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -106,6 +106,9 @@ function impulseOf(s, h = statHorizon) {
 
 function viewOf(snap) {
   if (!snap) return null;
+  if (snap.lightDist) {
+    // score.js setLightDist via buildLights
+  }
   const lights = buildLights(snap);
   attachImpulse(lights, snap, statHorizon);
   return {

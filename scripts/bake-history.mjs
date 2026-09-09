@@ -14,7 +14,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS } from "../score.js";
+import { makeAnchor, applyRealRateAnchors, buildLights, LIGHT_IDS, fitLightDist, calibrateLightScore, lightStateFromScore } from "../score.js";
+import { loadLightDist } from "./load-light-dist.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -401,7 +402,39 @@ async function main() {
   const assetCursors = {};
   const fundingCursor = { i: 0 };
   const rows = [];
+  /** Expanding raw composites — no look-ahead into the day's own future. */
+  const rawAccum = Object.fromEntries(LIGHT_IDS.map((id) => [id, []]));
+  /** Running mean/M2 for O(1) expanding fit (Welford). */
+  const run = Object.fromEntries(
+    LIGHT_IDS.map((id) => [id, { n: 0, mean: 0, m2: 0 }])
+  );
+  const EXPAND_MIN = 252; // ~1y trading days before standardization kicks in
+  let liveDist = null;
+  try {
+    liveDist = await loadLightDist();
+  } catch {
+    /* live compare optional */
+  }
 
+  function pushRunning(lid, x) {
+    const s = run[lid];
+    s.n += 1;
+    const d = x - s.mean;
+    s.mean += d / s.n;
+    s.m2 += d * (x - s.mean);
+  }
+  function expandDistNow() {
+    const lights = {};
+    const sds = [];
+    for (const id of LIGHT_IDS) {
+      const s = run[id];
+      const sd = s.n > 1 ? Math.sqrt(s.m2 / s.n) : 1;
+      lights[id] = { mean: s.mean, sd: sd > 1e-9 ? sd : 1 };
+      sds.push(lights[id].sd);
+    }
+    sds.sort((a, b) => a - b);
+    return { lights, refSd: sds[Math.floor(sds.length / 2)] || 0.53 };
+  }
   for (const date of grid) {
     const series = {};
     for (const spec of voters) {
@@ -464,12 +497,28 @@ async function main() {
       applyRealRateAnchors(series);
     }
 
-    const lights = buildLights(
+    // Raw composites first — expanding-window calib below (no look-ahead).
+    const rawLights = buildLights(
       { series, lightsMeta: catalog.lights },
-      Date.parse(date + "T12:00:00Z")
+      Date.parse(date + "T12:00:00Z"),
+      { calibrate: false }
     );
-    const scores = LIGHT_IDS.map((id) => lights[id]?.score);
-    if (scores.some((s) => s == null || !Number.isFinite(s))) continue;
+    const raw = LIGHT_IDS.map((id) => rawLights[id]?.score);
+    if (raw.some((s) => s == null || !Number.isFinite(s))) continue;
+
+    LIGHT_IDS.forEach((id, i) => {
+      rawAccum[id].push(raw[i]);
+      pushRunning(id, raw[i]);
+    });
+    const nSoFar = run[LIGHT_IDS[0]].n;
+    let scores;
+    if (nSoFar >= EXPAND_MIN) {
+      const expandDist = expandDistNow();
+      scores = LIGHT_IDS.map((id, i) => calibrateLightScore(id, raw[i], expandDist));
+    } else {
+      scores = raw;
+    }
+    const states = scores.map((sc) => lightStateFromScore(sc).state);
 
     const prices = {};
     for (const a of ASSETS) {
@@ -483,9 +532,27 @@ async function main() {
     rows.push({
       date,
       s: scores.map((v) => Number(v.toFixed(4))),
-      st: LIGHT_IDS.map((id) => lights[id].state),
+      raw: raw.map((v) => Number(v.toFixed(4))),
+      st: states,
       px: prices,
     });
+  }
+
+  const expandFinal = fitLightDist(rawAccum);
+  if (liveDist?.lights) {
+    console.log("  light calib — expanding (archive) vs full-sample (live):");
+    for (const id of LIGHT_IDS) {
+      const e = expandFinal.lights[id];
+      const f = liveDist.lights[id];
+      if (!f) continue;
+      const dMean = e.mean - f.mean;
+      const dSd = e.sd - f.sd;
+      if (Math.abs(dMean) > 0.02 || Math.abs(dSd) > 0.02) {
+        console.log(
+          `    ${id}: expand μ=${e.mean} σ=${e.sd}  live μ=${f.mean} σ=${f.sd}  Δμ=${dMean.toFixed(3)} Δσ=${dSd.toFixed(3)}`
+        );
+      }
+    }
   }
 
   const idxOf = new Map(rows.map((r, i) => [r.date, i]));
@@ -540,7 +607,7 @@ async function main() {
       crypto:
         "Bitcoin forwards start 2014-09-17. Crypto base rates are a thin post-2014 sample — do not read them beside multi-decade Treasury or equity rates as equals.",
     },
-    rows: rows.map((r) => ({ date: r.date, s: r.s, st: r.st, fwd: r.fwd })),
+    rows: rows.map((r) => ({ date: r.date, s: r.s, raw: r.raw, st: r.st, fwd: r.fwd })),
   };
 
   const dest = path.join(ROOT, "data", "regime-history.json");

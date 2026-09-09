@@ -202,11 +202,25 @@ async function main() {
 
   // One pass: stamp each row with the six calls.
   const labeled = [];
+  const valCover = {
+    EQUITY_ERP: { first: null, n: 0 },
+    SPX_EY: { first: null, n: 0 },
+    DFII10: { first: null, n: 0 },
+    erpFallback: 0,
+  };
   for (const row of hist.rows) {
+    const series = supportSnapAsOf(seriesPts, cursors, row.date);
+    for (const id of ["EQUITY_ERP", "SPX_EY", "DFII10"]) {
+      if (series[id]) {
+        valCover[id].n++;
+        if (!valCover[id].first) valCover[id].first = series[id].asOf;
+      }
+    }
+    if (!series.EQUITY_ERP && (series.SPX_EY || series.DFII10)) valCover.erpFallback++;
     const meaning = buildMeaning(
       {
         lights: lightsFromRow(row),
-        series: supportSnapAsOf(seriesPts, cursors, row.date),
+        series,
       },
       "1m"
     );
@@ -226,8 +240,17 @@ async function main() {
     `fail when: in-favor median < out-favor median (${PRIMARY_HZ}); any stance n < ${MIN_STANCE_N}; mixed share > ${Math.round(MAX_MIXED_SHARE * 100)}%`
   );
   console.log(
-    `warn (not fail) when the window is short (${[...SOFT_WINDOWS].join(", ")}, or <${SOFT_MIN_DAYS} days) or returns are one-way (≥${Math.round(ONE_WAY_UP * 100)}% up)\n`
+    `warn (not fail) when the window is short (${[...SOFT_WINDOWS].join(", ")}, or <${SOFT_MIN_DAYS} days) or returns are one-way (≥${Math.round(ONE_WAY_UP * 100)}% up)`
   );
+  const nRows = hist.rows?.length || 1;
+  console.log(
+    `valuation live: EQUITY_ERP ${valCover.EQUITY_ERP.n}/${nRows} (from ${valCover.EQUITY_ERP.first || "—"})` +
+      `  SPX_EY ${valCover.SPX_EY.n}/${nRows}  DFII10 ${valCover.DFII10.n}/${nRows}` +
+      (valCover.erpFallback
+        ? `  erp-fallback days ${valCover.erpFallback}`
+        : "  erp-fallback days 0")
+  );
+  console.log("");
 
   for (const win of WINDOWS) {
     console.log(`══ ${win.label} ══`);

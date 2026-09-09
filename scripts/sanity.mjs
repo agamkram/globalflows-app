@@ -17,6 +17,7 @@ import {
   DEFAULT_IMPULSE,
 } from "../score.js";
 import { buildMeaning } from "../meaning.js";
+import { loadLightDist } from "./load-light-dist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
@@ -63,7 +64,17 @@ function ageDays(asOf, today = new Date()) {
 }
 
 async function main() {
+  await loadLightDist().catch(() => null);
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
+  if (!snap.lightDist) {
+    try {
+      snap.lightDist = JSON.parse(
+        await fs.readFile(path.join(ROOT, "data", "light-dist.json"), "utf8")
+      );
+    } catch {
+      /* optional until calibrate:lights */
+    }
+  }
   const catalog = JSON.parse(await fs.readFile(CATALOG, "utf8"));
   const bySpec = Object.fromEntries((catalog.series || []).map((s) => [s.id, s]));
   let checks = null;
