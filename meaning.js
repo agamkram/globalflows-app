@@ -349,8 +349,14 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     if (t30.stance === "in" && !t30.why.includes("duration is paid")) t30.why += tip;
   }
   const tenorSet = new Set([t5.stance, t10.stance, t30.stance]);
-  // Parent leans on 10s/30s — a taxed front end should not veto a paid long end.
-  const ustAvgNet = 0.2 * t5Net + 0.4 * t10Net + 0.4 * t30Net;
+  // Parent is the long end. Carrying the 5-year at even a fifth of the weight
+  // did not soften a taxed front end, it vetoed a paid long end: whenever Rates
+  // is tight the 5-year net pins at −1, which lifts the bar on the 10s and 30s
+  // from the 0.35 a tenor needs on its own to 0.69 each. The strip could show
+  // Treasuries mixed with both long tenors in favor, and the parent went the
+  // whole of 2021-2026 without one in-favor day. The front end is the Rates
+  // light's job — it is reported here, not voted twice.
+  const ustAvgNet = 0.5 * t10Net + 0.5 * t30Net;
   const ustStance = netCall(ustAvgNet, 0.35, -0.35);
   let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
   if (tenorSet.size === 1 && ustStance === t10.stance) {
