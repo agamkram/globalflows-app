@@ -1,6 +1,6 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-09T01:33:14.815Z",
+  "generatedAt": "2026-09-09T01:45:35.443Z",
   "ingestAt": "2026-09-09T01:03:47.637Z",
   "verdict": "SPOT ON",
   "fails": [],
@@ -60,8 +60,8 @@
           "id": "credit",
           "name": "Credit",
           "stance": "mixed",
-          "why": "Investment grade and high yield are both mixed.",
-          "margin": 0.13309459904540089,
+          "why": "Investment grade mixed, high yield in — duration and cash-flow aren’t the same trade.",
+          "margin": 0.14036655219778146,
           "splits": [
             {
               "id": "ig",
@@ -75,11 +75,11 @@
             {
               "id": "hy",
               "name": "HY",
-              "stance": "mixed",
-              "why": "High yield needs both growth and calm fear; only one side is helping.",
-              "net": 0.29900065066138065,
+              "stance": "in",
+              "why": "Growth and risk appetite still say coupons get paid.",
+              "net": 0.3192005205291045,
               "label": "High yield",
-              "margin": 0.2758707885774961
+              "margin": 0.29041469488225724
             }
           ]
         },
@@ -88,26 +88,26 @@
           "name": "Equities",
           "stance": "mixed",
           "why": "Growth isn’t a clean overweight, and real 10y yields already tax the multiple.",
-          "net": 0.14900065066138046,
-          "margin": 0.19233261529481363,
+          "net": -0.12219856854496267,
+          "margin": -0.002930822533753416,
           "splits": [
             {
               "id": "cyc",
               "name": "Cy",
-              "stance": "in",
-              "why": "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
-              "net": 0.45000000000000007,
+              "stance": "mixed",
+              "why": "Cyclicals want Strong growth and calm fear; only one side is helping.",
+              "net": 0.19999999999999998,
               "label": "Cyclicals",
-              "margin": 0.4090521468186197
+              "margin": 0.22905214681861968
             },
             {
               "id": "def",
               "name": "Df",
               "stance": "out",
-              "why": "Strong growth and Risk-on — defensives usually lag that mix.",
-              "net": -0.5,
+              "why": "Strong growth and calm fear — defensives usually lag that mix.",
+              "net": -0.55,
               "label": "Defensives",
-              "margin": -0.4450521468186197
+              "margin": -0.48105214681861974
             }
           ]
         },
@@ -115,17 +115,17 @@
           "id": "crypto",
           "name": "Crypto",
           "stance": "mixed",
-          "why": "Crypto wants easy plumbing and calm fear; only one side is helping.",
-          "net": -0.161598958941791,
-          "margin": -0.10378872797659532
+          "why": "Crypto wants easy plumbing; fear alone is a late signal.",
+          "net": -0.3019986986772387,
+          "margin": -0.20487654058611768
         },
         {
           "id": "gold",
           "name": "Gold",
-          "stance": "out",
-          "why": "Real 10y yields are high.",
-          "net": -0.5,
-          "margin": -0.3916872516271369
+          "stance": "mixed",
+          "why": "Real 10y yields are high, but there’s no crisis bid — gold stays mixed rather than a clean avoid.",
+          "net": 0,
+          "margin": -0.031687251627136905
         },
         {
           "id": "cmdty",

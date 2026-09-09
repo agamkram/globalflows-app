@@ -348,32 +348,35 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     if (named.length) hyOutParts.push(...named);
     else hyOutParts.push("credit risk is rising");
   }
-  if (tightW(rSc) > 0.55) hyOutParts.push("fear is expensive");
-  if (tightW(gSc) > 0.55) hyOutParts.push("growth is soft");
-  if (tightW(lSc) > 0.55) hyOutParts.push("cash is draining");
-  if (hyTights) hyOutParts.push("spreads are at cycle tights — you are not paid");
-  // Symmetric net: ease and stress have matching weights (no OR pile-on).
+  // Soft growth / drain / tights only take HY out while fear is still calm —
+  // once fear is expensive the bounce is often already the trade.
+  if (tightW(gSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("growth is soft while fear is still cheap");
+  if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("cash is draining while fear is still cheap");
+  if (hyTights && easeW(rSc) > 0.4) hyOutParts.push("spreads are at cycle tights — you are not paid");
+  if (tightW(rSc) > 0.55) hyOutParts.push("fear is already expensive — the easy out call is late");
+  const calm = easeW(rSc);
+  // Credit “out” only while fear is still calm — risk-off outs are bounce days.
   const hyNet =
-    (creditDir === "falling" ? 0.4 : creditDir === "rising" ? -0.4 : 0) +
-    0.25 * easeW(lSc) -
-    0.25 * tightW(lSc) +
-    0.25 * easeW(rSc) -
-    0.25 * tightW(rSc) +
-    0.2 * easeW(gSc) -
-    0.2 * tightW(gSc) -
-    (hyTights ? 0.45 : 0);
+    (creditDir === "falling" ? 0.55 : 0) -
+    (creditDir === "rising" ? 0.4 * Math.max(calm, 0.35) : 0) +
+    0.35 * easeW(gSc) -
+    0.5 * tightW(gSc) * calm -
+    0.2 * tightW(lSc) * calm -
+    (hyTights ? 0.5 * calm : 0);
   const hy = instrumentFromNet(
     "hy",
     "HY",
     hyNet,
     "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
-    "High yield needs both growth and calm fear; only one side is helping."
+    "High yield needs both growth and calm fear; only one side is helping.",
+    0.28,
+    -0.28
   );
   hy.label = "High yield";
   hy.margin = blendMargin(hy.stance, hy.net, meanImpulse([gImp, kImp, hyImp]));
 
-  let creditStance = netCall((ig.net + hy.net) / 2, 0.35, -0.35);
+  let creditStance = netCall((ig.net + hy.net) / 2, 0.28, -0.28);
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
@@ -401,32 +404,52 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   };
 
   const stocksOutParts = [];
-  if (tightW(gSc) > 0.55) stocksOutParts.push("growth is soft");
-  if (tightW(rSc) > 0.55) stocksOutParts.push("fear is in charge");
-  if (tightW(lSc) > 0.55 && easeW(gSc) < 0.45) stocksOutParts.push("cash is draining");
-  if (realHigh) stocksOutParts.push("real 10y yields are high — equities are not cheap on the discount rate");
+  // Equities “out” is soft growth (or a cash drain) while fear is still cheap —
+  // the archive’s risk-off “out” days are mostly already-priced and then bounce.
+  if (tightW(gSc) > 0.55 && easeW(rSc) > 0.4) {
+    stocksOutParts.push("growth is soft while fear is still cheap");
+  }
+  if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4 && easeW(gSc) < 0.45) {
+    stocksOutParts.push("cash is draining while fear is still cheap");
+  }
+  if (realHigh && easeW(rSc) > 0.4) {
+    stocksOutParts.push("real 10y yields are high — equities are not cheap on the discount rate");
+  }
+  if (tightW(rSc) > 0.55) {
+    stocksOutParts.push("fear is already expensive — a clean underweight is late");
+  }
+  const calmRisk = easeW(rSc);
+  // Soft growth alone is not enough for “out” — that sample still bounced.
+  // Out needs soft growth (or a drain) while fear is calm AND either high real
+  // yields or draining cash are confirming the multiple is taxed.
+  const stocksTax = Math.max(realHigh ? 1 : 0, tightW(lSc));
   const stocksNet =
-    0.35 * easeW(gSc) -
-    0.35 * tightW(gSc) +
-    0.3 * easeW(rSc) -
-    0.3 * tightW(rSc) +
-    0.25 * easeW(lSc) -
-    0.25 * tightW(lSc) -
-    (realHigh ? 0.4 : 0);
+    0.55 * easeW(gSc) -
+    0.35 * tightW(gSc) * calmRisk -
+    0.75 * tightW(gSc) * calmRisk * stocksTax -
+    0.55 * tightW(lSc) * calmRisk -
+    (realHigh ? 0.55 * calmRisk : 0) +
+    0.1 * calmRisk;
   const cycNet =
-    0.45 * easeW(gSc) - 0.45 * tightW(gSc) + 0.35 * easeW(rSc) - 0.4 * tightW(rSc) - (realHigh ? 0.35 : 0);
+    0.6 * easeW(gSc) -
+    0.35 * tightW(gSc) * calmRisk -
+    0.75 * tightW(gSc) * calmRisk * stocksTax -
+    (realHigh ? 0.5 * calmRisk : 0) +
+    0.1 * calmRisk;
   const defNet =
-    0.45 * tightW(gSc) + 0.45 * tightW(rSc) - 0.5 * easeW(gSc) * easeW(rSc);
+    0.5 * tightW(gSc) * calmRisk * Math.max(stocksTax, 0.5) +
+    0.15 * tightW(rSc) -
+    0.55 * easeW(gSc) * calmRisk;
   const cyc = instrumentFromNet(
     "cyc",
     "Cy",
     cycNet,
     "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
-    tightW(gSc) > 0.55
-      ? "Growth is soft — cyclicals are the first equity to get hurt."
+    tightW(gSc) > 0.55 && easeW(rSc) > 0.4
+      ? "Growth is soft while fear is still cheap — cyclicals usually get hurt first."
       : realHigh
         ? "Real yields are high — cyclicals pay more for every dollar of cash flow."
-        : "Fear is in charge — cyclicals usually dump first.",
+        : "Fear is already expensive — the easy cyclical underweight is late.",
     "Cyclicals want Strong growth and calm fear; only one side is helping."
   );
   cyc.label = "Cyclicals";
@@ -435,11 +458,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "def",
     "Df",
     defNet,
-    tightW(gSc) > 0.55
-      ? "Growth is soft — defensives are the ballast inside equities."
+    tightW(gSc) > 0.55 && easeW(rSc) > 0.4
+      ? "Growth is soft while fear is still cheap — defensives are the ballast inside equities."
       : "Fear is expensive — defensives usually hold up better than the cycle.",
-    "Strong growth and Risk-on — defensives usually lag that mix.",
-    "Defensives want Soft growth or expensive fear; the expansion mix leaves them mixed."
+    "Strong growth and calm fear — defensives usually lag that mix.",
+    "Defensives want Soft growth with calm fear, or expensive fear; the expansion mix leaves them mixed."
   );
   def.label = "Defensives";
   def.margin = blendMargin(def.stance, def.net, meanImpulse([-gImp, -kImp]));
@@ -451,82 +474,73 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     sentence(stocksOutParts, "Equities are out of favor here."),
     realHigh
       ? "Growth isn’t a clean overweight, and real 10y yields already tax the multiple."
-      : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out."
+      : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
+    0.15,
+    -0.28
   );
   stocks.margin = blendMargin(stocks.stance, stocks.net, meanImpulse([gImp, kImp]));
   stocks.splits = [cyc, def];
 
   const cryptoOutParts = [];
   if (tightW(lSc) > 0.55) cryptoOutParts.push("cash is draining");
-  if (tightW(rSc) > 0.55) cryptoOutParts.push("fear is in charge");
-  if (realHigh) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
   if (dolStrong) cryptoOutParts.push("the dollar is rising");
+  if (realHigh && easeW(rSc) > 0.4) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
+  if (tightW(rSc) > 0.55) cryptoOutParts.push("fear is already expensive — the easy dump call is late");
   const cryptoInParts = [];
   if (easeW(lSc) > 0.55) cryptoInParts.push("plumbing is feeding risk");
-  if (easeW(rSc) > 0.55) cryptoInParts.push("fear is cheap");
+  if (easeW(rSc) > 0.55 && easeW(lSc) > 0.4) cryptoInParts.push("fear is cheap with easy plumbing");
   const cryptoNet =
-    0.4 * easeW(lSc) -
-    0.4 * tightW(lSc) +
-    0.35 * easeW(rSc) -
-    0.35 * tightW(rSc) -
-    (realHigh ? 0.35 : 0) -
-    (dolStrong ? 0.3 : 0);
+    0.5 * easeW(lSc) -
+    0.5 * tightW(lSc) +
+    0.15 * easeW(rSc) -
+    0.1 * tightW(rSc) -
+    (realHigh ? 0.25 * calmRisk : 0) -
+    (dolStrong ? 0.45 : 0);
   const crypto = instrumentFromNet(
     "crypto",
     "Crypto",
     cryptoNet,
     sentence(cryptoInParts, "Easy plumbing and calm fear — Bitcoin is the high-beta valve."),
-    sentence(cryptoOutParts, "Draining cash or expensive fear — the high-beta valve usually dumps first."),
-    "Crypto wants easy plumbing and calm fear; only one side is helping."
+    sentence(cryptoOutParts, "Draining cash or a rising dollar — the high-beta valve usually dumps first."),
+    "Crypto wants easy plumbing; fear alone is a late signal.",
+    0.32,
+    -0.32
   );
   crypto.margin = blendMargin(crypto.stance, crypto.net, meanImpulse([lImp, kImp]));
 
-  const goldFear = tightW(rSc) > 0.55;
   const goldDrain = tightW(lSc) > 0.55 && tightW(tSc) < 0.45;
-  const goldHotEasy = easeW(iSc) > 0.55 && easeW(tSc) > 0.45 && !realHigh;
-  const goldRealSoft = realLow && !dolStrong;
+  const goldCrisis = tightW(lSc) > 0.45 && tightW(rSc) > 0.45;
   const goldInParts = [];
-  if (goldFear) goldInParts.push("fear is paying gold’s usual wage");
-  if (goldDrain) goldInParts.push("cash is draining without a rates squeeze");
-  if (goldHotEasy) goldInParts.push("prices are hot and funding is easy");
-  if (goldRealSoft) goldInParts.push("real 10y yields are low and the dollar isn’t fighting");
+  if (goldCrisis) goldInParts.push("cash is draining and fear is expensive — gold’s crisis bid");
+  if (goldDrain && !dolStrong) goldInParts.push("cash is draining without a dollar squeeze");
+  if (dolSoft && !realHigh) goldInParts.push("the dollar is soft");
   const goldOutParts = [];
-  if (realHigh) goldOutParts.push("real 10y yields are high");
   if (dolStrong) goldOutParts.push("the dollar is rising");
-  if (tightW(iSc) > 0.45 && easeW(rSc) > 0.45 && tightW(tSc) > 0.45) {
-    goldOutParts.push("cold inflation, risk-on, and tight funding");
-  }
   let goldMix = "Gold has no clean job right now.";
-  const bei = seriesOk(snap, "T5YIFR");
-  const beiAnchored =
-    bei?.anchor?.score != null && Math.abs(bei.anchor.score) <= 0.45;
-  if (realHigh || dolStrong) {
-    goldMix = sentence(
-      goldOutParts,
-      "Real yields and the dollar are the two things that price gold — both are fighting it."
-    );
-  } else if (easeW(iSc) > 0.55 && !goldHotEasy && !goldFear && !goldDrain && !goldRealSoft) {
-    goldMix = beiAnchored
-      ? "PCE is still hot, but 5y5y is anchored and real yields aren’t soft — gold has no second job."
-      : "Inflation is hot, but gold has no second job — real yields and the dollar aren’t paying.";
-  } else if (!goldFear && !goldDrain && !goldHotEasy && !goldRealSoft) {
+  if (dolStrong) {
+    goldMix = sentence(goldOutParts, "A rising dollar — gold rarely leads that mix.");
+  } else if (realHigh && !goldCrisis) {
+    goldMix =
+      "Real 10y yields are high, but there’s no crisis bid — gold stays mixed rather than a clean avoid.";
+  } else if (!goldCrisis && !goldDrain) {
     goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
+  // Crisis plumbing + fear, or a soft dollar without high real yields, as “in”.
+  // A rising dollar is the out.
   const goldNet =
-    (goldFear ? 0.4 : 0) +
-    (goldDrain ? 0.35 : 0) +
-    (goldHotEasy ? 0.3 : 0) +
-    (goldRealSoft ? 0.4 : 0) -
-    (realHigh ? 0.5 : 0) -
-    (dolStrong ? 0.45 : 0) -
-    tightW(iSc) * easeW(rSc) * tightW(tSc) * 0.5;
+    (goldCrisis ? 0.7 : goldDrain && !dolStrong ? 0.35 : 0) +
+    (dolSoft && !realHigh ? 0.5 : 0) -
+    (dolStrong ? 0.8 : 0) -
+    (realHigh && dolStrong ? 0.15 : 0);
   const gold = instrumentFromNet(
     "gold",
     "Gold",
     goldNet,
-    sentence(goldInParts, "Fear, a cash drain, soft real yields, or hot prices with easy funding."),
-    sentence(goldOutParts, "High real yields and a rising dollar — gold rarely leads that mix."),
-    goldMix
+    sentence(goldInParts, "Crisis plumbing and fear, or a soft dollar — gold’s usual wage."),
+    sentence(goldOutParts, "A rising dollar — gold rarely leads that mix."),
+    goldMix,
+    0.18,
+    -0.18
   );
   gold.margin = blendMargin(gold.stance, gold.net, meanImpulse([-kImp, iImp]));
 
