@@ -97,7 +97,9 @@ function teach(lid, c) {
   const cliff = distanceToCliff(c.score);
   const cliffNote =
     cliff != null && cliff < 0.05
-      ? ` ${cliff.toFixed(2)} from the colour line.`
+      ? Math.abs(c.score) > 0.45
+        ? ` Only ${cliff.toFixed(2)} past a word flip.`
+        : ` Only ${cliff.toFixed(2)} from flipping the word.`
       : "";
   const by = {
     liquidity: {
@@ -139,17 +141,10 @@ function story(lights) {
 }
 
 async function main() {
-  await loadLightDist().catch(() => null);
+  const lightDist = await loadLightDist().catch(() => null);
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
-  if (!snap.lightDist) {
-    try {
-      snap.lightDist = JSON.parse(
-        await fs.readFile(path.join(ROOT, "data", "light-dist.json"), "utf8")
-      );
-    } catch {
-      /* optional */
-    }
-  }
+  // File wins over whatever ingest embedded — calibrate:lights runs after ingest.
+  if (lightDist) snap.lightDist = lightDist;
   const fails = [];
   const rebuilt = buildLights(snap);
   attachImpulse(rebuilt, snap, DEFAULT_IMPULSE);

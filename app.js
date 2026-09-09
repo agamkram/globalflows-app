@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261014";
+import { buildMeaning } from "./meaning.js?v=20261015";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261014";
+} from "./score.js?v=20261015";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -449,7 +449,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light or the turn.",
   growth:
-    "Real activity — coincident jobs and GDP, a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — core measures, median, sticky prices, expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
@@ -749,9 +749,22 @@ function openLightSheet(id) {
     ? `<p class="light-teach">${escapeHtml(baked.teach)}</p>`
     : `<p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>`;
   const chev = L.impulse?.dir || "flat";
+  const cliff = baked?.cliff;
+  const scoreNum = baked?.score ?? L.score;
+  const scoreTxt =
+    scoreNum != null && Number.isFinite(scoreNum)
+      ? `${scoreNum >= 0 ? "+" : ""}${scoreNum.toFixed(2)}`
+      : "—";
+  let cliffBit = "";
+  if (cliff != null && Number.isFinite(cliff)) {
+    cliffBit =
+      Math.abs(scoreNum) > 0.45
+        ? ` · ${cliff.toFixed(2)} past a word flip`
+        : ` · ${cliff.toFixed(2)} from flipping`;
+  }
   bodyEl.innerHTML = `
     ${teach}
-    <p class="light-status">${escapeHtml(word)} · ${h} ${escapeHtml(chev)}</p>
+    <p class="light-status">${escapeHtml(word)} · ${escapeHtml(scoreTxt)}${cliffBit} · ${h} ${escapeHtml(chev)}</p>
     <div class="light-members">
       <table>
         <thead><tr><th>Name</th><th>Latest</th></tr></thead>
@@ -1403,6 +1416,14 @@ function renderLights(snap) {
         L.score != null && Number.isFinite(L.score)
           ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
           : "—";
+      const baked = bakeLight(id);
+      const cliff = baked?.cliff;
+      const nearFlip =
+        cliff != null && Number.isFinite(cliff) && cliff < 0.05
+          ? Math.abs(L.score) > 0.45
+            ? `${cliff.toFixed(2)} past flip`
+            : `${cliff.toFixed(2)} from flip`
+          : null;
       const on =
         spyLight != null ? spyLight === id : focusLight === id;
       const chev = L.impulse?.dir || "flat";
@@ -1410,12 +1431,13 @@ function renderLights(snap) {
       const word = wordFor(L);
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
-      }" data-clash="${split ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}" aria-label="${escapeHtml(
-        `${L.label || id}, ${word}, ${score}${split ? ", voters disagree" : ""}`
+      }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}" aria-label="${escapeHtml(
+        `${L.label || id}, ${word}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
         <span class="word">${escapeHtml(word)}</span>
+        <span class="score">${escapeHtml(score)}${nearFlip ? ` · ${escapeHtml(nearFlip)}` : ""}</span>
         ${trackHtml(L.score, L.state || "empty")}
       </button>`;
     })

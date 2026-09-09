@@ -12,7 +12,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { LIGHT_IDS, fitLightDist, setLightDist } from "../score.js";
+import { LIGHT_IDS, fitLightDist, setLightDist, buildLights, attachImpulse, DEFAULT_IMPULSE } from "../score.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST = path.join(ROOT, "data", "regime-history.json");
@@ -52,6 +52,32 @@ async function main() {
   });
   setLightDist(dist);
   await fs.writeFile(OUT, JSON.stringify(dist, null, 2) + "\n");
+
+  // Keep embedded snapshot centres in sync — ingest ran before this step.
+  for (const snapPath of [
+    path.join(ROOT, "data", "snapshot.json"),
+    path.join(ROOT, "snapshot.json"),
+  ]) {
+    try {
+      const snap = JSON.parse(await fs.readFile(snapPath, "utf8"));
+      snap.lightDist = dist;
+      const lights = buildLights(snap);
+      attachImpulse(lights, snap, DEFAULT_IMPULSE);
+      for (const id of LIGHT_IDS) {
+        if (!snap.lights?.[id] || !lights[id]) continue;
+        snap.lights[id].score = lights[id].score;
+        snap.lights[id].state = lights[id].state;
+        const w = lights[id].words;
+        if (w && lights[id].state && w[lights[id].state]) {
+          snap.lights[id].word = w[lights[id].state];
+        }
+      }
+      await fs.writeFile(snapPath, JSON.stringify(snap, null, 2) + "\n");
+    } catch (e) {
+      console.log(`  ! could not patch ${path.relative(ROOT, snapPath)}: ${e.message}`);
+    }
+  }
+
   console.log(`light-dist → ${path.relative(ROOT, OUT)}`);
   console.log(`  sample ${dist.sampleFrom} → ${dist.sampleTo}  n=${dist.n}  refSd=${dist.refSd}`);
   for (const id of LIGHT_IDS) {

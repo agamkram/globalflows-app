@@ -369,7 +369,7 @@
     },
     {
       "id": "SOFR_SPREAD",
-      "name": "SOFR vs target top",
+      "name": "Funding vs target top",
       "layer": "liquidity",
       "pipe": "derived",
       "derive": "sofr_spread",
@@ -379,11 +379,28 @@
       "light": "liquidity",
       "weight": 2,
       "sourceUrl": "https://www.newyorkfed.org/markets/reference-rates/sofr",
-      "sub": "Repo cost vs policy ceiling",
+      "sub": "Overnight funding vs policy ceiling",
       "search": "SOFR_SPREAD",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing."
+      "note": "Overnight funding minus the top of the fed funds target, in bp. From 2018-04-02 that is SOFR; before then EFFR versus DFEDTAR / DFEDTARU on the same band so the funding ballot covers the full archive. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019."
+    },
+    {
+      "id": "DFEDTAR",
+      "name": "Fed funds target (legacy)",
+      "street": "rates",
+      "causal": "rates",
+      "pipe": "fred",
+      "fred": "DFEDTAR",
+      "units": "%",
+      "freq": "daily",
+      "sign": -1,
+      "light": null,
+      "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTAR",
+      "layer": "rates",
+      "sub": "Pre-range policy target",
+      "search": "DFEDTAR",
+      "note": "Single fed funds target through December 2008. Used only to build the pre-SOFR funding spread (EFFR \u2212 target); does not vote a light."
     },
     {
       "id": "RESERVES_GDP",

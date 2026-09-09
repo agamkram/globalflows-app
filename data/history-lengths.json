@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T05:11:14.324Z",
+  "updatedAt": "2026-09-09T05:53:39.119Z",
   "note": "High-water mark of data/history point counts. Sanity fails if any series shrinks below its mark. Updated by npm run ingest.",
   "series": {
     "ADA": {
@@ -618,8 +618,8 @@
       "last": "2026-09-04"
     },
     "SOFR_SPREAD": {
-      "n": 2106,
-      "first": "2018-04-02",
+      "n": 12424,
+      "first": "1990-01-01",
       "last": "2026-09-04"
     },
     "SOL": {
@@ -861,6 +861,11 @@
       "n": 140,
       "first": "1991-01-01",
       "last": "2025-10-01"
+    },
+    "DFEDTAR": {
+      "n": 9577,
+      "first": "1982-09-27",
+      "last": "2008-12-15"
     }
   }
 }

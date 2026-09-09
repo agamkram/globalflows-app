@@ -676,6 +676,15 @@ body.page-about::before {
   line-height: 1;
   text-align: center;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.light[data-near-flip="true"] .score {
+  color: var(--ink, #e8e6e3);
+  font-weight: 600;
 }
 
 /* Center-zero range: −1 left, +1 right. Lights tick 0 and ±0.45; assets only 0. */

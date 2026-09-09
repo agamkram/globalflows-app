@@ -898,22 +898,64 @@ async function main() {
     console.log(`  ${id} (derived)… ok  asOf=${stats.asOf}  n=${stats.n}`);
   }
 
-  // Derived: SOFR minus the top of the fed funds target, in bp. A spread against
-  // policy needs no rebasing as the balance sheet grows, so it is the one plumbing
-  // level that can carry a fixed band honestly.
+  // Derived: overnight funding minus the policy ceiling, in bp. From 2018-04-02
+  // that is SOFR − DFEDTARU. Before SOFR, EFFR − target (DFEDTAR then DFEDTARU)
+  // on the same band so Liquidity keeps a funding ballot through the archive —
+  // not a 2-ballot light pre-2018 and a 3-ballot light after under one centre.
   try {
+    const SOFR_START = "2018-04-02";
     const sofr = JSON.parse(await fs.readFile(path.join(HIST, "SOFR.json"), "utf8"));
-    const upper = [...(rawPoints.DFEDTARU || [])].sort((a, b) => a.date.localeCompare(b.date));
-    if (!upper.length) throw new Error("no fed funds target history");
-    let ui = 0;
-    const points = [];
-    for (const p of sofr.points) {
-      while (ui + 1 < upper.length && upper[ui + 1].date <= p.date) ui++;
-      if (!upper[ui] || upper[ui].date > p.date) continue;
-      points.push({ date: p.date, value: (p.value - upper[ui].value) * 100 });
+    const effrPts =
+      rawPoints.EFFR ||
+      JSON.parse(await fs.readFile(path.join(HIST, "EFFR.json"), "utf8")).points ||
+      [];
+    let legacy = [...(rawPoints.DFEDTAR || [])];
+    if (!legacy.length) {
+      try {
+        legacy = JSON.parse(await fs.readFile(path.join(HIST, "DFEDTAR.json"), "utf8")).points || [];
+      } catch {
+        /* optional — DFEDTARU covers post-2008 */
+      }
     }
+    const upper = [...(rawPoints.DFEDTARU || [])].sort((a, b) => a.date.localeCompare(b.date));
+    legacy = legacy.sort((a, b) => a.date.localeCompare(b.date));
+    const effr = [...effrPts].sort((a, b) => a.date.localeCompare(b.date));
+    if (!upper.length && !legacy.length) throw new Error("no fed funds target history");
+    if (!effr.length) throw new Error("no EFFR history for pre-SOFR funding");
+
+    const targetAt = (date, uiRef, liRef) => {
+      while (uiRef.i + 1 < upper.length && upper[uiRef.i + 1].date <= date) uiRef.i++;
+      while (liRef.i + 1 < legacy.length && legacy[liRef.i + 1].date <= date) liRef.i++;
+      if (upper[uiRef.i] && upper[uiRef.i].date <= date) return upper[uiRef.i].value;
+      if (legacy[liRef.i] && legacy[liRef.i].date <= date) return legacy[liRef.i].value;
+      return null;
+    };
+
+    const ui = { i: 0 };
+    const li = { i: 0 };
+    const pre = [];
+    for (const p of effr) {
+      if (p.date >= SOFR_START) break;
+      const t = targetAt(p.date, ui, li);
+      if (t == null || !Number.isFinite(p.value)) continue;
+      pre.push({ date: p.date, value: (p.value - t) * 100 });
+    }
+    ui.i = 0;
+    li.i = 0;
+    const post = [];
+    for (const p of sofr.points || []) {
+      if (p.date < SOFR_START) continue;
+      const t = targetAt(p.date, ui, li);
+      if (t == null || !Number.isFinite(p.value)) continue;
+      post.push({ date: p.date, value: (p.value - t) * 100 });
+    }
+    const points = [...pre, ...post];
     if (points.length < 100) throw new Error(`thin overlap (${points.length})`);
-    await emitDerived("SOFR_SPREAD", points, "derived (SOFR − fed funds target top)");
+    await emitDerived(
+      "SOFR_SPREAD",
+      points,
+      `derived (EFFR−target pre-${SOFR_START}; SOFR−target from ${SOFR_START})`
+    );
   } catch (e) {
     console.log(`  SOFR_SPREAD FAIL  ${e.message}`);
     errors.push({ id: "SOFR_SPREAD", error: String(e.message || e) });

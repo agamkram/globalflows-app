@@ -441,8 +441,10 @@ async function main() {
       let value = null;
 
       if (spec.id === "SOFR_SPREAD") {
-        if (date >= SOFR_START && hist.SOFR_SPREAD) {
-          const got = asOf(hist.SOFR_SPREAD, cursors.SOFR_SPREAD || 0, date);
+        const sofrHist = hist.SOFR_SPREAD;
+        const sofrCoversPre = sofrHist?.[0]?.date && sofrHist[0].date < SOFR_START;
+        if (sofrHist && (date >= SOFR_START || sofrCoversPre)) {
+          const got = asOf(sofrHist, cursors.SOFR_SPREAD || 0, date);
           cursors.SOFR_SPREAD = got.i;
           value = got.value;
         } else if (fundingSpread) {

@@ -15,6 +15,7 @@ import {
   attachImpulse,
   aggregateVotes,
   DEFAULT_IMPULSE,
+  setLightDist,
 } from "../score.js";
 import { buildMeaning } from "../meaning.js";
 import { loadLightDist } from "./load-light-dist.mjs";
@@ -64,13 +65,16 @@ function ageDays(asOf, today = new Date()) {
 }
 
 async function main() {
-  await loadLightDist().catch(() => null);
+  const lightDist = await loadLightDist().catch(() => null);
   const snap = JSON.parse(await fs.readFile(SNAP, "utf8"));
+  // File wins over whatever ingest embedded — calibrate:lights runs after ingest.
+  if (lightDist) snap.lightDist = lightDist;
   if (!snap.lightDist) {
     try {
       snap.lightDist = JSON.parse(
         await fs.readFile(path.join(ROOT, "data", "light-dist.json"), "utf8")
       );
+      setLightDist(snap.lightDist);
     } catch {
       /* optional until calibrate:lights */
     }

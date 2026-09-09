@@ -36,14 +36,15 @@ export const VOTE_FAMILIES = {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
   },
-  // Coincident labor/GDP, leading housing/orders/openings, and regional surveys
-  // each cast one family ballot so six lagging prints cannot drown the turn.
-  // Survey weight 0.5 — two regional prints at the ceiling were carrying a third
-  // of Growth and flipping Strong by a hair over six coincident prints at +0.24.
+  // Labor and output each cast one ballot — six coincident prints in one family
+  // were cancelling each other (quiet sd). Leading housing/orders/openings and
+  // regional surveys keep their own seats. Survey is a full ballot again: the
+  // old 0.5 weight was a scale patch that light calibration now handles.
   growth: {
-    coincident: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"],
+    labor: ["PAYEMS", "UNRATE", "ICSA"],
+    output: ["GDPC1", "CFNAI", "WEI"],
     leading: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"],
-    survey: { ids: ["EMPIRE_MFG", "PHILLY_MFG"], weight: 0.5 },
+    survey: ["EMPIRE_MFG", "PHILLY_MFG"],
   },
   // Realized core weight 2 so low-variance expectations cannot cap Hot.
   // Persistence (sticky + wages + upstream PPI) is a third ballot, not a half.
@@ -506,7 +507,7 @@ function whyKind(kind, value) {
     case "nfci":
       return `NFCI ${fmt(v, 2)}`;
     case "sofr_spread":
-      return `SOFR ${fmt(v, 0)}bp vs the top of the target range — 0 is where repo broke in 2019`;
+      return `funding ${fmt(v, 0)}bp vs the policy ceiling — 0 is where repo broke in 2019`;
     case "reserves_gdp":
       return `reserves ${fmt(v)}% of GDP — 6.9% in the 2019 squeeze, 16.6% at the QE peak`;
     case "netliq_gdp":
