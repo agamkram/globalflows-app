@@ -1,6 +1,23 @@
-/** About page — data status + how a light gets its color. */
+/** About page — live telemetry, today’s calibration, valuation centres. */
 
 const $ = (sel, el = document) => el.querySelector(sel);
+
+const LIGHT_ORDER = [
+  ["liquidity", "Liquidity"],
+  ["rates", "Rates"],
+  ["growth", "Growth"],
+  ["inflation", "Inflation"],
+  ["risk", "Risk"],
+];
+
+const VAL_ORDER = [
+  ["THREEFFTP10", "Term premium (10y)"],
+  ["DFII10", "10-year real yield"],
+  ["BAMLH0A0HYM2", "High-yield OAS"],
+  ["BAA10Y", "Baa spread"],
+  ["EQUITY_ERP", "Equity risk premium"],
+  ["SPX_EY", "S&P earnings yield"],
+];
 
 function escapeHtml(t) {
   return String(t)
@@ -21,28 +38,15 @@ function fmtWhen(iso) {
   return `${mm}/${dd}/${yy} ${hh}:${mi}`;
 }
 
-function renderFormula(snap) {
-  const f = snap.formula || {};
-  const lights =
-    f.lights ||
-    "Each light is an economic level (high is high), not a score versus last year. The 1w / 2w / 1m row is only the turn. Green/red still mean clearly easy/tight on that level.";
-  $("#formulaBody").innerHTML = `
-    <p>${escapeHtml(lights)}</p>
-    <dl class="formula-dl">
-      <div>
-        <dt>Net liquidity</dt>
-        <dd><code>${escapeHtml(f.netLiquidity || "Fed assets − TGA − ON RRP")}</code></dd>
-      </div>
-      <div>
-        <dt>Stock–bond correlation</dt>
-        <dd><code>${escapeHtml(f.stockBondCorr || "how stock and Treasury returns have been moving together lately")}</code></dd>
-      </div>
-    </dl>
-    <p class="muted tiny">
-      Changing the 1w / 2w / 1m lookback does not recolor the lights; it changes the turn
-      and the six asset classes.
-    </p>
-  `;
+function fmtNum(n, d = 4) {
+  if (n == null || !Number.isFinite(Number(n))) return "—";
+  return Number(n).toFixed(d);
+}
+
+function derivedCount(snap) {
+  return Object.values(snap.series || {}).filter((s) =>
+    String(s.source || "").startsWith("derived")
+  ).length;
 }
 
 function renderAboutMeta(snap, regime) {
@@ -68,6 +72,90 @@ function renderAboutMeta(snap, regime) {
   } else {
     $("#aboutBake").textContent = "—";
   }
+
+  const dist = snap.lightDist || {};
+  const n = dist.n || regime?.analogs?.sampleDays;
+  const from = dist.sampleFrom || regime?.analogs?.windowStart;
+  const to = dist.sampleTo || regime?.analogs?.windowEnd;
+  if (n && from) {
+    $("#aboutArchive").textContent = `${Number(n).toLocaleString("en-US")} days · ${from}${to ? ` → ${to}` : ""}`;
+  } else {
+    $("#aboutArchive").textContent = "—";
+  }
+
+  const nDerived = derivedCount(snap);
+  const note = $("#mathLiveNote");
+  if (note) {
+    note.textContent = nDerived
+      ? `This morning’s file has ${nDerived} derived lines. Identities below; fitted numbers load from the same file.`
+      : "";
+  }
+}
+
+function renderFormulaLive(snap) {
+  const el = $("#formulaLive");
+  if (!el) return;
+  const f = snap.formula || {};
+  const net = f.netLiquidity;
+  const corr = f.stockBondCorr;
+  if (!net && !corr) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = `
+    <p class="muted tiny">What this morning’s file wrote for the same identities:</p>
+    <dl class="formula-dl">
+      ${net ? `<div><dt>Net liquidity (file)</dt><dd><code>${escapeHtml(net)}</code></dd></div>` : ""}
+      ${corr ? `<div><dt>Stock–bond correlation (file)</dt><dd><code>${escapeHtml(corr)}</code></dd></div>` : ""}
+    </dl>
+  `;
+}
+
+function renderCalib(snap) {
+  const el = $("#calibBody");
+  if (!el) return;
+  const dist = snap.lightDist;
+  if (!dist?.lights) {
+    el.innerHTML = `<p class="muted">No calibration in this morning’s file.</p>`;
+    return;
+  }
+  const rows = LIGHT_ORDER.map(([id, label]) => {
+    const L = dist.lights[id] || {};
+    const scale = dist.outputScale?.[id];
+    return `<div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd><code>mean ${escapeHtml(fmtNum(L.mean))} · sd ${escapeHtml(fmtNum(L.sd))} · scale ${escapeHtml(fmtNum(scale))}</code></dd>
+    </div>`;
+  }).join("");
+  const shared = Number.isFinite(dist.refSd) ? fmtNum(dist.refSd) : "—";
+  const n = dist.n ? Number(dist.n).toLocaleString("en-US") : "—";
+  el.innerHTML = `
+    <p>${escapeHtml(n)} days, ${escapeHtml(dist.sampleFrom || "—")} → ${escapeHtml(dist.sampleTo || "—")}. Shared spread ${escapeHtml(shared)}.</p>
+    <dl class="formula-dl">${rows}</dl>
+  `;
+}
+
+function renderVal(snap) {
+  const el = $("#valBody");
+  if (!el) return;
+  const table = snap.valCenter;
+  if (!table || !Object.keys(table).length) {
+    el.innerHTML = `<p class="muted">No valuation centres in this morning’s file.</p>`;
+    return;
+  }
+  const rows = VAL_ORDER.map(([id, label]) => {
+    const c = table[id];
+    if (!c) return "";
+    const src = c.source === "band-mid" ? "pinned band mid" : "archive median";
+    const sample = c.sampleFrom && c.sampleTo ? ` · ${c.sampleFrom} → ${c.sampleTo}` : "";
+    return `<div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd><code>median ${escapeHtml(fmtNum(c.median, 2))} · scale ${escapeHtml(fmtNum(c.scale, 2))} · ${escapeHtml(src)}${escapeHtml(sample)}</code></dd>
+    </div>`;
+  }).join("");
+  el.innerHTML = rows
+    ? `<dl class="formula-dl">${rows}</dl>`
+    : `<p class="muted">No valuation centres in this morning’s file.</p>`;
 }
 
 async function boot() {
@@ -86,11 +174,16 @@ async function boot() {
         regime = null;
       }
     }
-    renderFormula(snap);
     renderAboutMeta(snap, regime);
+    renderFormulaLive(snap);
+    renderCalib(snap);
+    renderVal(snap);
   } catch (e) {
-    $("#aboutIngest").textContent = e.message || String(e);
-    $("#formulaBody").innerHTML = `<p class="muted">${escapeHtml(e.message || String(e))}</p>`;
+    const msg = e.message || String(e);
+    if ($("#aboutIngest")) $("#aboutIngest").textContent = msg;
+    const fail = `<p class="muted">${escapeHtml(msg)}</p>`;
+    if ($("#calibBody")) $("#calibBody").innerHTML = fail;
+    if ($("#valBody")) $("#valBody").innerHTML = fail;
   }
 }
 

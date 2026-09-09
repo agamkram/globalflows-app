@@ -1828,10 +1828,22 @@ html.page-about body,
   color: #c5dcff;
 }
 
+.about-top-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .about-top-mark {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.about-build {
+  font: 500 0.65rem var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 .about-top-mark .dot,
@@ -1884,6 +1896,26 @@ html.page-about body,
   max-width: 34rem;
 }
 
+.about-toc {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.about-toc a {
+  font: 500 0.72rem var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.about-toc a:hover {
+  color: #c5dcff;
+}
+
 .about-block {
   margin: 0;
   padding: 28px 0 8px;
@@ -1908,6 +1940,15 @@ html.page-about body,
   font-size: 0.95rem;
   line-height: 1.55;
   color: #b7c0cf;
+}
+
+.about-block a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.about-block a:hover {
+  color: #c5dcff;
 }
 
 .about-chain {
@@ -2081,7 +2122,7 @@ html.page-about body,
 
 @media (min-width: 560px) {
   .about-status {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -2152,6 +2193,27 @@ html.page-about body,
 .formula-dl code {
   font: 500 0.78rem var(--mono);
   color: var(--text);
+  word-break: break-word;
+}
+
+.formula-dl .ident-note {
+  display: block;
+  margin-top: 6px;
+  font: 400 0.78rem var(--sans);
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+code.about-ident {
+  display: block;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(11, 14, 19, 0.55);
+  font: 500 0.78rem var(--mono);
+  color: var(--text);
+  white-space: pre-wrap;
   word-break: break-word;
 }
 

@@ -42,7 +42,7 @@
   </script>
   <meta
     name="description"
-    content="About GlobalFlows — how the five lights, So what, and the data table work."
+    content="About GlobalFlows — how the five lights and six asset classes are built, and the math behind every derived number."
   />
   <title>About — GlobalFlows</title>
   <link rel="canonical" href="https://globalflows.markmaga.com/about.html" />
@@ -50,43 +50,59 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261021" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261021" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261023" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261023" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261021" />
+  <link rel="stylesheet" href="styles.css?v=20261023" />
 </head>
 <body class="page-about">
   <div class="about-shell">
     <header class="about-top">
       <a class="about-back" href="./">← Back</a>
-      <span class="about-top-mark" aria-hidden="true">
-        <i class="dot ease"></i><i class="dot mid"></i><i class="dot tight"></i>
-      </span>
+      <div class="about-top-end">
+        <span class="about-top-mark" aria-hidden="true">
+          <i class="dot ease"></i><i class="dot mid"></i><i class="dot tight"></i>
+        </span>
+        <span class="about-build" id="aboutBuild">20261023</span>
+      </div>
     </header>
 
     <main class="about-main">
       <header class="about-hero">
         <h1 class="about-brand">GlobalFlows</h1>
         <p class="about-lede">
-          A live picture of how money and the real economy are moving together —
-          cash, rates, growth, inflation, and fear — and what that mix usually means
-          for bonds, credit, and risk assets.
+          Every morning the public book is turned into two things. First, five lights
+          — Liquidity, Rates, Growth, Inflation, Risk — that say where the world is
+          on each of those questions. Second, six asset classes — Treasuries, Credit,
+          Equities, Crypto, Gold, Commodity — graded in favor, mixed, or out of favor
+          from what that mix has historically rewarded. Same two-step a macro desk
+          runs: describe the regime, then say what the regime pays for.
         </p>
+        <ul class="about-toc" aria-label="On this page">
+          <li><a href="#numbers">Numbers</a></li>
+          <li><a href="#lights">Lights</a></li>
+          <li><a href="#sowhat">Asset classes</a></li>
+          <li><a href="#baserates">Last time</a></li>
+          <li><a href="#math">Math</a></li>
+          <li><a href="#audits">Checks</a></li>
+          <li><a href="#limits">Limits</a></li>
+          <li><a href="#glossary">Glossary</a></li>
+        </ul>
       </header>
 
       <section class="about-block" id="how">
         <h2>The idea</h2>
         <p>
-          Read left to right. Cheap or scarce cash shows up first. Rates and the
-          dollar pass that pressure around. Growth and inflation say what households
-          and firms are actually doing. Risk tells you whether markets are calm or
-          stressed. When you know that mix, you can ask the useful question: so what
-          for assets?
+          Read left to right. That is the order money actually travels: cash
+          conditions show up first, rates and the dollar pass the pressure around,
+          growth and inflation say what households and firms are doing, and risk
+          tells you whether markets have noticed yet. When you know that mix, you
+          can ask the useful question: so what for assets?
         </p>
         <ol class="about-chain" aria-label="Causal chain">
           <li><span class="chain-label">Liquidity</span><span class="chain-sub">cash &amp; plumbing</span></li>
@@ -95,14 +111,18 @@
           <li><span class="chain-label">Inflation</span><span class="chain-sub">price pressure</span></li>
           <li><span class="chain-label">Risk</span><span class="chain-sub">fear &amp; spreads</span></li>
         </ol>
+        <p>
+          The five lights are the navigation. The tab bar only carries All, FX, and
+          Markets; the economic sections are reached by tapping a light.
+        </p>
         <div class="about-doors">
           <div class="about-door">
             <h3>All</h3>
-            <p>Every indicator in one list.</p>
+            <p>Every indicator in one list, ordered the way the chain runs.</p>
           </div>
           <div class="about-door">
             <h3>FX</h3>
-            <p>The dollar and major currencies. The broad dollar also feeds Rates.</p>
+            <p>The dollar and major currencies. The broad dollar also feeds Liquidity.</p>
           </div>
           <div class="about-door">
             <h3>Markets</h3>
@@ -111,13 +131,102 @@
         </div>
       </section>
 
+      <section class="about-block" id="numbers">
+        <h2>Where the numbers come from</h2>
+        <p>
+          Public sources: FRED, the New York Fed, Yahoo Finance, Bundesbank, Bank
+          of England, Japan’s Ministry of Finance, and S&amp;P earnings yield from
+          multpl. A morning job at 8:47 New York time — after the 8:30 prints, before
+          the open — pulls the book, rebuilds the archive from 2003, refits the
+          calibration, bakes today’s regime, then runs the sanity check. If the
+          check fails, the bake does not publish.
+        </p>
+        <p>
+          Market prices move every day; payrolls arrive monthly; GDP and China’s
+          credit stock arrive quarterly and late. A series that has gone quiet past
+          its allowed age stops voting and disappears from the table rather than
+          casting a stale opinion. On open, last prints that can move refresh
+          again. Weekly, monthly, and quarterly lines stay on the last official
+          release. Analog history stays the morning snapshot.
+        </p>
+        <p>
+          Some lines nobody publishes, so the app builds them — net liquidity,
+          funding versus the policy ceiling, reserves and net liquidity as a share
+          of GDP, G4 balance sheets in dollars, the equity risk premium, credit
+          impulse. Each identity is in <a href="#math">The math</a>.
+        </p>
+        <div class="about-status" id="aboutStatus">
+          <div>
+            <span class="status-label">Last data pull</span>
+            <span class="status-value" id="aboutIngest">—</span>
+          </div>
+          <div>
+            <span class="status-label">Coverage</span>
+            <span class="status-value" id="aboutCoverage">—</span>
+          </div>
+          <div>
+            <span class="status-label">Today’s check</span>
+            <span class="status-value" id="aboutBake">—</span>
+          </div>
+          <div>
+            <span class="status-label">Archive</span>
+            <span class="status-value" id="aboutArchive">—</span>
+          </div>
+        </div>
+      </section>
+
       <section class="about-block" id="lights">
         <h2>The five lights</h2>
         <p>
-          Each colored light is a short status for one part of the machine —
-          Liquidity, Rates, Growth, Inflation, or Risk. Behind every light is a
-          handful of related public indicators. Together they decide whether that
-          part of the machine looks easy, mixed, or tight.
+          Each light answers one question: is cash cheap or scarce, is the price of
+          money easy or tight, is real activity strong or soft, is price pressure
+          hot or cold, is the market calm or frightened. Behind every light is a
+          handful of related public indicators, grouped so cousins do not get counted
+          twice.
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>Chevron</strong>
+            — ▲ up, ▼ down, – flat. Which way the light has moved over the lookback
+            you picked. This is the turn, not the level.
+          </li>
+          <li>
+            <strong>Word</strong>
+            — the plain reading. Each light has its own three words: Liquidity
+            Easing / Neutral / Tightening; Rates Easy / Neutral / Tight; Growth
+            Strong / Mid / Soft; Inflation Hot / Mid / Cold; Risk Risk-on / Neutral
+            / Risk-off.
+          </li>
+          <li>
+            <strong>Score and needle</strong>
+            — a number from −1.5 to +1.5, drawn on a rail with ticks at ±0.45,
+            where the colour changes. Positive is the reflationary end. If the
+            light is close to flipping, the score line says so. If the indicators
+            behind it disagree sharply, the label turns white — a split, and a
+            warning that the single word on the front is hiding an argument.
+          </li>
+        </ul>
+        <p>
+          All five lights share one axis. <strong>Green is the reflationary
+          end</strong> — more cash, easier funding, firmer growth, hotter prices,
+          more appetite for risk. <strong>Red is the contractionary end</strong> —
+          the same five things going the other way. Amber is mixed or near the
+          middle. Neither colour means good or bad. A green Inflation light is Hot:
+          prices are running, not the app approving. That is the one trap. The same
+          three colours do a second job on the six asset classes, where they mean
+          in favor, mixed, and out of favor.
+        </p>
+        <div class="about-legend" aria-label="Light colors">
+          <span><i class="swatch ease"></i> Green — reflationary: easier, stronger, hotter, risk-on</span>
+          <span><i class="swatch mid"></i> Amber — mixed, or near the middle</span>
+          <span><i class="swatch tight"></i> Red — contractionary: tighter, softer, colder, risk-off</span>
+        </div>
+        <p>
+          The 1w · 2w · 1m buttons select the window for the turn. One month is the
+          default. The lookback drives the chevrons, the sparklines, the asset-class
+          needles, and the wording of the narrative. It does not recolour the
+          lights. The lights are where things are; the lookback is which way they
+          are heading. A light can be red and turning up — two different facts.
         </p>
         <ul class="about-steps">
           <li>
@@ -126,33 +235,17 @@
           </li>
           <li>
             <strong>Tap “Tap for who voted”</strong>
-            — see those indicators, their scores, and a short plain-language read.
-          </li>
-          <li>
-            <strong>1w · 2w · 1m</strong>
-            — the turn, not “is it high.” Lights stay on the economic level. One month is the default.
+            — the roster: every indicator behind the light, its latest print, and a
+            plain-language read of what the light is saying and why.
           </li>
         </ul>
         <p>
-          All five lights share one axis, and it is worth learning before anything
-          else on this page. <strong>Green is the reflationary end</strong> — more
-          cash, easier funding, firmer growth, hotter prices, more appetite for
-          risk. <strong>Red is the contractionary end</strong> — the same five
-          things going the other way. Neither colour means good or bad. A green
-          Inflation light is not the app approving of inflation; it is telling you
-          prices are running hot, which is usually bad for long bonds and fine for
-          commodities. Read the colours as a direction the whole machine is
-          leaning, then let the asset classes below tell you who that helps.
-          Inflation votes core PCE, core CPI, and the market’s 5y5y — not
-          household surveys. Risk votes VIX, high-yield and Baa spreads (the long
-          credit history), and NFCI. MOVE stays on Rates as the bond-market stress gauge: a spike
-          can tighten the light and the turn; calm does not vote easy.
+          Inflation votes core PCE, core CPI, and the market’s 5y5y — not household
+          surveys. Risk votes VIX, high-yield and Baa spreads (the long credit
+          history), and NFCI. MOVE stays on Rates: a spike can tighten the light
+          and the turn; calm does not vote easy. How those votes become one number
+          is in <a href="#math">The math</a>.
         </p>
-        <div class="about-legend" aria-label="Light colors">
-          <span><i class="swatch ease"></i> Green — reflationary: easier, stronger, hotter, risk-on</span>
-          <span><i class="swatch mid"></i> Amber — mixed, or near the middle</span>
-          <span><i class="swatch tight"></i> Red — contractionary: tighter, softer, colder, risk-off</span>
-        </div>
       </section>
 
       <section class="about-block" id="global">
@@ -205,154 +298,146 @@
           same number — but for <em>global dollar</em> liquidity it is arguably the
           more relevant one, because reserves are the part that actually recycles
           into world markets. China private credit as a share of GDP does vote
-          Liquidity (the four-quarter impulse only moves the lookback). Euro area HICP and euro/Japan unemployment sit on
-          the street and do not vote. The Growth and Inflation <em>lights</em> are
-          still US voters. Japan monthly CPI is not on a live public pipe we can
-          keep — OECD-on-FRED died in 2021 — so it is not faked.
+          Liquidity at half weight (the four-quarter impulse only moves the
+          lookback). Euro area HICP and euro/Japan unemployment sit on the street
+          and do not vote. The Growth and Inflation <em>lights</em> are still US
+          voters. Japan monthly CPI is not on a live public pipe we can keep —
+          OECD-on-FRED died in 2021 — so it is not faked.
         </p>
       </section>
 
       <section class="about-block" id="sowhat">
-        <h2>So what</h2>
+        <h2>The six asset classes</h2>
         <p>
-          Under the five lights sit six asset classes — Treasuries (5 / 10 / 30),
-          credit (investment grade / high yield), equities, crypto, gold, commodities. Green, amber, and red mean in,
-          mixed, and out of favor. Tap a class for why that call, the curve or
-          credit split, and the analog. <strong>Full regime</strong> inside that card
-          is the longer duration / credit / confirm sheet.
+          Under the five lights sits a strip of six cells: Treasuries (5 / 10 / 30),
+          Credit (IG / HY), Equities (Cy / Df), Crypto, Gold, Commodity (Oi / Cu).
+          Green, amber, and red mean in, mixed, and out of favor. The needle shows
+          lean <em>within</em> the call. It cannot flip the call. A Treasuries cell
+          that is red with the needle nudging right means “out of favor, but less
+          emphatically than yesterday” — not “nearly in favor.”
+        </p>
+        <p>
+          Crypto is Bitcoin. Gold stands alone, as money and as fear. Bills are not
+          on this strip — the front end is the Rates light’s business.
         </p>
         <div class="about-grid-2">
           <article class="about-panel">
             <h3>Duration risk</h3>
             <p>
-              How painful rising rates and sticky inflation are for long bonds and
-              other assets that get paid far in the future. Rising means discount
-              rates are biting harder.
+              Will owning long bonds hurt? Rising duration risk comes from inflation
+              that is hot and not cooling, tight funding, and a compressed term
+              premium. Falling duration risk comes from cold inflation, easing
+              funding, a wide term premium, and high real yields — whether you are
+              actually paid to take duration, as opposed to merely being able to.
             </p>
           </article>
           <article class="about-panel">
             <h3>Credit risk</h3>
             <p>
-              How worried markets are that borrowers still pay. Built from growth,
-              fear gauges, credit spreads, and whether bank lending is speeding up
-              or slowing down.
-            </p>
-          </article>
-          <article class="about-panel">
-            <h3>In / out of favor</h3>
-            <p>
-              The same mix, mapped onto six asset classes. Treasuries split 5s, 10s,
-              and 30s. Credit shows IG and HY; Equities shows Cy and Df;
-              Commodity shows Oi and Cu. Crypto is the high-beta liquidity
-              valve (Bitcoin). Gold is money/fear. Bills live on the Rates light,
-              not as their own class.
-            </p>
-          </article>
-          <article class="about-panel">
-            <h3>Confirm</h3>
-            <p>
-              Extra checks that line up with the story — or don’t — such as how
-              stocks and bonds are moving together, the dollar, gold, or bitcoin
-              versus cash conditions.
-            </p>
-          </article>
-          <article class="about-panel">
-            <h3>Falsify</h3>
-            <p>
-              The clean flip that would undo the read. Example: inflation turns
-              cold while growth stays strong softens a “duration is hard” call.
+              Will borrowers pay? Rising credit risk comes from soft growth,
+              expensive fear, activity rolling over, high-yield spreads widening,
+              and a slowing credit impulse in the US or China. Falling is the mirror.
             </p>
           </article>
         </div>
-      </section>
-
-      <section class="about-block" id="method">
-        <h2>The mapping</h2>
         <p>
-          Lights are <strong>where it is</strong> versus an economic line — 7%
-          inflation is high even if it just fell. The 1w / 2w / 1m row is
-          <strong>which way it’s going</strong>. The six asset classes use both. GDP is
-          quarterly (1w and 1m share the latest quarter). Monthly prints have no
-          true one-week turn — 1w and 1m share the same print. Liquidity color is scarce
-          vs ample, not the dollar stock; the clocks show adding vs draining.
+          Those two, crossed, give the headline pairing:
         </p>
+        <ul class="about-steps">
+          <li>Duration risk rising and credit risk falling → stocks over long Treasuries</li>
+          <li>Duration risk falling and credit risk rising → long Treasuries over stocks</li>
+          <li>Both rising, cash paid → cash over stocks and bonds</li>
+          <li>Both falling → risk assets and duration can both work</li>
+        </ul>
         <p>
-          From the lights we score two risks. <strong>Duration</strong> asks whether
-          long coupons are taxed (hot inflation, tight real funding) — cooling this
-          window can soften that even when the level is still high.
-          <strong>Credit</strong> asks whether borrowers still look good for the
-          money. Stocks vs bonds follows that pair.
+          Each class runs a checklist of conditions. The conditions are about
+          interactions, not levels: not “growth is soft, therefore sell,” but
+          “growth is soft while fear is still cheap” — the combination that has
+          actually hurt. Valuation sits in the checklist both ways, against
+          23-year medians: term premium and the 10-year real yield for Treasuries,
+          the high-yield spread (or Baa over longer history) for Credit, earnings
+          yield minus the 10-year real for Equities, positioning for Gold. Cheap
+          adds, expensive subtracts.
         </p>
         <ul class="about-steps">
           <li>
             <strong>Treasuries</strong>
-            — 5s follow policy, 10s follow duration and inflation, 30s follow
-            inflation (and duration). A flight to quality can help 10s and 30s
-            if inflation isn’t hot.
+            — the 5-year is a policy call: is funding easing or tightening. The 10s
+            and 30s are duration risk plus inflation plus whether the term premium
+            and real yields pay you to hold them. The parent call is the long end
+            only. The 5-year is shown on the strip and left out of the call, because
+            the front end is what the Rates light already measures.
           </li>
           <li>
             <strong>Credit</strong>
-            — investment grade and high yield on the strip, like 5s / 10s / 30s.
-            Investment-grade bonds care about duration as well as spreads;
-            high yield cares about growth, fear, and whether the spread pays.
-            Cycle-tight OAS takes high yield out even if fear is cheap. If the
-            two disagree, the Credit title is mixed.
+            — investment grade is mostly duration with a credit overlay. High yield
+            is mostly the growth-and-fear question, plus whether spreads pay you.
+            “Spreads are tight — you are not paid” is a standalone out condition.
+            If the two disagree, the Credit title is mixed.
           </li>
           <li>
             <strong>Equities</strong>
-            — broad call when growth is firm and fear isn’t in charge. Soft
-            growth, draining cash, or risk-off takes the title out. On the
-            strip: <strong>Cy</strong> (cyclicals) wants Strong growth and
-            calm fear; <strong>Df</strong> (defensives) wants Soft growth or
-            expensive fear. Proxies are XLY and XLP.
+            — expensive fear opens the risk premium; complacent fear into firm
+            growth is late to the expansion. A wide earnings yield against real
+            yields adds. Cash draining into a still-calm tape subtracts.
+            <strong>Cy</strong> (cyclicals, XLY) leans harder on growth;
+            <strong>Df</strong> (defensives, XLP) leans harder on fear.
           </li>
           <li>
             <strong>Crypto</strong>
-            — Bitcoin, the high-beta liquidity valve. In when plumbing is easy
-            and fear isn’t in charge. Out when cash is draining or risk is off.
-            It does not vote Liquidity; it confirms or falsifies it.
+            — Bitcoin, the high-beta valve. Easy plumbing into cheap fear is the
+            classic dump. Drain into paid fear is the bounce sample. A rising
+            dollar and high real yields both tax it. It does not vote a light.
           </li>
           <li>
             <strong>Gold</strong>
-            — in for fear, a cash drain that isn’t a rates squeeze, or hot prices
-            with easy funding. Hot inflation alone is not enough. Cold inflation,
-            risk-on, and high funding usually leave it out.
+            — three jobs, no permanent one: crisis plumbing, an inflation wage when
+            the dollar is soft, and deflation fear. When none of those is live, the
+            app says so — “gold has no job right now” — rather than inventing a
+            reason. Crowded speculative longs lean against the call.
           </li>
           <li>
             <strong>Commodity</strong>
-            — title from oil and copper: in when both are in; out when both are
-            out; otherwise mixed. On the strip:
-            <strong>Oi</strong> (oil) follows Growth and the dollar;
-            <strong>Cu</strong>
-            (copper) follows Growth.
+            — oil and copper are not the same trade. <strong>Cu</strong> is the
+            industrial growth read; <strong>Oi</strong> carries the dollar and
+            supply. When they disagree the parent says so rather than averaging
+            the disagreement into silence.
           </li>
         </ul>
+        <p>
+          Tap a class for the call, the sentence explaining why, the component
+          split, and what history says. <strong>Full regime</strong> inside that
+          card is the longer sheet: the story, duration and credit risk, the full
+          in/out list, what happened last time, also-note for tensions, and Watch
+          for what would falsify. That last one is the app naming, in advance, the
+          print that would prove it wrong.
+        </p>
       </section>
 
       <section class="about-block" id="baserates">
         <h2>What happened last time</h2>
         <p>
-          A read is worth more when you know how often it has been right. Under
-          <strong>So what</strong> sits a base rate: the app scores every trading
-          day back to 2018 with the same five lights, finds the days that sat
-          closest to today, and shows what the market actually did over the weeks
-          that followed — the median move and how often each asset rose.
-          History agrees or disagrees only when both the hit rate and the median
-          move beat the unconditional tape the same way.
+          Under each asset class, and in the Full regime sheet, the app finds the
+          days in its 23-year record whose five-light mix most resembles today, and
+          reports what happened next: the median move and how often it went that
+          way. This is a base rate, not a forecast. It says “when the world has
+          looked like this before, here is what followed.”
         </p>
         <p>
-          Three things to hold in mind. It says how close the match is, and a
-          distant match is context rather than evidence. Days sitting next to each
-          other in the calendar are nearly the same day, so matches are kept at
-          least a month apart to stop one episode counting as twenty. And the
-          replay scores jobs, prices, GDP and NFCI on ALFRED vintages — the print
-          that was public that morning. Funding, the curve, volatility and
-          spreads are market-priced and not revised.
+          The app grades its own match: a close match is worth weight, a loose
+          match is context, a distant match is context rather than evidence. It
+          also says whether history agrees with today’s call — History agrees,
+          History disagrees, History is a coin flip, or History leans up/down.
+          When history disagrees, the class title on the strip turns white. That
+          is the app flagging its own internal argument rather than hiding it.
         </p>
         <p>
-          It is a base rate, not a forecast. Its most useful moments are when it
-          disagrees with the read above it, because that tells you the call rests
-          on this cycle being different from the last few.
+          Days sitting next to each other in the calendar are nearly the same day,
+          so matches are kept at least a few weeks apart to stop one episode
+          counting as twenty. Jobs, prices, GDP and NFCI are scored on ALFRED
+          vintages — the print that was public that morning — where the vintage
+          file reaches. Funding, the curve, volatility and spreads are
+          market-priced and not revised.
         </p>
       </section>
 
@@ -368,64 +453,509 @@
         </ol>
       </section>
 
-      <section class="about-block" id="data">
-        <h2>Where the numbers come from</h2>
-        <p>
-          Public sources: FRED, the New York Fed, Yahoo Finance, Bundesbank,
-          Bank of England, and Japan’s Ministry of Finance. A morning job bakes
-          the full book. On open, last prints that can move — Yahoo tape, official
-          dailies, G3 / SOFR spread / dollar 12m — refresh again. Weekly, monthly,
-          and quarterly lines stay on the last official release. Analog history
-          stays the morning snapshot.
-        </p>
-        <div class="about-status" id="aboutStatus">
-          <div>
-            <span class="status-label">Last data pull</span>
-            <span class="status-value" id="aboutIngest">—</span>
-          </div>
-          <div>
-            <span class="status-label">Coverage</span>
-            <span class="status-value" id="aboutCoverage">—</span>
-          </div>
-          <div>
-            <span class="status-label">Today’s check</span>
-            <span class="status-value" id="aboutBake">—</span>
-          </div>
-        </div>
+      <section class="about-block" id="screen">
+        <h2>Everything else on screen</h2>
+        <ul class="about-steps">
+          <li>
+            <strong>The series table</strong>
+            — every indicator, latest print coloured by direction over your
+            lookback. Tap a name for what it is, which light it votes, how often
+            it prints, its as-of date, and a link to the source. Tap the value to
+            flip that row into a sparkline.
+          </li>
+          <li>
+            <strong>Chart / Values</strong>
+            — flips the whole table. Each chart is the lookback window, with the
+            change labelled beside it.
+          </li>
+          <li>
+            <strong>Markets shelf</strong>
+            — on Markets, buckets appear: All, Equities, Credit, Duration, Metals,
+            Energy, Ag, Crypto. An age stamp shows how old the last prints are.
+            Listed names can lag about 15 minutes.
+          </li>
+          <li>
+            <strong>Compare</strong>
+            — pick up to 10 series and view them together. Clubs can be saved to
+            three slots (m1, m2, m3) and recalled later.
+          </li>
+          <li>
+            <strong>Build mark</strong>
+            — the number in the top-right of this page, and the
+            <code>?v=</code> on the files. If the page ever looks like last week’s,
+            that is the thing to check.
+          </li>
+        </ul>
       </section>
 
-      <section class="about-block" id="formula">
-        <h2>How a light gets its color</h2>
-        <div id="formulaBody" class="about-formula">
+      <section class="about-block" id="math">
+        <h2>The math</h2>
+        <p>
+          Everything the app computes — rather than copies off FRED or Yahoo — is
+          named here, with the identity used at ingest. Today’s fitted centres
+          load from this morning’s file so the numbers on this page can be checked
+          against the bake, not against a screenshot of last month’s bands.
+        </p>
+        <p class="muted tiny" id="mathLiveNote"></p>
+
+        <h3 class="about-gloss-head">Derived series</h3>
+        <p>
+          Dollar stocks (Fed assets, loans, a balance sheet) grow with the economy.
+          They never vote a colour. They either sit on the lookback, or they are
+          turned into a ratio, a spread, or a rate of change that can still mean
+          the same thing in ten years. FRED units are a trap: Fed assets and the
+          Treasury account arrive in millions, reverse repo in billions, Bank of
+          Japan assets in hundreds of millions of yen. The identities below are
+          what the ingest actually does with those units.
+        </p>
+        <dl class="formula-dl">
+          <div>
+            <dt>Net liquidity</dt>
+            <dd>
+              <code>WALCL(bn) − TGA(bn) − ON RRP(bn)</code>
+              <span class="ident-note">Fed assets and the Treasury account are millions on FRED, so each is divided by 1,000 first. Reverse repo is already billions. Rising means more cash in markets. The dollar stock does not vote; the GDP share does.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Reserves ÷ GDP</dt>
+            <dd>
+              <code>(WRESBAL millions ÷ 1,000) ÷ nominal GDP × 100</code>
+              <span class="ident-note">Bank reserves as a percent of the economy. Scored against its own trailing five-year normal, not a fixed band — reserves near zero before 2008 and enormous after are not the same system.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Net liquidity ÷ GDP</dt>
+            <dd>
+              <code>net liquidity (bn) ÷ nominal GDP × 100</code>
+              <span class="ident-note">The same plumbing stack as a share of GDP. Also trailing five-year.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Funding vs target top</dt>
+            <dd>
+              <code>(overnight funding − fed funds target top) × 100</code>
+              <span class="ident-note">In basis points. From 2018-04-02 that is SOFR; before then, effective fed funds versus the target, so the funding ballot covers the whole archive. Deeply negative means cash is trading inside the corridor; at or above zero means reserves are scarce. Trailing five-year. High is tight.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>G4 central bank assets</dt>
+            <dd>
+              <code>Fed + ECB×USD/EUR + BoJ×(100 / yen per dollar) + China FX reserves</code>
+              <span class="ident-note">Each leg converted at that day’s market rate, then summed in trillions of dollars. The China leg is FX reserves, not the PBoC balance sheet. The level does not vote.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Global CB assets, 12m</dt>
+            <dd>
+              <code>(G4 today − G4 ~1y ago) / |G4 ~1y ago| × 100</code>
+              <span class="ident-note">This is the G4 voter. Neutral sits at +5%, not zero, because world nominal output grows around that much. Flat balance sheets are a mild drain.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Dollar, 12m change</dt>
+            <dd>
+              <code>(broad dollar today − ~1y ago) / |~1y ago| × 100</code>
+              <span class="ident-note">DTWEXBGS. Rising is tight for Liquidity: most of the world borrows dollars it cannot print.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Global long rates (G3)</dt>
+            <dd>
+              <code>(Bund 10y + gilt 10y + JGB 10y) / 3</code>
+              <span class="ident-note">Official daily prints, last observation carried across holidays so one country’s close does not drop the average.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Credit impulse (US)</dt>
+            <dd>
+              <code>Δ over ~1y of (TOTLL YoY %)</code>
+              <span class="ident-note">The change in the year-over-year growth rate of bank loans, in percentage points. Second derivative: it turns before the stock does. Lookback only — it does not vote a colour.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>China credit impulse</dt>
+            <dd>
+              <code>China credit/GDP today − China credit/GDP four quarters ago</code>
+              <span class="ident-note">BIS private credit as a share of GDP, via FRED. Lookback only. The stock itself votes Liquidity at half weight because the print lags two to three quarters.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Equity risk premium</dt>
+            <dd>
+              <code>S&amp;P earnings yield − 10-year real yield</code>
+              <span class="ident-note">What stocks pay you over inflation-protected government debt. Wide = equities cheap versus duration.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Nominal − real GDP</dt>
+            <dd>
+              <code>nominal GDP YoY − real GDP YoY</code>
+              <span class="ident-note">How much of the expansion is prices versus actual activity. Does not vote a light; used in the story, not the ballot.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Stock–bond correlation</dt>
+            <dd>
+              <code>60-day Pearson of SPX returns vs −Δ 10-year yield</code>
+              <span class="ident-note">The yield change is sign-flipped so a falling yield counts as a positive bond return. Rising together means less diversification. Confirm/falsify, not a light vote.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Gold speculative positioning</dt>
+            <dd>
+              <code>156-week min–max index of CFTC non-commercial net % of open interest</code>
+              <span class="ident-note">0 is the least crowded print in that window, 100 the most. Raw contract counts drift with open interest, so only the index carries a band. Taxes the Gold call when longs are crowded. Does not vote Risk.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>2-year real (Rates vote)</dt>
+            <dd>
+              <code>2-year yield − core PCE YoY</code>
+              <span class="ident-note">Built at score time, not stored as its own series. TIPS 5y and 10y vote as published; this is the one trailing-core-PCE construct still on Rates.</span>
+            </dd>
+          </div>
+        </dl>
+        <div id="formulaLive" class="about-formula"></div>
+
+        <h3 class="about-gloss-head">How a print becomes a score</h3>
+        <p>
+          Each voter is mapped onto a common −1 to +1. Positive is always the
+          reflationary side of that light — more cash, easier funding, firmer
+          growth, hotter prices, more risk appetite. Two methods:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>A band</strong>
+            — three numbers for that series: low, normal, high, typically the 10th
+            percentile, the median, and the 90th of its own history. Below low is
+            −1; at the middle is 0; above high is +1; in between, a straight line.
+            If high is the contractionary end (VIX, real yields, the dollar), the
+            sign is flipped once, in the band, not again later.
+          </li>
+          <li>
+            <strong>Trailing five-year normal</strong>
+            — used where a fixed band would lie across a regime change: reserves ÷
+            GDP, net liquidity ÷ GDP, and the funding spread. Score is how many
+            standard deviations the print sits from its own recent mean, divided
+            by two and clipped to −1…+1. A 2005 reading is judged on 2000–2005,
+            never against a future it could not have known. About two years of
+            history are required before it will vote; short of that, it abstains.
+          </li>
+        </ul>
+        <p>
+          Bands are never guessed. An audit flags any series pinned at the top or
+          bottom of its band more than half the time — a constant wearing the
+          costume of a signal. Reverse repo did that for two years; financial
+          conditions did it for a decade. Both were pulled off the colour vote.
+        </p>
+
+        <h3 class="about-gloss-head">How scores become a light</h3>
+        <p>
+          Related indicators are grouped into ballots, and the ballots are
+          averaged — not the raw indicators. Core CPI and core PCE would otherwise
+          give inflation’s realized side two votes. Inside a ballot, members are
+          weighted (core PCE counts double against core CPI). Across ballots:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>Liquidity</strong>
+            — Fed balance sheet (the two GDP shares) · funding cost · funding
+            stress (commercial paper) · global central banks and the dollar ·
+            China credit at half weight.
+          </li>
+          <li>
+            <strong>Rates</strong>
+            — real yields · nominal yields · the curve · bond volatility.
+          </li>
+          <li>
+            <strong>Growth</strong>
+            — coincident (jobs, output) at half weight · leading at 1.5 · surveys.
+          </li>
+          <li>
+            <strong>Inflation</strong>
+            — realized (weight 2) · persistence · expectations.
+          </li>
+          <li>
+            <strong>Risk</strong>
+            — credit spreads · volatility.
+          </li>
+        </ul>
+        <p>
+          If a light has five or more ballots, the highest and the lowest are
+          dropped before the weighted average, so one wild reading cannot carry
+          it. With three or four ballots the trim is skipped — dropping ends
+          there would throw away the only Strong or Soft votes and pin the light
+          Mid. Liquidity is the light with five seats, so it is the one that trims.
+        </p>
+        <p>
+          Two overrides where averaging would lie:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>MOVE can turn Rates red but never green.</strong>
+            A spike means duration is unownable. Calm is not cheap money, so
+            silence does not get to vote easy — on the light or on the turn.
+          </li>
+          <li>
+            <strong>A broken funding market floors Liquidity.</strong>
+            If the funding-cost ballot or the commercial-paper ballot is at or
+            below −0.5, the light is held at least that tight. Quantity ballots
+            cannot talk it back up. In October 2008 reserves were far above
+            normal because the Fed was flooding a market where commercial paper
+            cost 242 basis points over fed funds. Easy funding never floors the
+            light the other way.
+          </li>
+        </ul>
+        <p>
+          Each light’s raw mix is then recentered on that light’s own 23-year
+          average and stretched so all five share one spread, then clipped to
+          −1.5…+1.5:
+        </p>
+        <p>
+          <code class="about-ident">score = clip( ((raw − mean) / sd) × shared spread × scale, −1.5, +1.5 )</code>
+        </p>
+        <p>
+          Colour changes at ±0.45. With that line and the shared spread, a
+          well-behaved light is amber roughly 60% of the time. That is arithmetic,
+          not indecision. Today’s fitted mean, sd, and scale for each light:
+        </p>
+        <div id="calibBody" class="about-formula">
           <p class="muted">Loading…</p>
         </div>
+
+        <h3 class="about-gloss-head">The lookback, and when a series stops voting</h3>
+        <p>
+          1w is 7 calendar days, 2w is 14, 1m is 30. Monthly series take one step
+          back for anything under about six weeks. Quarterly series share the
+          latest quarter on 1w and 1m. A small deadband treats noise as flat
+          before a chevron is drawn. The lookback score is the signed change
+          over that window; it never recolours the light.
+        </p>
+        <p>
+          A print older than its allowance does not vote: 14 days for a daily,
+          21 for a weekly, 85 for a monthly (observation-month dating, so a late
+          release of last month still counts), 190 for a quarterly. Past that, it
+          is hidden as stale.
+        </p>
+
+        <h3 class="about-gloss-head">Duration risk and credit risk</h3>
+        <p>
+          Before any class is graded, two nets are formed. Positive means that
+          risk is falling. Each light score is first turned into a soft 0–1
+          weight: it starts turning on at −0.2 and is fully on at the colour line
+          (±0.45), so a light sitting at +0.44 still counts almost as much as one
+          that has just flipped.
+        </p>
+        <p>
+          Duration net (positive = duration risk falling):
+        </p>
+        <p>
+          <code class="about-ident">−0.70 × hot inflation that is not cooling
++0.65 × cold inflation
++0.45 × hot-but-cooling this window
+−0.55 × tight Rates
++0.35 × easy Rates
++0.70 × term-premium z
++0.55 × 10-year real-yield z
+−0.25 × strong Growth × (1 − cold inflation)</code>
+        </p>
+        <p>
+          Credit net (positive = credit risk falling):
+        </p>
+        <p>
+          <code class="about-ident">+0.35 × strong Growth  −0.35 × soft Growth
++0.35 × Risk-on        −0.35 × Risk-off
+−0.30 if activity is rolling over this window, +0.20 if it is firming
+−0.30 if high-yield spreads are widening, +0.20 if they are tightening
+−0.35 if US bank-credit impulse is slowing, +0.35 if it is speeding up
+−0.15 if China credit impulse is slowing, +0.15 if it is speeding up
++0.25 × credit-spread z (wide = you are paid)</code>
+        </p>
+        <p>
+          Either net at or above +0.35 is falling; at or below −0.35 is rising;
+          in between is mixed.
+        </p>
+        <p>
+          Valuation z is <code>(print − median) / scale</code>, clipped to −1…+1.
+          Four of the six centres are the median of the same 2003–2026 window they
+          are then applied to, so each reads cheap about half the time as
+          arithmetic. High-yield OAS is the exception: pinned to a long-run
+          typical of 4.0%, because only about three years of the ICE series is
+          licensed. Today’s centres:
+        </p>
+        <div id="valBody" class="about-formula">
+          <p class="muted">Loading…</p>
+        </div>
+
+        <h3 class="about-gloss-head">How a class gets in / mixed / out</h3>
+        <p>
+          Each class adds and subtracts weights for the conditions that fire. The
+          total is the net. Most classes map in at +0.35 and out at −0.35.
+          Credit uses a slightly tighter pair; commodities use a looser one, so
+          they lean more often. The 5-year is shown on the Treasuries strip and
+          left out of the parent net. The lookback may slide the needle; it
+          cannot flip the call.
+        </p>
+      </section>
+
+      <section class="about-block" id="audits">
+        <h2>How we know it is right</h2>
+        <p>
+          Nothing in this app has ever broken loudly. Every real bug ran clean,
+          produced a plausible number, and stated something false with total
+          confidence. Four standing checks, plus a forward record. The daily bake
+          will not publish if the first check fails.
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>Sanity</strong>
+            — recomputes all eleven boxes (five lights, six classes) independently
+            and confirms they match what was published. Also checks that no series
+            is stale beyond its allowance and that every print is in a plausible
+            range. Today’s result is the “Today’s check” line above.
+          </li>
+          <li>
+            <strong>Band audit</strong>
+            — flags any band where the series sits pinned at an extreme, or barely
+            moves. A light that reaches one colour on under 8% of days has that
+            colour in name only. A green:red ratio worse than 3:1 usually means a
+            band is tracking an era rather than a condition.
+          </li>
+          <li>
+            <strong>Episode audit</strong>
+            — lines the five lights up against 24 named events (the GFC, the 2013
+            taper tantrum, 2018–19 QT, COVID, the 2021–22 inflation surge, and so
+            on), each with an expected reading written from what actually happened.
+            A well-shaped distribution is not the same as being right about a
+            crisis. This is the check that found the largest error the app has had.
+          </li>
+          <li>
+            <strong>Call audit</strong>
+            — replays the grading logic across the whole archive and asks whether
+            the classes called in favor actually outperformed the ones called out
+            of favor, on independent non-overlapping windows, not on consecutive
+            days that are really one bet. Fifty-eight days graded on a one-month
+            forward return is about two bets on one episode, not fifty-eight.
+          </li>
+        </ul>
+        <p>
+          One episode is worth keeping, because it is the distinction the lights
+          rest on. Rates reads Easy through the 2013 taper tantrum. The 10-year
+          went from 1.6% to 3.0% in four months — that looks wrong until you
+          notice the 2-year sat at 0.2%, the real 5-year never got above zero, QE
+          was still running $85bn a month, and the curve steepened. Rates were
+          easy the whole way; they became dramatically less easy. The drama lives
+          in the turn. The light showed green, falling steadily. A light that went
+          red there would be reporting the turn and calling it the level.
+        </p>
+        <p>
+          Every number in those backtests is measured over the same history the
+          settings were chosen on. The forward scorecard is the test that cannot
+          flatter the app: each morning the six calls are written down, and later
+          marked once the outcome exists. That record began in September 2026. It
+          prints empty on purpose, and it will not report a hit rate until a class
+          has twelve independent windows. <code>regime-history.json</code> is a
+          replay of today’s model over revised data, rebuilt whenever the model
+          changes. <code>regime-log.json</code> is what a reader actually saw that
+          morning, and is never recomputed.
+        </p>
+      </section>
+
+      <section class="about-block" id="limits">
+        <h2>Honest limits</h2>
+        <ul class="about-honest">
+          <li>
+            The archive starts in 2003 — the first date where real yields,
+            inflation breakevens, and net liquidity all exist together. It covers
+            the GFC, QE, COVID, and the 2022 tightening. It has never seen the
+            1970s, and it has never seen Volcker.
+          </li>
+          <li>
+            Where possible the archive uses the print as it was published that
+            morning. For some economic series that vintage record only reaches
+            back to around 2016; before that the app is reading revised figures,
+            which is slightly kinder to it than reality was.
+          </li>
+          <li>
+            Bitcoin’s record starts in 2014. Its base rates should not be read
+            beside a multi-decade Treasury or equity sample as an equal.
+          </li>
+          <li>
+            China’s credit stock lags two to three quarters. It votes at half
+            weight for exactly that reason.
+          </li>
+          <li>
+            “In favor” means this mix has historically rewarded owning this, over
+            about a one-month horizon. It is a base rate, not a target, and not
+            advice.
+          </li>
+          <li>
+            Bands, calibration, valuation medians, and class checklists were
+            fitted across 2003–2026 and then graded across 2003–2026. The episode
+            audit is more independent, because its expectations come from recorded
+            history rather than from the app. The only real test of a macro tool
+            is forward time, and that record has just started.
+          </li>
+          <li>
+            Four of the six valuation centres use the median of the same window
+            they are applied to, so none of them can ever report that a whole era
+            was expensive — the era is inside the centre. High yield, pinned at
+            4.0%, reads “you are not paid” on most days the app has run, which is
+            true of this period and means half of the credit call is not currently
+            separating one day from another.
+          </li>
+          <li>
+            The conditions behind each class call are economically motivated; the
+            exact weights are judgment, tuned until the audit passed, against
+            maybe five genuinely independent macro cycles. That is a real
+            overfitting risk. What protects it is that the conditions describe
+            interactions a desk would recognise — soft growth into cheap fear,
+            tight spreads that do not pay you — rather than being fitted curves.
+          </li>
+        </ul>
       </section>
 
       <section class="about-block" id="glossary">
         <h2>Glossary</h2>
 
-        <h3 class="about-gloss-head">Reading the numbers</h3>
+        <h3 class="about-gloss-head">On the lights</h3>
         <dl class="glossary">
           <div>
-            <dt id="g-level">Level</dt>
-            <dd>Where a light sits versus an economic line (2% inflation, ~4% unemployment, VIX and high-yield bands). High is high. Not a table column — only a few series vote this.</dd>
+            <dt id="g-lights">Light</dt>
+            <dd>One of the five regime reads: Liquidity, Rates, Growth, Inflation, Risk. Tap one to see the indicators behind it.</dd>
           </div>
           <div>
-            <dt id="g-impulse">Impulse</dt>
-            <dd>Up, flat, or down over 1w, 2w, or 1m. The turn. Monthly series: anything under about six weeks is the last print vs the one before.</dd>
+            <dt id="g-word">Word</dt>
+            <dd>The plain-English state of a light — Hot, Soft, Tightening.</dd>
+          </div>
+          <div>
+            <dt id="g-score">Score</dt>
+            <dd>The light’s number, −1.5 to +1.5. Colour changes at ±0.45.</dd>
+          </div>
+          <div>
+            <dt id="g-needle">Needle</dt>
+            <dd>The score drawn on a rail. On an asset class, shows lean within the call — it cannot flip the call.</dd>
+          </div>
+          <div>
+            <dt id="g-chevron">Chevron</dt>
+            <dd>▲▼– beside a light. Which way it has moved over the lookback.</dd>
           </div>
           <div>
             <dt id="g-1361">1w · 2w · 1m</dt>
-            <dd>Lookback. Default 1m. Does not recolor the lights.</dd>
+            <dd>Lookback. Default 1m. Sets the turn. Does not recolor the lights.</dd>
+          </div>
+          <div>
+            <dt id="g-ballot">Ballot</dt>
+            <dd>A group of related indicators that vote together, so correlated measures do not get counted twice.</dd>
+          </div>
+          <div>
+            <dt id="g-band">Band</dt>
+            <dd>The three numbers — low, normal, high — that convert one series’ print into a comparable score.</dd>
           </div>
         </dl>
 
         <h3 class="about-gloss-head">In the app</h3>
         <dl class="glossary">
-          <div>
-            <dt id="g-lights">Lights</dt>
-            <dd>The five status colors for liquidity, rates, growth, inflation, and risk. Tap one to see the indicators behind it.</dd>
-          </div>
           <div>
             <dt id="g-outputs">Markets</dt>
             <dd>Stocks, commodities, crypto, gold, and related prices — how risk assets are behaving, separate from the five lights.</dd>
@@ -439,24 +969,28 @@
             <dd>The six asset classes under the lights, and the panel behind a tap: duration risk, credit risk, 5/10/30, IG/HY, Cy/Df, Oi/Cu on the strip, what confirms, and what would falsify.</dd>
           </div>
           <div>
-            <dt id="g-mapping">The mapping</dt>
-            <dd>Usual in/out from the lights: level first, then the 1w/2w/1m lookback. Duration and credit, then the Treasury curve, credit, equities, crypto, gold, commodities. Crypto is the liquidity valve (Bitcoin) and does not vote a light. Gold needs a second job besides hot inflation — fear, a cash drain without a rates squeeze, or hot prices with easy funding. Crowded speculative longs lean against the gold call.</dd>
+            <dt id="g-favor">In / mixed / out of favor</dt>
+            <dd>The asset-class call. Green, amber, red on the strip.</dd>
           </div>
           <div>
             <dt id="g-duration">Duration risk</dt>
-            <dd>How rate moves change the value of cash flows that arrive later (bonds, and stock valuations that lean on the far future).</dd>
+            <dd>Whether owning long bonds is likely to hurt.</dd>
           </div>
           <div>
             <dt id="g-credit">Credit risk</dt>
-            <dd>Doubt that cash flows arrive at all — spreads, growth, and risk appetite.</dd>
+            <dd>Whether borrowers are likely to keep paying.</dd>
+          </div>
+          <div>
+            <dt id="g-analog">Analog</dt>
+            <dd>A past day whose five-light mix resembles today’s.</dd>
+          </div>
+          <div>
+            <dt id="g-baserate">Base rate</dt>
+            <dd>What happened after those days. Not a forecast.</dd>
           </div>
           <div>
             <dt id="g-credit-impulse">Credit impulse</dt>
-            <dd>Whether bank lending growth is speeding up or slowing down. Central-bank plumbing is one cash story; private lending is the other.</dd>
-          </div>
-          <div>
-            <dt id="g-nomreal">Nominal − real GDP</dt>
-            <dd>Nominal growth minus real growth — how much of the expansion is prices versus actual activity.</dd>
+            <dd>The change in the flow of new credit — the second derivative, which turns before the level does. Central-bank plumbing is one cash story; private lending is the other.</dd>
           </div>
         </dl>
 
@@ -484,7 +1018,11 @@
           </div>
           <div>
             <dt id="g-real">Real yield</dt>
-            <dd>Yield after inflation (TIPS). Higher real yields tighten conditions for risk assets.</dd>
+            <dd>Yield after inflation (TIPS). Higher real yields tighten conditions for risk assets. The market’s true cost of money.</dd>
+          </div>
+          <div>
+            <dt id="g-tp">Term premium</dt>
+            <dd>The extra yield for holding a long bond rather than rolling short ones. Wide means duration is paid.</dd>
           </div>
           <div>
             <dt id="g-be">Breakeven</dt>
@@ -508,7 +1046,7 @@
           </div>
           <div>
             <dt id="g-oas">OAS</dt>
-            <dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries. Wider means more credit stress.</dd>
+            <dd>Option-adjusted spread — extra yield a corporate bond pays over Treasuries, adjusted for embedded options. Wider means more credit stress.</dd>
           </div>
           <div>
             <dt id="g-vol">VIX / MOVE</dt>
@@ -518,7 +1056,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261021"></script>
+  <script type="module" src="about.js?v=20261023"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
