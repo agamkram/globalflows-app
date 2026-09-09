@@ -533,10 +533,13 @@ async function writeHistory(id, payload, lengthLedger) {
   if (raw) out.raw = raw;
   await fs.writeFile(path.join(HIST, `${id}.json`), JSON.stringify(out, null, 0));
 
-  const first = points[0]?.date || null;
-  const last = points[points.length - 1]?.date || null;
+  const first = (raw || points)[0]?.date || null;
+  const last = (raw || points)[(raw || points).length - 1]?.date || null;
   const prev = lengthLedger.series[id];
-  const high = Math.max(prev?.n || 0, points.length);
+  // Prefer raw length for transformed series — YoY/diff drop ~a year of scored points
+  // without losing observations.
+  const countForLedger = raw ? raw.length : points.length;
+  const high = Math.max(prev?.n || 0, countForLedger);
   lengthLedger.series[id] = {
     n: high,
     first: prev?.first && first ? (prev.first < first ? prev.first : first) : first,

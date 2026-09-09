@@ -157,9 +157,9 @@
       "id": "liquidity",
       "label": "Liquidity",
       "state": "neutral",
-      "score": -0.2316551133030395,
+      "score": -0.3009993493386194,
       "n": 5,
-      "nAnchor": 6,
+      "nAnchor": 5,
       "words": {
         "easing": "Easing",
         "neutral": "Neutral",
@@ -189,7 +189,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0,
+        "score": 0.0627235562724772,
         "dir": "flat"
       }
     },
@@ -197,9 +197,9 @@
       "id": "rates",
       "label": "Rates",
       "state": "tight",
-      "score": -0.7366666666666667,
+      "score": -0.6073031550177118,
       "n": 6,
-      "nAnchor": 8,
+      "nAnchor": 6,
       "words": {
         "easing": "Easy",
         "neutral": "Neutral",
@@ -225,17 +225,17 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": -0.2500000000000002,
+        "score": -0.4951032573983393,
         "dir": "down"
       }
     },
     "growth": {
       "id": "growth",
       "label": "Growth",
-      "state": "neutral",
-      "score": 0.08,
-      "n": 6,
-      "nAnchor": 7,
+      "state": "easing",
+      "score": 0.45185444616257014,
+      "n": 12,
+      "nAnchor": 12,
       "words": {
         "easing": "Strong",
         "neutral": "Mid",
@@ -245,7 +245,13 @@
         "PAYEMS",
         "UNRATE",
         "ICSA",
+        "JTSJOL",
+        "DGORDER",
+        "HOUST",
+        "PERMIT",
         "GDPC1",
+        "EMPIRE_MFG",
+        "PHILLY_MFG",
         "CFNAI",
         "WEI"
       ],
@@ -253,7 +259,13 @@
         "PAYEMS",
         "UNRATE",
         "ICSA",
+        "JTSJOL",
+        "DGORDER",
+        "HOUST",
+        "PERMIT",
         "GDPC1",
+        "EMPIRE_MFG",
+        "PHILLY_MFG",
         "CFNAI",
         "WEI",
         "RSAFS",
@@ -262,17 +274,17 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.75,
+        "score": 0.8393981029559646,
         "dir": "up"
       }
     },
     "inflation": {
       "id": "inflation",
       "label": "Inflation",
-      "state": "easing",
-      "score": 0.4526651983161887,
+      "state": "neutral",
+      "score": 0.409350474662323,
       "n": 3,
-      "nAnchor": 4,
+      "nAnchor": 3,
       "words": {
         "easing": "Hot",
         "neutral": "Mid",
@@ -291,17 +303,17 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.0016516830006474414,
-        "dir": "flat"
+        "score": -0.2676313687615061,
+        "dir": "down"
       }
     },
     "risk": {
       "id": "risk",
       "label": "Risk",
       "state": "easing",
-      "score": 0.8153846153846153,
+      "score": 0.5318461271432731,
       "n": 4,
-      "nAnchor": 5,
+      "nAnchor": 4,
       "words": {
         "easing": "Risk-on",
         "neutral": "Neutral",
@@ -322,7 +334,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.15625000000000014,
+        "score": 0.07187489867210353,
         "dir": "flat"
       }
     }
@@ -4035,28 +4047,28 @@
       "layer": "growth",
       "street": "growth",
       "causal": "labels",
-      "units": "k",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "JOLTS job openings. Labor demand; falling openings = cooling.",
+      "note": "JOLTS job openings, 12-month change. Leading labor demand (the stock of openings drifted up for a decade, so the light reads YoY).",
       "sub": "Unfilled jobs (JOLTS)",
       "search": "JTSJOL",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSJOL",
-      "latest": 7271,
+      "latest": 2.56735787840316,
       "asOf": "2026-07-01",
       "n": 308,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "jolts_yoy",
+        "score": -0.07540221692614946,
+        "why": "job openings +2.6% over 12m",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4103,7 +4115,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "JTSJOL",
+      "transform": "yoy"
     },
     "JTSQUR": {
       "id": "JTSQUR",
@@ -4339,28 +4354,28 @@
       "layer": "growth",
       "street": "growth",
       "causal": "labels",
-      "units": "USD mn",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Durable goods orders. Capex and goods-demand lead.",
+      "note": "Durable goods orders, 12-month change. Leading factory demand (dollar levels grow forever, so the light reads YoY).",
       "sub": "Big-ticket factory demand",
       "search": "DGORDER",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGORDER",
-      "latest": 339392,
+      "latest": 11.99873280709628,
       "asOf": "2026-07-01",
       "n": 414,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "dgorder_yoy",
+        "score": 0.8887480896773644,
+        "why": "durable goods orders +12.0% over 12m",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4407,7 +4422,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "DGORDER",
+      "transform": "yoy"
     },
     "HOUST": {
       "id": "HOUST",
@@ -4418,12 +4436,12 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Housing starts. New residential construction — rate-sensitive growth.",
+      "note": "Housing starts — homes breaking ground. Leading growth sleeve.",
       "sub": "New homes begun",
       "search": "HOUST",
       "freshness": "live",
@@ -4433,10 +4451,10 @@
       "asOf": "2026-07-01",
       "n": 439,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "housings",
+        "score": -0.22199999999999998,
+        "why": "1239k housing starts (SAAR)",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4483,7 +4501,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "HOUST",
+      "transform": null
     },
     "PERMIT": {
       "id": "PERMIT",
@@ -4494,12 +4515,12 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Building permits. Forward look at housing starts.",
+      "note": "Building permits — forward housing demand. Leading growth sleeve.",
       "sub": "OK to start building",
       "search": "PERMIT",
       "freshness": "live",
@@ -4509,10 +4530,10 @@
       "asOf": "2026-07-01",
       "n": 439,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "permits",
+        "score": 0.07333333333333333,
+        "why": "1433k building permits (SAAR)",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4559,7 +4580,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "PERMIT",
+      "transform": null
     },
     "CPIAUCSL": {
       "id": "CPIAUCSL",
@@ -7054,12 +7078,12 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity.",
+      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity — Growth survey sleeve.",
       "sub": "NY Fed factory survey",
       "search": "GACDISA066MSFRBNY",
       "freshness": "live",
@@ -7069,10 +7093,10 @@
       "asOf": "2026-08-01",
       "n": 302,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "empire_mfg",
+        "score": 0.9034482758620691,
+        "why": "Empire manufacturing 20.6",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -7119,7 +7143,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 38
+      "staleDays": 38,
+      "pipe": "fred",
+      "fred": "GACDISA066MSFRBNY",
+      "transform": null
     },
     "PHILLY_MFG": {
       "id": "PHILLY_MFG",
@@ -7130,12 +7157,12 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Philly Fed manufacturing survey. Another regional PMI-style read.",
+      "note": "Philly Fed manufacturing survey. Regional PMI-style activity — Growth survey sleeve.",
       "sub": "Philly Fed factory survey",
       "search": "GACDFSA066MSFRBPHI",
       "freshness": "live",
@@ -7145,10 +7172,10 @@
       "asOf": "2026-08-01",
       "n": 440,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "philly_mfg",
+        "score": 1,
+        "why": "Philly manufacturing 47.4",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -7195,7 +7222,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 38
+      "staleDays": 38,
+      "pipe": "fred",
+      "fred": "GACDFSA066MSFRBPHI",
+      "transform": null
     },
     "CFNAI": {
       "id": "CFNAI",
@@ -12478,6 +12508,181 @@
   "formula": {
     "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
-    "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
+    "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10",
+    "summary": "Lights = weighted mean of voter anchors (correlated families first). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%."
+  },
+  "meaning": {
+    "past": "Over the past month",
+    "horizon": "1m",
+    "duration": {
+      "dir": "rising",
+      "label": "Duration risk rising",
+      "line": "Long bonds aren’t getting paid — funding is tight, so present value stays under pressure. Real 10y yields are high — discount rates still bite."
+    },
+    "credit": {
+      "dir": "falling",
+      "label": "Credit risk falling",
+      "line": "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating this window — private lending is adding fuel."
+    },
+    "favor": {
+      "pair": {
+        "line": "Stocks over long Treasuries",
+        "why": "Cash flows still look collectible while discount rates tax long bonds."
+      },
+      "items": [
+        {
+          "id": "treasuries",
+          "name": "Treasuries",
+          "stance": "out",
+          "why": "The whole curve is taxed — policy, duration, and inflation aren’t paying.",
+          "margin": -0.6924730124232027,
+          "tenors": [
+            {
+              "id": "5",
+              "name": "5",
+              "stance": "out",
+              "why": "Policy/funding still taxes the 5s.",
+              "margin": -0.8124192747143566
+            },
+            {
+              "id": "10",
+              "name": "10",
+              "stance": "out",
+              "why": "Discount rates still tax the 10s.",
+              "margin": -0.6174712013213435
+            },
+            {
+              "id": "30",
+              "name": "30",
+              "stance": "out",
+              "why": "Term premium or duration risk — 30s aren’t getting paid.",
+              "margin": -0.647528561233908
+            }
+          ]
+        },
+        {
+          "id": "credit",
+          "name": "Credit",
+          "stance": "mixed",
+          "why": "Investment grade and high yield are both mixed.",
+          "margin": 0.13309459904540089,
+          "splits": [
+            {
+              "id": "ig",
+              "name": "IG",
+              "stance": "mixed",
+              "why": "Investment-grade credit sits between duration and credit risk; neither side is giving a clean signal.",
+              "net": 0,
+              "label": "Investment grade",
+              "margin": -0.00968159048669429
+            },
+            {
+              "id": "hy",
+              "name": "HY",
+              "stance": "mixed",
+              "why": "High yield needs both growth and calm fear; only one side is helping.",
+              "net": 0.29900065066138065,
+              "label": "High yield",
+              "margin": 0.2758707885774961
+            }
+          ]
+        },
+        {
+          "id": "stocks",
+          "name": "Equities",
+          "stance": "mixed",
+          "why": "Growth isn’t a clean overweight, and real 10y yields already tax the multiple.",
+          "net": 0.14900065066138046,
+          "margin": 0.19233261529481363,
+          "splits": [
+            {
+              "id": "cyc",
+              "name": "Cy",
+              "stance": "in",
+              "why": "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
+              "net": 0.45000000000000007,
+              "label": "Cyclicals",
+              "margin": 0.4090521468186197
+            },
+            {
+              "id": "def",
+              "name": "Df",
+              "stance": "out",
+              "why": "Strong growth and Risk-on — defensives usually lag that mix.",
+              "net": -0.5,
+              "label": "Defensives",
+              "margin": -0.4450521468186197
+            }
+          ]
+        },
+        {
+          "id": "crypto",
+          "name": "Crypto",
+          "stance": "mixed",
+          "why": "Crypto wants easy plumbing and calm fear; only one side is helping.",
+          "net": -0.161598958941791,
+          "margin": -0.10378872797659532
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "stance": "out",
+          "why": "Real 10y yields are high.",
+          "net": -0.5,
+          "margin": -0.3916872516271369
+        },
+        {
+          "id": "cmdty",
+          "name": "Commodity",
+          "stance": "in",
+          "why": "Oil and copper are both in — firm growth and a cooperative dollar.",
+          "margin": 0.727515734413835,
+          "splits": [
+            {
+              "id": "oil",
+              "name": "Oi",
+              "stance": "in",
+              "why": "Growth is firm, the dollar isn’t taxing dollar oil, and crude is firm this window.",
+              "net": 0.5,
+              "label": "Oil",
+              "margin": 0.5783438229425567
+            },
+            {
+              "id": "copper",
+              "name": "Cu",
+              "stance": "in",
+              "why": "Growth is Strong — copper usually gets the industrial bid.",
+              "net": 1,
+              "label": "Copper",
+              "margin": 0.8766876458851134
+            }
+          ]
+        }
+      ]
+    },
+    "confirm": [
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
+      "The 10y yield is rising this window — markets are already marking duration risk up.",
+      "Copper is firm with Strong growth — the industrial tape is confirming.",
+      "Oil is firm with Strong growth — the crude tape is confirming."
+    ],
+    "falsify": [],
+    "lines": [
+      "Long bonds aren’t getting paid — funding is tight, so present value stays under pressure. Real 10y yields are high — discount rates still bite.",
+      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible. Bank credit impulse is accelerating this window — private lending is adding fuel.",
+      "Stock–bond correlation is falling this window — classic balancers can still hedge each other.",
+      "The 10y yield is rising this window — markets are already marking duration risk up.",
+      "Copper is firm with Strong growth — the industrial tape is confirming."
+    ],
+    "snapshot": {
+      "liquidity": "Neutral",
+      "rates": "Tight",
+      "growth": "Strong",
+      "inflation": "Mid",
+      "risk": "Risk-on",
+      "creditImpulse": 3.00274393222095,
+      "nomRealSpread": 4.463880581194535,
+      "stockBondCorr": 0.41429766698804893
+    }
   }
 }

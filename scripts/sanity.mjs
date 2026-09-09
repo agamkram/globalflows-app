@@ -226,9 +226,17 @@ async function main() {
       let last = null;
       try {
         const hist = JSON.parse(await fs.readFile(path.join(HIST, `${id}.json`), "utf8"));
-        n = Array.isArray(hist.points) ? hist.points.length : 0;
-        first = hist.points?.[0]?.date || null;
-        last = hist.points?.[n - 1]?.date || null;
+        // Transformed series (YoY/diff) keep fewer scored points than observations.
+        // Append-only is about the underlying record — prefer raw when present.
+        const pts =
+          Array.isArray(hist.raw) && hist.raw.length
+            ? hist.raw
+            : Array.isArray(hist.points)
+              ? hist.points
+              : [];
+        n = pts.length;
+        first = pts[0]?.date || null;
+        last = pts[n - 1]?.date || null;
       } catch {
         fails.push(`${id}: history file missing (high-water n=${want})`);
         shrunk++;

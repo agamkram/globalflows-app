@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261008";
+import { buildMeaning } from "./meaning.js?v=20261009";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261008";
+} from "./score.js?v=20261009";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -446,7 +446,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light or the turn.",
   growth:
-    "Real activity — jobs, claims, weekly/monthly activity, spending, copper. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — coincident jobs and GDP, a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — core measures, median, sticky prices, expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:

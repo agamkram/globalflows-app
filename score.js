@@ -26,6 +26,13 @@ const VOTE_FAMILIES = {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
   },
+  // Coincident labor/GDP, leading housing/orders/openings, and regional surveys
+  // each cast one family ballot so six lagging prints cannot drown the turn.
+  growth: {
+    coincident: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"],
+    leading: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"],
+    survey: ["EMPIRE_MFG", "PHILLY_MFG"],
+  },
 };
 
 /** Weight is influence, not a duplicate median seat. */
@@ -123,6 +130,14 @@ const KIND = {
   GDP: "gdp_nom",
   CFNAI: "cfnai",
   WEI: "wei",
+  // Leading growth sleeve — housing levels (physical units), orders/openings as YoY.
+  PERMIT: "permits",
+  HOUST: "housings",
+  DGORDER: "dgorder_yoy",
+  JTSJOL: "jolts_yoy",
+  // Regional Fed surveys stand in for ISM (not on FRED).
+  EMPIRE_MFG: "empire_mfg",
+  PHILLY_MFG: "philly_mfg",
   RSAFS: "none",
   COPPER: "none",
   VIX: "vix",
@@ -190,6 +205,28 @@ function scoreKind(kind, value) {
       return bandScore(value, -0.7, 0, 0.7, false);
     case "wei":
       return bandScore(value, 0, 2.0, 4.0, false);
+    // Building permits (thousands SAAR). 1990–2026: ~900 is soft (post-GFC floor
+    // neighbourhood), 1400 the median, 1850 the boom upper quartile.
+    case "permits":
+      return bandScore(value, 900, 1400, 1850, false);
+    // Housing starts (thousands SAAR). Same record: soft near 850, mid 1350, firm 1750.
+    case "housings":
+      return bandScore(value, 850, 1350, 1750, false);
+    // Durable goods orders, 12-month %. Dollar levels trend up forever; YoY is the
+    // signal. Soft near −7 (p10), mid +4 (p50), firm +13 (p90).
+    case "dgorder_yoy":
+      return bandScore(value, -7, 4, 13, false);
+    // JOLTS openings, 12-month %. The stock of openings drifted up for a decade, so
+    // the light reads the turn: soft near −15, mid +4, firm +20.
+    case "jolts_yoy":
+      return bandScore(value, -15, 4, 20, false);
+    // NY Fed Empire State general business conditions. Diffusion index: soft −10,
+    // mid ~7.5, firm ~22 (p10 / p50 / ~p90 since 2001).
+    case "empire_mfg":
+      return bandScore(value, -10, 7.5, 22, false);
+    // Philly Fed current activity. Soft −12, mid 9, firm 24 on the 1990–2026 record.
+    case "philly_mfg":
+      return bandScore(value, -12, 9, 24, false);
     // Last ten years: 12 is the 10th percentile, 17 the median, 28 the 90th.
     // Floor at 14 left VIX near maximum calm whenever it sat in the teens.
     case "vix":
@@ -296,6 +333,18 @@ function whyKind(kind, value) {
       return `activity index ${fmt(v, 2)} (0 ≈ trend)`;
     case "wei":
       return `weekly activity ${fmt(v)}`;
+    case "permits":
+      return `${fmt(v, 0)}k building permits (SAAR)`;
+    case "housings":
+      return `${fmt(v, 0)}k housing starts (SAAR)`;
+    case "dgorder_yoy":
+      return `durable goods orders ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m`;
+    case "jolts_yoy":
+      return `job openings ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m`;
+    case "empire_mfg":
+      return `Empire manufacturing ${fmt(v, 1)}`;
+    case "philly_mfg":
+      return `Philly manufacturing ${fmt(v, 1)}`;
     case "vix":
       return `VIX ${fmt(v, 1)}`;
     case "hy":

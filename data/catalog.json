@@ -1,6 +1,6 @@
 {
   "title": "GlobalFlows series book",
-  "note": "Flexible catalog — hang series on layers; empty cell > fake number.",
+  "note": "Flexible catalog \u2014 hang series on layers; empty cell > fake number.",
   "layers": [
     {
       "id": "liquidity",
@@ -29,7 +29,7 @@
     {
       "id": "risk",
       "label": "Risk",
-      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress.",
+      "blurb": "Vol, credit spreads, financial conditions \u2014 fear and funding stress.",
       "role": "street"
     },
     {
@@ -92,7 +92,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "note": "Overnight reverse repo — cash parked at the Fed. Drained to near zero since 2023, so the level no longer says much; the direction still does.",
+      "note": "Overnight reverse repo \u2014 cash parked at the Fed. Drained to near zero since 2023, so the level no longer says much; the direction still does.",
       "sourceUrl": "https://fred.stlouisfed.org/series/RRPONTSYD",
       "sub": "Cash parked at the Fed",
       "search": "RRPONTSYD",
@@ -110,7 +110,7 @@
       "freq": "weekly",
       "sign": -1,
       "light": null,
-      "note": "Treasury General Account — the government's Fed checking account. Rise pulls reserves out of banks.",
+      "note": "Treasury General Account \u2014 the government's Fed checking account. Rise pulls reserves out of banks.",
       "sourceUrl": "https://fred.stlouisfed.org/series/WTREGEN",
       "sub": "Gov checking acct at Fed",
       "search": "WTREGEN",
@@ -187,7 +187,7 @@
       "search": "CREDIT_IMPULSE",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy — the private-sector impulse, not just Fed plumbing.",
+      "note": "Change in the YoY growth rate of bank loans (TOTLL). Rising = credit accelerating into the economy \u2014 the private-sector impulse, not just Fed plumbing.",
       "impulseLight": "liquidity"
     },
     {
@@ -205,7 +205,7 @@
       "causal": "liquidity",
       "street": "liquidity",
       "light": null,
-      "note": "H.8 weekly C&I loans (FRED TOTCI). FRED’s BUSLOANS ticker is monthly; this is the weekly print."
+      "note": "H.8 weekly C&I loans (FRED TOTCI). FRED\u2019s BUSLOANS ticker is monthly; this is the weekly print."
     },
     {
       "id": "GFDEBTN",
@@ -265,7 +265,7 @@
       "layer": "liquidity",
       "pipe": "fred",
       "fred": "JPNASSETS",
-      "units": "¥100m",
+      "units": "\u00a5100m",
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/JPNASSETS",
@@ -292,7 +292,7 @@
       "causal": "liquidity",
       "street": "liquidity",
       "light": null,
-      "note": "Secured Overnight Financing Rate — US overnight secured funding cost. Higher = tighter cash."
+      "note": "Secured Overnight Financing Rate \u2014 US overnight secured funding cost. Higher = tighter cash."
     },
     {
       "id": "EFFR",
@@ -309,7 +309,7 @@
       "causal": "liquidity",
       "street": "liquidity",
       "light": null,
-      "note": "Effective Federal Funds Rate — where overnight bank reserves actually trade vs the Fed target."
+      "note": "Effective Federal Funds Rate \u2014 where overnight bank reserves actually trade vs the Fed target."
     },
     {
       "id": "NET_LIQ",
@@ -323,8 +323,8 @@
       "light": null,
       "weight": 2,
       "sourceUrl": "https://fred.stlouisfed.org/series/WALCL",
-      "note": "Street shorthand: Fed assets − TGA − ON RRP. Rising = more cash in markets.",
-      "sub": "Fed assets − TGA − ON RRP",
+      "note": "Street shorthand: Fed assets \u2212 TGA \u2212 ON RRP. Rising = more cash in markets.",
+      "sub": "Fed assets \u2212 TGA \u2212 ON RRP",
       "search": "NET_LIQ",
       "causal": "liquidity",
       "street": "liquidity",
@@ -346,11 +346,11 @@
       "search": "SOFR_SPREAD",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce — that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing."
+      "note": "Secured overnight funding minus the top of the fed funds target. Deeply negative means reserves are so ample that cash trades well inside the corridor; at or above zero means reserves are scarce \u2014 that is where repo broke in September 2019. A spread against policy cannot go stale as the balance sheet grows, so this is the most reliable read on plumbing."
     },
     {
       "id": "RESERVES_GDP",
-      "name": "Reserves ÷ GDP",
+      "name": "Reserves \u00f7 GDP",
       "layer": "liquidity",
       "pipe": "derived",
       "derive": "reserves_gdp",
@@ -368,7 +368,7 @@
     },
     {
       "id": "NETLIQ_GDP",
-      "name": "Net liquidity ÷ GDP",
+      "name": "Net liquidity \u00f7 GDP",
       "layer": "liquidity",
       "pipe": "derived",
       "derive": "netliq_gdp",
@@ -433,7 +433,7 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "5-year Treasury yield. Mid-curve — mix of policy path and growth/inflation views."
+      "note": "5-year Treasury yield. Mid-curve \u2014 mix of policy path and growth/inflation views."
     },
     {
       "id": "DGS10",
@@ -519,7 +519,7 @@
       "search": "DFII5",
       "causal": "rates",
       "street": "rates",
-      "note": "5-year TIPS real yield — the market’s real funding rate. Votes the Rates light on the real-rate band; do not replace this with nominal minus trailing core PCE."
+      "note": "5-year TIPS real yield \u2014 the market\u2019s real funding rate. Votes the Rates light on the real-rate band; do not replace this with nominal minus trailing core PCE."
     },
     {
       "id": "DFII10",
@@ -537,7 +537,7 @@
       "search": "DFII10",
       "causal": "rates",
       "street": "rates",
-      "note": "10-year TIPS real yield — the discount rate risk assets actually face. Votes the Rates light on the real-rate band."
+      "note": "10-year TIPS real yield \u2014 the discount rate risk assets actually face. Votes the Rates light on the real-rate band."
     },
     {
       "id": "T5YIE",
@@ -554,7 +554,7 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "5-year breakeven inflation — market's expected average CPI over 5 years."
+      "note": "5-year breakeven inflation \u2014 market's expected average CPI over 5 years."
     },
     {
       "id": "T10YIE",
@@ -571,7 +571,7 @@
       "causal": "rates",
       "street": "rates",
       "light": null,
-      "note": "10-year breakeven inflation — market's long-run inflation pricing."
+      "note": "10-year breakeven inflation \u2014 market's long-run inflation pricing."
     },
     {
       "id": "T5YIFR",
@@ -583,13 +583,13 @@
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/T5YIFR",
-      "sub": "Inflation 5–10y ahead",
+      "sub": "Inflation 5\u201310y ahead",
       "search": "T5YIFR",
       "causal": "rates",
       "street": "rates",
       "light": "inflation",
       "weight": 1,
-      "note": "5y5y forward inflation — inflation expected 5–10 years out. The Fed's preferred long-run gauge, and the inflation light's market voter: 2.3% is the CPI-equivalent of a 2% PCE target. Realized PCE and this print can disagree; when they do, the light says so."
+      "note": "5y5y forward inflation \u2014 inflation expected 5\u201310 years out. The Fed's preferred long-run gauge, and the inflation light's market voter: 2.3% is the CPI-equivalent of a 2% PCE target. Realized PCE and this print can disagree; when they do, the light says so."
     },
     {
       "id": "DTWEXBGS",
@@ -625,7 +625,7 @@
       "causal": "rates",
       "street": "fx",
       "light": null,
-      "note": "BIS real effective USD — inflation-adjusted dollar strength vs trading partners."
+      "note": "BIS real effective USD \u2014 inflation-adjusted dollar strength vs trading partners."
     },
     {
       "id": "IRLTLT01DEM156N",
@@ -638,7 +638,7 @@
       "sign": -1,
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-      "sub": "Bund risk-free rate · OECD monthly",
+      "sub": "Bund risk-free rate \u00b7 OECD monthly",
       "search": "IRLTLT01DEM156N",
       "causal": "rates",
       "street": "rates",
@@ -656,7 +656,7 @@
       "sign": -1,
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01GBM156N",
-      "sub": "Gilt risk-free rate · OECD monthly",
+      "sub": "Gilt risk-free rate \u00b7 OECD monthly",
       "search": "IRLTLT01GBM156N",
       "causal": "rates",
       "street": "rates",
@@ -674,7 +674,7 @@
       "sign": -1,
       "freshness": "lagged",
       "sourceUrl": "https://fred.stlouisfed.org/series/IRLTLT01JPM156N",
-      "sub": "JGB risk-free rate · OECD monthly",
+      "sub": "JGB risk-free rate \u00b7 OECD monthly",
       "search": "IRLTLT01JPM156N",
       "causal": "rates",
       "street": "rates",
@@ -691,7 +691,7 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://www.bundesbank.de/en/statistics/money-and-capital-markets/interest-rates-and-yields/daily-term-structure-on-listed-federal-securities-651570",
-      "sub": "German 10-year · Bundesbank daily",
+      "sub": "German 10-year \u00b7 Bundesbank daily",
       "search": "DE10Y Bund",
       "causal": "rates",
       "street": "rates",
@@ -708,7 +708,7 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://www.bankofengland.co.uk/statistics/yield-curves",
-      "sub": "UK 10-year · BoE daily par yield",
+      "sub": "UK 10-year \u00b7 BoE daily par yield",
       "search": "GB10Y gilt",
       "causal": "rates",
       "street": "rates",
@@ -724,7 +724,7 @@
       "freq": "daily",
       "sign": -1,
       "sourceUrl": "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/index.htm",
-      "sub": "Japan 10-year · MOF daily",
+      "sub": "Japan 10-year \u00b7 MOF daily",
       "search": "JP10Y JGB",
       "causal": "rates",
       "street": "rates",
@@ -746,7 +746,7 @@
       "search": "^MOVE",
       "causal": "rates",
       "street": "rates",
-      "note": "ICE BofA MOVE — implied vol on Treasuries. The rates complex’s stress gauge: a spike taxes the Rates light (dealers won’t warehouse duration); calm does not vote easy."
+      "note": "ICE BofA MOVE \u2014 implied vol on Treasuries. The rates complex\u2019s stress gauge: a spike taxes the Rates light (dealers won\u2019t warehouse duration); calm does not vote easy."
     },
     {
       "id": "DXY",
@@ -917,7 +917,7 @@
       "search": "PAYEMS",
       "causal": "labels",
       "street": "growth",
-      "note": "Nonfarm payrolls — monthly jobs added. Headline labor-market print.",
+      "note": "Nonfarm payrolls \u2014 monthly jobs added. Headline labor-market print.",
       "weight": 2
     },
     {
@@ -987,7 +987,7 @@
       "search": "ICSA",
       "causal": "labels",
       "street": "growth",
-      "note": "Initial jobless claims — weekly new unemployment filings. Fast labor stress tell."
+      "note": "Initial jobless claims \u2014 weekly new unemployment filings. Fast labor stress tell."
     },
     {
       "id": "CCSA",
@@ -1004,7 +1004,7 @@
       "causal": "labels",
       "street": "growth",
       "light": null,
-      "note": "Continuing claims — people still on unemployment. Stickier labor softening."
+      "note": "Continuing claims \u2014 people still on unemployment. Stickier labor softening."
     },
     {
       "id": "JTSJOL",
@@ -1012,16 +1012,18 @@
       "layer": "growth",
       "pipe": "fred",
       "fred": "JTSJOL",
-      "units": "k",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSJOL",
       "sub": "Unfilled jobs (JOLTS)",
       "search": "JTSJOL",
       "causal": "labels",
       "street": "growth",
-      "note": "JOLTS job openings. Labor demand; falling openings = cooling."
+      "note": "JOLTS job openings, 12-month change. Leading labor demand (the stock of openings drifted up for a decade, so the light reads YoY).",
+      "weight": 1,
+      "transform": "yoy"
     },
     {
       "id": "JTSQUR",
@@ -1038,7 +1040,7 @@
       "causal": "labels",
       "street": "growth",
       "light": null,
-      "note": "JOLTS quit rate. Workers' confidence quitting — high = tight labor market."
+      "note": "JOLTS quit rate. Workers' confidence quitting \u2014 high = tight labor market."
     },
     {
       "id": "CES0500000003",
@@ -1081,7 +1083,7 @@
       "layer": "growth",
       "pipe": "fred",
       "fred": "DGORDER",
-      "units": "USD mn",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGORDER",
@@ -1089,8 +1091,10 @@
       "search": "DGORDER",
       "causal": "labels",
       "street": "growth",
-      "light": null,
-      "note": "Durable goods orders. Capex and goods-demand lead."
+      "light": "growth",
+      "note": "Durable goods orders, 12-month change. Leading factory demand (dollar levels grow forever, so the light reads YoY).",
+      "weight": 1,
+      "transform": "yoy"
     },
     {
       "id": "HOUST",
@@ -1106,8 +1110,9 @@
       "search": "HOUST",
       "causal": "labels",
       "street": "growth",
-      "light": null,
-      "note": "Housing starts. New residential construction — rate-sensitive growth."
+      "light": "growth",
+      "note": "Housing starts \u2014 homes breaking ground. Leading growth sleeve.",
+      "weight": 1
     },
     {
       "id": "PERMIT",
@@ -1123,8 +1128,9 @@
       "search": "PERMIT",
       "causal": "labels",
       "street": "growth",
-      "light": null,
-      "note": "Building permits. Forward look at housing starts."
+      "light": "growth",
+      "note": "Building permits \u2014 forward housing demand. Leading growth sleeve.",
+      "weight": 1
     },
     {
       "id": "CPIAUCSL",
@@ -1179,7 +1185,7 @@
       "search": "PCEPI",
       "causal": "labels",
       "street": "inflation",
-      "note": "Headline PCE price index — Fed's official inflation target basket."
+      "note": "Headline PCE price index \u2014 Fed's official inflation target basket."
     },
     {
       "id": "PCEPILFE",
@@ -1216,7 +1222,7 @@
       "search": "MICH",
       "causal": "labels",
       "street": "inflation",
-      "note": "UMich 1-year inflation expectations. Household inflation psychology — on the book and the lookback, does not vote the Inflation light. Households run hot versus the Fed's basket."
+      "note": "UMich 1-year inflation expectations. Household inflation psychology \u2014 on the book and the lookback, does not vote the Inflation light. Households run hot versus the Fed's basket."
     },
     {
       "id": "GDPC1",
@@ -1236,7 +1242,7 @@
       "search": "GDPC1",
       "causal": "labels",
       "street": "growth",
-      "note": "Real GDP YoY. Volume of the whole economy — the real side of growth."
+      "note": "Real GDP YoY. Volume of the whole economy \u2014 the real side of growth."
     },
     {
       "id": "GDP",
@@ -1256,12 +1262,12 @@
       "search": "GDP",
       "causal": "labels",
       "street": "growth",
-      "note": "Nominal GDP YoY. Dollar spending in the economy — growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation.",
+      "note": "Nominal GDP YoY. Dollar spending in the economy \u2014 growth + prices. Split vs real GDP tells you how much of the heat is real vs inflation.",
       "impulseLight": "growth"
     },
     {
       "id": "NOM_REAL_SPREAD",
-      "name": "Nominal − real GDP",
+      "name": "Nominal \u2212 real GDP",
       "layer": "growth",
       "pipe": "derived",
       "derive": "nom_real_spread",
@@ -1292,7 +1298,7 @@
       "search": "HG=F",
       "causal": "labels",
       "street": "growth",
-      "note": "Copper futures. \"Dr. Copper\" — industrial demand / global growth proxy.",
+      "note": "Copper futures. \"Dr. Copper\" \u2014 industrial demand / global growth proxy.",
       "marketBucket": "metals",
       "order": 430,
       "impulseLight": "growth"
@@ -1312,7 +1318,7 @@
       "search": "^VIX",
       "causal": "risk",
       "street": "risk",
-      "note": "Cboe VIX — 30-day implied vol on the S&P 500. Equity fear gauge."
+      "note": "Cboe VIX \u2014 30-day implied vol on the S&P 500. Equity fear gauge."
     },
     {
       "id": "BAMLH0A0HYM2",
@@ -1346,7 +1352,7 @@
       "search": "BAMLC0A0CM",
       "causal": "risk",
       "street": "risk",
-      "note": "ICE BofA investment-grade OAS. Extra yield on investment-grade corporates — milder credit stress."
+      "note": "ICE BofA investment-grade OAS. Extra yield on investment-grade corporates \u2014 milder credit stress."
     },
     {
       "id": "NFCI",
@@ -1380,7 +1386,7 @@
       "causal": "risk",
       "street": "risk",
       "light": null,
-      "note": "Adjusted NFCI — strips out economic activity so it's more about pure financial stress."
+      "note": "Adjusted NFCI \u2014 strips out economic activity so it's more about pure financial stress."
     },
     {
       "id": "SPX",
@@ -1473,7 +1479,7 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Russell 2000. US small-cap risk — more domestic and credit-sensitive.",
+      "note": "Russell 2000. US small-cap risk \u2014 more domestic and credit-sensitive.",
       "marketBucket": "equities",
       "order": 130
     },
@@ -1492,7 +1498,7 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Gold futures. Real-rate / dollar / fear hedge — treat as an output, not a cause.",
+      "note": "Gold futures. Real-rate / dollar / fear hedge \u2014 treat as an output, not a cause.",
       "marketBucket": "metals",
       "order": 410
     },
@@ -1511,7 +1517,7 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "Bitcoin. Speculative liquidity-sensitive risk asset — output, not input.",
+      "note": "Bitcoin. Speculative liquidity-sensitive risk asset \u2014 output, not input.",
       "marketBucket": "crypto",
       "order": 710
     },
@@ -1555,11 +1561,11 @@
     },
     {
       "id": "STOCK_BOND_CORR",
-      "name": "Stock–bond correlation",
+      "name": "Stock\u2013bond correlation",
       "layer": "risk",
       "pipe": "derived",
       "derive": "stock_bond_corr",
-      "units": "ρ 60d",
+      "units": "\u03c1 60d",
       "freq": "daily",
       "sign": 0,
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
@@ -1580,7 +1586,7 @@
       "units": "USD mn",
       "freq": "monthly",
       "sign": 0,
-      "note": "Monthly federal budget balance. Deficit (−) means more Treasury issuance ahead.",
+      "note": "Monthly federal budget balance. Deficit (\u2212) means more Treasury issuance ahead.",
       "sourceUrl": "https://fred.stlouisfed.org/series/MTSDS133FMS",
       "layer": "liquidity",
       "sub": "Monthly surplus/deficit",
@@ -1620,7 +1626,7 @@
       "sub": "Treasuries in Fed's SOMA",
       "search": "TREAST",
       "light": null,
-      "note": "Fed's SOMA Treasury holdings — the QE/QT Treasury piece of the balance sheet."
+      "note": "Fed's SOMA Treasury holdings \u2014 the QE/QT Treasury piece of the balance sheet."
     },
     {
       "id": "FYGFDPUN",
@@ -1654,7 +1660,7 @@
       "layer": "rates",
       "sub": "Policy rate ceiling",
       "search": "DFEDTARU",
-      "note": "Top of the Fed's federal funds target range. Used to build SOFR_SPREAD; does not vote Rates — audit:bands flagged it pinned (~54%) as a near-constant after trailing-PCE deflation."
+      "note": "Top of the Fed's federal funds target range. Used to build SOFR_SPREAD; does not vote Rates \u2014 audit:bands flagged it pinned (~54%) as a near-constant after trailing-PCE deflation."
     },
     {
       "id": "DFEDTARL",
@@ -1701,7 +1707,7 @@
       "freq": "daily",
       "sign": -1,
       "light": null,
-      "note": "NY Fed ACM 10y forward term premium — extra yield for long-bond risk, beyond rate-path expectations.",
+      "note": "NY Fed ACM 10y forward term premium \u2014 extra yield for long-bond risk, beyond rate-path expectations.",
       "sourceUrl": "https://fred.stlouisfed.org/series/THREEFFTP10",
       "layer": "rates",
       "sub": "Extra pay for long bonds",
@@ -1722,7 +1728,7 @@
       "sub": "Extra pay for rate risk",
       "search": "THREEFFTP2",
       "light": null,
-      "note": "NY Fed ACM 2y forward term premium — near-term bond risk premium."
+      "note": "NY Fed ACM 2y forward term premium \u2014 near-term bond risk premium."
     },
     {
       "id": "T10YFF",
@@ -1802,7 +1808,7 @@
       "units": "FX",
       "freq": "daily",
       "sign": 1,
-      "note": "Euro vs yen. Classic risk-on cross — rises when risk appetite improves.",
+      "note": "Euro vs yen. Classic risk-on cross \u2014 rises when risk appetite improves.",
       "sourceUrl": "https://finance.yahoo.com/quote/EURJPY=X",
       "layer": "fx",
       "sub": "Risk appetite cross",
@@ -1819,12 +1825,13 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
-      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity.",
+      "light": "growth",
+      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity \u2014 Growth survey sleeve.",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY",
       "layer": "growth",
       "sub": "NY Fed factory survey",
-      "search": "GACDISA066MSFRBNY"
+      "search": "GACDISA066MSFRBNY",
+      "weight": 1
     },
     {
       "id": "PHILLY_MFG",
@@ -1836,12 +1843,13 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
-      "note": "Philly Fed manufacturing survey. Another regional PMI-style read.",
+      "light": "growth",
+      "note": "Philly Fed manufacturing survey. Regional PMI-style activity \u2014 Growth survey sleeve.",
       "sourceUrl": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI",
       "layer": "growth",
       "sub": "Philly Fed factory survey",
-      "search": "GACDFSA066MSFRBPHI"
+      "search": "GACDFSA066MSFRBPHI",
+      "weight": 1
     },
     {
       "id": "CFNAI",
@@ -1858,7 +1866,7 @@
       "layer": "growth",
       "sub": "Broad growth index",
       "search": "CFNAI",
-      "note": "Chicago Fed National Activity Index. Broad monthly growth factor (0 ≈ trend)."
+      "note": "Chicago Fed National Activity Index. Broad monthly growth factor (0 \u2248 trend)."
     },
     {
       "id": "WEI",
@@ -1911,7 +1919,7 @@
       "sub": "Homes changing hands",
       "search": "EXHOSLUSM495S",
       "light": null,
-      "note": "Existing home sales. Housing turnover — rates and affordability."
+      "note": "Existing home sales. Housing turnover \u2014 rates and affordability."
     },
     {
       "id": "UMCSENT",
@@ -2016,7 +2024,7 @@
       "layer": "inflation",
       "sub": "Rents & housing in CPI",
       "search": "CUSR0000SAH1",
-      "note": "CPI shelter. Housing rents/OER — big, sticky CPI weight."
+      "note": "CPI shelter. Housing rents/OER \u2014 big, sticky CPI weight."
     },
     {
       "id": "SUPERCORE",
@@ -2030,7 +2038,7 @@
       "sign": 0,
       "light": null,
       "transform": "yoy",
-      "note": "CPI services ex energy. \"Supercore\" — services inflation the Fed watches.",
+      "note": "CPI services ex energy. \"Supercore\" \u2014 services inflation the Fed watches.",
       "sourceUrl": "https://fred.stlouisfed.org/series/CUSR0000SASLE",
       "layer": "inflation",
       "sub": "Supercore services prices",
@@ -2156,7 +2164,7 @@
       "layer": "risk",
       "sub": "Jobless jump vs low",
       "search": "SAHMREALTIME",
-      "note": "Sahm rule trigger — unemployment jump vs recent low. Recession flag when ≥0.5."
+      "note": "Sahm rule trigger \u2014 unemployment jump vs recent low. Recession flag when \u22650.5."
     },
     {
       "id": "HYG",
@@ -2211,7 +2219,7 @@
       "sub": "Price of S&P crash hedges",
       "search": "^SKEW",
       "light": null,
-      "note": "Cboe SKEW — price of S&P crash insurance (tail risk). Higher = more fear of a crash."
+      "note": "Cboe SKEW \u2014 price of S&P crash insurance (tail risk). Higher = more fear of a crash."
     },
     {
       "id": "SILVER",
@@ -2386,7 +2394,7 @@
     },
     {
       "id": "IEF",
-      "name": "7–10y Treasury ETF",
+      "name": "7\u201310y Treasury ETF",
       "layer": "markets",
       "street": "markets",
       "pipe": "yahoo",
@@ -2401,11 +2409,11 @@
       "sub": "Intermediate Treasuries",
       "search": "IEF",
       "causal": "assets",
-      "note": "iShares 7–10 Year Treasury. Intermediate duration prices."
+      "note": "iShares 7\u201310 Year Treasury. Intermediate duration prices."
     },
     {
       "id": "SHY",
-      "name": "1–3y Treasury ETF",
+      "name": "1\u20133y Treasury ETF",
       "layer": "markets",
       "street": "markets",
       "pipe": "yahoo",
@@ -2420,7 +2428,7 @@
       "sub": "Short Treasuries",
       "search": "SHY",
       "causal": "assets",
-      "note": "iShares 1–3 Year Treasury. Short duration / cash-like rates."
+      "note": "iShares 1\u20133 Year Treasury. Short duration / cash-like rates."
     },
     {
       "id": "TIP",
@@ -2515,7 +2523,7 @@
       "sub": "US 30-name household tape",
       "search": "^DJI",
       "causal": "assets",
-      "note": "Dow Jones Industrial Average. 30-name household US equity tape — narrower than the S&P 500."
+      "note": "Dow Jones Industrial Average. 30-name household US equity tape \u2014 narrower than the S&P 500."
     },
     {
       "id": "EWY",
@@ -2610,7 +2618,7 @@
       "sub": "Palladium futures",
       "search": "PA=F",
       "causal": "assets",
-      "note": "Palladium futures. Auto-catalyst metal — completes the precious/industrial set."
+      "note": "Palladium futures. Auto-catalyst metal \u2014 completes the precious/industrial set."
     },
     {
       "id": "GASOLINE",
@@ -2629,7 +2637,7 @@
       "sub": "US gasoline futures",
       "search": "RB=F",
       "causal": "assets",
-      "note": "RBOB gasoline futures. Downstream oil — the pump-price tape."
+      "note": "RBOB gasoline futures. Downstream oil \u2014 the pump-price tape."
     },
     {
       "id": "HEATOIL",
@@ -2648,7 +2656,7 @@
       "sub": "Diesel / distillate",
       "search": "HO=F",
       "causal": "assets",
-      "note": "NYMEX heating oil / ULSD. Distillate — freight, heating, and the crack vs crude."
+      "note": "NYMEX heating oil / ULSD. Distillate \u2014 freight, heating, and the crack vs crude."
     },
     {
       "id": "TTF",
@@ -2667,7 +2675,7 @@
       "sub": "Europe gas benchmark",
       "search": "TTF=F",
       "causal": "assets",
-      "note": "Dutch TTF natural gas. European gas benchmark — the non-US energy shock tape."
+      "note": "Dutch TTF natural gas. European gas benchmark \u2014 the non-US energy shock tape."
     },
     {
       "id": "CORN",
@@ -2676,7 +2684,7 @@
       "street": "markets",
       "pipe": "yahoo",
       "yahoo": "ZC=F",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -2695,7 +2703,7 @@
       "street": "markets",
       "pipe": "yahoo",
       "yahoo": "ZW=F",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -2714,7 +2722,7 @@
       "street": "markets",
       "pipe": "yahoo",
       "yahoo": "ZS=F",
-      "units": "¢/bu",
+      "units": "\u00a2/bu",
       "freq": "daily",
       "sign": 1,
       "light": null,
@@ -2724,7 +2732,7 @@
       "sub": "CBOT soybean futures",
       "search": "ZS=F",
       "causal": "assets",
-      "note": "Soybean futures. Protein / crush — China demand tell."
+      "note": "Soybean futures. Protein / crush \u2014 China demand tell."
     },
     {
       "id": "BNB",
@@ -2743,7 +2751,7 @@
       "sub": "Binance coin",
       "search": "BNB-USD",
       "causal": "assets",
-      "note": "BNB. Exchange-chain crypto — liquidity-sensitive alt."
+      "note": "BNB. Exchange-chain crypto \u2014 liquidity-sensitive alt."
     },
     {
       "id": "XRP",
@@ -2762,7 +2770,7 @@
       "sub": "Payments crypto",
       "search": "XRP-USD",
       "causal": "assets",
-      "note": "XRP. Cross-border payments crypto — beta to risk and regulation."
+      "note": "XRP. Cross-border payments crypto \u2014 beta to risk and regulation."
     },
     {
       "id": "SOL",
@@ -2781,7 +2789,7 @@
       "sub": "High-throughput L1",
       "search": "SOL-USD",
       "causal": "assets",
-      "note": "Solana. High-throughput smart-contract chain — crypto risk appetite."
+      "note": "Solana. High-throughput smart-contract chain \u2014 crypto risk appetite."
     },
     {
       "id": "TRX",
@@ -2819,7 +2827,7 @@
       "sub": "Perp DEX token",
       "search": "HYPE",
       "causal": "assets",
-      "note": "Hyperliquid. On-chain perp-DEX token — crypto trading-activity proxy."
+      "note": "Hyperliquid. On-chain perp-DEX token \u2014 crypto trading-activity proxy."
     },
     {
       "id": "ZEC",
@@ -2857,7 +2865,7 @@
       "sub": "Meme liquidity",
       "search": "DOGE-USD",
       "causal": "assets",
-      "note": "Dogecoin. Meme-beta crypto — retail risk appetite."
+      "note": "Dogecoin. Meme-beta crypto \u2014 retail risk appetite."
     },
     {
       "id": "XMR",
@@ -2914,7 +2922,7 @@
       "sub": "Oracle network",
       "search": "LINK-USD",
       "causal": "assets",
-      "note": "Chainlink. Oracle infrastructure — DeFi plumbing tape."
+      "note": "Chainlink. Oracle infrastructure \u2014 DeFi plumbing tape."
     },
     {
       "id": "ADA",
@@ -3008,7 +3016,7 @@
       "search": "GLOBAL_CB",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "The four balance sheets that actually set the price of global money, converted to dollars at market rates so they can be added up. The China leg is FX reserves rather than the PBoC balance sheet, which FRED does not carry — for global dollar liquidity that is arguably the more relevant number, since it is the part that recycles into world markets."
+      "note": "The four balance sheets that actually set the price of global money, converted to dollars at market rates so they can be added up. The China leg is FX reserves rather than the PBoC balance sheet, which FRED does not carry \u2014 for global dollar liquidity that is arguably the more relevant number, since it is the part that recycles into world markets."
     },
     {
       "id": "GLOBAL_CB_YOY",
@@ -3062,7 +3070,7 @@
       "search": "G3_10Y",
       "causal": "rates",
       "street": "rates",
-      "note": "Average 10-year across Germany, the UK and Japan from official daily prints: Bundesbank Bund term structure, Bank of England gilt par yield, Japan MOF JGB. Duration is priced globally — when Bunds and JGBs move, Treasuries follow."
+      "note": "Average 10-year across Germany, the UK and Japan from official daily prints: Bundesbank Bund term structure, Bank of England gilt par yield, Japan MOF JGB. Duration is priced globally \u2014 when Bunds and JGBs move, Treasuries follow."
     }
   ],
   "lights": [
@@ -3127,7 +3135,7 @@
     {
       "id": "risk",
       "label": "Risk",
-      "blurb": "Vol, credit spreads, financial conditions — fear and funding stress."
+      "blurb": "Vol, credit spreads, financial conditions \u2014 fear and funding stress."
     },
     {
       "id": "fx",
@@ -3169,7 +3177,7 @@
       "id": "assets",
       "label": "Assets",
       "role": "outputs",
-      "blurb": "Outputs — never lead with this."
+      "blurb": "Outputs \u2014 never lead with this."
     }
   ]
 }

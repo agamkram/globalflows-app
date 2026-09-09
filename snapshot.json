@@ -232,10 +232,10 @@
     "growth": {
       "id": "growth",
       "label": "Growth",
-      "state": "neutral",
-      "score": 0.17959430150689687,
-      "n": 6,
-      "nAnchor": 6,
+      "state": "easing",
+      "score": 0.45185444616257014,
+      "n": 12,
+      "nAnchor": 12,
       "words": {
         "easing": "Strong",
         "neutral": "Mid",
@@ -245,7 +245,13 @@
         "PAYEMS",
         "UNRATE",
         "ICSA",
+        "JTSJOL",
+        "DGORDER",
+        "HOUST",
+        "PERMIT",
         "GDPC1",
+        "EMPIRE_MFG",
+        "PHILLY_MFG",
         "CFNAI",
         "WEI"
       ],
@@ -253,7 +259,13 @@
         "PAYEMS",
         "UNRATE",
         "ICSA",
+        "JTSJOL",
+        "DGORDER",
+        "HOUST",
+        "PERMIT",
         "GDPC1",
+        "EMPIRE_MFG",
+        "PHILLY_MFG",
         "CFNAI",
         "WEI",
         "RSAFS",
@@ -262,7 +274,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.32926691522547086,
+        "score": 0.8393981029559646,
         "dir": "up"
       }
     },
@@ -4035,28 +4047,28 @@
       "layer": "growth",
       "street": "growth",
       "causal": "labels",
-      "units": "k",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "JOLTS job openings. Labor demand; falling openings = cooling.",
+      "note": "JOLTS job openings, 12-month change. Leading labor demand (the stock of openings drifted up for a decade, so the light reads YoY).",
       "sub": "Unfilled jobs (JOLTS)",
       "search": "JTSJOL",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/JTSJOL",
-      "latest": 7271,
+      "latest": 2.56735787840316,
       "asOf": "2026-07-01",
       "n": 308,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "jolts_yoy",
+        "score": -0.07540221692614946,
+        "why": "job openings +2.6% over 12m",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4103,7 +4115,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "JTSJOL",
+      "transform": "yoy"
     },
     "JTSQUR": {
       "id": "JTSQUR",
@@ -4339,28 +4354,28 @@
       "layer": "growth",
       "street": "growth",
       "causal": "labels",
-      "units": "USD mn",
+      "units": "% YoY",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Durable goods orders. Capex and goods-demand lead.",
+      "note": "Durable goods orders, 12-month change. Leading factory demand (dollar levels grow forever, so the light reads YoY).",
       "sub": "Big-ticket factory demand",
       "search": "DGORDER",
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGORDER",
-      "latest": 339392,
+      "latest": 11.99873280709628,
       "asOf": "2026-07-01",
       "n": 414,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "dgorder_yoy",
+        "score": 0.8887480896773644,
+        "why": "durable goods orders +12.0% over 12m",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4407,7 +4422,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "DGORDER",
+      "transform": "yoy"
     },
     "HOUST": {
       "id": "HOUST",
@@ -4418,12 +4436,12 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Housing starts. New residential construction — rate-sensitive growth.",
+      "note": "Housing starts — homes breaking ground. Leading growth sleeve.",
       "sub": "New homes begun",
       "search": "HOUST",
       "freshness": "live",
@@ -4433,10 +4451,10 @@
       "asOf": "2026-07-01",
       "n": 439,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "housings",
+        "score": -0.22199999999999998,
+        "why": "1239k housing starts (SAAR)",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4483,7 +4501,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "HOUST",
+      "transform": null
     },
     "PERMIT": {
       "id": "PERMIT",
@@ -4494,12 +4515,12 @@
       "units": "k",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Building permits. Forward look at housing starts.",
+      "note": "Building permits — forward housing demand. Leading growth sleeve.",
       "sub": "OK to start building",
       "search": "PERMIT",
       "freshness": "live",
@@ -4509,10 +4530,10 @@
       "asOf": "2026-07-01",
       "n": 439,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "permits",
+        "score": 0.07333333333333333,
+        "why": "1433k building permits (SAAR)",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -4559,7 +4580,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 69
+      "staleDays": 69,
+      "pipe": "fred",
+      "fred": "PERMIT",
+      "transform": null
     },
     "CPIAUCSL": {
       "id": "CPIAUCSL",
@@ -7054,12 +7078,12 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity.",
+      "note": "NY Fed Empire State manufacturing survey. Regional PMI-style activity — Growth survey sleeve.",
       "sub": "NY Fed factory survey",
       "search": "GACDISA066MSFRBNY",
       "freshness": "live",
@@ -7069,10 +7093,10 @@
       "asOf": "2026-08-01",
       "n": 302,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "empire_mfg",
+        "score": 0.9034482758620691,
+        "why": "Empire manufacturing 20.6",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -7119,7 +7143,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 38
+      "staleDays": 38,
+      "pipe": "fred",
+      "fred": "GACDISA066MSFRBNY",
+      "transform": null
     },
     "PHILLY_MFG": {
       "id": "PHILLY_MFG",
@@ -7130,12 +7157,12 @@
       "units": "index",
       "freq": "monthly",
       "sign": 1,
-      "light": null,
+      "light": "growth",
       "impulseLight": null,
       "weight": 1,
       "marketBucket": null,
       "order": null,
-      "note": "Philly Fed manufacturing survey. Another regional PMI-style read.",
+      "note": "Philly Fed manufacturing survey. Regional PMI-style activity — Growth survey sleeve.",
       "sub": "Philly Fed factory survey",
       "search": "GACDFSA066MSFRBPHI",
       "freshness": "live",
@@ -7145,10 +7172,10 @@
       "asOf": "2026-08-01",
       "n": 440,
       "anchor": {
-        "kind": "none",
-        "score": null,
-        "why": "no level anchor — flow/impulse only",
-        "votes": false
+        "kind": "philly_mfg",
+        "score": 1,
+        "why": "Philly manufacturing 47.4",
+        "votes": true
       },
       "impulse": {
         "1w": {
@@ -7195,7 +7222,10 @@
         }
       },
       "status": "ok",
-      "staleDays": 38
+      "staleDays": 38,
+      "pipe": "fred",
+      "fred": "GACDFSA066MSFRBPHI",
+      "transform": null
     },
     "CFNAI": {
       "id": "CFNAI",
@@ -12535,7 +12565,7 @@
           "name": "Credit",
           "stance": "mixed",
           "why": "Investment grade and high yield are both mixed.",
-          "margin": 0.08727121976497686,
+          "margin": 0.13309459904540089,
           "splits": [
             {
               "id": "ig",
@@ -12551,9 +12581,9 @@
               "name": "HY",
               "stance": "mixed",
               "why": "High yield needs both growth and calm fear; only one side is helping.",
-              "net": 0.2157988972788874,
+              "net": 0.29900065066138065,
               "label": "High yield",
-              "margin": 0.184224030016648
+              "margin": 0.2758707885774961
             }
           ]
         },
@@ -12562,26 +12592,26 @@
           "name": "Equities",
           "stance": "mixed",
           "why": "Growth isn’t a clean overweight, and real 10y yields already tax the multiple.",
-          "net": 0.003397582242017305,
-          "margin": 0.03988616184469274,
+          "net": 0.14900065066138046,
+          "margin": 0.19233261529481363,
           "splits": [
             {
               "id": "cyc",
               "name": "Cy",
-              "stance": "mixed",
-              "why": "Cyclicals want Strong growth and calm fear; only one side is helping.",
-              "net": 0.2627960548893902,
+              "stance": "in",
+              "why": "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
+              "net": 0.45000000000000007,
               "label": "Cyclicals",
-              "margin": 0.2266530621508012
+              "margin": 0.4090521468186197
             },
             {
               "id": "def",
               "name": "Df",
-              "stance": "mixed",
-              "why": "Defensives want Soft growth or expensive fear; the expansion mix leaves them mixed.",
-              "net": -0.2919956165437668,
+              "stance": "out",
+              "why": "Strong growth and Risk-on — defensives usually lag that mix.",
+              "net": -0.5,
               "label": "Defensives",
-              "margin": -0.24767674654195238
+              "margin": -0.4450521468186197
             }
           ]
         },
@@ -12605,26 +12635,26 @@
           "id": "cmdty",
           "name": "Commodity",
           "stance": "in",
-          "why": "Commodities lean in — oil mixed, copper in.",
-          "margin": 0.43145263399883405,
+          "why": "Oil and copper are both in — firm growth and a cooperative dollar.",
+          "margin": 0.727515734413835,
           "splits": [
             {
               "id": "oil",
               "name": "Oi",
-              "stance": "mixed",
-              "why": "Oil wants firm growth and a cooperative dollar; only one side is helping.",
-              "net": 0.2919956165437668,
+              "stance": "in",
+              "why": "Growth is firm, the dollar isn’t taxing dollar oil, and crude is firm this window.",
+              "net": 0.5,
               "label": "Oil",
-              "margin": 0.3809684226658894
+              "margin": 0.5783438229425567
             },
             {
               "id": "copper",
               "name": "Cu",
               "stance": "in",
               "why": "Growth is Strong — copper usually gets the industrial bid.",
-              "net": 0.5839912330875336,
+              "net": 1,
               "label": "Copper",
-              "margin": 0.4819368453317788
+              "margin": 0.8766876458851134
             }
           ]
         }
@@ -12647,7 +12677,7 @@
     "snapshot": {
       "liquidity": "Neutral",
       "rates": "Tight",
-      "growth": "Mid",
+      "growth": "Strong",
       "inflation": "Mid",
       "risk": "Risk-on",
       "creditImpulse": 3.00274393222095,
