@@ -43,6 +43,8 @@ const LIGHT_SINCE = "2003-01-01";
 const PIN_WARN = 0.5; // flag a voter pinned on more than half the days
 const FLAT_WARN = 0.15; // flag a voter whose score barely moves
 const AMBER_WARN = 0.6; // light stuck amber most days — scale or voters too quiet
+const ONEWAY_MIN = 0.08; // a colour reached on fewer days than this is not a call
+const SKEW_MAX = 3; // green:red (or red:green) beyond this describes an era
 const QUIET_SD_FRAC = 0.75; // flag light sd more than ~25% below the median light
 const OUT_SD_TOL = 0.05; // calibrated output sds must match — else ±0.45 is a different percentile
 const CALIB_SKIP = 252; // first year of archive is raw, before expanding-window calib
@@ -167,6 +169,30 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
       rawSd: RAW_SD[LIGHT_IDS[i]],
       n: vals.length,
     };
+  }
+  // A light can carry the right spread and still describe the calendar rather
+  // than the world. Liquidity was green 58% and red 1% across a window holding
+  // the GFC, the 2019 repo squeeze and the 2022 QT: correct sd, correct centre
+  // drift, and it called every crisis after 2008 ample. What gave it away was
+  // the count of red days, which nothing was checking. A light that almost never
+  // reaches one colour has that colour in name only.
+  for (const lid of LIGHT_IDS) {
+    const { green, red } = byLight[lid];
+    const one = Math.min(green, red);
+    const other = Math.max(green, red);
+    const thin = green < red ? "green" : "red";
+    if (one < ONEWAY_MIN) {
+      fails.push(
+        `${lid} light reaches ${thin} on ${(one * 100).toFixed(0)}% of days ` +
+          `(min ${(ONEWAY_MIN * 100).toFixed(0)}%) — that colour is decoration, not a call`
+      );
+    } else if (other > one * SKEW_MAX) {
+      fails.push(
+        `${lid} light is ${(other / one).toFixed(1)}:1 skewed ` +
+          `(green ${(green * 100).toFixed(0)}% vs red ${(red * 100).toFixed(0)}%, max ${SKEW_MAX}:1) — ` +
+          `check whether a voter's band is tracking an era rather than a condition`
+      );
+    }
   }
   // Calibrated output sds must match. Input-centre drift can pass while
   // expanding-window z × refSd quietly gives each light a different percentile.
