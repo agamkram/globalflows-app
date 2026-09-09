@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * Prove all 11 boxes lock: 5 lights (number / word / color) and 6 asset
- * classes (in / mixed / out). Writes sanity.txt.
+ * classes (in / mixed / out). Also fail if any series' on-disk history shrank
+ * below the high-water mark in data/history-lengths.json — the only class of
+ * data loss that is silent and unrecoverable. Writes sanity.txt.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -18,6 +20,8 @@ import { buildMeaning } from "../meaning.js";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SNAP = path.join(ROOT, "snapshot.json");
 const REGIME = path.join(ROOT, "data", "regime-today.json");
+const HIST = path.join(ROOT, "data", "history");
+const LENGTHS = path.join(ROOT, "data", "history-lengths.json");
 const OUT = path.join(ROOT, "sanity.txt");
 
 const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
@@ -202,12 +206,61 @@ async function main() {
     }
   }
 
+  // History must never shrink. Rolling-window feeds (ICE BofA 3y, Yahoo ~10y)
+  // used to overwrite data/history and drop a day off the back every run.
+  lines.push("");
+  lines.push("History length (append-only high-water marks)");
+  let lengthLedger = null;
+  try {
+    lengthLedger = JSON.parse(await fs.readFile(LENGTHS, "utf8"));
+  } catch {
+    fails.push("history-lengths.json missing — run npm run ingest once to seed it");
+  }
+  if (lengthLedger?.series) {
+    const ids = Object.keys(lengthLedger.series).sort();
+    let checked = 0;
+    let shrunk = 0;
+    for (const id of ids) {
+      const mark = lengthLedger.series[id];
+      const want = mark?.n || 0;
+      if (!want) continue;
+      let n = 0;
+      let first = null;
+      let last = null;
+      try {
+        const hist = JSON.parse(await fs.readFile(path.join(HIST, `${id}.json`), "utf8"));
+        n = Array.isArray(hist.points) ? hist.points.length : 0;
+        first = hist.points?.[0]?.date || null;
+        last = hist.points?.[n - 1]?.date || null;
+      } catch {
+        fails.push(`${id}: history file missing (high-water n=${want})`);
+        shrunk++;
+        continue;
+      }
+      checked++;
+      if (n < want) {
+        shrunk++;
+        fails.push(
+          `${id}: history shrank ${want} → ${n} (first ${first || "—"} last ${last || "—"}; high-water first ${mark.first || "—"})`
+        );
+      }
+    }
+    if (shrunk) {
+      lines.push(`  FAIL  ${shrunk} series shorter than high-water mark (${checked} checked)`);
+    } else {
+      lines.push(
+        `  ok  ${checked} series at or above high-water` +
+          (lengthLedger.updatedAt ? ` · ledger ${lengthLedger.updatedAt}` : "")
+      );
+    }
+  }
+
   lines.push("");
   if (fails.length) {
     lines.push("FAIL");
     for (const f of fails) lines.push(`  ${f}`);
   } else {
-    lines.push("ok — all 11 boxes lock (5 lights + 6 asset classes).");
+    lines.push("ok — all 11 boxes lock (5 lights + 6 asset classes); history lengths hold.");
   }
   await fs.writeFile(OUT, lines.join("\n") + "\n");
   console.log(lines.join("\n"));

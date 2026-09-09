@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-08T22:06:26.842Z",
-  "ingestAt": "2026-09-08T21:17:20.874Z",
+  "generatedAt": "2026-09-09T00:21:20.625Z",
+  "ingestAt": "2026-09-09T00:20:57.808Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -61,7 +61,7 @@
           "name": "Credit",
           "stance": "out",
           "why": "Investment grade and high yield are both out — rising yields tax investment-grade bonds, and high-yield spreads are too tight to pay.",
-          "margin": -0.2204070737211726,
+          "margin": -0.2320737403878393,
           "splits": [
             {
               "id": "ig",
@@ -69,7 +69,7 @@
               "stance": "out",
               "why": "Rising yields tax the duration in investment-grade bonds.",
               "label": "Investment grade",
-              "margin": -0.374591925220123
+              "margin": -0.3804252585534564
             },
             {
               "id": "hy",
@@ -77,7 +77,7 @@
               "stance": "out",
               "why": "Spreads are at cycle tights — you are not paid.",
               "label": "High yield",
-              "margin": -0.06622222222222217
+              "margin": -0.0837222222222222
             }
           ]
         },
@@ -86,7 +86,7 @@
           "name": "Equities",
           "stance": "mixed",
           "why": "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
-          "margin": 0.33333333333333337,
+          "margin": 0.32458333333333333,
           "splits": [
             {
               "id": "cyc",
@@ -94,7 +94,7 @@
               "stance": "mixed",
               "why": "Cyclicals want Strong growth and calm fear; only one side is helping.",
               "label": "Cyclicals",
-              "margin": 0.2733333333333334
+              "margin": 0.26458333333333334
             },
             {
               "id": "def",
@@ -102,7 +102,7 @@
               "stance": "mixed",
               "why": "Defensives want Soft growth or expensive fear; the expansion mix leaves them mixed.",
               "label": "Defensives",
-              "margin": -0.09333333333333337
+              "margin": -0.08458333333333336
             }
           ]
         },
@@ -111,14 +111,14 @@
           "name": "Crypto",
           "stance": "mixed",
           "why": "Crypto wants easy plumbing and calm fear; only one side is helping.",
-          "margin": 0.20333333333333337
+          "margin": 0.19458333333333333
         },
         {
           "id": "gold",
           "name": "Gold",
           "stance": "mixed",
           "why": "PCE is still hot, but 5y5y is anchored and funding isn’t easy — gold has no second job.",
-          "margin": -0.02317917625327293
+          "margin": -0.01442917625327292
         },
         {
           "id": "cmdty",
@@ -364,9 +364,9 @@
         {
           "id": "BAMLH0A0HYM2",
           "name": "High-yield spread",
-          "score": 0.9,
+          "score": 0.8799999999999999,
           "weight": 1,
-          "why": "High-yield OAS 2.6% — 2.5 is cycle tights, 4 is typical, 6.5 is stress"
+          "why": "High-yield OAS 2.7% — 2.5 is cycle tights, 4 is typical, 6.5 is stress"
         },
         {
           "id": "BAA10Y",

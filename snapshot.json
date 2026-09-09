@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T21:17:20.874Z",
+  "generatedAt": "2026-09-09T00:20:57.808Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -320,8 +320,8 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.2500000000000002,
-        "dir": "up"
+        "score": 0.15625000000000014,
+        "dir": "flat"
       }
     }
   },
@@ -5368,61 +5368,40 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
-      "latest": 2.65,
-      "asOf": "2026-09-03",
-      "n": 787,
+      "latest": 2.68,
+      "asOf": "2026-09-07",
+      "n": 789,
       "anchor": {
         "kind": "hy",
-        "score": 0.9,
-        "why": "High-yield OAS 2.6% — 2.5 is cycle tights, 4 is typical, 6.5 is stress",
+        "score": 0.8799999999999999,
+        "why": "High-yield OAS 2.7% — 2.5 is cycle tights, 4 is typical, 6.5 is stress",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.020000000000000018,
+          "delta": 0.050000000000000266,
           "dir": "flat",
-          "score": -0.06250000000000006,
+          "score": -0.15625000000000083,
           "prior": 2.63,
-          "priorDate": "2026-08-27"
+          "priorDate": "2026-08-31"
         },
         "2w": {
-          "delta": -0.10000000000000009,
-          "dir": "down",
-          "score": 0.3125000000000003,
-          "prior": 2.75,
-          "priorDate": "2026-08-20"
+          "delta": -0.009999999999999787,
+          "dir": "flat",
+          "score": 0.031249999999999334,
+          "prior": 2.69,
+          "priorDate": "2026-08-24"
         },
         "1m": {
-          "delta": -0.08000000000000007,
-          "dir": "down",
-          "score": 0.2500000000000002,
-          "prior": 2.73,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": -0.0900000000000003,
-          "dir": "down",
-          "score": 0.28125000000000094,
-          "prior": 2.74,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": -0.3500000000000001,
-          "dir": "down",
-          "score": 1.0937500000000002,
-          "prior": 3,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": -0.22999999999999998,
-          "dir": "down",
-          "score": 0.7187499999999999,
-          "prior": 2.88,
-          "priorDate": "2025-09-03"
+          "delta": -0.020000000000000018,
+          "dir": "flat",
+          "score": 0.06250000000000006,
+          "prior": 2.7,
+          "priorDate": "2026-08-07"
         }
       },
       "status": "ok",
-      "staleDays": 5
+      "staleDays": 2
     },
     "BAMLC0A0CM": {
       "id": "BAMLC0A0CM",
@@ -5445,8 +5424,8 @@
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
       "latest": 0.81,
-      "asOf": "2026-09-03",
-      "n": 786,
+      "asOf": "2026-09-07",
+      "n": 788,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -5455,50 +5434,29 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.020000000000000018,
-          "dir": "up",
-          "score": -0.2500000000000002,
-          "prior": 0.79,
-          "priorDate": "2026-08-27"
+          "delta": 0.010000000000000009,
+          "dir": "flat",
+          "score": -0.1250000000000001,
+          "prior": 0.8,
+          "priorDate": "2026-08-31"
         },
         "2w": {
-          "delta": -0.009999999999999898,
+          "delta": 0,
           "dir": "flat",
-          "score": 0.12499999999999872,
-          "prior": 0.82,
-          "priorDate": "2026-08-20"
+          "score": 0,
+          "prior": 0.81,
+          "priorDate": "2026-08-24"
         },
         "1m": {
           "delta": 0.030000000000000027,
           "dir": "up",
           "score": -0.37500000000000033,
           "prior": 0.78,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 0.07000000000000006,
-          "dir": "up",
-          "score": -0.8750000000000008,
-          "prior": 0.74,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": -0.009999999999999898,
-          "dir": "flat",
-          "score": 0.12499999999999872,
-          "prior": 0.82,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": 0.81,
-          "priorDate": "2025-09-03"
+          "priorDate": "2026-08-07"
         }
       },
       "status": "ok",
-      "staleDays": 5
+      "staleDays": 2
     },
     "NFCI": {
       "id": "NFCI",
@@ -8636,9 +8594,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLC0A4CBBB",
-      "latest": 1,
-      "asOf": "2026-09-03",
-      "n": 787,
+      "latest": 0.99,
+      "asOf": "2026-09-07",
+      "n": 789,
       "anchor": {
         "kind": "bbb",
         "score": 1,
@@ -8647,50 +8605,29 @@
       },
       "impulse": {
         "1w": {
+          "delta": 0.010000000000000009,
+          "dir": "flat",
+          "score": -0.03125000000000003,
+          "prior": 0.98,
+          "priorDate": "2026-08-31"
+        },
+        "2w": {
+          "delta": -0.010000000000000009,
+          "dir": "flat",
+          "score": 0.03125000000000003,
+          "prior": 1,
+          "priorDate": "2026-08-24"
+        },
+        "1m": {
           "delta": 0.020000000000000018,
           "dir": "flat",
           "score": -0.06250000000000006,
-          "prior": 0.98,
-          "priorDate": "2026-08-27"
-        },
-        "2w": {
-          "delta": 0,
-          "dir": "flat",
-          "score": 0,
-          "prior": 1,
-          "priorDate": "2026-08-20"
-        },
-        "1m": {
-          "delta": 0.030000000000000027,
-          "dir": "flat",
-          "score": -0.09375000000000008,
           "prior": 0.97,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 0.06999999999999995,
-          "dir": "flat",
-          "score": -0.21874999999999983,
-          "prior": 0.93,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": -0.040000000000000036,
-          "dir": "flat",
-          "score": 0.1250000000000001,
-          "prior": 1.04,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": -0.020000000000000018,
-          "dir": "flat",
-          "score": 0.06250000000000006,
-          "prior": 1.02,
-          "priorDate": "2025-09-03"
+          "priorDate": "2026-08-07"
         }
       },
       "status": "ok",
-      "staleDays": 5
+      "staleDays": 2
     },
     "HY_CCC_OAS": {
       "id": "HY_CCC_OAS",
@@ -8712,9 +8649,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A3HYC",
-      "latest": 10.51,
-      "asOf": "2026-09-03",
-      "n": 787,
+      "latest": 10.55,
+      "asOf": "2026-09-07",
+      "n": 789,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -8723,50 +8660,29 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.1999999999999993,
+          "delta": 0.13000000000000078,
           "dir": "up",
-          "score": -1.1893434823977123,
-          "prior": 10.31,
-          "priorDate": "2026-08-27"
+          "score": -0.7701421800947913,
+          "prior": 10.42,
+          "priorDate": "2026-08-31"
         },
         "2w": {
-          "delta": 0.16000000000000014,
+          "delta": 0.19000000000000128,
           "dir": "up",
-          "score": -0.951474785918174,
-          "prior": 10.35,
-          "priorDate": "2026-08-20"
+          "score": -1.125592417061619,
+          "prior": 10.36,
+          "priorDate": "2026-08-24"
         },
         "1m": {
-          "delta": 0.3200000000000003,
+          "delta": 0.41999999999999993,
           "dir": "up",
           "score": -1.5,
-          "prior": 10.19,
-          "priorDate": "2026-08-04"
-        },
-        "3m": {
-          "delta": 1.049999999999999,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 9.46,
-          "priorDate": "2026-06-04"
-        },
-        "6m": {
-          "delta": 1.0700000000000003,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 9.44,
-          "priorDate": "2026-03-05"
-        },
-        "1y": {
-          "delta": 2.4499999999999993,
-          "dir": "up",
-          "score": -1.5,
-          "prior": 8.06,
-          "priorDate": "2025-09-03"
+          "prior": 10.13,
+          "priorDate": "2026-08-07"
         }
       },
       "status": "ok",
-      "staleDays": 5
+      "staleDays": 2
     },
     "EPU": {
       "id": "EPU",
@@ -12312,27 +12228,6 @@
           "score": -0.6077362767354464,
           "prior": 5824.838,
           "priorDate": "2026-07-29"
-        },
-        "3m": {
-          "delta": -64.97599999999966,
-          "dir": "down",
-          "score": -0.7039660626299205,
-          "prior": 5833.72,
-          "priorDate": "2026-06-03"
-        },
-        "6m": {
-          "delta": -27.219999999999345,
-          "dir": "down",
-          "score": -0.2949082157225141,
-          "prior": 5795.964,
-          "priorDate": "2026-03-04"
-        },
-        "1y": {
-          "delta": -209.89800000000014,
-          "dir": "down",
-          "score": -1.5,
-          "prior": 5978.642000000001,
-          "priorDate": "2025-08-27"
         }
       },
       "status": "ok"
@@ -12383,27 +12278,6 @@
           "score": -1.458075654845735,
           "prior": 0.5309437193757077,
           "priorDate": "2026-08-07"
-        },
-        "3m": {
-          "delta": -0.2874792855649304,
-          "dir": "down",
-          "score": -1.5,
-          "prior": 0.7017769525529793,
-          "priorDate": "2026-06-09"
-        },
-        "6m": {
-          "delta": 0.48303674001615154,
-          "dir": "up",
-          "score": 1.5,
-          "prior": -0.06873907302810263,
-          "priorDate": "2026-03-10"
-        },
-        "1y": {
-          "delta": 0.38141925519713743,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 0.03287841179091152,
-          "priorDate": "2025-09-08"
         }
       },
       "status": "ok"
@@ -12456,27 +12330,6 @@
           "score": 1.5,
           "prior": 2.803533374130062,
           "priorDate": "2026-07-22"
-        },
-        "3m": {
-          "delta": -0.6981887940987273,
-          "dir": "down",
-          "score": -1.5,
-          "prior": 3.700932726319677,
-          "priorDate": "2026-05-27"
-        },
-        "6m": {
-          "delta": -0.9619384631757892,
-          "dir": "down",
-          "score": -1.5,
-          "prior": 3.964682395396739,
-          "priorDate": "2026-02-25"
-        },
-        "1y": {
-          "delta": 0.9710479655378452,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 2.0316959666831047,
-          "priorDate": "2025-08-20"
         }
       },
       "status": "ok"
@@ -12528,27 +12381,6 @@
           "score": 1.5,
           "prior": 3.3854288864729076,
           "priorDate": "2026-01-01"
-        },
-        "3m": {
-          "delta": 1.0784516947216272,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 3.3854288864729076,
-          "priorDate": "2026-01-01"
-        },
-        "6m": {
-          "delta": 1.0974912138418391,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 3.3663893673526957,
-          "priorDate": "2025-10-01"
-        },
-        "1y": {
-          "delta": 1.9514799710808273,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 2.5124006101137075,
-          "priorDate": "2025-04-01"
         }
       },
       "status": "ok"
@@ -13087,7 +12919,7 @@
     }
   ],
   "formula": {
-    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1w/2w/1m/3m/6m/1y = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
+    "lights": "Lights = median of voter anchors (economic level, not vs last year). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
     "stockBondCorr": "60d Pearson of SPX returns vs −ΔDGS10"
   }

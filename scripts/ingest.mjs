@@ -4,6 +4,12 @@
  * FRED CSV graph (no key required), NY Fed Markets API, Yahoo chart API,
  * Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
  * Empty cell > fake. Writes data/snapshot.json + data/history/*.json
+ *
+ * History files are append-only. FRED's ICE BofA series are a rolling 3-year
+ * license and Yahoo's chart API is a rolling 10 years — a naive overwrite
+ * drops a day off the back every day. Merge new prints into the stored file;
+ * never truncate. data/history-lengths.json holds the high-water mark so
+ * sanity can fail if length ever shrinks.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -21,6 +27,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CATALOG = path.join(ROOT, "data", "catalog.json");
 const OUT = path.join(ROOT, "data", "snapshot.json");
 const HIST = path.join(ROOT, "data", "history");
+const LENGTHS = path.join(ROOT, "data", "history-lengths.json");
 
 const UA =
   "GlobalFlows/0.1 (+https://markmaga.com; public macro instrument; educational)";
@@ -310,7 +317,9 @@ async function fetchNyfedSofr() {
 }
 
 async function fetchYahoo(symbol) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=10y&interval=1d&includePrePost=false`;
+  // range=max — still capped by Yahoo, and some symbols only return ~10y.
+  // Append-only merge below keeps anything older already on disk.
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=max&interval=1d&includePrePost=false`;
   let json;
   for (let attempt = 0; attempt < 4; attempt++) {
     try {
@@ -449,6 +458,96 @@ function computeStats(points, spec = {}) {
   return seriesFacts(points, spec);
 }
 
+/** Union by date. Incoming wins on overlap (revisions); prior-only dates stay. */
+function mergePoints(priorPoints, incomingPoints) {
+  const byDate = new Map();
+  for (const p of priorPoints || []) {
+    if (p?.date && Number.isFinite(p.value)) byDate.set(p.date, p.value);
+  }
+  const incomingDates = new Set();
+  for (const p of incomingPoints || []) {
+    if (!p?.date || !Number.isFinite(p.value)) continue;
+    byDate.set(p.date, p.value);
+    incomingDates.add(p.date);
+  }
+  const points = [...byDate.entries()]
+    .map(([date, value]) => ({ date, value }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  let preserved = 0;
+  for (const p of priorPoints || []) {
+    if (p?.date && Number.isFinite(p.value) && !incomingDates.has(p.date)) preserved++;
+  }
+  return { points, preserved };
+}
+
+async function loadLengthLedger() {
+  try {
+    return JSON.parse(await fs.readFile(LENGTHS, "utf8"));
+  } catch {
+    return { updatedAt: null, series: {} };
+  }
+}
+
+/**
+ * Write a history file after merging with whatever is already on disk.
+ * Updates the high-water length ledger. Throws if the merge somehow shortens.
+ * When `raw` is provided (transformed series), it is merged and stored alongside
+ * so derived ratios can still see dollar levels after a rolling window truncates.
+ */
+async function writeHistory(id, payload, lengthLedger) {
+  let priorFile = null;
+  try {
+    priorFile = JSON.parse(await fs.readFile(path.join(HIST, `${id}.json`), "utf8"));
+  } catch {
+    priorFile = null;
+  }
+  const prior = Array.isArray(priorFile?.points) ? priorFile.points : [];
+  const priorN = prior.length;
+  const { points, preserved } = mergePoints(prior, payload.points || []);
+  if (priorN && points.length < priorN) {
+    throw new Error(
+      `${id}: append-only merge shrank history ${priorN} → ${points.length}`
+    );
+  }
+
+  let raw = null;
+  let rawPreserved = 0;
+  if (payload.raw) {
+    const priorRaw = Array.isArray(priorFile?.raw) ? priorFile.raw : [];
+    const mergedRaw = mergePoints(priorRaw, payload.raw);
+    raw = mergedRaw.points;
+    rawPreserved = mergedRaw.preserved;
+    if (priorRaw.length && raw.length < priorRaw.length) {
+      throw new Error(
+        `${id}: append-only raw merge shrank ${priorRaw.length} → ${raw.length}`
+      );
+    }
+  }
+
+  const { raw: _incomingRaw, ...rest } = payload;
+  const out = { ...rest, id, points };
+  if (raw) out.raw = raw;
+  await fs.writeFile(path.join(HIST, `${id}.json`), JSON.stringify(out, null, 0));
+
+  const first = points[0]?.date || null;
+  const last = points[points.length - 1]?.date || null;
+  const prev = lengthLedger.series[id];
+  const high = Math.max(prev?.n || 0, points.length);
+  lengthLedger.series[id] = {
+    n: high,
+    first: prev?.first && first ? (prev.first < first ? prev.first : first) : first,
+    last,
+  };
+  return {
+    n: points.length,
+    preserved: preserved + rawPreserved,
+    first,
+    last,
+    points,
+    raw,
+  };
+}
+
 async function loadDotEnv(dir) {
   try {
     const text = await fs.readFile(path.join(dir, ".env"), "utf8");
@@ -493,12 +592,14 @@ async function main() {
   await loadDotEnv(ROOT);
   const catalog = JSON.parse(await fs.readFile(CATALOG, "utf8"));
   await fs.mkdir(HIST, { recursive: true });
+  const lengthLedger = await loadLengthLedger();
 
   const apiKey = process.env.FRED_API_KEY || "";
   const marketsOnly = process.env.GF_MARKETS_ONLY === "1";
   const results = {};
   const errors = [];
   const rawPoints = {};
+  let preservedTotal = 0;
 
   const only = (process.env.INGEST_ONLY || "")
     .split(",")
@@ -566,14 +667,29 @@ async function main() {
       let points = got.points;
       // Keep the untransformed print: ratios like reserves/GDP need the dollar
       // level of a series the catalog publishes as YoY.
-      rawPoints[s.id] = got.points;
+      const incomingRaw = got.points;
       if (s.transform === "yoy") points = yoyTransform(points);
       if (s.transform === "diff") points = diffTransform(points);
 
-      await fs.writeFile(
-        path.join(HIST, `${s.id}.json`),
-        JSON.stringify({ id: s.id, ...got, points, transform: s.transform || null }, null, 0)
+      const wrote = await writeHistory(
+        s.id,
+        {
+          id: s.id,
+          source: got.source,
+          sourceUrl: got.sourceUrl,
+          points,
+          transform: s.transform || null,
+          ...(s.transform ? { raw: incomingRaw } : {}),
+        },
+        lengthLedger
       );
+      points = wrote.points;
+      // Derived blocks need levels: merged points when untransformed, else merged raw.
+      rawPoints[s.id] = s.transform ? wrote.raw || incomingRaw : points;
+      if (wrote.preserved) {
+        preservedTotal += wrote.preserved;
+        process.stdout.write(`kept ${wrote.preserved} older · `);
+      }
 
       const stats = computeStats(points, s);
       const staleDays = daysSince(stats.asOf);
@@ -653,12 +769,14 @@ async function main() {
       const tgaBn = row.b / 1000;
       points.push({ date: row.date, value: walclBn - tgaBn - rrpV });
     }
-    await fs.writeFile(
-      path.join(HIST, "NET_LIQ.json"),
-      JSON.stringify({ id: "NET_LIQ", source: "derived", points }, null, 0)
+    await writeHistory(
+      "NET_LIQ",
+      { id: "NET_LIQ", source: "derived", points },
+      lengthLedger
     );
     const meta = catalog.series.find((x) => x.id === "NET_LIQ");
-    const stats = computeStats(points, meta);
+    const netMerged = JSON.parse(await fs.readFile(path.join(HIST, "NET_LIQ.json"), "utf8"));
+    const stats = computeStats(netMerged.points, meta);
     results.NET_LIQ = {
       id: "NET_LIQ",
       name: meta.name,
@@ -689,11 +807,9 @@ async function main() {
   async function emitDerived(id, points, sourceLabel) {
     const meta = catalog.series.find((x) => x.id === id);
     if (!meta) throw new Error(`no catalog entry for ${id}`);
-    await fs.writeFile(
-      path.join(HIST, `${id}.json`),
-      JSON.stringify({ id, source: "derived", points }, null, 0)
-    );
-    const stats = computeStats(points, meta);
+    await writeHistory(id, { id, source: "derived", points }, lengthLedger);
+    const merged = JSON.parse(await fs.readFile(path.join(HIST, `${id}.json`), "utf8"));
+    const stats = computeStats(merged.points, meta);
     results[id] = {
       id,
       name: meta.name,
@@ -910,12 +1026,16 @@ async function main() {
       if (c == null) continue;
       corrPoints.push({ date: aligned[i + 1].date, value: c });
     }
-    await fs.writeFile(
-      path.join(HIST, "STOCK_BOND_CORR.json"),
-      JSON.stringify({ id: "STOCK_BOND_CORR", source: "derived", points: corrPoints }, null, 0)
+    await writeHistory(
+      "STOCK_BOND_CORR",
+      { id: "STOCK_BOND_CORR", source: "derived", points: corrPoints },
+      lengthLedger
     );
     const meta = catalog.series.find((x) => x.id === "STOCK_BOND_CORR");
-    const stats = computeStats(corrPoints, meta);
+    const corrMerged = JSON.parse(
+      await fs.readFile(path.join(HIST, "STOCK_BOND_CORR.json"), "utf8")
+    );
+    const stats = computeStats(corrMerged.points, meta);
     results.STOCK_BOND_CORR = {
       id: "STOCK_BOND_CORR",
       name: meta.name,
@@ -975,12 +1095,16 @@ async function main() {
       impulse.push({ date: yoy[i].date, value: yoy[i].value - base.value });
     }
     if (impulse.length < 24) throw new Error(`thin impulse history (${impulse.length})`);
-    await fs.writeFile(
-      path.join(HIST, "CREDIT_IMPULSE.json"),
-      JSON.stringify({ id: "CREDIT_IMPULSE", source: "derived", points: impulse }, null, 0)
+    await writeHistory(
+      "CREDIT_IMPULSE",
+      { id: "CREDIT_IMPULSE", source: "derived", points: impulse },
+      lengthLedger
     );
     const meta = catalog.series.find((x) => x.id === "CREDIT_IMPULSE");
-    const stats = computeStats(impulse, meta);
+    const impulseMerged = JSON.parse(
+      await fs.readFile(path.join(HIST, "CREDIT_IMPULSE.json"), "utf8")
+    );
+    const stats = computeStats(impulseMerged.points, meta);
     results.CREDIT_IMPULSE = {
       id: "CREDIT_IMPULSE",
       name: meta.name,
@@ -1019,12 +1143,16 @@ async function main() {
       .filter((r) => Number.isFinite(r.a) && Number.isFinite(r.b))
       .map((r) => ({ date: r.date, value: r.a - r.b }));
     if (points.length < 8) throw new Error(`thin nom−real history (${points.length})`);
-    await fs.writeFile(
-      path.join(HIST, "NOM_REAL_SPREAD.json"),
-      JSON.stringify({ id: "NOM_REAL_SPREAD", source: "derived", points }, null, 0)
+    await writeHistory(
+      "NOM_REAL_SPREAD",
+      { id: "NOM_REAL_SPREAD", source: "derived", points },
+      lengthLedger
     );
     const meta = catalog.series.find((x) => x.id === "NOM_REAL_SPREAD");
-    const stats = computeStats(points, meta);
+    const nomMerged = JSON.parse(
+      await fs.readFile(path.join(HIST, "NOM_REAL_SPREAD.json"), "utf8")
+    );
+    const stats = computeStats(nomMerged.points, meta);
     results.NOM_REAL_SPREAD = {
       id: "NOM_REAL_SPREAD",
       name: meta.name,
@@ -1216,9 +1344,18 @@ async function main() {
   // Also copy for static serve from root
   await fs.writeFile(path.join(ROOT, "snapshot.json"), JSON.stringify(snapshot, null, 2));
 
+  lengthLedger.updatedAt = new Date().toISOString();
+  await fs.writeFile(LENGTHS, JSON.stringify(lengthLedger, null, 2) + "\n");
+
   const ok = Object.values(results).filter((r) => r.status === "ok").length;
   const empty = Object.values(results).filter((r) => r.status !== "ok").length;
   console.log(`\nDone. ok=${ok} empty=${empty} → data/snapshot.json`);
+  if (preservedTotal) {
+    console.log(
+      `Append-only merge kept ${preservedTotal} older point(s) that the live feed no longer returns.`
+    );
+  }
+  console.log(`History high-water marks → data/history-lengths.json`);
 }
 
 main().catch((e) => {
