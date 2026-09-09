@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T04:15:04.731Z",
+  "updatedAt": "2026-09-09T05:11:14.324Z",
   "note": "High-water mark of data/history point counts. Sanity fails if any series shrinks below its mark. Updated by npm run ingest.",
   "series": {
     "ADA": {
@@ -851,6 +851,16 @@
       "n": 285,
       "first": "2003-02-01",
       "last": "2026-09-08"
+    },
+    "CHINA_CREDIT_GDP": {
+      "n": 144,
+      "first": "1990-01-01",
+      "last": "2025-10-01"
+    },
+    "CHINA_CREDIT_IMPULSE": {
+      "n": 140,
+      "first": "1991-01-01",
+      "last": "2025-10-01"
     }
   }
 }

@@ -31,7 +31,7 @@ export function distanceToCliff(score) {
  * Family entry is an id list (ballot weight 1) or `{ ids, weight }` so a
  * low-variance peer cannot flatten the light 50/50.
  */
-const VOTE_FAMILIES = {
+export const VOTE_FAMILIES = {
   risk: {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
@@ -76,6 +76,10 @@ function familySpec(raw) {
   return null;
 }
 
+export function familyIds(raw) {
+  return familySpec(raw)?.ids || [];
+}
+
 /** Weight is influence, not a duplicate median seat. */
 export function weightedMean(items) {
   let num = 0;
@@ -99,13 +103,35 @@ export function weightedTrimmedMean(items) {
 }
 
 /**
- * Build light (or impulse) ballots: family-average first, then weighted trimmed mean.
- * @param {string} lid
- * @param {{ id: string, score: number, weight?: number }[]} voters
+ * 2003–2026 centres of the raw (pre-threshold) light composites.
+ * Calibrate so ±0.45 is the same z on every light (cliff ≈ 0.85σ of the
+ * median light). Family averaging compressed Growth/Inflation; this restores
+ * a common percentile without five hand-tuned cliffs.
+ * REF_SD = median of the five raw composite sds — keeps typical score
+ * amplitude, expands quiet lights, mildly compresses loud ones.
  */
-export function aggregateVotes(lid, voters) {
+const LIGHT_DIST = {
+  liquidity: { mean: -0.0579, sd: 0.6015 },
+  rates: { mean: 0.2273, sd: 0.5627 },
+  growth: { mean: -0.0146, sd: 0.445 },
+  inflation: { mean: -0.0321, sd: 0.4707 },
+  risk: { mean: 0.0631, sd: 0.5307 },
+};
+const LIGHT_REF_SD = 0.5307;
+
+/** Map raw composite → calibrated score. Impulse path skips this. */
+export function calibrateLightScore(lid, raw) {
+  if (raw == null || !Number.isFinite(raw)) return raw;
+  const d = LIGHT_DIST[lid];
+  if (!d || !(d.sd > 0)) return raw;
+  const z = (raw - d.mean) / d.sd;
+  return Math.max(-1.5, Math.min(1.5, z * LIGHT_REF_SD));
+}
+
+/** Family / ungrouped ballots before the trimmed mean (for audits). */
+export function buildBallots(lid, voters) {
   const list = (voters || []).filter((v) => v && Number.isFinite(v.score));
-  if (!list.length) return null;
+  if (!list.length) return [];
   const families = VOTE_FAMILIES[lid] || {};
   const used = new Set();
   const ballots = [];
@@ -118,7 +144,6 @@ export function aggregateVotes(lid, voters) {
     const fam = weightedMean(
       members.map((m) => ({ score: m.score, weight: Math.max(1, m.weight || 1) }))
     );
-    // One ballot per family — weight is explicit (default 1), not always equal.
     if (fam != null) ballots.push({ id: `family:${fname}`, score: fam, weight: spec.weight });
   }
   for (const v of list) {
@@ -129,7 +154,22 @@ export function aggregateVotes(lid, voters) {
       weight: Math.max(1, Number(v.weight) || 1),
     });
   }
-  return weightedTrimmedMean(ballots);
+  return ballots;
+}
+
+/**
+ * Build light (or impulse) ballots: family-average first, then weighted trimmed mean.
+ * Level scores are calibrated; pass `{ calibrate: false }` for impulse.
+ * @param {string} lid
+ * @param {{ id: string, score: number, weight?: number }[]} voters
+ * @param {{ calibrate?: boolean }} [opts]
+ */
+export function aggregateVotes(lid, voters, opts = {}) {
+  const ballots = buildBallots(lid, voters);
+  if (!ballots.length) return null;
+  const raw = weightedTrimmedMean(ballots);
+  if (opts.calibrate === false) return raw;
+  return calibrateLightScore(lid, raw);
 }
 
 function clamp(n, lo, hi) {
@@ -206,6 +246,8 @@ const KIND = {
   TOTLL: "none",
   NET_LIQ: "none",
   CREDIT_IMPULSE: "none",
+  CHINA_CREDIT_GDP: "none",
+  CHINA_CREDIT_IMPULSE: "none",
   DGS2: "pending_real",
   // Market TIPS real yields — the Rates light's primary real-rate voters.
   // Trailing-core-PCE constructs (DGS2 only) stay as at most one voter; DFEDTARU
@@ -666,7 +708,8 @@ export function attachImpulse(lights, snap, horizon = DEFAULT_IMPULSE) {
       if (sc == null) continue;
       voters.push({ id, score: sc, weight: Math.max(1, Number(m.weight) || 1) });
     }
-    const score = aggregateVotes(lid, voters);
+    // Impulse stays on the raw voter scale — LIGHT_DIST is for level composites.
+    const score = aggregateVotes(lid, voters, { calibrate: false });
     let dir = "flat";
     if (score > 0.2) dir = "up";
     else if (score < -0.2) dir = "down";

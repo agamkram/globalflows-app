@@ -429,7 +429,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   hy.label = "High yield";
   hy.margin = blendMargin(hy.stance, hy.net, meanImpulse([gImp, kImp, hyImp]));
 
-  let creditStance = netCall((ig.net + hy.net) / 2, 0.28, -0.28);
+  let creditStance = netCall((ig.net + hy.net) / 2, 0.26, -0.28);
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
@@ -459,56 +459,47 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     splits: [ig, hy],
   };
 
-  const stocksOutParts = [];
-  // Equities “out” is soft growth (or a cash drain) while fear is still cheap —
-  // the archive’s risk-off “out” days are mostly already-priced and then bounce.
-  if (tightW(gSc) > 0.55 && easeW(rSc) > 0.4) {
-    stocksOutParts.push("growth is soft while fear is still cheap");
-  }
-  if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4 && easeW(gSc) < 0.45) {
-    stocksOutParts.push("cash is draining while fear is still cheap");
-  }
-  if (erpZ < -0.35 && easeW(rSc) > 0.4) {
-    stocksOutParts.push("earnings yield is tight vs real 10y — equities are not cheap");
-  }
-  if (erpZ > 0.35) {
-    stocksOutParts.push("earnings yield is wide vs real 10y — equities are paid");
-  }
-  if (tightW(rSc) > 0.55) {
-    stocksOutParts.push("fear is already expensive — a clean underweight is late");
-  }
+  // Equities on 1m: fear-expensive days pay (risk premium open). Soft-growth
+  // “outs” bounce. The late trade is firm growth while fear is still cheap.
   const calmRisk = easeW(rSc);
-  // Soft growth alone is not enough for “out” — that sample still bounced.
-  // Equity valuation is two-sided via ERP (earnings yield − real 10y).
-  const stocksTax = Math.max(Math.max(0, -erpZ), tightW(lSc));
+  const fearW = tightW(rSc);
+  const stocksInParts = [];
+  if (fearW > 0.55) stocksInParts.push("fear is expensive — the risk premium is open");
+  if (erpZ > 0.35 && calmRisk < 0.55) {
+    stocksInParts.push("earnings yield is wide vs real 10y while fear isn’t complacent");
+  }
+  if (tightW(gSc) > 0.55 && fearW > 0.4) {
+    stocksInParts.push("growth is soft into expensive fear — the bounce sample");
+  }
+  const stocksOutParts = [];
+  if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
+    stocksOutParts.push("growth is firm while fear is still cheap — late to the expansion");
+  }
+  if (tightW(lSc) > 0.55 && calmRisk > 0.55 && easeW(gSc) > 0.4) {
+    stocksOutParts.push("cash is draining into a still-calm tape");
+  }
   const stocksNet =
-    0.55 * easeW(gSc) -
-    0.35 * tightW(gSc) * calmRisk -
-    0.75 * tightW(gSc) * calmRisk * stocksTax -
-    0.55 * tightW(lSc) * calmRisk +
-    0.55 * erpZ * calmRisk +
-    0.1 * calmRisk;
+    0.55 * fearW +
+    0.4 * Math.max(0, erpZ) * (1 - calmRisk * 0.5) -
+    0.65 * easeW(gSc) * calmRisk -
+    0.35 * tightW(lSc) * calmRisk +
+    0.2 * tightW(gSc) * fearW;
   const cycNet =
-    0.6 * easeW(gSc) -
-    0.35 * tightW(gSc) * calmRisk -
-    0.75 * tightW(gSc) * calmRisk * stocksTax +
-    0.5 * erpZ * calmRisk +
-    0.1 * calmRisk;
+    0.4 * fearW -
+    0.8 * easeW(gSc) * calmRisk +
+    0.3 * Math.max(0, erpZ) * (1 - calmRisk * 0.5) +
+    0.15 * tightW(gSc) * fearW;
   const defNet =
-    0.5 * tightW(gSc) * calmRisk * Math.max(stocksTax, 0.5) +
-    0.15 * tightW(rSc) -
-    0.55 * easeW(gSc) * calmRisk;
+    0.6 * fearW +
+    0.35 * tightW(gSc) * fearW -
+    0.4 * easeW(gSc) * calmRisk;
   const cyc = instrumentFromNet(
     "cyc",
     "Cy",
     cycNet,
-    "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
-    tightW(gSc) > 0.55 && easeW(rSc) > 0.4
-      ? "Growth is soft while fear is still cheap — cyclicals usually get hurt first."
-      : erpZ < -0.35
-        ? "Equities are expensive vs real yields — cyclicals pay more for every dollar of cash flow."
-        : "Fear is already expensive — the easy cyclical underweight is late.",
-    "Cyclicals want Strong growth and calm fear; only one side is helping."
+    sentence(stocksInParts, "Risk premium is open — cyclicals usually lead the bounce."),
+    sentence(stocksOutParts, "Firm growth with cheap fear — cyclicals are late to that expansion."),
+    "Cyclicals want paid fear, not complacent strength; only one side is helping."
   );
   cyc.label = "Cyclicals";
   cyc.margin = blendMargin(cyc.stance, cyc.net, meanImpulse([gImp, kImp]));
@@ -516,11 +507,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "def",
     "Df",
     defNet,
-    tightW(gSc) > 0.55 && easeW(rSc) > 0.4
-      ? "Growth is soft while fear is still cheap — defensives are the ballast inside equities."
-      : "Fear is expensive — defensives usually hold up better than the cycle.",
-    "Strong growth and calm fear — defensives usually lag that mix.",
-    "Defensives want Soft growth with calm fear, or expensive fear; the expansion mix leaves them mixed."
+    fearW > 0.55
+      ? "Fear is expensive — defensives are the ballast inside the risk-premium bid."
+      : "Soft growth into fear — defensives usually hold up better than the cycle.",
+    "Firm growth and calm fear — defensives usually lag that mix.",
+    "Defensives want expensive fear or soft growth; complacent strength leaves them mixed."
   );
   def.label = "Defensives";
   def.margin = blendMargin(def.stance, def.net, meanImpulse([-gImp, -kImp]));
@@ -528,18 +519,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "stocks",
     "Equities",
     stocksNet,
-    erpZ > 0.35
-      ? "Activity is firm and earnings yield is wide vs real yields — risk assets usually get the bid."
-      : "Activity is firm and fear is not in charge — risk assets usually get the bid.",
-    sentence(
-      stocksOutParts.filter((p) => !p.includes("equities are paid")),
-      "Equities are out of favor here."
-    ),
-    erpZ < -0.35
-      ? "Growth isn’t a clean overweight, and earnings yield is tight vs real 10y."
-      : erpZ > 0.35
-        ? "Growth isn’t firm enough for a clean overweight, but equities are cheap vs real yields."
-        : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
+    sentence(stocksInParts, "Fear is expensive — risk assets usually get paid for the premium."),
+    sentence(stocksOutParts, "Equities are out of favor here."),
+    erpZ > 0.35 && calmRisk > 0.55
+      ? "Earnings yield is wide, but fear is still cheap — not a clean overweight."
+      : "Neither paid fear nor late-expansion complacency is loud enough for a clean call.",
     0.15,
     -0.28
   );
@@ -576,37 +560,44 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
 
   const goldDrain = tightW(lSc) > 0.55 && tightW(tSc) < 0.45;
   const goldCrisis = tightW(lSc) > 0.45 && tightW(rSc) > 0.45;
+  // Gold on 1m: bare low reals were half the old “in” sample and lost money.
+  // Crisis / drain still pay. Inflation hedge when Hot and real yields are high.
+  // Soft dollar + Cold is the deflation-fear bid. Low reals without crisis = out
+  // (easy-money risk-on where gold lags). Rising dollar alone is not the out.
   const goldInParts = [];
   if (goldCrisis) goldInParts.push("cash is draining and fear is expensive — gold’s crisis bid");
   if (goldDrain && !dolStrong) goldInParts.push("cash is draining without a dollar squeeze");
-  if (dolSoft && realZ < 0.2) goldInParts.push("the dollar is soft");
-  if (realLow) goldInParts.push("real 10y yields are low — gold’s rate wage is back");
+  if (dolSoft && tightW(iSc) > 0.55) {
+    goldInParts.push("the dollar is soft and inflation is cold — deflation-fear bid");
+  }
+  if (realHigh && easeW(iSc) > 0.55) {
+    goldInParts.push("inflation is hot and real yields are high — gold’s inflation wage");
+  }
   const goldOutParts = [];
-  if (dolStrong) goldOutParts.push("the dollar is rising");
+  if (realLow && !goldCrisis) {
+    goldOutParts.push("real 10y yields are low without a crisis bid — gold lags easy-money risk-on");
+  }
   let goldMix = "Gold has no clean job right now.";
-  if (dolStrong) {
-    goldMix = sentence(goldOutParts, "A rising dollar — gold rarely leads that mix.");
-  } else if (realZ > 0.35 && !goldCrisis) {
+  if (realHigh && easeW(iSc) <= 0.55 && !goldCrisis && !(goldDrain && !dolStrong)) {
     goldMix =
-      "Real 10y yields are high, but there’s no crisis bid — gold stays mixed rather than a clean avoid.";
-  } else if (realLow && !dolStrong) {
-    goldMix = "Real 10y yields are low — gold’s rate wage helps, but the dollar and plumbing aren’t a clean bid yet.";
-  } else if (!goldCrisis && !goldDrain) {
+      "Real yields are high without hot inflation or a crisis bid — not a clean gold overweight.";
+  } else if (dolStrong && !goldCrisis && !realLow) {
+    goldMix = "The dollar is rising — gold rarely leads that mix without a crisis bid.";
+  } else if (!goldCrisis && !(goldDrain && !dolStrong)) {
     goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
-  // Crisis / soft dollar / cheap reals as “in”. Rising dollar is the out.
-  // High reals alone stay mixed — they tax the rate wage but do not make a clean avoid.
   const goldNet =
-    (goldCrisis ? 0.7 : goldDrain && !dolStrong ? 0.35 : 0) +
-    (dolSoft ? 0.45 * Math.max(0, 1 - Math.max(0, realZ)) : 0) +
-    (realLow ? 0.4 : 0) -
-    (dolStrong ? 0.8 : 0);
+    (goldCrisis ? 0.65 : 0) +
+    (goldDrain && !dolStrong ? 0.4 : 0) +
+    (dolSoft && tightW(iSc) > 0.55 ? 0.45 : 0) +
+    (realHigh && easeW(iSc) > 0.55 ? 0.5 : 0) -
+    (realLow && !goldCrisis ? 0.65 : 0);
   const gold = instrumentFromNet(
     "gold",
     "Gold",
     goldNet,
-    sentence(goldInParts, "Crisis plumbing and fear, or a soft dollar — gold’s usual wage."),
-    sentence(goldOutParts, "A rising dollar — gold rarely leads that mix."),
+    sentence(goldInParts, "Crisis plumbing, inflation wage, or deflation fear — gold’s usual bid."),
+    sentence(goldOutParts, "Easy real yields without a crisis — gold rarely leads that mix."),
     goldMix,
     0.18,
     -0.18
@@ -702,6 +693,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   const gImpSc = impulseUnit(lights.growth?.impulse);
 
   const impulse = seriesOk(snap, "CREDIT_IMPULSE");
+  const chinaImpulse = seriesOk(snap, "CHINA_CREDIT_IMPULSE");
   const nomReal = seriesOk(snap, "NOM_REAL_SPREAD");
   const sbCorr = seriesOk(snap, "STOCK_BOND_CORR");
   const realY = seriesOk(snap, "DFII10");
@@ -712,6 +704,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   const dollar = seriesOk(snap, "DTWEXBGS");
 
   const creditFlow = hzImp(impulse, horizon);
+  const chinaFlow = hzImp(chinaImpulse, horizon);
   const sbImp = hzImp(sbCorr, horizon);
   const realYImp = hzImp(realY, horizon);
   const hyImp = hzImp(hy, horizon);
@@ -793,8 +786,12 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   if (Gimp === "down" || gImpSc < -0.25) creditUpParts.push("activity is rolling over this window");
   if (hyImp.dir === "up") creditUpParts.push("high-yield spreads are widening this window");
   const impulseSlow = creditFlow.dir === "down";
+  const chinaSlow = chinaFlow.dir === "down";
   if (impulseSlow && creditUpParts.length) {
     creditUpParts.push("bank credit impulse is slowing");
+  }
+  if (chinaSlow && creditUpParts.length) {
+    creditUpParts.push("China credit impulse is slowing");
   }
 
   let creditNet =
@@ -807,7 +804,9 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     (hyImp.dir === "up" ? 0.3 : 0) +
     (hyImp.dir === "down" ? 0.2 : 0) -
     (impulseSlow ? 0.35 : 0) +
-    (creditFlow.dir === "up" ? 0.35 : 0) +
+    (creditFlow.dir === "up" ? 0.35 : 0) -
+    (chinaSlow ? 0.15 : 0) +
+    (chinaFlow.dir === "up" ? 0.15 : 0) +
     0.25 * creditSpreadZ(snap);
 
   if (creditNet <= -0.35) {
@@ -835,6 +834,11 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     creditLine += ` Bank credit impulse is accelerating this window — private lending is adding fuel.`;
   } else if (creditFlow.dir === "down" && !creditLine.includes("impulse")) {
     creditLine += ` Bank credit impulse is decelerating this window — private lending is not confirming easy plumbing.`;
+  }
+  if (chinaFlow.dir === "up" && !creditLine.includes("China credit")) {
+    creditLine += ` China credit impulse is accelerating this window — Asia’s credit cycle is adding fuel.`;
+  } else if (chinaFlow.dir === "down" && !creditLine.includes("China credit")) {
+    creditLine += ` China credit impulse is decelerating this window — Asia’s credit cycle is not confirming easy plumbing.`;
   }
 
   const confirm = [];

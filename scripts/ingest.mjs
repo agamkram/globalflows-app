@@ -1196,6 +1196,62 @@ async function main() {
     errors.push({ id: "CREDIT_IMPULSE", error: String(e.message || e) });
   }
 
+  // Derived: China credit impulse = 4Q change in BIS credit/GDP (pp of GDP).
+  // Monthly TSF is the Street series but free history only reaches 2015 — too
+  // short to band or to sit in the 2003 archive. FRED QCNPAM770A is the free
+  // long sample.
+  try {
+    const raw = JSON.parse(await fs.readFile(path.join(HIST, "CHINA_CREDIT_GDP.json"), "utf8"));
+    const pts = [...(raw.points || [])]
+      .filter((p) => p?.date && Number.isFinite(p.value))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    const impulse = [];
+    for (let i = 4; i < pts.length; i++) {
+      // Quarterly prints — four steps ≈ one year.
+      const prev = pts[i - 4];
+      if (!prev || !Number.isFinite(prev.value)) continue;
+      impulse.push({ date: pts[i].date, value: pts[i].value - prev.value });
+    }
+    if (impulse.length < 24) throw new Error(`thin China impulse history (${impulse.length})`);
+    await writeHistory(
+      "CHINA_CREDIT_IMPULSE",
+      { id: "CHINA_CREDIT_IMPULSE", source: "derived", points: impulse },
+      lengthLedger
+    );
+    const meta = catalog.series.find((x) => x.id === "CHINA_CREDIT_IMPULSE");
+    const impulseMerged = JSON.parse(
+      await fs.readFile(path.join(HIST, "CHINA_CREDIT_IMPULSE.json"), "utf8")
+    );
+    const stats = computeStats(impulseMerged.points, meta);
+    results.CHINA_CREDIT_IMPULSE = {
+      id: "CHINA_CREDIT_IMPULSE",
+      name: meta.name,
+      layer: meta.street || "liquidity",
+      street: meta.street || "liquidity",
+      causal: meta.causal || "liquidity",
+      units: meta.units,
+      freq: "quarterly",
+      sign: 1,
+      light: null,
+      weight: Math.max(1, Number(meta.weight) || 1),
+      note: meta.note,
+      sub: meta.sub || "4Q Δ China credit/GDP",
+      search: meta.search || "CHINA_CREDIT_IMPULSE",
+      freshness: "lagged",
+      source: "derived (BIS credit/GDP via FRED)",
+      sourceUrl: meta.sourceUrl,
+      impulseLight: meta.impulseLight || "liquidity",
+      ...stats,
+      status: "ok",
+    };
+    console.log(
+      `  CHINA_CREDIT_IMPULSE… ok  asOf=${stats.asOf}  ${stats.latest?.toFixed?.(2)} pp`
+    );
+  } catch (e) {
+    console.log(`  CHINA_CREDIT_IMPULSE FAIL  ${e.message}`);
+    errors.push({ id: "CHINA_CREDIT_IMPULSE", error: String(e.message || e) });
+  }
+
   // Derived: nominal − real GDP YoY (pp) — price heat in the expansion
   try {
     const nom = JSON.parse(await fs.readFile(path.join(HIST, "GDP.json"), "utf8"));

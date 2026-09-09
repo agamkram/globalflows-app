@@ -15,18 +15,34 @@
  * A voter pinned on most days is not necessarily wrong — spreads genuinely sit at
  * the calm end for long stretches — but it cannot distinguish degrees while it is
  * there, and a light built mostly from pinned voters cannot move.
+ *
+ * After the voters, LIGHT COMPOSITES checks the five lights themselves: colour
+ * mix and composite sd over the archive, plus each family ballot's sd. Family
+ * averaging can compress a light onto amber while every member still looks fine.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { makeAnchor, anchorKind, LIGHT_IDS } from "../score.js";
+import {
+  makeAnchor,
+  anchorKind,
+  LIGHT_IDS,
+  VOTE_FAMILIES,
+  familyIds,
+  lightStateFromScore,
+  weightedMean,
+} from "../score.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST = path.join(ROOT, "data", "history");
+const REGIME_HIST = path.join(ROOT, "data", "regime-history.json");
 
 const SINCE = "2015-01-01";
+const LIGHT_SINCE = "2003-01-01";
 const PIN_WARN = 0.5; // flag a voter pinned on more than half the days
 const FLAT_WARN = 0.15; // flag a voter whose score barely moves
+const AMBER_WARN = 0.6; // light stuck amber most days — scale or voters too quiet
+const QUIET_SD_FRAC = 0.75; // flag light sd more than ~25% below the median light
 
 /**
  * A voter measured over a short window is measured over one regime, and one
@@ -56,6 +72,141 @@ function pad(s, n) {
   return String(s).padEnd(n);
 }
 
+function asof(pts, date) {
+  if (!pts?.length) return null;
+  let lo = 0;
+  let hi = pts.length - 1;
+  if (pts[0].date > date) return null;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (pts[mid].date <= date) lo = mid;
+    else hi = mid - 1;
+  }
+  return pts[lo];
+}
+
+async function auditLightComposites(catalog, coreAt, problems) {
+  let hist;
+  try {
+    hist = JSON.parse(await fs.readFile(REGIME_HIST, "utf8"));
+  } catch {
+    console.log("LIGHT COMPOSITES — no data/regime-history.json (run bake:history)\n");
+    return;
+  }
+  const rows = (hist.rows || []).filter((r) => r.date >= LIGHT_SINCE);
+  if (rows.length < 30) {
+    console.log("LIGHT COMPOSITES — regime history too thin\n");
+    return;
+  }
+
+  console.log(`LIGHT COMPOSITES — calibrated scores from ${LIGHT_SINCE} (${rows.length} days)\n`);
+
+  // Quietness is judged on the raw (pre-calibrate) archive — after C3 every
+  // light’s calibrated sd matches by construction.
+  const RAW_SD = {
+    liquidity: 0.6015,
+    rates: 0.5627,
+    growth: 0.445,
+    inflation: 0.4707,
+    risk: 0.5307,
+  };
+  const rawSds = LIGHT_IDS.map((id) => RAW_SD[id]).sort((a, b) => a - b);
+  const medianRawSd = rawSds[Math.floor(rawSds.length / 2)];
+
+  const byLight = {};
+  for (let i = 0; i < LIGHT_IDS.length; i++) {
+    const vals = rows.map((r) => r.s[i]).filter(Number.isFinite);
+    const green = vals.filter((v) => lightStateFromScore(v).state === "easing").length / vals.length;
+    const amber = vals.filter((v) => lightStateFromScore(v).state === "neutral").length / vals.length;
+    const red = vals.filter((v) => lightStateFromScore(v).state === "tight").length / vals.length;
+    byLight[LIGHT_IDS[i]] = {
+      green,
+      amber,
+      red,
+      sd: stdev(vals),
+      rawSd: RAW_SD[LIGHT_IDS[i]],
+      n: vals.length,
+    };
+  }
+  // Family ballot sds: weekly asof over the same window (raw voter scale).
+  const specById = Object.fromEntries(catalog.series.map((s) => [s.id, s]));
+  const scoreCache = new Map();
+
+  async function scoreSeries(id) {
+    if (scoreCache.has(id)) return scoreCache.get(id);
+    const pts = await readPoints(id);
+    const spec = specById[id];
+    if (!pts || !spec) {
+      scoreCache.set(id, null);
+      return null;
+    }
+    const kind = anchorKind(id);
+    const isReal = kind === "pending_real";
+    const scored = [];
+    for (const p of pts) {
+      if (p.date < LIGHT_SINCE) continue;
+      let a;
+      if (isReal) {
+        const c = coreAt(p.date);
+        if (c == null) continue;
+        a = makeAnchor({ ...spec, anchorKind: "real_rate" }, p.value - c);
+      } else {
+        a = makeAnchor(spec, p.value);
+      }
+      if (a.score != null && Number.isFinite(a.score)) scored.push({ date: p.date, score: a.score });
+    }
+    scoreCache.set(id, scored);
+    return scored;
+  }
+
+  const weekDates = rows.filter((_, i) => i % 5 === 0).map((r) => r.date);
+
+  for (const lid of LIGHT_IDS) {
+    const L = byLight[lid];
+    const flags = [];
+    if (L.amber > AMBER_WARN) flags.push(`AMBER ${Math.round(L.amber * 100)}%`);
+    if (medianRawSd > 0 && L.rawSd < QUIET_SD_FRAC * medianRawSd) {
+      flags.push(`QUIET raw-sd=${L.rawSd.toFixed(3)} (median ${medianRawSd.toFixed(3)})`);
+    }
+    if (flags.length) {
+      problems.push(`${lid} light: ${flags.join(", ")} over full sample`);
+    }
+    console.log(
+      `  ${pad(lid.toUpperCase(), 10)}` +
+        ` green ${pad(Math.round(L.green * 100) + "%", 4)}` +
+        ` amber ${pad(Math.round(L.amber * 100) + "%", 4)}` +
+        ` red ${pad(Math.round(L.red * 100) + "%", 4)}` +
+        `  sd ${L.sd.toFixed(3)}  raw-sd ${L.rawSd.toFixed(3)}` +
+        (flags.length ? `   <-- ${flags.join(" ")}` : "")
+    );
+
+    const fams = VOTE_FAMILIES[lid] || {};
+    for (const [fname, raw] of Object.entries(fams)) {
+      const ids = familyIds(raw);
+      const series = [];
+      for (const id of ids) series.push(await scoreSeries(id));
+      const ballot = [];
+      for (const d of weekDates) {
+        const members = [];
+        for (let i = 0; i < ids.length; i++) {
+          const pts = series[i];
+          if (!pts) continue;
+          const hit = asof(pts, d);
+          if (hit) members.push({ score: hit.score, weight: 1 });
+        }
+        const fam = weightedMean(members);
+        if (fam != null) ballot.push(fam);
+      }
+      if (ballot.length < 30) {
+        console.log(`    family:${pad(fname, 12)} thin (${ballot.length} weeks)`);
+        continue;
+      }
+      console.log(`    family:${pad(fname, 12)} sd ${stdev(ballot).toFixed(3)}  n=${ballot.length}`);
+    }
+  }
+  console.log("");
+}
+
 async function main() {
   const catalog = JSON.parse(await fs.readFile(path.join(ROOT, "data", "catalog.json"), "utf8"));
   const voters = catalog.series.filter((s) => s.light);
@@ -64,8 +215,7 @@ async function main() {
   // inflation series aligned alongside their own.
   const core = await readPoints("PCEPILFE");
   const coreAt = (date) => {
-    if (!core) return null;
-    const f = core.filter((p) => p.date <= date).pop();
+    const f = asof(core, date);
     return f ? f.value : null;
   };
 
@@ -154,6 +304,8 @@ async function main() {
     }
     console.log("");
   }
+
+  await auditLightComposites(catalog, coreAt, problems);
 
   if (!problems.length) {
     console.log("No band problems found.");

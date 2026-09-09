@@ -35,6 +35,8 @@ const SUPPORT_IDS = [
   "CREDIT_IMPULSE",
   "SPX_EY",
   "EQUITY_ERP",
+  "CHINA_CREDIT_IMPULSE",
+  "CHINA_CREDIT_GDP",
 ];
 
 const WORD = {
@@ -75,8 +77,9 @@ const WINDOWS = [
 const PRIMARY_HZ = "1m";
 const MIN_STANCE_N = 50;
 const MAX_MIXED_SHARE = 0.5;
-/** Windows too short or one-way to discriminate — warn, don't fail the harness. */
-const SOFT_WINDOWS = new Set(["2023+"]);
+/** Hard grade is the full archive (+ ex-COVID). Subsample windows warn —
+ *  they trade regime coverage for noise, and chasing them undoes the full sample. */
+const SOFT_WINDOWS = new Set(["pre-2020", "2021+", "2023+"]);
 const SOFT_MIN_DAYS = 400;
 const ONE_WAY_UP = 0.95;
 
