@@ -44,6 +44,27 @@ export async function appendRegimeLog(bake) {
     ),
     duration: bake.meaning?.duration?.dir ?? null,
     credit: bake.meaning?.credit?.dir ?? null,
+    // The six calls as published. Everything else the app knows about its own
+    // accuracy is a backtest graded on the same 23 years its bands, calibration
+    // and checklists were fitted on. These are the only calls it will ever have
+    // that were made before the outcome existed, so they are worth recording
+    // even though the sample takes years to become worth reading.
+    calls: Object.fromEntries(
+      (bake.meaning?.favor?.items || []).map((it) => [
+        it.id,
+        {
+          stance: it.stance ?? null,
+          margin: Number.isFinite(it.margin) ? Number(it.margin.toFixed(4)) : null,
+          ...(it.tenors?.length
+            ? {
+                parts: Object.fromEntries(
+                  it.tenors.map((t) => [t.id || t.label, t.stance ?? null])
+                ),
+              }
+            : {}),
+        },
+      ])
+    ),
   };
 
   // One entry per day; a re-bake replaces the day rather than duplicating it.

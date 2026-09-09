@@ -17,6 +17,7 @@ import { fileURLToPath } from "node:url";
 import { buildMeaning } from "../meaning.js";
 import { LIGHT_IDS, makeAnchor } from "../score.js";
 import { loadValCenter } from "./load-val-center.mjs";
+import { CLASS_ASSETS, CLASS_ORDER, classReturn } from "./class-assets.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST_FILE = path.join(ROOT, "data", "regime-history.json");
@@ -50,16 +51,6 @@ const WORD = {
 };
 
 /** Parent class → archive ticker(s). Multiple tickers average into one return. */
-const CLASS_ASSETS = {
-  treasuries: ["UST5", "UST10", "UST30"],
-  credit: ["HYG", "LQD"],
-  stocks: ["SPX"],
-  crypto: ["BTC"],
-  gold: ["GOLD"],
-  cmdty: ["WTI", "COPPER"],
-};
-
-const CLASS_ORDER = ["treasuries", "credit", "stocks", "crypto", "gold", "cmdty"];
 const STANCES = ["in", "mixed", "out"];
 
 /** Windows the harness always prints. COVID = Feb–Jun 2020. */
@@ -167,12 +158,6 @@ function lightsFromRow(row) {
   return lights;
 }
 
-function classReturn(fwd, assetIds) {
-  if (!fwd) return null;
-  const vals = assetIds.map((id) => fwd[id]).filter(Number.isFinite);
-  if (!vals.length) return null;
-  return mean(vals);
-}
 
 async function loadPoints(id) {
   try {
