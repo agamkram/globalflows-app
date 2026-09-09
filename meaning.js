@@ -27,6 +27,9 @@ const VAL_CENTER = {
   DFII10: { median: 1.05, scale: 0.8 },
   BAMLH0A0HYM2: { median: 4.0, scale: 1.5 },
   BAA10Y: { median: 2.24, scale: 0.7 },
+  // Earnings yield − 10y real (2003–2026). Wide = equities cheap.
+  EQUITY_ERP: { median: 3.71, scale: 1.5 },
+  SPX_EY: { median: 4.47, scale: 1.0 },
 };
 
 /** (value − median) / scale, clamped to −1..+1. */
@@ -56,6 +59,14 @@ function real10Z(snap) {
 /** Credit-spread z: wide (+) = paid; tight (−) = not paid. HY, else Baa. */
 function creditSpreadZ(snap) {
   return seriesValZ(snap, "BAMLH0A0HYM2", "BAA10Y");
+}
+
+/** Equity valuation z: wide ERP (+) = cheap; tight (−) = not paid vs real 10y. */
+function equityErpZ(snap) {
+  if (seriesOk(snap, "EQUITY_ERP")) return seriesValZ(snap, "EQUITY_ERP");
+  // Fallback: earnings yield alone, inverted against real yields when ERP missing.
+  if (seriesOk(snap, "SPX_EY")) return seriesValZ(snap, "SPX_EY") - real10Z(snap);
+  return -real10Z(snap);
 }
 
 /**
@@ -264,6 +275,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const tpZ = termPremiumZ(snap);
   const realZ = real10Z(snap);
   const spreadZ = creditSpreadZ(snap);
+  const erpZ = equityErpZ(snap);
   const realHigh = realZ > 0.45;
   const realLow = realZ < -0.45;
   const dolStrong = dollarStrong(snap);
@@ -456,31 +468,31 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4 && easeW(gSc) < 0.45) {
     stocksOutParts.push("cash is draining while fear is still cheap");
   }
-  if (realZ > 0.35 && easeW(rSc) > 0.4) {
-    stocksOutParts.push("real 10y yields are high — equities are not cheap on the discount rate");
+  if (erpZ < -0.35 && easeW(rSc) > 0.4) {
+    stocksOutParts.push("earnings yield is tight vs real 10y — equities are not cheap");
   }
-  if (realZ < -0.35) {
-    stocksOutParts.push("real 10y yields are low — the discount rate is cheap for equities");
+  if (erpZ > 0.35) {
+    stocksOutParts.push("earnings yield is wide vs real 10y — equities are paid");
   }
   if (tightW(rSc) > 0.55) {
     stocksOutParts.push("fear is already expensive — a clean underweight is late");
   }
   const calmRisk = easeW(rSc);
   // Soft growth alone is not enough for “out” — that sample still bounced.
-  // Real 10y is two-sided: high taxes the multiple, low pays it.
-  const stocksTax = Math.max(Math.max(0, realZ), tightW(lSc));
+  // Equity valuation is two-sided via ERP (earnings yield − real 10y).
+  const stocksTax = Math.max(Math.max(0, -erpZ), tightW(lSc));
   const stocksNet =
     0.55 * easeW(gSc) -
     0.35 * tightW(gSc) * calmRisk -
     0.75 * tightW(gSc) * calmRisk * stocksTax -
-    0.55 * tightW(lSc) * calmRisk -
-    0.55 * realZ * calmRisk +
+    0.55 * tightW(lSc) * calmRisk +
+    0.55 * erpZ * calmRisk +
     0.1 * calmRisk;
   const cycNet =
     0.6 * easeW(gSc) -
     0.35 * tightW(gSc) * calmRisk -
-    0.75 * tightW(gSc) * calmRisk * stocksTax -
-    0.5 * realZ * calmRisk +
+    0.75 * tightW(gSc) * calmRisk * stocksTax +
+    0.5 * erpZ * calmRisk +
     0.1 * calmRisk;
   const defNet =
     0.5 * tightW(gSc) * calmRisk * Math.max(stocksTax, 0.5) +
@@ -493,8 +505,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
     tightW(gSc) > 0.55 && easeW(rSc) > 0.4
       ? "Growth is soft while fear is still cheap — cyclicals usually get hurt first."
-      : realZ > 0.35
-        ? "Real yields are high — cyclicals pay more for every dollar of cash flow."
+      : erpZ < -0.35
+        ? "Equities are expensive vs real yields — cyclicals pay more for every dollar of cash flow."
         : "Fear is already expensive — the easy cyclical underweight is late.",
     "Cyclicals want Strong growth and calm fear; only one side is helping."
   );
@@ -516,17 +528,17 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "stocks",
     "Equities",
     stocksNet,
-    realZ < -0.35
-      ? "Activity is firm and the discount rate is cheap — risk assets usually get the bid."
+    erpZ > 0.35
+      ? "Activity is firm and earnings yield is wide vs real yields — risk assets usually get the bid."
       : "Activity is firm and fear is not in charge — risk assets usually get the bid.",
     sentence(
-      stocksOutParts.filter((p) => !p.includes("discount rate is cheap")),
+      stocksOutParts.filter((p) => !p.includes("equities are paid")),
       "Equities are out of favor here."
     ),
-    realZ > 0.35
-      ? "Growth isn’t a clean overweight, and real 10y yields already tax the multiple."
-      : realZ < -0.35
-        ? "Growth isn’t firm enough for a clean overweight, but real yields are not the tax."
+    erpZ < -0.35
+      ? "Growth isn’t a clean overweight, and earnings yield is tight vs real 10y."
+      : erpZ > 0.35
+        ? "Growth isn’t firm enough for a clean overweight, but equities are cheap vs real yields."
         : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
     0.15,
     -0.28

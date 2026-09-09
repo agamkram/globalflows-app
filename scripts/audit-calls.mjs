@@ -33,6 +33,8 @@ const SUPPORT_IDS = [
   "WTI",
   "DGS10",
   "CREDIT_IMPULSE",
+  "SPX_EY",
+  "EQUITY_ERP",
 ];
 
 const WORD = {

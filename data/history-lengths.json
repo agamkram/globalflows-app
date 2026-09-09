@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T03:53:39.292Z",
+  "updatedAt": "2026-09-09T04:15:04.731Z",
   "note": "High-water mark of data/history point counts. Sanity fails if any series shrinks below its mark. Updated by npm run ingest.",
   "series": {
     "ADA": {
@@ -841,6 +841,16 @@
       "n": 3227,
       "first": "2017-11-09",
       "last": "2026-09-09"
+    },
+    "SPX_EY": {
+      "n": 1870,
+      "first": "1871-01-01",
+      "last": "2026-09-08"
+    },
+    "EQUITY_ERP": {
+      "n": 285,
+      "first": "2003-02-01",
+      "last": "2026-09-08"
     }
   }
 }

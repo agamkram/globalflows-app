@@ -369,6 +369,58 @@ async function fetchYahoo(symbol) {
   };
 }
 
+/** Multpl monthly HTML tables (earnings yield, CAPE, …). Yale’s XLS has gone stale. */
+async function fetchMultpl(slug) {
+  const url = `https://www.multpl.com/${slug}/table/by-month`;
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": "GlobalFlows/0.1 (+https://markmaga.com)",
+      Accept: "text/html",
+    },
+  });
+  if (!res.ok) throw new Error(`Multpl ${slug} ${res.status}`);
+  const html = await res.text();
+  const trs = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+  const byDate = new Map();
+  for (const tr of trs) {
+    const tds = [...tr.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((m) =>
+      m[1]
+        .replace(/<[^>]+>/g, "")
+        .replace(/&#x2002;|&nbsp;|†/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+    );
+    if (tds.length < 2) continue;
+    const dm = tds[0].match(/^([A-Za-z]{3}) (\d{1,2}), (\d{4})$/);
+    if (!dm) continue;
+    const months = {
+      Jan: "01",
+      Feb: "02",
+      Mar: "03",
+      Apr: "04",
+      May: "05",
+      Jun: "06",
+      Jul: "07",
+      Aug: "08",
+      Sep: "09",
+      Oct: "10",
+      Nov: "11",
+      Dec: "12",
+    };
+    const mon = months[dm[1]];
+    if (!mon) continue;
+    const date = `${dm[3]}-${mon}-${String(dm[2]).padStart(2, "0")}`;
+    const nm = tds[1].replace(/,/g, "").match(/(-?\d+(?:\.\d+)?)/);
+    if (!nm) continue;
+    byDate.set(date, Number(nm[1]));
+  }
+  const points = [...byDate.entries()]
+    .map(([date, value]) => ({ date, value }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (points.length < 100) throw new Error(`Multpl ${slug} thin (${points.length})`);
+  return { points, source: "Multpl", sourceUrl: url };
+}
+
 function mean(arr) {
   if (!arr.length) return NaN;
   return arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -659,6 +711,9 @@ async function main() {
         got = await fetchNyfedSofr();
       } else if (s.pipe === "yahoo") {
         got = await fetchYahoo(s.yahoo);
+      } else if (s.pipe === "multpl") {
+        if (!s.multpl) throw new Error("missing multpl slug");
+        got = await fetchMultpl(s.multpl);
       } else if (s.pipe === "bundesbank") {
         if (!s.bundesbank) throw new Error("missing bundesbank key");
         got = await fetchBundesbank(s.bundesbank);
@@ -1186,6 +1241,26 @@ async function main() {
   } catch (e) {
     console.log(`  NOM_REAL_SPREAD FAIL  ${e.message}`);
     errors.push({ id: "NOM_REAL_SPREAD", error: String(e.message || e) });
+  }
+
+  // Derived: S&P earnings yield minus 10y real yield — Fed-model ERP with TIPS.
+  try {
+    const ey = JSON.parse(await fs.readFile(path.join(HIST, "SPX_EY.json"), "utf8"));
+    const real = JSON.parse(await fs.readFile(path.join(HIST, "DFII10.json"), "utf8"));
+    const realPts = [...(real.points || [])].sort((a, b) => a.date.localeCompare(b.date));
+    let ri = 0;
+    const points = [];
+    for (const p of ey.points || []) {
+      while (ri + 1 < realPts.length && realPts[ri + 1].date <= p.date) ri++;
+      if (!realPts[ri] || realPts[ri].date > p.date) continue;
+      if (!Number.isFinite(p.value) || !Number.isFinite(realPts[ri].value)) continue;
+      points.push({ date: p.date, value: p.value - realPts[ri].value });
+    }
+    if (points.length < 100) throw new Error(`thin ERP overlap (${points.length})`);
+    await emitDerived("EQUITY_ERP", points, "derived (S&P earnings yield − 10y real)");
+  } catch (e) {
+    console.log(`  EQUITY_ERP FAIL  ${e.message}`);
+    errors.push({ id: "EQUITY_ERP", error: String(e.message || e) });
   }
 
   // Spark bundle: the chart column only ever draws the last year, so ship a
