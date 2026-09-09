@@ -42,7 +42,22 @@ const SINCE = "2015-01-01";
 const LIGHT_SINCE = "2003-01-01";
 const PIN_WARN = 0.5; // flag a voter pinned on more than half the days
 const FLAT_WARN = 0.15; // flag a voter whose score barely moves
-const AMBER_WARN = 0.6; // light stuck amber most days — scale or voters too quiet
+const AMBER_CLIFF = 0.45; // score at which a light leaves amber
+const AMBER_EXCESS_WARN = 0.05; // amber share this far over its own implied floor
+
+/** Standard normal CDF (Abramowitz & Stegun 7.1.26 erf). */
+function normalCdf(z) {
+  const s = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const erf =
+    1 -
+    ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t +
+      0.254829592) *
+      t *
+      Math.exp(-x * x);
+  return 0.5 * (1 + s * erf);
+}
 const ONEWAY_MIN = 0.08; // a colour reached on fewer days than this is not a call
 const SKEW_MAX = 3; // green:red (or red:green) beyond this describes an era
 const CENTRE_SPAN_MIN = 0.8; // a valuation centre must span this much of the replay
@@ -248,7 +263,18 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
   for (const lid of LIGHT_IDS) {
     const L = byLight[lid];
     const flags = [];
-    if (L.amber > AMBER_WARN) flags.push(`AMBER ${Math.round(L.amber * 100)}%`);
+    // Judge amber against what the cliffs imply for this light's own spread, not
+    // a flat 60%: a normally distributed composite at the shared calibrated sd
+    // with cliffs at ±0.45 is amber 60% of the time by construction, so the flat
+    // line flagged Inflation for sitting exactly where the arithmetic puts it.
+    // Only an excess over that floor says the composite is peaked — that its
+    // ballots are averaging each other into the middle.
+    const impliedAmber = L.sd > 0 ? 2 * normalCdf(AMBER_CLIFF / L.sd) - 1 : null;
+    if (impliedAmber != null && L.amber - impliedAmber > AMBER_EXCESS_WARN) {
+      flags.push(
+        `AMBER ${Math.round(L.amber * 100)}% vs ${Math.round(impliedAmber * 100)}% implied by its spread`
+      );
+    }
     if (medianRawSd > 0 && L.rawSd < QUIET_SD_FRAC * medianRawSd) {
       flags.push(`QUIET raw-sd=${L.rawSd.toFixed(3)} (median ${medianRawSd.toFixed(3)})`);
     }
