@@ -17,22 +17,45 @@ function seriesOk(snap, id) {
   return s && s.status === "ok" ? s : null;
 }
 
-/** Term premium compressed — long bonds are not paid for duration risk. */
-function termPremiumUnpaid(snap) {
-  const tp = seriesOk(snap, "THREEFFTP10");
-  return tp?.latest != null && Number.isFinite(tp.latest) && tp.latest < 0.75;
+/**
+ * 2003–2026 centres for signed valuation. Rich (above centre for yields /
+ * below for spreads that pay you) subtracts; cheap adds. HY uses the long-run
+ * typical (band mid) — FRED’s ICE print is only ~3y of cycle tights.
+ */
+const VAL_CENTER = {
+  THREEFFTP10: { median: 1.06, scale: 0.75 },
+  DFII10: { median: 1.05, scale: 0.8 },
+  BAMLH0A0HYM2: { median: 4.0, scale: 1.5 },
+  BAA10Y: { median: 2.24, scale: 0.7 },
+};
+
+/** (value − median) / scale, clamped to −1..+1. */
+function valZ(value, median, scale) {
+  if (value == null || !Number.isFinite(value) || !(scale > 0)) return 0;
+  return Math.max(-1, Math.min(1, (value - median) / scale));
 }
 
-/** Market 10y real yield already high — discount rates bite. */
-function real10High(snap, thresh = 1.5) {
-  const r = seriesOk(snap, "DFII10");
-  return r?.latest != null && Number.isFinite(r.latest) && r.latest > thresh;
+function seriesValZ(snap, id, fallbackId = null) {
+  const s = seriesOk(snap, id) || (fallbackId ? seriesOk(snap, fallbackId) : null);
+  if (!s || s.latest == null || !Number.isFinite(s.latest)) return 0;
+  const cfg = VAL_CENTER[s.id] || VAL_CENTER[id];
+  if (!cfg) return 0;
+  return valZ(s.latest, cfg.median, cfg.scale);
 }
 
-/** Market 10y real yield low/negative — gold’s usual wage from rates. */
-function real10Low(snap, thresh = 0.5) {
-  const r = seriesOk(snap, "DFII10");
-  return r?.latest != null && Number.isFinite(r.latest) && r.latest < thresh;
+/** Term premium z: wide (+) = duration paid; compressed (−) = not paid. */
+function termPremiumZ(snap) {
+  return seriesValZ(snap, "THREEFFTP10");
+}
+
+/** Real 10y z: high (+) taxes risk assets; low (−) is cheap discount rate. */
+function real10Z(snap) {
+  return seriesValZ(snap, "DFII10");
+}
+
+/** Credit-spread z: wide (+) = paid; tight (−) = not paid. HY, else Baa. */
+function creditSpreadZ(snap) {
+  return seriesValZ(snap, "BAMLH0A0HYM2", "BAA10Y");
 }
 
 /**
@@ -238,9 +261,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const kImp = lightImpulse(lights, "risk");
   const hyImp = impulseUnit(hzImp(seriesOk(snap, "BAMLH0A0HYM2"), horizon));
 
-  const tpUnpaid = termPremiumUnpaid(snap);
-  const realHigh = real10High(snap);
-  const realLow = real10Low(snap);
+  const tpZ = termPremiumZ(snap);
+  const realZ = real10Z(snap);
+  const spreadZ = creditSpreadZ(snap);
+  const realHigh = realZ > 0.45;
+  const realLow = realZ < -0.45;
   const dolStrong = dollarStrong(snap);
   const dolSoft = dollarSoft(snap);
 
@@ -273,31 +298,44 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
 
   const tenorCtx = { T, I };
   // Continuous policy lean for 5s; duration + inflation + term premium for 10s/30s.
-  const tpTax = tpUnpaid ? -0.85 : 0;
+  // Term premium and real yields are two-sided: wide/high pay duration, compressed/low tax it.
+  const tpTerm = 0.85 * tpZ;
+  const realPay = 0.7 * realZ;
   const t5Net = easeW(tSc) - tightW(tSc);
-  const t10Net = d + flight * 0.8 - easeW(iSc) * 0.7 + tpTax;
-  const t30Net = d + flight * 0.8 - easeW(iSc) + tightW(iSc) * 0.5 + tpTax;
+  const t10Net = d + flight * 0.8 - easeW(iSc) * 0.7 + tpTerm + realPay;
+  const t30Net = d + flight * 0.8 - easeW(iSc) + tightW(iSc) * 0.5 + tpTerm + realPay;
   const t5 = gradeTenor("5", t5Net, tenorCtx, 1);
   t5.margin = blendMargin(t5.stance, t5Net, rImp);
   const t10 = gradeTenor("10", t10Net, tenorCtx, 2);
   const t30 = gradeTenor("30", t30Net, tenorCtx, 2);
   t10.margin = blendMargin(t10.stance, clampMargin(t10Net / 2), meanImpulse([rImp, -iImp]));
   t30.margin = blendMargin(t30.stance, clampMargin(t30Net / 2), -iImp);
-  if (tpUnpaid && t10.stance === "in") {
+  if (tpZ < -0.35 && t10.stance === "in") {
     t10.why = (t10.why || "") + " Term premium is compressed — duration is not paid.";
+  } else if (tpZ > 0.35 && t10.stance !== "out") {
+    t10.why = (t10.why || "") + " Term premium is wide — duration is paid.";
+  }
+  if (realZ > 0.35 && (t10.stance === "in" || t30.stance === "in")) {
+    const tip = " Real 10y yields are high — duration is paid.";
+    if (t10.stance === "in" && !t10.why.includes("duration is paid")) t10.why += tip;
+    if (t30.stance === "in" && !t30.why.includes("duration is paid")) t30.why += tip;
   }
   const tenorSet = new Set([t5.stance, t10.stance, t30.stance]);
-  // Parent follows the curve average — a 5s/30s split is not an automatic mixed.
-  const ustAvgNet = (t5Net + t10Net + t30Net) / 3;
+  // Parent leans on 10s/30s — a taxed front end should not veto a paid long end.
+  const ustAvgNet = 0.2 * t5Net + 0.4 * t10Net + 0.4 * t30Net;
   const ustStance = netCall(ustAvgNet, 0.35, -0.35);
   let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
   if (tenorSet.size === 1 && ustStance === t10.stance) {
     if (ustStance === "out") {
-      ustWhy = tpUnpaid
-        ? "The curve is taxed — term premium is compressed and duration is not paid."
-        : "The whole curve is taxed — policy, duration, and inflation aren’t paying.";
+      ustWhy =
+        tpZ < -0.35
+          ? "The curve is taxed — term premium is compressed and duration is not paid."
+          : "The whole curve is taxed — policy, duration, and inflation aren’t paying.";
     } else if (ustStance === "in") {
-      ustWhy = "The whole curve can work — policy, duration, and inflation aren’t the tax.";
+      ustWhy =
+        tpZ > 0.35 || realZ > 0.35
+          ? "The whole curve can work — duration is paid on term premium or real yield."
+          : "The whole curve can work — policy, duration, and inflation aren’t the tax.";
     } else {
       ustWhy = "The whole curve is mixed — no clean duration bid.";
     }
@@ -306,8 +344,10 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   } else if (ustStance === "in") {
     ustWhy = `The curve leans in (5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}).`;
   }
-  if (tpUnpaid && ustStance !== "in" && !ustWhy.includes("term premium")) {
+  if (tpZ < -0.35 && ustStance !== "in" && !ustWhy.includes("term premium")) {
     ustWhy += " Term premium is compressed — long bonds are not paid.";
+  } else if (tpZ > 0.35 && ustStance === "in" && !ustWhy.includes("term premium")) {
+    ustWhy += " Term premium is wide — long bonds are paid.";
   }
   const treasuries = {
     id: "treasuries",
@@ -340,8 +380,6 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   ig.label = "Investment grade";
   ig.margin = blendMargin(ig.stance, ig.net, meanImpulse([rImp, -iImp, kImp]));
 
-  const hyPrint = seriesOk(snap, "BAMLH0A0HYM2");
-  const hyTights = hyPrint?.anchor?.score != null && hyPrint.anchor.score >= 0.85;
   const hyOutParts = [];
   if (creditDir === "rising") {
     const named = (creditUpParts || []).filter(Boolean);
@@ -352,22 +390,25 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // once fear is expensive the bounce is often already the trade.
   if (tightW(gSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("growth is soft while fear is still cheap");
   if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("cash is draining while fear is still cheap");
-  if (hyTights && easeW(rSc) > 0.4) hyOutParts.push("spreads are at cycle tights — you are not paid");
+  if (spreadZ < -0.35 && easeW(rSc) > 0.4) hyOutParts.push("spreads are tight — you are not paid");
   if (tightW(rSc) > 0.55) hyOutParts.push("fear is already expensive — the easy out call is late");
   const calm = easeW(rSc);
   // Credit “out” only while fear is still calm — risk-off outs are bounce days.
+  // Spread level is two-sided: tight docks, wide adds.
   const hyNet =
     (creditDir === "falling" ? 0.55 : 0) -
     (creditDir === "rising" ? 0.4 * Math.max(calm, 0.35) : 0) +
     0.35 * easeW(gSc) -
     0.5 * tightW(gSc) * calm -
-    0.2 * tightW(lSc) * calm -
-    (hyTights ? 0.5 * calm : 0);
+    0.2 * tightW(lSc) * calm +
+    0.45 * spreadZ * Math.max(calm, 0.35);
   const hy = instrumentFromNet(
     "hy",
     "HY",
     hyNet,
-    "Growth and risk appetite still say coupons get paid.",
+    spreadZ > 0.35
+      ? "Spreads are wide and growth still says coupons get paid."
+      : "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
     "High yield needs both growth and calm fear; only one side is helping.",
     0.28,
@@ -380,12 +421,15 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
-      creditWhy = hyTights
-        ? "Investment grade and high yield are both out — rising yields tax investment-grade bonds, and high-yield spreads are too tight to pay."
-        : "Investment grade and high yield are both out — duration and cash-flow risk are both up.";
+      creditWhy =
+        spreadZ < -0.35
+          ? "Investment grade and high yield are both out — rising yields tax investment-grade bonds, and spreads are too tight to pay."
+          : "Investment grade and high yield are both out — duration and cash-flow risk are both up.";
     } else if (creditStance === "in") {
       creditWhy =
-        "Investment grade and high yield are both in — spreads can tighten and coupons still look collectible.";
+        spreadZ > 0.35
+          ? "Investment grade and high yield are both in — spreads are wide enough to pay and coupons still look collectible."
+          : "Investment grade and high yield are both in — spreads can tighten and coupons still look collectible.";
     } else {
       creditWhy = "Investment grade and high yield are both mixed.";
     }
@@ -412,29 +456,31 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4 && easeW(gSc) < 0.45) {
     stocksOutParts.push("cash is draining while fear is still cheap");
   }
-  if (realHigh && easeW(rSc) > 0.4) {
+  if (realZ > 0.35 && easeW(rSc) > 0.4) {
     stocksOutParts.push("real 10y yields are high — equities are not cheap on the discount rate");
+  }
+  if (realZ < -0.35) {
+    stocksOutParts.push("real 10y yields are low — the discount rate is cheap for equities");
   }
   if (tightW(rSc) > 0.55) {
     stocksOutParts.push("fear is already expensive — a clean underweight is late");
   }
   const calmRisk = easeW(rSc);
   // Soft growth alone is not enough for “out” — that sample still bounced.
-  // Out needs soft growth (or a drain) while fear is calm AND either high real
-  // yields or draining cash are confirming the multiple is taxed.
-  const stocksTax = Math.max(realHigh ? 1 : 0, tightW(lSc));
+  // Real 10y is two-sided: high taxes the multiple, low pays it.
+  const stocksTax = Math.max(Math.max(0, realZ), tightW(lSc));
   const stocksNet =
     0.55 * easeW(gSc) -
     0.35 * tightW(gSc) * calmRisk -
     0.75 * tightW(gSc) * calmRisk * stocksTax -
     0.55 * tightW(lSc) * calmRisk -
-    (realHigh ? 0.55 * calmRisk : 0) +
+    0.55 * realZ * calmRisk +
     0.1 * calmRisk;
   const cycNet =
     0.6 * easeW(gSc) -
     0.35 * tightW(gSc) * calmRisk -
     0.75 * tightW(gSc) * calmRisk * stocksTax -
-    (realHigh ? 0.5 * calmRisk : 0) +
+    0.5 * realZ * calmRisk +
     0.1 * calmRisk;
   const defNet =
     0.5 * tightW(gSc) * calmRisk * Math.max(stocksTax, 0.5) +
@@ -447,7 +493,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Growth is firm and fear isn’t in charge — cyclicals usually get the bid.",
     tightW(gSc) > 0.55 && easeW(rSc) > 0.4
       ? "Growth is soft while fear is still cheap — cyclicals usually get hurt first."
-      : realHigh
+      : realZ > 0.35
         ? "Real yields are high — cyclicals pay more for every dollar of cash flow."
         : "Fear is already expensive — the easy cyclical underweight is late.",
     "Cyclicals want Strong growth and calm fear; only one side is helping."
@@ -470,11 +516,18 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "stocks",
     "Equities",
     stocksNet,
-    "Activity is firm and fear is not in charge — risk assets usually get the bid.",
-    sentence(stocksOutParts, "Equities are out of favor here."),
-    realHigh
+    realZ < -0.35
+      ? "Activity is firm and the discount rate is cheap — risk assets usually get the bid."
+      : "Activity is firm and fear is not in charge — risk assets usually get the bid.",
+    sentence(
+      stocksOutParts.filter((p) => !p.includes("discount rate is cheap")),
+      "Equities are out of favor here."
+    ),
+    realZ > 0.35
       ? "Growth isn’t a clean overweight, and real 10y yields already tax the multiple."
-      : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
+      : realZ < -0.35
+        ? "Growth isn’t firm enough for a clean overweight, but real yields are not the tax."
+        : "Growth isn’t firm enough for a clean overweight, and nothing has taken them out.",
     0.15,
     -0.28
   );
@@ -484,17 +537,18 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const cryptoOutParts = [];
   if (tightW(lSc) > 0.55) cryptoOutParts.push("cash is draining");
   if (dolStrong) cryptoOutParts.push("the dollar is rising");
-  if (realHigh && easeW(rSc) > 0.4) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
+  if (realZ > 0.35 && easeW(rSc) > 0.4) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
   if (tightW(rSc) > 0.55) cryptoOutParts.push("fear is already expensive — the easy dump call is late");
   const cryptoInParts = [];
   if (easeW(lSc) > 0.55) cryptoInParts.push("plumbing is feeding risk");
   if (easeW(rSc) > 0.55 && easeW(lSc) > 0.4) cryptoInParts.push("fear is cheap with easy plumbing");
+  if (realZ < -0.35) cryptoInParts.push("real yields are low — the discount rate helps the high-beta valve");
   const cryptoNet =
     0.5 * easeW(lSc) -
     0.5 * tightW(lSc) +
     0.15 * easeW(rSc) -
     0.1 * tightW(rSc) -
-    (realHigh ? 0.25 * calmRisk : 0) -
+    0.25 * realZ * calmRisk -
     (dolStrong ? 0.45 : 0);
   const crypto = instrumentFromNet(
     "crypto",
@@ -513,25 +567,28 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const goldInParts = [];
   if (goldCrisis) goldInParts.push("cash is draining and fear is expensive — gold’s crisis bid");
   if (goldDrain && !dolStrong) goldInParts.push("cash is draining without a dollar squeeze");
-  if (dolSoft && !realHigh) goldInParts.push("the dollar is soft");
+  if (dolSoft && realZ < 0.2) goldInParts.push("the dollar is soft");
+  if (realLow) goldInParts.push("real 10y yields are low — gold’s rate wage is back");
   const goldOutParts = [];
   if (dolStrong) goldOutParts.push("the dollar is rising");
   let goldMix = "Gold has no clean job right now.";
   if (dolStrong) {
     goldMix = sentence(goldOutParts, "A rising dollar — gold rarely leads that mix.");
-  } else if (realHigh && !goldCrisis) {
+  } else if (realZ > 0.35 && !goldCrisis) {
     goldMix =
       "Real 10y yields are high, but there’s no crisis bid — gold stays mixed rather than a clean avoid.";
+  } else if (realLow && !dolStrong) {
+    goldMix = "Real 10y yields are low — gold’s rate wage helps, but the dollar and plumbing aren’t a clean bid yet.";
   } else if (!goldCrisis && !goldDrain) {
     goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
-  // Crisis plumbing + fear, or a soft dollar without high real yields, as “in”.
-  // A rising dollar is the out.
+  // Crisis / soft dollar / cheap reals as “in”. Rising dollar is the out.
+  // High reals alone stay mixed — they tax the rate wage but do not make a clean avoid.
   const goldNet =
     (goldCrisis ? 0.7 : goldDrain && !dolStrong ? 0.35 : 0) +
-    (dolSoft && !realHigh ? 0.5 : 0) -
-    (dolStrong ? 0.8 : 0) -
-    (realHigh && dolStrong ? 0.15 : 0);
+    (dolSoft ? 0.45 * Math.max(0, 1 - Math.max(0, realZ)) : 0) +
+    (realLow ? 0.4 : 0) -
+    (dolStrong ? 0.8 : 0);
   const gold = instrumentFromNet(
     "gold",
     "Gold",
@@ -653,24 +710,27 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   let durationLabel = "Duration risk mixed";
   let durationLine = "";
 
-  const tpUnpaid = termPremiumUnpaid(snap);
+  const tpZ = termPremiumZ(snap);
+  const realZ = real10Z(snap);
   const hotNotCooling = easeW(iSc) * (Iimp === "down" ? 0.25 : 1);
   const coldInfl = tightW(iSc);
   const coolingRelief = easeW(iSc) * (Iimp === "down" ? 0.55 : 0);
+  // Term premium and real yields are two-sided: paid (+z) eases duration risk.
   let durNet =
     -0.7 * hotNotCooling +
     0.65 * coldInfl +
     0.45 * coolingRelief -
     0.55 * tightW(tSc) +
-    0.35 * easeW(tSc) -
-    (tpUnpaid ? 0.7 : 0) -
+    0.35 * easeW(tSc) +
+    0.7 * tpZ +
+    0.55 * realZ -
     0.25 * easeW(gSc) * (1 - tightW(iSc));
 
   const durationUpParts = [];
   if (hotNotCooling > 0.45) durationUpParts.push("inflation is still hot and not cooling this window");
-  if (tightW(tSc) > 0.55) durationUpParts.push("funding is tight");
-  if (tpUnpaid) durationUpParts.push("term premium is compressed — duration is not paid");
-  if (easeW(gSc) > 0.55 && tightW(iSc) < 0.4 && hotNotCooling < 0.45 && tightW(tSc) < 0.45 && !tpUnpaid) {
+  if (tightW(tSc) > 0.55 && realZ < 0.35) durationUpParts.push("funding is tight");
+  if (tpZ < -0.35) durationUpParts.push("term premium is compressed — duration is not paid");
+  if (easeW(gSc) > 0.55 && tightW(iSc) < 0.4 && hotNotCooling < 0.45 && tightW(tSc) < 0.45 && tpZ >= -0.2) {
     durationUpParts.push("firm growth is keeping a premium in the long end");
   }
 
@@ -683,9 +743,12 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   } else if (durNet >= 0.35) {
     durationDir = "falling";
     durationLabel = "Duration risk falling";
-    durationLine = coolingRelief > 0.3
-      ? "Inflation is still high but cooling this window — duration gets a look if funding isn’t fighting you."
-      : "Long bonds can work again — cooler inflation and softer funding open room for duration if credit stays calm.";
+    durationLine =
+      realZ > 0.35 || tpZ > 0.35
+        ? "Duration is paid — wide term premium or high real yields open room for long bonds if inflation isn’t fighting you."
+        : coolingRelief > 0.3
+          ? "Inflation is still high but cooling this window — duration gets a look if funding isn’t fighting you."
+          : "Long bonds can work again — cooler inflation and softer funding open room for duration if credit stays calm.";
   } else {
     durationDir = "mixed";
     durationLabel = "Duration risk mixed";
@@ -694,13 +757,17 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
       : "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid.";
   }
 
-  if (realY?.latest != null && Number.isFinite(realY.latest) && realY.latest > 2) {
-    durationLine += " Real 10y yields are high — discount rates still bite.";
+  if (realZ > 0.45 && durationDir === "rising") {
+    durationLine += " Real 10y yields are high — you are paid on the rate, but inflation or funding still tax present value.";
+  } else if (realZ > 0.45 && durationDir !== "rising" && !durationLine.includes("real")) {
+    durationLine += " Real 10y yields are high — duration is paid.";
   } else if (realYImp.dir === "up" && durationDir !== "falling") {
     durationLine += " Real 10y yields are rising this window — discount rates still bite.";
   }
-  if (tpUnpaid && !durationLine.includes("term premium")) {
+  if (tpZ < -0.35 && !durationLine.includes("term premium")) {
     durationLine += " Term premium is compressed — you are not paid for duration risk.";
+  } else if (tpZ > 0.35 && durationDir === "falling" && !durationLine.includes("term premium")) {
+    durationLine += " Term premium is wide — you are paid for duration risk.";
   }
 
   // Credit net: positive = credit risk falling. Symmetric ease/stress weights.
@@ -727,8 +794,9 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     (gImpSc > 0.25 ? 0.2 : 0) -
     (hyImp.dir === "up" ? 0.3 : 0) +
     (hyImp.dir === "down" ? 0.2 : 0) -
-    (impulseSlow ? 0.2 : 0) +
-    (creditFlow.dir === "up" ? 0.2 : 0);
+    (impulseSlow ? 0.35 : 0) +
+    (creditFlow.dir === "up" ? 0.35 : 0) +
+    0.25 * creditSpreadZ(snap);
 
   if (creditNet <= -0.35) {
     creditDir = "rising";

@@ -14,6 +14,7 @@ import {
   attachImpulse,
   memberAnchorScore,
   lightStateFromScore,
+  distanceToCliff,
   aggregateVotes,
   DEFAULT_IMPULSE,
 } from "../score.js";
@@ -92,31 +93,36 @@ function teach(lid, c) {
       riskNote = " HY OAS is at cycle tights — calm, and not paid.";
     }
   }
+  const cliff = distanceToCliff(c.score);
+  const cliffNote =
+    cliff != null && cliff < 0.05
+      ? ` ${cliff.toFixed(2)} from the colour line.`
+      : "";
   const by = {
     liquidity: {
-      easing: `Cash looks ample on the level.${split} Point: plumbing is not the scarce good.`,
-      neutral: `Cash looks neither clearly ample nor scarce.${split} Point: liquidity isn’t the loud driver right now.`,
-      tight: `Cash looks scarce on the level.${split} Point: funding/parking say less fuel in the pipes.`,
+      easing: `Cash looks ample on the level.${split}${cliffNote} Point: plumbing is not the scarce good.`,
+      neutral: `Cash looks neither clearly ample nor scarce.${split}${cliffNote} Point: liquidity isn’t the loud driver right now.`,
+      tight: `Cash looks scarce on the level.${split}${cliffNote} Point: funding/parking say less fuel in the pipes.`,
     },
     rates: {
-      easing: `Real funding looks easy.${split} Point: money is cheap to fund with.`,
-      neutral: `Real funding looks mixed.${split} Point: not clearly cheap or dear.`,
-      tight: `Real funding looks tight.${split} Point: you are being paid to wait in cash, not in duration.`,
+      easing: `Real funding looks easy.${split}${cliffNote} Point: money is cheap to fund with.`,
+      neutral: `Real funding looks mixed.${split}${cliffNote} Point: not clearly cheap or dear.`,
+      tight: `Real funding looks tight.${split}${cliffNote} Point: you are being paid to wait in cash, not in duration.`,
     },
     growth: {
-      easing: `Activity looks firm versus full employment / trend.${split} Point: the real side is holding up.`,
-      neutral: `Activity looks mixed versus trend.${split} Point: no clean boom or bust.`,
-      tight: `Activity looks soft versus trend.${split} Point: demand/labor are under pressure.`,
+      easing: `Activity looks firm versus full employment / trend.${split}${cliffNote} Point: the real side is holding up.`,
+      neutral: `Activity looks mixed versus trend.${split}${cliffNote} Point: no clean boom or bust.`,
+      tight: `Activity looks soft versus trend.${split}${cliffNote} Point: demand/labor are under pressure.`,
     },
     inflation: {
-      easing: `Prices are high versus ~2%.${inflNote} Point: the level is still hot — the impulse row says if it’s cooling.`,
-      neutral: `Prices are near the target band.${inflNote} Point: no clean hot or cold call.`,
-      tight: `Prices are cold versus ~2%.${inflNote} Point: inflation is not the tax right now.`,
+      easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — the impulse row says if it’s cooling.`,
+      neutral: `Prices are near the target band.${inflNote}${cliffNote} Point: no clean hot or cold call.`,
+      tight: `Prices are cold versus ~2%.${inflNote}${cliffNote} Point: inflation is not the tax right now.`,
     },
     risk: {
-      easing: `Fear is cheap on the gauges.${riskNote} Point: vol and credit are quiet.`,
-      neutral: `Fear gauges look mixed.${riskNote} Point: not a clear risk-on or risk-off tape.`,
-      tight: `Markets are paying up for fear.${riskNote} Point: vol/credit stress is elevated.`,
+      easing: `Fear is cheap on the gauges.${riskNote}${cliffNote} Point: vol and credit are quiet.`,
+      neutral: `Fear gauges look mixed.${riskNote}${cliffNote} Point: not a clear risk-on or risk-off tape.`,
+      tight: `Markets are paying up for fear.${riskNote}${cliffNote} Point: vol/credit stress is elevated.`,
     },
   };
   return by[lid]?.[c.state] || `${c.word}.`;
@@ -153,6 +159,7 @@ async function main() {
       state: c.state,
       word: c.word,
       score: c.score,
+      cliff: distanceToCliff(c.score),
       color: c.color,
       n: c.n,
       teach: teach(lid, c),

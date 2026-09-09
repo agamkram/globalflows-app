@@ -16,10 +16,20 @@ export function lightStateFromScore(score) {
   return { state: "neutral", score };
 }
 
+/** Signed distance to the nearest colour cliff (−0.45 / +0.45). */
+export function distanceToCliff(score) {
+  if (score == null || !Number.isFinite(score)) return null;
+  if (score > 0.45) return score - 0.45;
+  if (score < -0.45) return -0.45 - score;
+  return Math.min(0.45 - score, score - -0.45);
+}
+
 /**
  * Correlated voters average into one family ballot before the light mean, so
  * three credit spreads cannot outvote VIX three times over. Ungrouped voters
  * keep their catalog weights as true multipliers (not bag-duplicates).
+ * Family entry is an id list (ballot weight 1) or `{ ids, weight }` so a
+ * low-variance peer cannot flatten the light 50/50.
  */
 const VOTE_FAMILIES = {
   risk: {
@@ -28,12 +38,43 @@ const VOTE_FAMILIES = {
   },
   // Coincident labor/GDP, leading housing/orders/openings, and regional surveys
   // each cast one family ballot so six lagging prints cannot drown the turn.
+  // Survey weight 0.5 — two regional prints at the ceiling were carrying a third
+  // of Growth and flipping Strong by a hair over six coincident prints at +0.24.
   growth: {
     coincident: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"],
     leading: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"],
-    survey: ["EMPIRE_MFG", "PHILLY_MFG"],
+    survey: { ids: ["EMPIRE_MFG", "PHILLY_MFG"], weight: 0.5 },
+  },
+  // Realized core weight 2 so low-variance expectations cannot cap Hot.
+  // Persistence (sticky + wages + upstream PPI) is a third ballot, not a half.
+  inflation: {
+    realized: { ids: ["CPILFESL", "PCEPILFE"], weight: 2 },
+    persistence: { ids: ["STICKY_CPI", "CES0500000003", "PPIFIS"], weight: 1 },
+    expected: { ids: ["T5YIFR"], weight: 1 },
+  },
+  // Level-of-rates was casting ~5 ballots vs 1 each for curve and vol.
+  rates: {
+    real: ["DFII5", "DFII10", "DGS2"],
+    nominal: ["MORTGAGE30US", "G3_10Y"],
+    curve: ["T10Y2Y"],
+    vol: ["MOVE"],
+  },
+  // Two Fed-balance-sheet/GDP ratios share one ballot.
+  liquidity: {
+    fed: ["RESERVES_GDP", "NETLIQ_GDP"],
+    funding: ["SOFR_SPREAD"],
+    global: ["GLOBAL_CB_YOY", "DOLLAR_YOY"],
   },
 };
+
+function familySpec(raw) {
+  if (Array.isArray(raw)) return { ids: raw, weight: 1 };
+  if (raw && Array.isArray(raw.ids)) {
+    const w = Number(raw.weight);
+    return { ids: raw.ids, weight: Number.isFinite(w) && w > 0 ? w : 1 };
+  }
+  return null;
+}
 
 /** Weight is influence, not a duplicate median seat. */
 export function weightedMean(items) {
@@ -52,7 +93,7 @@ export function weightedTrimmedMean(items) {
   const ok = (items || []).filter(
     (it) => Number.isFinite(it?.score) && Number.isFinite(it?.weight) && it.weight > 0
   );
-  if (ok.length < 5) return weightedMean(ok);
+  if (ok.length < 3) return weightedMean(ok);
   const sorted = [...ok].sort((a, b) => a.score - b.score);
   return weightedMean(sorted.slice(1, -1));
 }
@@ -68,15 +109,17 @@ export function aggregateVotes(lid, voters) {
   const families = VOTE_FAMILIES[lid] || {};
   const used = new Set();
   const ballots = [];
-  for (const [fname, ids] of Object.entries(families)) {
-    const members = list.filter((v) => ids.includes(v.id));
+  for (const [fname, raw] of Object.entries(families)) {
+    const spec = familySpec(raw);
+    if (!spec) continue;
+    const members = list.filter((v) => spec.ids.includes(v.id));
     if (!members.length) continue;
     for (const m of members) used.add(m.id);
     const fam = weightedMean(
       members.map((m) => ({ score: m.score, weight: Math.max(1, m.weight || 1) }))
     );
-    // One ballot per family — credit and vol sit as peers, not 3-vs-1.
-    if (fam != null) ballots.push({ id: `family:${fname}`, score: fam, weight: 1 });
+    // One ballot per family — weight is explicit (default 1), not always equal.
+    if (fam != null) ballots.push({ id: `family:${fname}`, score: fam, weight: spec.weight });
   }
   for (const v of list) {
     if (used.has(v.id)) continue;
@@ -123,6 +166,8 @@ const KIND = {
   PCEPI: "pce_yoy",
   MICH: "mich",
   STICKY_CPI: "cpi_yoy",
+  CES0500000003: "wage_yoy",
+  PPIFIS: "ppi_yoy",
   UNRATE: "unrate",
   ICSA: "claims",
   PAYEMS: "payrolls",
@@ -189,6 +234,13 @@ function scoreKind(kind, value) {
     case "cpi_yoy":
     case "pce_yoy":
       return bandScore(value, 1.2, 2.0, 4.0, false);
+    // Average hourly earnings, 12-month %. Soft near 2%, mid ~3%, hot near 4.5%
+    // on the 2003–2026 wage-growth record.
+    case "wage_yoy":
+      return bandScore(value, 2.0, 3.0, 4.5, false);
+    // Final-demand PPI YoY. Softer and wider than core CPI: 0 / 2 / 6.5.
+    case "ppi_yoy":
+      return bandScore(value, 0, 2.0, 6.5, false);
     case "mich":
       return bandScore(value, 2.0, 3.0, 4.5, false);
     case "unrate":
@@ -321,6 +373,10 @@ function whyKind(kind, value) {
     case "cpi_yoy":
     case "pce_yoy":
       return `${fmt(v)}% YoY vs ~2% target`;
+    case "wage_yoy":
+      return `average hourly earnings ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m`;
+    case "ppi_yoy":
+      return `final-demand PPI ${v >= 0 ? "+" : ""}${fmt(v)}% over 12m`;
     case "mich":
       return `${fmt(v)}% household expected inflation`;
     case "unrate":
@@ -440,7 +496,7 @@ function priorPoint(points, days, freq) {
 
 function impulseDeadband(spec, latest) {
   const kind = anchorKind(spec.id);
-  if (kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich" || kind === "bei_5y5y") return 0.08;
+  if (kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich" || kind === "bei_5y5y" || kind === "wage_yoy" || kind === "ppi_yoy") return 0.08;
   if (kind === "unrate") return 0.05;
   if (kind === "vix") return 0.8;
   if (kind === "hy" || kind === "bbb") return 0.08;
