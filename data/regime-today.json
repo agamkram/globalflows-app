@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-09T16:11:11.290Z",
-  "ingestAt": "2026-09-09T16:10:16.579Z",
+  "generatedAt": "2026-09-09T17:22:34.606Z",
+  "ingestAt": "2026-09-09T17:22:10.161Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -61,7 +61,7 @@
           "name": "Credit",
           "stance": "in",
           "why": "Credit leans in — investment grade in, high yield mixed.",
-          "margin": 0.21220292114943864,
+          "margin": 0.21200849079818132,
           "splits": [
             {
               "id": "ig",
@@ -70,7 +70,7 @@
               "why": "Spreads can tighten and duration is not fighting you.",
               "net": 0.55,
               "label": "Investment grade",
-              "margin": 0.40366881156668705
+              "margin": 0.4034743812154297
             },
             {
               "id": "hy",
@@ -79,7 +79,7 @@
               "why": "High yield needs both growth and calm fear; only one side is helping.",
               "net": -0.06499999999999995,
               "label": "High yield",
-              "margin": 0.020737030732190236
+              "margin": 0.02054260038093291
             }
           ]
         },
@@ -89,7 +89,7 @@
           "stance": "out",
           "why": "Growth is firm while fear is still cheap — late to the expansion and cash is draining into a still-calm tape.",
           "net": -1,
-          "margin": -0.6274444539017148,
+          "margin": -0.6277360994286008,
           "splits": [
             {
               "id": "cyc",
@@ -98,7 +98,7 @@
               "why": "Growth is firm while fear is still cheap — late to the expansion and cash is draining into a still-calm tape.",
               "net": -0.8,
               "label": "Cyclicals",
-              "margin": -0.48344445390171475
+              "margin": -0.48373609942860074
             },
             {
               "id": "def",
@@ -107,7 +107,7 @@
               "why": "Firm growth and calm fear — defensives usually lag that mix.",
               "net": -0.4,
               "label": "Defensives",
-              "margin": -0.3805555460982852
+              "margin": -0.3802639005713992
             }
           ]
         },
@@ -117,7 +117,7 @@
           "stance": "mixed",
           "why": "Crypto wants paid fear or a clean drain; complacent easy plumbing is late.",
           "net": -0.1875,
-          "margin": -0.2680000094572703
+          "margin": -0.2682916549841563
         },
         {
           "id": "gold",
@@ -125,7 +125,7 @@
           "stance": "mixed",
           "why": "Gold has no job right now — don’t treat it as a liquidity vote.",
           "net": 0.15000000000000002,
-          "margin": 0.06355380503607062
+          "margin": 0.06384545056295661
         },
         {
           "id": "cmdty",
@@ -462,8 +462,8 @@
       "label": "Risk",
       "state": "easing",
       "word": "Risk-on",
-      "score": 0.5424510458755204,
-      "cliff": 0.09245104587552039,
+      "score": 0.5398280346464835,
+      "cliff": 0.08982803464648353,
       "color": "green",
       "n": 4,
       "teach": "Fear is cheap on the gauges. HY OAS is at cycle tights — calm, and not paid. Point: vol and credit are quiet.",
@@ -492,7 +492,7 @@
         {
           "id": "VIX",
           "name": "Equity volatility (VIX)",
-          "score": 0.14399986267089848,
+          "score": 0.14000015258789067,
           "weight": 1,
           "why": "VIX 16.3"
         }
@@ -513,7 +513,7 @@
   "analogs": {
     "n": 40,
     "closeness": "loose",
-    "medianDistance": 0.636,
+    "medianDistance": 0.635,
     "windowStart": "2003-01-02",
     "windowEnd": "2026-09-09",
     "sampleDays": 5990,
