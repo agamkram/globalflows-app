@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261041";
+import { buildMeaning } from "./meaning.js?v=20261042";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261041";
+} from "./score.js?v=20261042";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -712,7 +712,7 @@ function renderFavorStrip() {
             ${
               price
                 ? isBtc
-                  ? `<span class="favor-tenor favor-spot-px favor-spot-btc">₿${escapeHtml(
+                  ? `<span class="favor-tenor favor-spot-px favor-spot-btc">₿ ${escapeHtml(
                       price
                     )}</span>`
                   : `<span class="favor-tenor favor-spot-px favor-spot-gold"><span class="favor-price">${escapeHtml(
