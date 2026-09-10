@@ -467,6 +467,8 @@ body.page-about::before {
   flex-direction: column;
   gap: 0;
   width: 100%;
+  min-width: 0;
+  container-type: inline-size;
 }
 
 .favor-cell.favor-ust {
@@ -530,7 +532,12 @@ body.page-about::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  font: 400 0.65rem var(--mono);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0 5px;
+  font: 400 clamp(0.5rem, 16cqi, 0.65rem) var(--mono);
   white-space: nowrap;
 }
 
