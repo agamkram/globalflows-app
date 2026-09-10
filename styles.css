@@ -528,35 +528,6 @@ body.page-about::before {
   min-height: 1.25em;
 }
 
-.favor-tenor.favor-spot-px {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  padding: 0 5px;
-  font: 400 0.8rem var(--mono);
-  white-space: nowrap;
-}
-
-.favor-spot-btc {
-  color: #f7931a;
-}
-
-.favor-spot-gold,
-.favor-spot-gold .favor-price {
-  color: #d4af37;
-}
-
-.favor-price {
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
-  max-width: 100%;
-  white-space: nowrap;
-}
-
 .dlg-body .rubric-extra {
   display: flex;
   flex-direction: column;
