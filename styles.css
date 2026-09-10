@@ -1808,10 +1808,10 @@ html.page-about body,
 }
 
 .about-top {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  column-gap: 12px;
   position: fixed;
   top: 0;
   left: 0;
@@ -1827,35 +1827,41 @@ html.page-about body,
 }
 
 .about-main {
-  padding-top: calc(var(--safe-t) + 44px);
+  padding-top: calc(var(--safe-t) + 60px);
 }
 
-.about-top-start {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
+.about-back,
+.about-math {
+  font: 500 1.6rem var(--sans);
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-shadow: 0 0 8px var(--bg), 0 1px 4px var(--bg);
   min-width: 0;
 }
 
 .about-back {
-  font: 500 0.8rem var(--sans);
-  color: var(--accent);
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  text-shadow: 0 0 8px var(--bg), 0 1px 4px var(--bg);
+  justify-self: start;
 }
 
-.about-back:hover {
+.about-back:hover,
+.about-math:hover {
   color: #c5dcff;
 }
 
-.about-top-end {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+.about-math {
+  justify-self: end;
+  font-weight: 600;
+  text-align: right;
+}
+
+.about-math[aria-current="page"] {
+  color: var(--text);
 }
 
 .about-top-mark {
+  justify-self: center;
   display: inline-flex;
   align-items: center;
   gap: 6px;
