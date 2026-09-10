@@ -2,10 +2,11 @@
 #   npm run refresh = ingest → vintages → history → regime → sanity
 # then commit allowlisted JSON → Vercel.
 #
-# Vintages (ALFRED) are gitignored. The runner restores a cache so a failed
-# vintage pull still scores analog on yesterday's vintages instead of revised
-# history. When FRED_API_KEY is set, fetch:vintages still runs every morning
-# so today's payroll/CPI revisions land in the analog archive.
+# Vintages (ALFRED) and data/history are gitignored. The runner restores both
+# caches so a thin first pull cannot look like lost history, and a failed
+# vintage pull still scores analog on yesterday's vintages. When FRED_API_KEY
+# is set, fetch:vintages still runs every morning so today's payroll/CPI
+# revisions land in the analog archive.
 #
 # Ingest pipes: FRED (CSV; API when FRED_API_KEY is set), NY Fed, Yahoo,
 # Bundesbank SDMX, Bank of England IADB, Japan MOF JGB CSV.
@@ -77,6 +78,14 @@ jobs:
           key: vintages-${{ github.run_id }}
           restore-keys: |
             vintages-
+
+      - name: Restore history cache
+        uses: actions/cache@v4
+        with:
+          path: data/history
+          key: history-${{ github.run_id }}
+          restore-keys: |
+            history-
 
       - name: Snapshot before
         run: node scripts/bake-report.mjs --snapshot-before /tmp/regime-before.json

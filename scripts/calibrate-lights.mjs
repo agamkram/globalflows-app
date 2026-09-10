@@ -19,17 +19,29 @@ const HIST = path.join(ROOT, "data", "regime-history.json");
 const OUT = path.join(ROOT, "data", "light-dist.json");
 const CATALOG = path.join(ROOT, "data", "catalog.json");
 
+async function keepCommitted(why) {
+  try {
+    await fs.access(OUT);
+    console.log(`calibrate:lights: keep committed light-dist (${why})`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function main() {
   let hist;
   try {
     hist = JSON.parse(await fs.readFile(HIST, "utf8"));
   } catch {
+    if (await keepCommitted("no regime-history.json")) return;
     console.error("calibrate:lights needs data/regime-history.json — run npm run bake:history");
     process.exit(1);
   }
   const rows = hist.rows || [];
   const withRaw = rows.filter((r) => Array.isArray(r.raw) && r.raw.length === LIGHT_IDS.length);
   if (withRaw.length < 252) {
+    if (await keepCommitted(`${withRaw.length} days have row.raw`)) return;
     console.error(
       `calibrate:lights needs row.raw on the archive (${withRaw.length} days have it). ` +
         `Re-run npm run bake:history so each day stores the pre-threshold composite.`

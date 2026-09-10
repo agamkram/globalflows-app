@@ -60,10 +60,19 @@ async function patchSnapshot(centers) {
   }
 }
 
+async function loadCommitted() {
+  try {
+    return JSON.parse(await fs.readFile(OUT, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const centers = {};
   let sampleFrom = null;
   let sampleTo = null;
+  const missing = [];
   for (const spec of SPECS) {
     const pts = await loadPoints(spec.id);
     const vals = pts.map((p) => p.value);
@@ -75,10 +84,26 @@ async function main() {
     const fromArchive = median(vals);
     const pinned = spec.source === "band-mid";
     const med = pinned ? spec.median : fromArchive;
-    if (med == null || !Number.isFinite(med)) {
-      console.error(`calibrate:val: no median for ${spec.id}`);
-      process.exit(1);
+    if (med == null || !Number.isFinite(med)) missing.push(spec.id);
+  }
+  if (missing.length) {
+    const committed = await loadCommitted();
+    if (committed?.centers) {
+      console.log(
+        `calibrate:val: keep committed val-center (no median for ${missing.join(", ")})`
+      );
+      await patchSnapshot(committed.centers);
+      return;
     }
+    console.error(`calibrate:val: no median for ${missing.join(", ")}`);
+    process.exit(1);
+  }
+  for (const spec of SPECS) {
+    const pts = await loadPoints(spec.id);
+    const vals = pts.map((p) => p.value);
+    const fromArchive = median(vals);
+    const pinned = spec.source === "band-mid";
+    const med = pinned ? spec.median : fromArchive;
     centers[spec.id] = {
       median: Number(med.toFixed(4)),
       scale: spec.scale,

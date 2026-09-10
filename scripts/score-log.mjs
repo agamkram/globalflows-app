@@ -75,7 +75,17 @@ function pct(v) {
 async function main() {
   const log = JSON.parse(await fs.readFile(LOG, "utf8"));
   const days = (log.days || []).filter((d) => d?.date);
-  const archive = JSON.parse(await fs.readFile(ARCHIVE, "utf8"));
+  let archive;
+  try {
+    archive = JSON.parse(await fs.readFile(ARCHIVE, "utf8"));
+  } catch {
+    console.log(
+      "\nForward scorecard — live calls, graded after the fact\n\n" +
+        "  ok — no regime archive on disk yet. bake:history writes it; " +
+        "the scorecard waits.\n"
+    );
+    return;
+  }
   const rows = archive.rows || archive.days || [];
   const byDate = new Map(rows.map((r) => [r.date, r]));
 

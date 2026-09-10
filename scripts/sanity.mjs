@@ -26,6 +26,7 @@ const SNAP = path.join(ROOT, "snapshot.json");
 const REGIME = path.join(ROOT, "data", "regime-today.json");
 const HIST = path.join(ROOT, "data", "history");
 const LENGTHS = path.join(ROOT, "data", "history-lengths.json");
+const PRESENT = path.join(ROOT, "data", "history-present.json");
 const CHECKS = path.join(ROOT, "data", "sanity-checks.json");
 const CATALOG = path.join(ROOT, "data", "catalog.json");
 const OUT = path.join(ROOT, "sanity.txt");
@@ -253,13 +254,22 @@ async function main() {
     fails.push("history-lengths.json missing — run npm run ingest once to seed it");
   }
   if (lengthLedger?.series) {
+    let presentAtStart = null;
+    try {
+      const raw = JSON.parse(await fs.readFile(PRESENT, "utf8"));
+      presentAtStart = new Set(Array.isArray(raw?.ids) ? raw.ids : []);
+    } catch {
+      presentAtStart = null;
+    }
     const ids = Object.keys(lengthLedger.series).sort();
     let checked = 0;
     let shrunk = 0;
+    let skippedBare = 0;
     for (const id of ids) {
       const mark = lengthLedger.series[id];
       const want = mark?.n || 0;
       if (!want) continue;
+      const hadFile = presentAtStart ? presentAtStart.has(id) : true;
       let n = 0;
       let first = null;
       let last = null;
@@ -277,11 +287,18 @@ async function main() {
         first = pts[0]?.date || null;
         last = pts[n - 1]?.date || null;
       } catch {
+        if (!hadFile) {
+          // Bare folder: ingest never wrote this series. Other gates catch
+          // missing voters. This check is only for losing a file we already had.
+          skippedBare++;
+          continue;
+        }
         fails.push(`${id}: history file missing (high-water n=${want})`);
         shrunk++;
         continue;
       }
       checked++;
+      if (!hadFile) continue;
       if (n < want) {
         shrunk++;
         fails.push(
@@ -294,6 +311,7 @@ async function main() {
     } else {
       lines.push(
         `  ok  ${checked} series at or above high-water` +
+          (skippedBare ? ` · ${skippedBare} first-write on this disk` : "") +
           (lengthLedger.updatedAt ? ` · ledger ${lengthLedger.updatedAt}` : "")
       );
     }

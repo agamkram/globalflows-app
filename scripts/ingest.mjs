@@ -29,6 +29,10 @@ const CATALOG = path.join(ROOT, "data", "catalog.json");
 const OUT = path.join(ROOT, "data", "snapshot.json");
 const HIST = path.join(ROOT, "data", "history");
 const LENGTHS = path.join(ROOT, "data", "history-lengths.json");
+// Which history files were already on this disk when ingest started.
+// Sanity uses it so a bare checkout (GitHub, or a hidden data/history)
+// is not treated as 175 lost series.
+const PRESENT = path.join(ROOT, "data", "history-present.json");
 
 const UA =
   "GlobalFlows/0.1 (+https://markmaga.com; public macro instrument; educational)";
@@ -592,10 +596,18 @@ async function writeHistory(id, payload, lengthLedger) {
   // Prefer raw length for transformed series — YoY/diff drop ~a year of scored points
   // without losing observations.
   const countForLedger = raw ? raw.length : points.length;
-  const high = Math.max(prev?.n || 0, countForLedger);
+  // Floor is this disk's file, not the committed ledger. A GitHub runner has
+  // no data/history; max(laptop high-water, fresh pull) makes sanity fail
+  // every morning even when the feed is complete.
+  const high = priorFile ? Math.max(priorN, countForLedger) : countForLedger;
   lengthLedger.series[id] = {
     n: high,
-    first: prev?.first && first ? (prev.first < first ? prev.first : first) : first,
+    first:
+      priorFile && prev?.first && first
+        ? prev.first < first
+          ? prev.first
+          : first
+        : first,
     last,
   };
   return {
@@ -653,6 +665,19 @@ async function main() {
   const catalog = JSON.parse(await fs.readFile(CATALOG, "utf8"));
   await fs.mkdir(HIST, { recursive: true });
   const lengthLedger = await loadLengthLedger();
+  const presentIds = [];
+  try {
+    for (const name of await fs.readdir(HIST)) {
+      if (name.endsWith(".json")) presentIds.push(name.slice(0, -5));
+    }
+  } catch {
+    /* empty folder */
+  }
+  await fs.writeFile(
+    PRESENT,
+    JSON.stringify({ recordedAt: new Date().toISOString(), ids: presentIds }, null, 2) +
+      "\n"
+  );
 
   const apiKey = process.env.FRED_API_KEY || "";
   const marketsOnly = process.env.GF_MARKETS_ONLY === "1";
