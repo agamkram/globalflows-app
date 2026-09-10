@@ -19,10 +19,20 @@
   --safe-r: env(safe-area-inset-right, 0px);
   --pwa-fill-h: 100%;
   --pwa-extra-b: 0px;
-  --lights-h: 94px;
-  --favor-h: 75px;
-  --lights-favor-gap: 3px;
-  --favor-tenor-gap: 7px;
+  /* Phone is 1.0 (94 / 3 / 75 at 16px). From 721px the strip scales together. */
+  --ui-scale: 1;
+  --lights-h: calc(5.875rem * var(--ui-scale));
+  --favor-h: calc(4.6875rem * var(--ui-scale));
+  --lights-favor-gap: calc(0.1875rem * var(--ui-scale));
+  --favor-tenor-gap: calc(0.4375rem * var(--ui-scale));
+  --lights-col: calc(4.5rem * var(--ui-scale));
+  --track-w: calc(3.25rem * var(--ui-scale));
+  --track-h: calc(0.875rem * var(--ui-scale));
+  --track-xs-w: calc(2.25rem * var(--ui-scale));
+  --needle-h: calc(3.125rem * var(--ui-scale));
+  --needle-top: calc(-1.5625rem * var(--ui-scale));
+  --needle-xs-h: calc(2.375rem * var(--ui-scale));
+  --needle-xs-top: calc(-1.1875rem * var(--ui-scale));
 }
 
 *,
@@ -390,11 +400,11 @@ body.page-about::before {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 3px;
+  gap: calc(3px * var(--ui-scale));
   min-width: 0;
   height: var(--favor-h);
   min-height: var(--favor-h);
-  padding: 5px 2px 6px;
+  padding: calc(5px * var(--ui-scale)) calc(2px * var(--ui-scale)) calc(6px * var(--ui-scale));
   overflow: visible;
   background: var(--bg2);
   border: 1px solid var(--line);
@@ -413,7 +423,7 @@ body.page-about::before {
 }
 
 .favor-title {
-  font-size: 0.48rem;
+  font-size: calc(0.48rem * var(--ui-scale));
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
@@ -497,7 +507,7 @@ body.page-about::before {
   align-items: center;
   column-gap: 3px;
   background: transparent;
-  font: 600 0.58rem var(--mono);
+  font: 600 calc(0.58rem * var(--ui-scale)) var(--mono);
   line-height: 1.25;
   letter-spacing: 0.02em;
   width: 100%;
@@ -562,8 +572,8 @@ body.page-about::before {
 /* Five components: compact cards, packed left (all widths). */
 .lights {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 72px));
-  gap: 5px;
+  grid-template-columns: repeat(5, minmax(0, var(--lights-col)));
+  gap: calc(5px * var(--ui-scale));
   width: max-content;
   max-width: 100%;
   align-self: start;
@@ -578,8 +588,8 @@ body.page-about::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 8px 5px;
+  gap: calc(5px * var(--ui-scale));
+  padding: calc(8px * var(--ui-scale)) calc(5px * var(--ui-scale));
   height: var(--lights-h);
   min-height: var(--lights-h);
   min-width: 0;
@@ -616,10 +626,10 @@ body.page-about::before {
 }
 
 .impulse-chev {
-  font-size: 0.62rem;
+  font-size: calc(0.62rem * var(--ui-scale));
   line-height: 1;
   font-weight: 700;
-  height: 10px;
+  height: calc(10px * var(--ui-scale));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -657,7 +667,7 @@ body.page-about::before {
 }
 
 .light .lbl {
-  font-size: 0.52rem;
+  font-size: calc(0.52rem * var(--ui-scale));
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.02em;
@@ -672,20 +682,19 @@ body.page-about::before {
 }
 
 .light .word {
-  font-size: 0.72rem;
+  font-size: calc(0.72rem * var(--ui-scale));
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
-  line-height: 1.1;
+  line-height: 1.2;
   text-align: center;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 .light .score {
   font-family: var(--mono);
-  font-size: 0.58rem;
+  font-size: calc(0.58rem * var(--ui-scale));
   color: var(--muted);
   margin: 0;
   line-height: 1;
@@ -706,8 +715,8 @@ body.page-about::before {
 .track {
   display: block;
   width: 100%;
-  max-width: 52px;
-  height: 14px;
+  max-width: var(--track-w);
+  height: var(--track-h);
   flex-shrink: 0;
   margin: 1px 0 0;
   overflow: visible;
@@ -721,8 +730,8 @@ body.page-about::before {
   margin-top: 5px;
 }
 .track-xs {
-  max-width: 36px;
-  height: 10px;
+  max-width: var(--track-xs-w);
+  height: calc(0.625rem * var(--ui-scale));
   margin: 0;
 }
 .track-rail {
@@ -781,18 +790,18 @@ body.page-about::before {
 }
 .track-mark {
   position: absolute;
-  top: -25px;
-  width: 3px;
-  height: 50px;
+  top: var(--needle-top);
+  width: calc(3px * var(--ui-scale));
+  height: var(--needle-h);
   border-radius: 1px;
   transform: translateX(-50%);
   background: var(--neutral);
   pointer-events: none;
 }
 .track-xs .track-mark {
-  top: -19px;
-  width: 3px;
-  height: 38px;
+  top: var(--needle-xs-top);
+  width: calc(3px * var(--ui-scale));
+  height: var(--needle-xs-h);
 }
 .track[data-state="easing"] .track-mark {
   background: var(--ease);
@@ -805,24 +814,8 @@ body.page-about::before {
 }
 
 @media (min-width: 721px) {
-  .lights {
-    grid-template-columns: repeat(5, 89px);
-  }
-
-  .light .lbl {
-    font-size: 0.58rem;
-  }
-
-  .light .word {
-    font-size: 0.76rem;
-  }
-
-  .light .score {
-    font-size: 0.62rem;
-  }
-
-  .track {
-    max-width: 64px;
+  :root {
+    --ui-scale: 1.2;
   }
 }
 
