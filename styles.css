@@ -1830,6 +1830,13 @@ html.page-about body,
   padding-top: calc(var(--safe-t) + 44px);
 }
 
+.about-top-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
 .about-back {
   font: 500 0.8rem var(--sans);
   color: var(--accent);

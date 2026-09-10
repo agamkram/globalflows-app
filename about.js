@@ -1,4 +1,4 @@
-/** About page — live telemetry, today’s calibration, valuation centres. */
+/** About and Math pages — live telemetry, today’s calibration, valuation centres. */
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -50,37 +50,40 @@ function derivedCount(snap) {
 }
 
 function renderAboutMeta(snap, regime) {
-  const vals = Object.values(snap.series || {});
-  const ok = vals.filter((s) => s.status === "ok").length;
-  const stale = vals.filter((s) => s.status === "stale");
-  const empty = vals.filter((s) => s.status !== "ok" && s.status !== "stale").length;
+  const ingest = $("#aboutIngest");
+  if (ingest) {
+    const vals = Object.values(snap.series || {});
+    const ok = vals.filter((s) => s.status === "ok").length;
+    const stale = vals.filter((s) => s.status === "stale");
+    const empty = vals.filter((s) => s.status !== "ok" && s.status !== "stale").length;
 
-  $("#aboutIngest").textContent = fmtWhen(snap.generatedAt);
+    ingest.textContent = fmtWhen(snap.generatedAt);
 
-  $("#aboutCoverage").textContent = stale.length
-    ? `${ok} live · ${stale.length} stale hidden${empty ? ` · ${empty} empty` : ""}`
-    : `${ok} live lines${empty ? ` · ${empty} empty` : ""}`;
-  if (stale.length) {
-    $("#aboutCoverage").title = stale.map((s) => s.name || s.id).join(", ");
-  }
+    $("#aboutCoverage").textContent = stale.length
+      ? `${ok} live · ${stale.length} stale hidden${empty ? ` · ${empty} empty` : ""}`
+      : `${ok} live lines${empty ? ` · ${empty} empty` : ""}`;
+    if (stale.length) {
+      $("#aboutCoverage").title = stale.map((s) => s.name || s.id).join(", ");
+    }
 
-  if (regime?.verdict) {
-    const when = fmtWhen(regime.generatedAt);
-    $("#aboutBake").textContent = `${regime.verdict} · ${when}`;
-    $("#aboutBake").classList.toggle("is-ok", regime.verdict === "SPOT ON");
-    $("#aboutBake").classList.toggle("is-bad", regime.verdict !== "SPOT ON");
-  } else {
-    $("#aboutBake").textContent = "—";
-  }
+    if (regime?.verdict) {
+      const when = fmtWhen(regime.generatedAt);
+      $("#aboutBake").textContent = `${regime.verdict} · ${when}`;
+      $("#aboutBake").classList.toggle("is-ok", regime.verdict === "SPOT ON");
+      $("#aboutBake").classList.toggle("is-bad", regime.verdict !== "SPOT ON");
+    } else {
+      $("#aboutBake").textContent = "—";
+    }
 
-  const dist = snap.lightDist || {};
-  const n = dist.n || regime?.analogs?.sampleDays;
-  const from = dist.sampleFrom || regime?.analogs?.windowStart;
-  const to = dist.sampleTo || regime?.analogs?.windowEnd;
-  if (n && from) {
-    $("#aboutArchive").textContent = `${Number(n).toLocaleString("en-US")} days · ${from}${to ? ` → ${to}` : ""}`;
-  } else {
-    $("#aboutArchive").textContent = "—";
+    const dist = snap.lightDist || {};
+    const n = dist.n || regime?.analogs?.sampleDays;
+    const from = dist.sampleFrom || regime?.analogs?.windowStart;
+    const to = dist.sampleTo || regime?.analogs?.windowEnd;
+    if (n && from) {
+      $("#aboutArchive").textContent = `${Number(n).toLocaleString("en-US")} days · ${from}${to ? ` → ${to}` : ""}`;
+    } else {
+      $("#aboutArchive").textContent = "—";
+    }
   }
 
   const nDerived = derivedCount(snap);

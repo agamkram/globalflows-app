@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="page-about">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#0b0e13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GlobalFlows" />
+  <script>
+    (function () {
+      try {
+        var r = document.documentElement;
+        var n = window.navigator;
+        var standalone =
+          n.standalone === true ||
+          (window.matchMedia &&
+            (window.matchMedia("(display-mode: standalone)").matches ||
+              window.matchMedia("(display-mode: fullscreen)").matches));
+        var iw = window.innerWidth || 0;
+        var ih = window.innerHeight || 0;
+        var sw = (window.screen && window.screen.width) || 0;
+        var sh = (window.screen && window.screen.height) || 0;
+        var screenMax = Math.max(sw, sh);
+        var screenMin = Math.min(sw, sh);
+        if (standalone) {
+          r.classList.add("pwa-standalone");
+          var fillH = ih >= iw ? Math.max(ih, screenMax) : Math.max(ih, screenMin);
+          var extra = 0;
+          if (Math.min(iw, ih) >= 600 && screenMax < ih - 10) extra = 20;
+          var total = fillH + extra;
+          r.style.setProperty("--pwa-fill-h", fillH + "px");
+          r.style.setProperty("--pwa-extra-b", extra + "px");
+          r.style.height = total + "px";
+          r.style.minHeight = total + "px";
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta
+    name="description"
+    content="GlobalFlows math — identities, ballots, and how scores become the five regime components."
+  />
+  <title>Math — GlobalFlows</title>
+  <link rel="canonical" href="https://globalflows.markmaga.com/math.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://globalflows.markmaga.com/math.html" />
+  <meta property="og:title" content="Math — GlobalFlows" />
+  <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261027" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261027" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css?v=20261027" />
+</head>
+<body class="page-about">
+  <div class="about-shell">
+    <header class="about-top">
+      <nav class="about-top-start">
+        <a class="about-back" href="./about.html">← About</a>
+      </nav>
+      <div class="about-top-end">
+        <span class="about-top-mark" aria-hidden="true">
+          <i class="dot ease"></i><i class="dot mid"></i><i class="dot tight"></i>
+        </span>
+        <span class="about-build" id="aboutBuild">20261027</span>
+      </div>
+    </header>
+
+    <main class="about-main">
+      <header class="about-hero">
+        <h1 class="about-brand">Math</h1>
+        <p class="about-lede">
+          Everything the app computes — rather than copies off FRED or Yahoo —
+          is named here. Today’s fitted centres load from this morning’s file.
+        </p>
+        <ul class="about-toc" aria-label="On this page">
+          <li><a href="#derived">Identities</a></li>
+          <li><a href="#score">Scores</a></li>
+          <li><a href="#ballots">Ballots</a></li>
+          <li><a href="#lookback">Lookback</a></li>
+          <li><a href="#nets">Duration · credit</a></li>
+          <li><a href="#calls">Calls</a></li>
+        </ul>
+      </header>
+
+      <section class="about-block" id="derived">
+        <h2>Derived series</h2>
+        <p class="muted tiny" id="mathLiveNote"></p>
+        <p>
+          Dollar stocks (Fed assets, loans, a balance sheet) grow with the economy.
+          They never vote a colour. They either sit on the lookback, or they are
+          turned into a ratio, a spread, or a rate of change that can still mean
+          the same thing in ten years. FRED units are a trap: Fed assets and the
+          Treasury account arrive in millions, reverse repo in billions, Bank of
+          Japan assets in hundreds of millions of yen. The identities below are
+          what the ingest actually does with those units.
+        </p>
+        <dl class="formula-dl">
+          <div>
+            <dt>Net liquidity</dt>
+            <dd>
+              <code>WALCL(bn) − TGA(bn) − ON RRP(bn)</code>
+              <span class="ident-note">Fed assets and the Treasury account are millions on FRED, so each is divided by 1,000 first. Reverse repo is already billions. Rising means more cash in markets. The dollar stock does not vote; the GDP share does.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Reserves ÷ GDP</dt>
+            <dd>
+              <code>(WRESBAL millions ÷ 1,000) ÷ nominal GDP × 100</code>
+              <span class="ident-note">Bank reserves as a percent of the economy. Scored against its own trailing five-year normal, not a fixed band — reserves near zero before 2008 and enormous after are not the same system.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Net liquidity ÷ GDP</dt>
+            <dd>
+              <code>net liquidity (bn) ÷ nominal GDP × 100</code>
+              <span class="ident-note">The same plumbing stack as a share of GDP. Also trailing five-year.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Funding vs target top</dt>
+            <dd>
+              <code>(overnight funding − fed funds target top) × 100</code>
+              <span class="ident-note">In basis points. From 2018-04-02 that is SOFR; before then, effective fed funds versus the target, so the funding ballot covers the whole archive. Deeply negative means cash is trading inside the corridor; at or above zero means reserves are scarce. Trailing five-year. High is tight.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>G4 central bank assets</dt>
+            <dd>
+              <code>Fed + ECB×USD/EUR + BoJ×(100 / yen per dollar) + China FX reserves</code>
+              <span class="ident-note">Each leg converted at that day’s market rate, then summed in trillions of dollars. The China leg is FX reserves, not the PBoC balance sheet. The level does not vote.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Global CB assets, 12m</dt>
+            <dd>
+              <code>(G4 today − G4 ~1y ago) / |G4 ~1y ago| × 100</code>
+              <span class="ident-note">This is the G4 voter. Neutral sits at +5%, not zero, because world nominal output grows around that much. Flat balance sheets are a mild drain.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Dollar, 12m change</dt>
+            <dd>
+              <code>(broad dollar today − ~1y ago) / |~1y ago| × 100</code>
+              <span class="ident-note">DTWEXBGS. Rising is tight for Liquidity: most of the world borrows dollars it cannot print.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Global long rates (G3)</dt>
+            <dd>
+              <code>(Bund 10y + gilt 10y + JGB 10y) / 3</code>
+              <span class="ident-note">Official daily prints, last observation carried across holidays so one country’s close does not drop the average.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Credit impulse (US)</dt>
+            <dd>
+              <code>Δ over ~1y of (TOTLL YoY %)</code>
+              <span class="ident-note">The change in the year-over-year growth rate of bank loans, in percentage points. Second derivative: it turns before the stock does. Lookback only — it does not vote a colour.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>China credit impulse</dt>
+            <dd>
+              <code>China credit/GDP today − China credit/GDP four quarters ago</code>
+              <span class="ident-note">BIS private credit as a share of GDP, via FRED. Lookback only. The stock itself votes Liquidity at half weight because the print lags two to three quarters.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Equity risk premium</dt>
+            <dd>
+              <code>S&amp;P earnings yield − 10-year real yield</code>
+              <span class="ident-note">What stocks pay you over inflation-protected government debt. Wide = equities cheap versus duration.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Nominal − real GDP</dt>
+            <dd>
+              <code>nominal GDP YoY − real GDP YoY</code>
+              <span class="ident-note">How much of the expansion is prices versus actual activity. Does not vote a component; used in the story, not the ballot.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Stock–bond correlation</dt>
+            <dd>
+              <code>60-day Pearson of SPX returns vs −Δ 10-year yield</code>
+              <span class="ident-note">The yield change is sign-flipped so a falling yield counts as a positive bond return. Rising together means less diversification. Confirm/falsify, not a component vote.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Gold speculative positioning</dt>
+            <dd>
+              <code>156-week min–max index of CFTC non-commercial net % of open interest</code>
+              <span class="ident-note">0 is the least crowded print in that window, 100 the most. Raw contract counts drift with open interest, so only the index carries a band. Taxes the Gold call when longs are crowded. Does not vote Risk.</span>
+            </dd>
+          </div>
+          <div>
+            <dt>2-year real (Rates vote)</dt>
+            <dd>
+              <code>2-year yield − core PCE YoY</code>
+              <span class="ident-note">Built at score time, not stored as its own series. TIPS 5y and 10y vote as published; this is the one trailing-core-PCE construct still on Rates.</span>
+            </dd>
+          </div>
+        </dl>
+        <div id="formulaLive" class="about-formula"></div>
+      </section>
+
+      <section class="about-block" id="score">
+        <h2>How a print becomes a score</h2>
+        <p>
+          Each voter is mapped onto a common −1 to +1. Positive is always the
+          reflationary side of that component — more cash, easier funding, firmer
+          growth, hotter prices, more risk appetite. Two methods:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>A band</strong>
+            — three numbers for that series: low, normal, high, typically the 10th
+            percentile, the median, and the 90th of its own history. Below low is
+            −1; at the middle is 0; above high is +1; in between, a straight line.
+            If high is the contractionary end (VIX, real yields, the dollar), the
+            sign is flipped once, in the band, not again later.
+          </li>
+          <li>
+            <strong>Trailing five-year normal</strong>
+            — used where a fixed band would lie across a regime change: reserves ÷
+            GDP, net liquidity ÷ GDP, and the funding spread. Score is how many
+            standard deviations the print sits from its own recent mean, divided
+            by two and clipped to −1…+1. A 2005 reading is judged on 2000–2005,
+            never against a future it could not have known. About two years of
+            history are required before it will vote; short of that, it abstains.
+          </li>
+        </ul>
+        <p>
+          Bands are never guessed. An audit flags any series pinned at the top or
+          bottom of its band more than half the time — a constant wearing the
+          costume of a signal. Reverse repo did that for two years; financial
+          conditions did it for a decade. Both were pulled off the colour vote.
+        </p>
+      </section>
+
+      <section class="about-block" id="ballots">
+        <h2>How scores become a component</h2>
+        <p>
+          Related indicators are grouped into ballots, and the ballots are
+          averaged — not the raw indicators. Core CPI and core PCE would otherwise
+          give inflation’s realized side two votes. Inside a ballot, members are
+          weighted (core PCE counts double against core CPI). Across ballots:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>Liquidity</strong>
+            — Fed balance sheet (the two GDP shares) · funding cost · funding
+            stress (commercial paper) · global central banks and the dollar ·
+            China credit at half weight.
+          </li>
+          <li>
+            <strong>Rates</strong>
+            — real yields · nominal yields · the curve · bond volatility.
+          </li>
+          <li>
+            <strong>Growth</strong>
+            — coincident (jobs, output) at half weight · leading at 1.5 · surveys.
+          </li>
+          <li>
+            <strong>Inflation</strong>
+            — realized (weight 2) · persistence · expectations.
+          </li>
+          <li>
+            <strong>Risk</strong>
+            — credit spreads · volatility.
+          </li>
+        </ul>
+        <p>
+          If a component has five or more ballots, the highest and the lowest are
+          dropped before the weighted average, so one wild reading cannot carry
+          it. With three or four ballots the trim is skipped — dropping ends
+          there would throw away the only Strong or Soft votes and pin it
+          Mid. Liquidity is the one with five seats, so it is the one that trims.
+        </p>
+        <p>
+          Two overrides where averaging would lie:
+        </p>
+        <ul class="about-steps">
+          <li>
+            <strong>MOVE can turn Rates red but never green.</strong>
+            A spike means duration is unownable. Calm is not cheap money, so
+            silence does not get to vote easy — on Rates or on the turn.
+          </li>
+          <li>
+            <strong>A broken funding market floors Liquidity.</strong>
+            If the funding-cost ballot or the commercial-paper ballot is at or
+            below −0.5, Liquidity is held at least that tight. Quantity ballots
+            cannot talk it back up. In October 2008 reserves were far above
+            normal because the Fed was flooding a market where commercial paper
+            cost 242 basis points over fed funds. Easy funding never floors
+            Liquidity the other way.
+          </li>
+        </ul>
+        <p>
+          Each component’s raw mix is then recentered on that component’s own 23-year
+          average and stretched so all five share one spread, then clipped to
+          −1.5…+1.5:
+        </p>
+        <p>
+          <code class="about-ident">score = clip( ((raw − mean) / sd) × shared spread × scale, −1.5, +1.5 )</code>
+        </p>
+        <p>
+          Colour changes at ±0.45. With that line and the shared spread, a
+          well-behaved component is amber roughly 60% of the time. That is arithmetic,
+          not indecision. Today’s fitted mean, sd, and scale for each component:
+        </p>
+        <div id="calibBody" class="about-formula">
+          <p class="muted">Loading…</p>
+        </div>
+      </section>
+
+      <section class="about-block" id="lookback">
+        <h2>The lookback, and when a series stops voting</h2>
+        <p>
+          1w is 7 calendar days, 2w is 14, 1m is 30. Monthly series take one step
+          back for anything under about six weeks. Quarterly series share the
+          latest quarter on 1w and 1m. A small deadband treats noise as flat
+          before a chevron is drawn. The lookback score is the signed change
+          over that window; it never recolours the component.
+        </p>
+        <p>
+          A print older than its allowance does not vote: 14 days for a daily,
+          21 for a weekly, 85 for a monthly (observation-month dating, so a late
+          release of last month still counts), 190 for a quarterly. Past that, it
+          is hidden as stale.
+        </p>
+      </section>
+
+      <section class="about-block" id="nets">
+        <h2>Duration risk and credit risk</h2>
+        <p>
+          Before any class is graded, two nets are formed. Positive means that
+          risk is falling. Each component score is first turned into a soft 0–1
+          weight: it starts turning on at −0.2 and is fully on at the colour line
+          (±0.45), so a component sitting at +0.44 still counts almost as much as one
+          that has just flipped.
+        </p>
+        <p>
+          Duration net (positive = duration risk falling):
+        </p>
+        <p>
+          <code class="about-ident">−0.70 × hot inflation that is not cooling
++0.65 × cold inflation
++0.45 × hot-but-cooling this window
+−0.55 × tight Rates
++0.35 × easy Rates
++0.70 × term-premium z
++0.55 × 10-year real-yield z
+−0.25 × strong Growth × (1 − cold inflation)</code>
+        </p>
+        <p>
+          Credit net (positive = credit risk falling):
+        </p>
+        <p>
+          <code class="about-ident">+0.35 × strong Growth  −0.35 × soft Growth
++0.35 × Risk-on        −0.35 × Risk-off
+−0.30 if activity is rolling over this window, +0.20 if it is firming
+−0.30 if high-yield spreads are widening, +0.20 if they are tightening
+−0.35 if US bank-credit impulse is slowing, +0.35 if it is speeding up
+−0.15 if China credit impulse is slowing, +0.15 if it is speeding up
++0.25 × credit-spread z (wide = you are paid)</code>
+        </p>
+        <p>
+          Either net at or above +0.35 is falling; at or below −0.35 is rising;
+          in between is mixed.
+        </p>
+        <p>
+          Valuation z is <code>(print − median) / scale</code>, clipped to −1…+1.
+          Four of the six centres are the median of the same 2003–2026 window they
+          are then applied to, so each reads cheap about half the time as
+          arithmetic. High-yield OAS is the exception: pinned to a long-run
+          typical of 4.0%, because only about three years of the ICE series is
+          licensed. Today’s centres:
+        </p>
+        <div id="valBody" class="about-formula">
+          <p class="muted">Loading…</p>
+        </div>
+      </section>
+
+      <section class="about-block" id="calls">
+        <h2>How a class gets in / mixed / out</h2>
+        <p>
+          Each class adds and subtracts weights for the conditions that fire. The
+          total is the net. Most classes map in at +0.35 and out at −0.35.
+          Credit uses a slightly tighter pair; commodities use a looser one, so
+          they lean more often. The 5-year is shown on the Treasuries strip and
+          left out of the parent net. The lookback may slide the needle; it
+          cannot flip the call.
+        </p>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="about.js?v=20261027"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

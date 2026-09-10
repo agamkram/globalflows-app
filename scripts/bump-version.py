@@ -13,12 +13,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "index.html"
 ABOUT = ROOT / "about.html"
+MATH = ROOT / "math.html"
 APP = ROOT / "app.js"
 
 SPOTS = {
     "index ?v=": (INDEX, r"\?v=(\d+)", "?v={n}"),
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "about build": (ABOUT, r'(id="aboutBuild">)(\d+)', r"\g<1>{n}"),
+    "math ?v=": (MATH, r"\?v=(\d+)", "?v={n}"),
+    "math build": (MATH, r'(id="aboutBuild">)(\d+)', r"\g<1>{n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
 }
