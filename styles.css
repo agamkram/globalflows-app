@@ -634,6 +634,7 @@ body.page-about::before {
   align-items: center;
   justify-content: center;
   font-family: var(--sans);
+  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 .impulse-chev[data-dir="up"]::before {
   content: "▲";
@@ -676,6 +677,7 @@ body.page-about::before {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 .light[data-clash="true"] .lbl {
   color: #fff;
@@ -690,6 +692,7 @@ body.page-about::before {
   text-align: center;
   max-width: 100%;
   overflow: visible;
+  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 
 .light .score {
@@ -704,6 +707,7 @@ body.page-about::before {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 
 .light[data-near-flip="true"] .score {
@@ -815,7 +819,7 @@ body.page-about::before {
 
 @media (min-width: 721px) {
   :root {
-    --ui-scale: 1.2;
+    --ui-scale: 1.3;
   }
 }
 
