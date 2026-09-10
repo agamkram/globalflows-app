@@ -19,6 +19,9 @@
   --safe-r: env(safe-area-inset-right, 0px);
   --pwa-fill-h: 100%;
   --pwa-extra-b: 0px;
+  --lights-h: 94px;
+  --favor-h: 75px;
+  --lights-favor-gap: 3px;
 }
 
 *,
@@ -309,6 +312,12 @@ html.pwa-standalone body {
   padding: 1px;
 }
 
+/* 3px between the light boxes and the asset-class boxes.
+   Pin gap stays 6px for the tabs below; lights keep 1px pad. */
+.lights + .favor-strip {
+  margin-top: calc(var(--lights-favor-gap) - 6px - 1px);
+}
+
 /* Cover notch while pin is stuck (layout-neutral). Not on About —
    that slab clips the page background into a black band. */
 body::before {
@@ -382,6 +391,8 @@ body.page-about::before {
   justify-content: flex-start;
   gap: 3px;
   min-width: 0;
+  height: var(--favor-h);
+  min-height: var(--favor-h);
   padding: 5px 2px 6px;
   overflow: visible;
   background: var(--bg2);
@@ -556,8 +567,9 @@ body.page-about::before {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 13px 5px;
-  min-height: 89px;
+  padding: 8px 5px;
+  height: var(--lights-h);
+  min-height: var(--lights-h);
   min-width: 0;
   overflow: visible;
   cursor: pointer;
