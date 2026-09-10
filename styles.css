@@ -529,6 +529,7 @@ body.page-about::before {
 .favor-tenor.favor-spot-px {
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: 2px;
+  font: 400 0.58rem var(--mono);
   color: var(--muted);
 }
 
@@ -537,17 +538,25 @@ body.page-about::before {
   justify-items: center;
 }
 
+.favor-spot-px b,
+.favor-spot-px .favor-price {
+  font: inherit;
+  line-height: 1.25;
+}
+
 .favor-spot-px b {
-  font-weight: 600;
-  color: var(--muted);
+  color: #f7931a;
   text-align: left;
 }
 
+.favor-spot-px:not(:has(b)) .favor-price {
+  color: #d4af37;
+  text-align: center;
+}
+
 .favor-price {
-  font: 400 0.48rem var(--mono);
   color: var(--muted);
   letter-spacing: 0;
-  line-height: 1.25;
   font-variant-numeric: tabular-nums;
   max-width: 100%;
   overflow: hidden;
