@@ -1832,10 +1832,10 @@ html.page-about body,
 
 .about-back,
 .about-math {
-  font: 400 1.4rem var(--sans);
+  font: 400 1.4rem Michroma, "IBM Plex Sans", system-ui, sans-serif;
   color: var(--accent);
   text-decoration: none;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   text-shadow: 0 0 8px var(--bg), 0 1px 4px var(--bg);
   min-width: 0;
