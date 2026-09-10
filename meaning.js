@@ -1,6 +1,6 @@
 /**
  * Regime → duration risk / credit risk → six asset classes (in / mixed / out).
- * Lights are levels. The 1w/2w/1m lookback only nudges needle position.
+ * The five components are levels. The 1w/2w/1m lookback only nudges needle position.
  */
 import { DEFAULT_IMPULSE } from "./score.js";
 
@@ -893,7 +893,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     creditDir = "mixed";
     creditLabel = "Credit risk mixed";
     creditLine =
-      "Credit is split — growth and risk lights aren’t telling the same story on cash-flow certainty.";
+      "Credit is split — Growth and Risk aren’t telling the same story on cash-flow certainty.";
   }
 
   if (creditFlow.dir === "up" && !creditLine.includes("impulse")) {

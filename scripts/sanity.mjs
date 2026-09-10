@@ -172,7 +172,7 @@ async function main() {
 
   lines.push("");
   lines.push(
-    `Asset classes = checklist from the five lights (+ duration / credit). Lookback ${DEFAULT_IMPULSE} slides the needle only.`
+    `Asset classes = checklist from the five components (+ duration / credit). Lookback ${DEFAULT_IMPULSE} slides the needle only.`
   );
   lines.push("in → green · mixed → amber · out → red.");
   if (meaning?.duration?.label) {

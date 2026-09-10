@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261025";
+import { buildMeaning } from "./meaning.js?v=20261026";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261025";
+} from "./score.js?v=20261026";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -29,12 +29,12 @@ function unlockPageScroll() {
 }
 
 let SNAP = null;
-/** Daily regime bake (spot-on lights + teach). Null if missing. */
+/** Daily regime bake (spot-on components + teach). Null if missing. */
 let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** 1w/2w/1m lookback for table, charts, chevrons, and asset classes. Lights stay on levels. */
+/** 1w/2w/1m lookback for table, charts, chevrons, and asset classes. Components stay on levels. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -447,7 +447,7 @@ const LIGHT_BLURB = {
   liquidity:
     "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are the SOFR spread, reserves and net liquidity versus GDP, the dollar’s 12-month change, and G4 balance-sheet growth.",
   rates:
-    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease the light or the turn.",
+    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
     "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
@@ -456,7 +456,7 @@ const LIGHT_BLURB = {
     "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
 };
 
-/** Which light dial is selected (blue border). Table shows that light’s full Street shelf. */
+/** Which component is selected (blue border). Table shows that component’s full Street shelf. */
 let focusLight = "liquidity";
 
 /** Street shelf when a light is focused — lights own these; tabs keep All / FX / Markets. */
@@ -1033,11 +1033,11 @@ function regimeEvidence(snap) {
     const d = disagreement(snap, "inflation_headline_vs_core");
     if (/headline.*hot/i.test(d?.text || "")) {
       beats.push(
-        `Prices split: overall CPI still looks hot versus ~2%; the Inflation light votes underlying/core.`
+        `Prices split: overall CPI still looks hot versus ~2%; Inflation votes underlying/core.`
       );
     } else {
       beats.push(
-        `Prices split: overall CPI looks cooler than underlying/core — the light follows the underlying.`
+        `Prices split: overall CPI looks cooler than underlying/core — Inflation follows the underlying.`
       );
     }
   }
@@ -1168,7 +1168,7 @@ function baseRateHtml() {
     .join("");
 
   return `<p class="sent-kicker">What happened last time</p>
-    <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five lights — ${match} Median move over ${window}, and how often it rose:</p>
+    <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five components — ${match} Median move over ${window}, and how often it rose:</p>
     <div class="base-grid">${body}</div>
     <p class="muted tiny">Returns are total return — coupons and dividends included, which is most of the return on a bond. Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
 }
@@ -1377,12 +1377,12 @@ function openSentence(snap) {
       )
       .join("")}`;
 
-  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each light, red the contractionary end — neither is good or bad on its own.</p>`;
+  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own.</p>`;
 
   const verified =
     REGIME?.verdict === "SPOT ON"
-      ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a light, then “Tap for who voted”.</p>`
-      : `${axis}<p class="muted tiny sent-foot">Tap a light, then “Tap for who voted”.</p>`;
+      ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a component, then “Tap for who voted”.</p>`
+      : `${axis}<p class="muted tiny sent-foot">Tap a component, then “Tap for who voted”.</p>`;
 
   const titleEl = $("#sentenceTitle");
   if (titleEl) titleEl.textContent = "Today’s regime";
@@ -2151,9 +2151,9 @@ function openSeries(s) {
   const lightLabel = SNAP?.lights?.[voter]?.label || voter;
   const clubLabel = SNAP?.lights?.[s.light]?.label || s.light;
   const voteLine = voter
-    ? `<p class="series-vote">Votes the <strong>${escapeHtml(
+    ? `<p class="series-vote">Votes <strong>${escapeHtml(
         lightLabel
-      )}</strong> light${
+      )}</strong>${
         cross
           ? ` · lives on ${escapeHtml(street)}, club is usually under ${escapeHtml(
               home
@@ -2163,8 +2163,8 @@ function openSeries(s) {
     : s.light && s.anchor?.kind === "move"
       ? `<p class="series-vote">On the <strong>${escapeHtml(
           clubLabel
-        )}</strong> shelf — votes only when bond vol spikes; calm does not ease the light.</p>`
-      : `<p class="series-vote muted">Does not vote a regime light — book / output line.</p>`;
+        )}</strong> shelf — votes only when bond vol spikes; calm does not ease Rates.</p>`
+      : `<p class="series-vote muted">Does not vote a regime component — book / output line.</p>`;
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
   $("#seriesBody").innerHTML = `

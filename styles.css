@@ -549,7 +549,7 @@ body.page-about::before {
   color: var(--muted);
 }
 
-/* Five dials: compact cards, packed left (all widths). */
+/* Five components: compact cards, packed left (all widths). */
 .lights {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 72px));
