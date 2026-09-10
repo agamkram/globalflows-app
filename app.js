@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261036";
+import { buildMeaning } from "./meaning.js?v=20261038";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261036";
+} from "./score.js?v=20261038";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -540,13 +540,19 @@ const FAVOR_STRIP_PRICE = {
   gold: "GOLD",
 };
 
-function fmtFavorPrice(n) {
+function fmtFavorPrice(n, { compact = false } = {}) {
   if (n == null || !Number.isFinite(n)) return "";
+  const abs = Math.abs(n);
+  if (compact && abs >= 1000) {
+    const k = n / 1000;
+    return `$${k >= 100 ? k.toFixed(0) : k.toFixed(1)}k`;
+  }
   return `$${Math.round(n).toLocaleString("en-US")}`;
 }
 
 function stripPriceText(seriesId) {
-  return fmtFavorPrice(SNAP?.series?.[seriesId]?.latest);
+  const n = SNAP?.series?.[seriesId]?.latest;
+  return fmtFavorPrice(n, { compact: seriesId === "BTC" });
 }
 
 /** Curve / credit / equity / commodity splits — 5s/10s/30s are synthetic UST. */
@@ -674,8 +680,9 @@ function renderFavorStrip() {
           ? ` data-clash="true" title="History disagrees with this call"`
           : "";
         const price = stripPriceText(FAVOR_STRIP_PRICE[it.id]);
+        const priceLabel = it.id === "crypto" && price ? "BTC" : "";
         const aria = `aria-label="${escapeHtml(title)}, ${word}${
-          price ? `, ${price}` : ""
+          price ? `, ${priceLabel ? `${priceLabel} ${price}` : price}` : ""
         }${clash ? ", history disagrees" : ""}. Tap for why."`;
         const titleHtml = escapeHtml(title);
         // Treasuries: 5/10/30. Credit: investment grade / high yield. No averaged parent needle.
@@ -698,12 +705,24 @@ function renderFavorStrip() {
               .join("")}</span>
           </button>`;
         }
-        return `<button type="button" class="favor-cell" data-favor-id="${escapeHtml(
+        return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
           it.id
         )}" data-state="${st}" ${aria}${clashAttr}>
           <span class="favor-title">${titleHtml}</span>
-          ${trackHtml(it.margin, st, { size: "sm", cuts: "favor" })}
-          ${price ? `<span class="favor-price">${escapeHtml(price)}</span>` : ""}
+          <span class="favor-curve">
+            <span class="favor-tenor favor-spot-needle" data-state="${st}">${trackHtml(
+              it.margin,
+              st,
+              { size: "xs", cuts: "favor" }
+            )}</span>
+            ${
+              price
+                ? `<span class="favor-tenor favor-spot-px">${
+                    priceLabel ? `<b>${escapeHtml(priceLabel)}</b>` : ""
+                  }<span class="favor-price">${escapeHtml(price)}</span></span>`
+                : ""
+            }
+          </span>
         </button>`;
       })
       .join("");
