@@ -148,6 +148,66 @@
           "margin": 0.1067
         }
       }
+    },
+    {
+      "date": "2026-09-10",
+      "generatedAt": "2026-09-10T18:44:23.307Z",
+      "headline": "Cash tightening, borrowing tight, growth strong, inflation hot, risk neutral.",
+      "lights": {
+        "liquidity": {
+          "state": "tight",
+          "score": -0.5275456584006049
+        },
+        "rates": {
+          "state": "tight",
+          "score": -0.5672128241352294
+        },
+        "growth": {
+          "state": "easing",
+          "score": 0.7262706588252834
+        },
+        "inflation": {
+          "state": "easing",
+          "score": 0.4873374919515727
+        },
+        "risk": {
+          "state": "neutral",
+          "score": 0.3991634174174937
+        }
+      },
+      "duration": "mixed",
+      "credit": "falling",
+      "calls": {
+        "treasuries": {
+          "stance": "in",
+          "margin": -0.1513,
+          "parts": {
+            "5": "out",
+            "10": "in",
+            "30": "mixed"
+          }
+        },
+        "credit": {
+          "stance": "in",
+          "margin": 0.1906
+        },
+        "stocks": {
+          "stance": "out",
+          "margin": -0.6291
+        },
+        "crypto": {
+          "stance": "mixed",
+          "margin": -0.2763
+        },
+        "gold": {
+          "stance": "mixed",
+          "margin": 0.1039
+        },
+        "cmdty": {
+          "stance": "mixed",
+          "margin": 0.0837
+        }
+      }
     }
   ]
 }
