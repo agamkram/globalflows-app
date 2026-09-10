@@ -90,7 +90,7 @@ function renderAboutMeta(snap, regime) {
   const note = $("#mathLiveNote");
   if (note) {
     note.textContent = nDerived
-      ? `This morning’s file has ${nDerived} derived lines. Identities below; fitted numbers load from the same file.`
+      ? `${nDerived} derived lines this morning.`
       : "";
   }
 }
@@ -106,7 +106,7 @@ function renderFormulaLive(snap) {
     return;
   }
   el.innerHTML = `
-    <p class="muted tiny">What this morning’s file wrote for the same identities:</p>
+    <p class="muted tiny">This morning’s file:</p>
     <dl class="formula-dl">
       ${net ? `<div><dt>Net liquidity (file)</dt><dd><code>${escapeHtml(net)}</code></dd></div>` : ""}
       ${corr ? `<div><dt>Stock–bond correlation (file)</dt><dd><code>${escapeHtml(corr)}</code></dd></div>` : ""}
