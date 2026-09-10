@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261035";
+import { buildMeaning } from "./meaning.js?v=20261036";
 import {
   buildLights,
   attachImpulse,
@@ -9,7 +9,7 @@ import {
   applyRealRateAnchors,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261035";
+} from "./score.js?v=20261036";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -534,6 +534,21 @@ const FAVOR_ASSET = {
   cmdty: null,
 };
 
+/** Spot under the Crypto and Gold needles. */
+const FAVOR_STRIP_PRICE = {
+  crypto: "BTC",
+  gold: "GOLD",
+};
+
+function fmtFavorPrice(n) {
+  if (n == null || !Number.isFinite(n)) return "";
+  return `$${Math.round(n).toLocaleString("en-US")}`;
+}
+
+function stripPriceText(seriesId) {
+  return fmtFavorPrice(SNAP?.series?.[seriesId]?.latest);
+}
+
 /** Curve / credit / equity / commodity splits — 5s/10s/30s are synthetic UST. */
 const FAVOR_CHILD_ASSET = {
   5: "UST5",
@@ -658,9 +673,10 @@ function renderFavorStrip() {
         const clashAttr = clash
           ? ` data-clash="true" title="History disagrees with this call"`
           : "";
+        const price = stripPriceText(FAVOR_STRIP_PRICE[it.id]);
         const aria = `aria-label="${escapeHtml(title)}, ${word}${
-          clash ? ", history disagrees" : ""
-        }. Tap for why."`;
+          price ? `, ${price}` : ""
+        }${clash ? ", history disagrees" : ""}. Tap for why."`;
         const titleHtml = escapeHtml(title);
         // Treasuries: 5/10/30. Credit: investment grade / high yield. No averaged parent needle.
         const kids = it.tenors?.length ? it.tenors : it.splits?.length ? it.splits : null;
@@ -687,6 +703,7 @@ function renderFavorStrip() {
         )}" data-state="${st}" ${aria}${clashAttr}>
           <span class="favor-title">${titleHtml}</span>
           ${trackHtml(it.margin, st, { size: "sm", cuts: "favor" })}
+          ${price ? `<span class="favor-price">${escapeHtml(price)}</span>` : ""}
         </button>`;
       })
       .join("");

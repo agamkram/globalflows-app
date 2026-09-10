@@ -518,6 +518,18 @@ body.page-about::before {
   margin-top: -3px;
 }
 
+.favor-price {
+  font: 400 0.52rem var(--mono);
+  color: var(--muted);
+  letter-spacing: 0;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .dlg-body .rubric-extra {
   display: flex;
   flex-direction: column;
