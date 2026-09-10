@@ -537,7 +537,7 @@ body.page-about::before {
   max-width: 100%;
   min-width: 0;
   padding: 0 5px;
-  font: 400 0.7rem var(--mono);
+  font: 400 0.8rem var(--mono);
   white-space: nowrap;
 }
 
@@ -554,8 +554,6 @@ body.page-about::before {
   letter-spacing: 0;
   font-variant-numeric: tabular-nums;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
