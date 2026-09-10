@@ -22,6 +22,7 @@
   --lights-h: 94px;
   --favor-h: 75px;
   --lights-favor-gap: 3px;
+  --favor-tenor-gap: 7px;
 }
 
 *,
@@ -475,7 +476,8 @@ body.page-about::before {
 }
 
 .favor-ust .favor-curve {
-  gap: 3px;
+  /* 5 / IG / Cy / Oi stay put; 10s and 30s drop into the slack. */
+  gap: var(--favor-tenor-gap);
 }
 
 .favor-ust .favor-tenor {
