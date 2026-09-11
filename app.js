@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261064";
+import { buildMeaning } from "./meaning.js?v=20261066";
 import {
   buildLights,
   attachImpulse,
@@ -11,8 +11,8 @@ import {
   clubLight,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261064";
-import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261064";
+} from "./score.js?v=20261066";
+import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261066";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -587,7 +587,7 @@ function analogMedianBar(hz) {
  * worth knowing before you act on it.
  *
  * Both how-often (hit rate vs normally) and how-much (median vs normally) must
- * point the same way. One without the other is a coin flip.
+ * point the same way. One without the other is no lean.
  */
 function analogFor(assetId, stance) {
   const a = REGIME?.analogs;
@@ -616,15 +616,14 @@ function analogFor(assetId, stance) {
   if (lean === "flat") verdict = "coinflip";
   else if (stance === "in") verdict = lean === "up" ? "agrees" : "disagrees";
   else if (stance === "out") verdict = lean === "down" ? "agrees" : "disagrees";
-  // When nothing in the record sits near today, the sample is context and not
-  // evidence, so the wording softens and the strip stops raising a flag over it.
+  // Distant or loose: context, not a verdict. Only a close match can flag the strip.
   return {
     ...r,
     hz,
     stance,
     lean,
     verdict,
-    weak: a.closeness === "distant",
+    weak: a.closeness !== "close",
     baseUp: base?.up,
     baseMedian: base?.median,
     lift,
@@ -661,8 +660,20 @@ function renderFavorStrip() {
       return;
     }
     el.hidden = false;
-    el.innerHTML = favor.items
-      .map((it) => {
+    const so = String(favor.stripLine || "").trim();
+    el.setAttribute(
+      "aria-label",
+      so
+        ? `In and out of favor. ${so}. Tap a class for why.`
+        : "In and out of favor. Tap a class for why."
+    );
+    const kicker = so
+      ? `<p class="favor-so" title="${escapeHtml(so)}">${escapeHtml(so)}</p>`
+      : "";
+    el.innerHTML =
+      kicker +
+      favor.items
+        .map((it) => {
         const st = stanceState(it.stance);
         const title = it.name;
         const word = it.stance === "in" ? "in" : it.stance === "out" ? "out" : "mixed";
@@ -676,7 +687,7 @@ function renderFavorStrip() {
           clash ? ", history disagrees" : ""
         }. Tap for why."`;
         const titleHtml = escapeHtml(title);
-        // Treasuries: 5/10/30. Credit: investment grade / high yield. No averaged parent needle.
+        // Treasuries: 5c cash / 10 / 30 duration. Credit: IG / HY. No averaged parent needle.
         const kids = it.tenors?.length ? it.tenors : it.splits?.length ? it.splits : null;
         if (kids) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
@@ -1229,7 +1240,7 @@ function analogHtml(br) {
       : br.verdict === "disagrees"
         ? "History disagrees"
         : br.verdict === "coinflip"
-          ? "History is a coin flip"
+          ? "No lean in the record"
           : `History leans ${br.lean}`;
   let rateLine = `after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time`;
   if (br.stance === "out" && fell != null) {

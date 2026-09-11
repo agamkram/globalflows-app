@@ -265,6 +265,107 @@ function gradeTenor(name, net, ctx, cap = 1) {
 }
 
 /**
+ * Pair line follows the six when Equities and long Treasuries have already
+ * chosen. Duration mixed is the 5s-versus-10s split, not silence.
+ * Cash over both still requires both risks up and bills paying.
+ */
+function pairFromStrip({ durationDir, creditDir, billsPay, stocks, treasuries, fallback }) {
+  if (durationDir === "rising" && creditDir === "rising" && billsPay) {
+    return {
+      line: "Cash over stocks and long bonds",
+      why: "Both discount-rate risk and cash-flow risk are up — get paid to wait.",
+    };
+  }
+  const eq = stocks?.stance;
+  const ust = treasuries?.stance;
+  const t5 = treasuries?.tenors?.find((t) => t.id === "5");
+  const fiveNote =
+    t5?.stance === "out"
+      ? " 5s are the cash / Rates call, not that bid."
+      : t5?.stance === "in"
+        ? " 5s can work too."
+        : "";
+  if (eq === "out" && ust === "in") {
+    return {
+      line: "Long Treasuries over stocks",
+      why: `The strip has chosen: Equities out, long bonds in.${fiveNote}`,
+    };
+  }
+  if (eq === "in" && ust === "out") {
+    return {
+      line: "Stocks over long Treasuries",
+      why: "The strip has chosen: Equities in, long bonds out.",
+    };
+  }
+  if (eq === "in" && ust === "in") {
+    return {
+      line: "Risk assets and duration can both work",
+      why: "Equities and long bonds are both in favor.",
+    };
+  }
+  if (eq === "out" && ust === "out") {
+    return {
+      line: "Neither stocks nor long bonds are a clean bid",
+      why: "Equities and long bonds are both out of favor.",
+    };
+  }
+  if (eq === "out" && ust === "mixed") {
+    return {
+      line: "Equities out — no clean long-bond offset",
+      why: "Equities are out of favor; the long end is mixed.",
+    };
+  }
+  if (eq === "in" && ust === "mixed") {
+    return {
+      line: "Stocks in — duration is mixed",
+      why: "Equities are in favor; the curve is split.",
+    };
+  }
+  if (eq === "mixed" && ust === "in") {
+    return {
+      line: "Long Treasuries in — equities mixed",
+      why: `Long bonds are in favor; equities are not a clean overweight.${fiveNote}`,
+    };
+  }
+  if (eq === "mixed" && ust === "out") {
+    return {
+      line: "Long Treasuries out — equities mixed",
+      why: "Long bonds are out of favor; equities are not a clean overweight.",
+    };
+  }
+  return fallback;
+}
+
+/** One line for the face of the strip. Empty if there is nothing worth saying. */
+function stripSoWhat({ gSc, rSc, stocks, treasuries }) {
+  const t5 = treasuries?.tenors?.find((t) => t.id === "5");
+  const t10 = treasuries?.tenors?.find((t) => t.id === "10");
+  const firm = easeW(gSc) > 0.55;
+  const soft = tightW(gSc) > 0.55;
+  const cheap = easeW(rSc) > 0.55;
+  const dear = tightW(rSc) > 0.55;
+  const left = [];
+  if (firm) left.push("Firm growth");
+  else if (soft) left.push("Soft growth");
+  if (cheap) left.push("cheap fear");
+  else if (dear) left.push("expensive fear");
+  const right = [];
+  if (stocks?.stance === "out" && firm && cheap) right.push("equities late");
+  else if (stocks?.stance === "out") right.push("equities out");
+  else if (stocks?.stance === "in") right.push("equities in");
+  if (t10?.stance === "in") right.push("10s paid");
+  else if (treasuries?.stance === "in") right.push("long bonds paid");
+  else if (treasuries?.stance === "out") right.push("long bonds out");
+  if (t5?.stance === "out") right.push("5s taxed");
+  else if (t5?.stance === "in") right.push("5s can work");
+  if (!left.length && !right.length) return "";
+  const head = left.join(", ");
+  const tail = right.join(" · ");
+  if (head && tail) return `${head} — ${tail}`;
+  return head || tail;
+}
+
+/**
  * Map duration × credit (plus lights) onto six asset classes.
  * Treasuries split 5 / 10 / 30. Credit shows investment grade and high yield.
  */
@@ -333,9 +434,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const t10Net = d + flight * 0.8 - easeW(iSc) * 0.7 + tpTerm + realPay;
   const t30Net = d + flight * 0.8 - easeW(iSc) + tightW(iSc) * 0.5 + tpTerm + realPay;
   const t5 = gradeTenor("5", t5Net, tenorCtx, 1);
+  t5.name = "5c";
+  t5.label = "5s (cash)";
   t5.margin = blendMargin(t5.stance, t5Net, rImp);
   const t10 = gradeTenor("10", t10Net, tenorCtx, 2);
+  t10.label = "10s (duration)";
   const t30 = gradeTenor("30", t30Net, tenorCtx, 2);
+  t30.label = "30s (duration)";
   t10.margin = blendMargin(t10.stance, clampMargin(t10Net / 2), meanImpulse([rImp, -iImp]));
   t30.margin = blendMargin(t30.stance, clampMargin(t30Net / 2), -iImp);
   if (tpZ < -0.35 && t10.stance === "in") {
@@ -732,9 +837,18 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     splits: [oil, copper],
   };
 
+  const items = [treasuries, credit, stocks, crypto, gold, cmdty];
   return {
-    pair: { line: pairLine, why: pairWhy },
-    items: [treasuries, credit, stocks, crypto, gold, cmdty],
+    pair: pairFromStrip({
+      durationDir,
+      creditDir,
+      billsPay,
+      stocks,
+      treasuries,
+      fallback: { line: pairLine, why: pairWhy },
+    }),
+    items,
+    stripLine: stripSoWhat({ gSc, rSc, stocks, treasuries }),
   };
 }
 

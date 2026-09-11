@@ -391,6 +391,19 @@ body.page-about::before {
   text-align: center;
 }
 
+.favor-so {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0 2px 1px;
+  font: 500 calc(0.62rem * var(--ui-scale)) var(--sans);
+  line-height: 1.2;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .favor-strip[hidden] {
   display: none;
 }
@@ -519,6 +532,7 @@ body.page-about::before {
   color: inherit;
   text-align: right;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .favor-tenor .track {
@@ -2394,9 +2408,7 @@ code.about-ident {
   border-left-color: rgba(255, 255, 255, 0.55);
 }
 .rubric-base > strong {
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-weight: 600;
   color: var(--muted, #8b97a8);
 }
 .rubric-base[data-verdict="disagrees"] > strong {
