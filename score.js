@@ -4,10 +4,10 @@
  */
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
-export const IMPULSE_KEYS = ["1w", "2w", "1m"];
+export const IMPULSE_KEYS = ["1w", "2w", "1m", "3m", "6m"];
 export const DEFAULT_IMPULSE = "1m";
 
-const DAYS = { "1w": 7, "2w": 14, "1m": 30 };
+const DAYS = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 };
 
 export function lightStateFromScore(score) {
   if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };

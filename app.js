@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261066";
+import { buildMeaning } from "./meaning.js?v=20261067";
 import {
   buildLights,
   attachImpulse,
@@ -11,8 +11,8 @@ import {
   clubLight,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261066";
-import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261066";
+} from "./score.js?v=20261067";
+import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261067";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -37,7 +37,7 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** 1w/2w/1m lookback for table, charts, chevrons, and asset classes. Components stay on levels. */
+/** 1w/2w/1m/3m/6m lookback for table, charts, chevrons, and asset classes. Components stay on levels. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -934,6 +934,8 @@ function ratesClause(snap) {
 function horizonPhrase(h = statHorizon) {
   if (h === "1w") return "Over the past week";
   if (h === "2w") return "Over the past two weeks";
+  if (h === "3m") return "Over the past three months";
+  if (h === "6m") return "Over the past six months";
   return "Over the past month";
 }
 
@@ -1181,6 +1183,8 @@ function baseRateHtml() {
     "1w": "the next week",
     "2w": "the next two weeks",
     "1m": "the next month",
+    "3m": "the next three months",
+    "6m": "the next six months",
   }[hz] || `the next ${hz}`;
   const match =
     a.closeness === "close"
@@ -1903,22 +1907,13 @@ function chartCell(s) {
 
 function renderThead(rows) {
   const thead = $("#heat thead tr");
-  const colhead = $("#heatColhead");
   if (!thead) return;
   const h = statHorizon;
   const charts = globalView === "charts";
   if (charts) {
     thead.innerHTML = `<th>Name</th><th colspan="${COLSPAN_DATA}">Chart · ${h}</th>`;
-    if (colhead) {
-      colhead.innerHTML = `<span>Name</span><span class="heat-colhead-span">Chart · ${h}</span>`;
-      colhead.dataset.mode = "charts";
-    }
   } else {
     thead.innerHTML = `<th>Name</th><th>Latest</th>`;
-    if (colhead) {
-      colhead.innerHTML = `<span>Name</span><span>Latest</span>`;
-      colhead.dataset.mode = "values";
-    }
   }
 }
 
@@ -2040,6 +2035,23 @@ function loadSparkBundle() {
   return sparkBundle;
 }
 
+/** Baked rows only carry 1w/2w/1m. Fill 3m/6m (and any missing window) from sparks. */
+async function hydrateImpulseFromSparks() {
+  if (!SNAP?.series) return;
+  const all = await loadSparkBundle();
+  if (!all) return;
+  for (const [id, s] of Object.entries(SNAP.series)) {
+    if (!s || s.status !== "ok") continue;
+    if (!sparkLive[id] && all[id]) {
+      sparkLive[id] = all[id].map((pt) => ({ ...pt }));
+    }
+    const pts = sparkLive[id];
+    if (!pts?.length) continue;
+    const facts = seriesFacts(pts, specFromRow(s));
+    s.impulse = { ...(s.impulse || {}), ...facts.impulse };
+  }
+}
+
 async function loadHistory(id) {
   if (histCache.has(id)) return histCache.get(id);
   const p = loadSparkBundle().then((all) => {
@@ -2054,7 +2066,7 @@ async function loadHistory(id) {
 
 function sliceDuration(points, dur) {
   if (!points?.length) return [];
-  const days = { "1w": 7, "2w": 14, "1m": 30 }[dur] || 30;
+  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 }[dur] || 30;
   const last = points[points.length - 1].date;
   const end = Date.parse(last + "T00:00:00Z");
   const start = end - days * 86400000;
@@ -2273,6 +2285,9 @@ async function boot() {
   renderTabs(SNAP);
   renderTable(snap);
   renderFavorStrip();
+  hydrateImpulseFromSparks().then(() => {
+    if (SNAP) refreshViews();
+  });
   pullMarketsLive();
   setInterval(syncMarketsLiveUi, 15000);
 

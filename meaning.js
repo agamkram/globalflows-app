@@ -142,6 +142,8 @@ function hzImp(s, horizon) {
 function pastWindow(horizon) {
   if (horizon === "1w") return "Over the past week";
   if (horizon === "2w") return "Over the past two weeks";
+  if (horizon === "3m") return "Over the past three months";
+  if (horizon === "6m") return "Over the past six months";
   return "Over the past month";
 }
 

@@ -101,13 +101,13 @@
     }
   </script>
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261066" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261066" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261066" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261067" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261067" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261067" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261066" />
+  <link rel="stylesheet" href="styles.css?v=20261067" />
 </head>
 <body>
   <div class="app" id="app">
@@ -118,16 +118,6 @@
     </header>
 
     <div class="dials-toolbar">
-      <div
-        class="dur-group regime-horizon"
-        id="horizonGroup"
-        title="Turn over this long — the five stay on the economic level"
-        aria-label="Lookback"
-      >
-        <button type="button" class="btn tiny-btn" data-horizon="1w">1w</button>
-        <button type="button" class="btn tiny-btn" data-horizon="2w">2w</button>
-        <button type="button" class="btn tiny-btn" data-horizon="1m" aria-pressed="true">1m</button>
-      </div>
       <nav class="topbar-nav" aria-label="Primary">
         <a
           href="https://oilprice.com/oil-price-charts/#prices"
@@ -136,7 +126,7 @@
           rel="noopener noreferrer"
           title="Oil price charts (oilprice.com)"
           aria-label="Oil price charts on oilprice.com"
-        ><img src="oilprice-32.png?v=20261066" width="16" height="16" alt="" /></a>
+        ><img src="oilprice-32.png?v=20261067" width="16" height="16" alt="" /></a>
         <a
           href="https://bubblincrude.markmaga.com"
           class="nav-link nav-link-icon"
@@ -144,7 +134,7 @@
           rel="noopener noreferrer"
           title="BubblinCrude"
           aria-label="BubblinCrude"
-        ><img src="bubblincrude-32.png?v=20261066" srcset="bubblincrude-64.png?v=20261066 2x" width="16" height="16" alt="" /></a>
+        ><img src="bubblincrude-32.png?v=20261067" srcset="bubblincrude-64.png?v=20261067 2x" width="16" height="16" alt="" /></a>
         <a class="nav-link nav-link-sm" href="./about.html">About</a>
       </nav>
     </div>
@@ -216,8 +206,19 @@
           <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
         </div>
       </div>
-      <div class="heat-colhead" id="heatColhead" aria-hidden="true">
-        <span>Name</span><span>Latest</span>
+      <div class="heat-colhead" id="heatColhead">
+        <div
+          class="dur-group regime-horizon"
+          id="horizonGroup"
+          title="Up or down over this long — table and charts"
+          aria-label="Lookback"
+        >
+          <button type="button" class="btn tiny-btn" data-horizon="1w">1w</button>
+          <button type="button" class="btn tiny-btn" data-horizon="2w">2w</button>
+          <button type="button" class="btn tiny-btn" data-horizon="1m" aria-pressed="true">1m</button>
+          <button type="button" class="btn tiny-btn" data-horizon="3m">3m</button>
+          <button type="button" class="btn tiny-btn" data-horizon="6m">6m</button>
+        </div>
       </div>
       <div class="market-buckets" id="marketBuckets" hidden></div>
     </div>
@@ -269,7 +270,7 @@
     </form>
   </dialog>
 
-  <script type="module" src="app.js?v=20261066"></script>
+  <script type="module" src="app.js?v=20261067"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
