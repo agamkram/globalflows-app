@@ -26,6 +26,13 @@ function names(arr, n = 2) {
   return arr.slice(0, n).map((v) => v.name).join(", ");
 }
 
+/** Inflation chevron: down = cooling, up = heating, flat = not cooling. */
+export function inflationTurn(dir) {
+  if (dir === "down") return "cooling";
+  if (dir === "up") return "heating";
+  return "not cooling";
+}
+
 /** Plain-English paragraph for this component’s current vote. Pass cliff on c. */
 export function teachLight(lid, c) {
   const soft = names(c.easy || [], 2);
@@ -88,7 +95,7 @@ export function teachLight(lid, c) {
       tight: `Activity looks soft versus trend.${split}${cliffNote} Point: demand/labor are under pressure.`,
     },
     inflation: {
-      easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — the impulse row says if it’s cooling.`,
+      easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — ${inflationTurn(c.impulse?.dir)}.`,
       neutral: `Prices are near the target band.${inflNote}${cliffNote} Point: no clean hot or cold call.`,
       tight: `Prices are cold versus ~2%.${inflNote}${cliffNote} Point: inflation is not the tax right now.`,
     },

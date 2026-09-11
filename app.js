@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261067";
+import { buildMeaning } from "./meaning.js?v=20261069";
 import {
   buildLights,
   attachImpulse,
@@ -11,8 +11,8 @@ import {
   clubLight,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261067";
-import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261067";
+} from "./score.js?v=20261069";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261069";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -37,7 +37,7 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** 1w/2w/1m/3m/6m lookback for table, charts, chevrons, and asset classes. Components stay on levels. */
+/** Table heat and spark length only. Chevrons, duration, credit, and the six classes stay on DEFAULT_IMPULSE. */
 let statHorizon = DEFAULT_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
@@ -113,7 +113,7 @@ function viewOf(snap) {
     // score.js setLightDist via buildLights
   }
   const lights = buildLights(snap);
-  attachImpulse(lights, snap, statHorizon);
+  attachImpulse(lights, snap, DEFAULT_IMPULSE);
   return {
     ...snap,
     lights,
@@ -495,7 +495,11 @@ function bakeLight(id) {
 function liveSheet(id, snap = SNAP) {
   if (!snap || !id) return null;
   const c = clubLight(snap, id);
-  return lightSheet(id, { ...c, cliff: distanceToCliff(c.score) });
+  return lightSheet(id, {
+    ...c,
+    cliff: distanceToCliff(c.score),
+    impulse: snap.lights?.[id]?.impulse,
+  });
 }
 
 function morningWord(id) {
@@ -592,7 +596,7 @@ function analogMedianBar(hz) {
 function analogFor(assetId, stance) {
   const a = REGIME?.analogs;
   if (!a?.stats || !assetId) return null;
-  const hz = statHorizon;
+  const hz = DEFAULT_IMPULSE;
   const r = a.stats[hz]?.[assetId];
   if (!r) return null;
 
@@ -653,7 +657,7 @@ function renderFavorStrip() {
   if (!el || !SNAP) return;
   try {
     const snap = viewOf(SNAP);
-    const favor = buildMeaning(snap, statHorizon).favor;
+    const favor = buildMeaning(snap, DEFAULT_IMPULSE).favor;
     if (!favor?.items?.length) {
       el.hidden = true;
       el.innerHTML = "";
@@ -754,7 +758,7 @@ function openLightSheet(id) {
     return;
   }
 
-  const h = statHorizon;
+  const h = DEFAULT_IMPULSE;
   const sheet = liveSheet(id, snap);
   const word = sheet?.word || wordFor(L);
   const titleEl = $("#lightTitle");
@@ -764,7 +768,11 @@ function openLightSheet(id) {
     console.warn("openLightSheet: dialog nodes missing");
     return;
   }
-  titleEl.textContent = `${L.label || id} · ${word}`;
+  const inflTurn =
+    id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
+  titleEl.textContent = inflTurn
+    ? `${L.label || id} · ${word}, ${inflTurn}`
+    : `${L.label || id} · ${word}`;
   const members = (L.members || [])
     .map((mid) => snap.series?.[mid])
     .filter((s) => s && memberAnchorScore(s) != null);
@@ -837,8 +845,8 @@ function buildDisagreements(snap, lights) {
   const risk = lights.risk;
   const growth = lights.growth;
   const infl = lights.inflation;
-  const goldDir = impulseOf(snap.series?.GOLD).dir;
-  const btcDir = impulseOf(snap.series?.BTC).dir;
+  const goldDir = impulseOf(snap.series?.GOLD, DEFAULT_IMPULSE).dir;
+  const btcDir = impulseOf(snap.series?.BTC, DEFAULT_IMPULSE).dir;
   const headSc = snap.series?.CPIAUCSL?.anchor?.score;
   const coreSc = snap.series?.CPILFESL?.anchor?.score;
   const disagreements = [];
@@ -931,7 +939,7 @@ function ratesClause(snap) {
   }[st];
 }
 
-function horizonPhrase(h = statHorizon) {
+function horizonPhrase(h = DEFAULT_IMPULSE) {
   if (h === "1w") return "Over the past week";
   if (h === "2w") return "Over the past two weeks";
   if (h === "3m") return "Over the past three months";
@@ -942,13 +950,18 @@ function horizonPhrase(h = statHorizon) {
 /**
  * Regime box: short editorial from light states + tensions.
  * Relations and splits — not a rewording of the five dial labels.
- * Leads with the active clock in plain language.
+ * Leads with the 3m turn in plain language.
  */
+function hotInflationTurn(snap) {
+  return `, ${inflationTurn(snap.lights?.inflation?.impulse?.dir)}`;
+}
+
 function regimeStoryHtml(snap) {
   const liq = lightState(snap, "liquidity");
   const gr = lightState(snap, "growth");
   const inf = lightState(snap, "inflation");
   const risk = lightState(snap, "risk");
+  const hotTurn = inf === "easing" ? hotInflationTurn(snap) : "";
 
   const cash = {
     easing: `<strong data-state="easing">cash has been flowing back</strong> into the system`,
@@ -967,19 +980,19 @@ function regimeStoryHtml(snap) {
       ? `the real growth has still looked <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
       : `the real growth has still looked <strong data-state="easing">firm</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else if (gr === "easing" && inf === "easing") {
-    growthBit = `the real growth has looked <strong data-state="easing">firm</strong> while inflation pressure is still <strong data-state="easing">high</strong>`;
+    growthBit = `the real growth has looked <strong data-state="easing">firm</strong> while inflation pressure is still <strong data-state="easing">high</strong>${hotTurn}`;
   } else if (gr === "easing" && inf === "neutral") {
     growthBit = `the real growth has still looked <strong data-state="easing">firm</strong> while inflation has looked <strong data-state="neutral">mixed</strong>`;
   } else if (gr === "tight" && inf === "easing") {
     growthBit = headColdCoreHot
-      ? `the real growth has looked <strong data-state="tight">soft</strong> while underlying inflation is still <strong data-state="easing">hot</strong> — even if the overall CPI print looks cooler`
-      : `the real growth has looked <strong data-state="tight">soft</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+      ? `the real growth has looked <strong data-state="tight">soft</strong> while underlying inflation is still <strong data-state="easing">hot</strong>${hotTurn} — even if the overall CPI print looks cooler`
+      : `the real growth has looked <strong data-state="tight">soft</strong> while inflation is still <strong data-state="easing">hot</strong>${hotTurn}`;
   } else if (gr === "tight" && inf === "tight") {
     growthBit = `the real growth has looked <strong data-state="tight">soft</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else if (gr === "tight" && inf === "neutral") {
     growthBit = `the real growth has looked <strong data-state="tight">soft</strong> while inflation has looked <strong data-state="neutral">mixed</strong>`;
   } else if (gr === "neutral" && inf === "easing") {
-    growthBit = `growth has looked <strong data-state="neutral">mixed</strong> while inflation is still <strong data-state="easing">hot</strong>`;
+    growthBit = `growth has looked <strong data-state="neutral">mixed</strong> while inflation is still <strong data-state="easing">hot</strong>${hotTurn}`;
   } else if (gr === "neutral" && inf === "tight") {
     growthBit = headHotCoreCold
       ? `growth has looked <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
@@ -1020,7 +1033,7 @@ function regimeStoryHtml(snap) {
     ? ` ${parts2.map((p, i) => (i === 0 ? p.charAt(0).toUpperCase() + p.slice(1) : p)).join(". ")}.`
     : "";
 
-  return `${horizonPhrase()}, ${s1}.${s2}`;
+  return `${horizonPhrase(DEFAULT_IMPULSE)}, ${s1}.${s2}`;
 }
 
 
@@ -1172,7 +1185,7 @@ function tensionTitle(d) {
 function baseRateHtml() {
   const a = REGIME?.analogs;
   if (!a?.stats) return "";
-  const hz = statHorizon;
+  const hz = DEFAULT_IMPULSE;
   const table = a.stats[hz] || {};
   if (!Object.keys(table).length) {
     return `<p class="sent-kicker">What happened last time</p>
@@ -1309,7 +1322,7 @@ function showSentenceDialog({ hug = false } = {}) {
 function openFavorCard(id) {
   if (!SNAP || !id) return;
   const snap = viewOf(SNAP);
-  const meaning = buildMeaning(snap, statHorizon);
+  const meaning = buildMeaning(snap, DEFAULT_IMPULSE);
   const it = meaning.favor.items.find((x) => x.id === id);
   if (!it) return;
 
@@ -1334,7 +1347,7 @@ function openFavorCard(id) {
 
 function openSentence(snap) {
   if (!snap) return;
-  const meaning = buildMeaning(snap, statHorizon);
+  const meaning = buildMeaning(snap, DEFAULT_IMPULSE);
   const sheets = Object.fromEntries(LIGHT_IDS.map((id) => [id, liveSheet(id, snap)]));
   const evidence = LIGHT_IDS.map((id) => sheets[id]?.teach)
     .filter(Boolean)
@@ -1426,10 +1439,10 @@ function openSentence(snap) {
   const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own.</p>`;
 
   const liveFoot = movedBits.length
-    ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${statHorizon} lookback · tap a component, then “Tap for who voted”.`
+    ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${DEFAULT_IMPULSE} turn · tap a component, then Voters.`
     : REGIME?.verdict === "SPOT ON"
-      ? `Verified bake · ${statHorizon} lookback · tap a component, then “Tap for who voted”.`
-      : `Tap a component, then “Tap for who voted”.`;
+      ? `Verified bake · ${DEFAULT_IMPULSE} turn · tap a component, then Voters.`
+      : `Tap a component, then Voters.`;
   const verified = `${axis}<p class="muted tiny sent-foot">${escapeHtml(liveFoot)}</p>`;
 
   const titleEl = $("#sentenceTitle");
@@ -1477,12 +1490,16 @@ function renderLights(snap) {
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
       const word = wordFor(L);
+      const inflTurn =
+        id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
+      const spoken = inflTurn ? `${word}, ${inflTurn}` : word;
+      const tip = [inflTurn ? spoken : null, nearFlip].filter(Boolean).join(" · ");
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
-        nearFlip ? ` title="${escapeHtml(nearFlip)}"` : ""
+        tip ? ` title="${escapeHtml(tip)}"` : ""
       } aria-label="${escapeHtml(
-        `${L.label || id}, ${word}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
+        `${L.label || id}, ${spoken}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
@@ -1952,19 +1969,7 @@ function renderTable(snap) {
   $("#layerTitle").textContent = layerMeta.label || activeLayer;
   const hint = $("#streetHint");
   if (hint) {
-    const showHint =
-      comparePhase === "off" &&
-      !!focusLight &&
-      streetId !== "all" &&
-      streetId !== "fx" &&
-      streetId !== "markets" &&
-      !!TAB_TO_LIGHT[streetId];
-    hint.hidden = !showHint;
-    if (showHint) {
-      hint.dataset.light = focusLight || TAB_TO_LIGHT[streetId];
-    } else {
-      delete hint.dataset.light;
-    }
+    hint.dataset.light = focusLight || "liquidity";
   }
   syncMarketsLiveUi();
 
@@ -2066,7 +2071,7 @@ async function loadHistory(id) {
 
 function sliceDuration(points, dur) {
   if (!points?.length) return [];
-  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 }[dur] || 30;
+  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 }[dur] || 91;
   const last = points[points.length - 1].date;
   const end = Date.parse(last + "T00:00:00Z");
   const start = end - days * 86400000;
@@ -2315,7 +2320,7 @@ async function boot() {
     pullMarketsLive(true);
   });
   $("#streetHint")?.addEventListener("click", () => {
-    const id = $("#streetHint")?.dataset.light || focusLight;
+    const id = $("#streetHint")?.dataset.light || focusLight || "liquidity";
     if (id) openLightSheet(id);
   });
   $("#btnViewMode").onclick = () => {

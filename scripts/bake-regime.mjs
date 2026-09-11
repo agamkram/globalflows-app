@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Bake today's regime — anchored lights + 6m so-what.
+ * Bake today's regime — anchored lights + 3m so-what.
  *   npm run bake:regime
  */
 import fs from "node:fs/promises";
@@ -54,7 +54,11 @@ async function main() {
   const lights = {};
   for (const lid of LIGHTS) {
     const c = clubLight(snap, lid);
-    const sheet = lightSheet(lid, { ...c, cliff: distanceToCliff(c.score) });
+    const sheet = lightSheet(lid, {
+      ...c,
+      cliff: distanceToCliff(c.score),
+      impulse: rebuilt[lid].impulse,
+    });
     if (!c.n) fails.push(`${lid}: no members`);
     if (!c.voters.length) fails.push(`${lid}: no anchor voters`);
     if (lightStateFromScore(c.score).state !== c.state) fails.push(`${lid}: lock broken`);

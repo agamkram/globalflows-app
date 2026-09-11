@@ -1,6 +1,7 @@
 /**
  * Regime → duration risk / credit risk → six asset classes (in / mixed / out).
- * The five components are levels. The 1w/2w/1m lookback only nudges needle position.
+ * One book: duration, credit, and the six classes read the 3m turn.
+ * The table lookback only colors rows and sets spark length.
  */
 import { DEFAULT_IMPULSE } from "./score.js";
 
@@ -147,6 +148,10 @@ function pastWindow(horizon) {
   return "Over the past month";
 }
 
+function onTurn(horizon) {
+  return `on the ${horizon} turn`;
+}
+
 function joinEnglish(parts) {
   const a = (parts || []).filter(Boolean);
   if (!a.length) return "";
@@ -197,8 +202,9 @@ function meanImpulse(parts) {
 }
 
 /**
- * The checklist sets in / mixed / out. The lookback may slide the needle
- * (28% weight) but cannot flip the call. checklistScore may be a continuous net.
+ * The checklist sets in / mixed / out. The 3m turn may slide the needle
+ * (28% weight) but cannot flip the call. The table lookback does not enter
+ * this mix. checklistScore may be a continuous net.
  */
 function blendMargin(stance, checklistScore, momentum) {
   const m = clampMargin(0.72 * clampMargin(checklistScore) + 0.28 * clampMargin(momentum));
@@ -389,6 +395,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const gImp = lightImpulse(lights, "growth");
   const lImp = lightImpulse(lights, "liquidity");
   const kImp = lightImpulse(lights, "risk");
+  const win = onTurn(horizon);
   const hyImp = impulseUnit(hzImp(seriesOk(snap, "BAMLH0A0HYM2"), horizon));
 
   const tpZ = termPremiumZ(snap);
@@ -770,14 +777,14 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (tightW(gSc) > 0.55 && fearW > 0.4) oilInParts.push("growth is soft into expensive fear — the bounce sample");
   if (dolZ < -0.35) oilInParts.push("the dollar isn’t taxing dollar oil");
   if (easeW(iSc) > 0.55) oilInParts.push("inflation is hot — crude’s price bid");
-  if (wtiImp.dir === "up") oilInParts.push("crude is firm this window");
+  if (wtiImp.dir === "up") oilInParts.push(`crude is firm ${win}`);
   const oilOutParts = [];
   if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
     oilOutParts.push("growth is firm while fear is still cheap — late to the industrial bid");
   }
   if (dolZ > 0.35) oilOutParts.push("the dollar is rising");
   if (tightW(iSc) > 0.55) oilOutParts.push("inflation is cold — crude rarely leads");
-  if (wtiImp.dir === "down") oilOutParts.push("crude is soft this window");
+  if (wtiImp.dir === "down") oilOutParts.push(`crude is soft ${win}`);
   const oilNet =
     0.45 * tightW(gSc) * fearW -
     0.55 * easeW(gSc) * calmRisk -
@@ -872,6 +879,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   const iSc = lightUnit(lights, "inflation");
   const rSc = lightUnit(lights, "risk");
   const past = pastWindow(horizon);
+  const win = onTurn(horizon);
   const Iimp = lights.inflation?.impulse?.dir || "flat";
   const Gimp = lights.growth?.impulse?.dir || "flat";
   const iImpSc = impulseUnit(lights.inflation?.impulse);
@@ -917,7 +925,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     0.25 * easeW(gSc) * (1 - tightW(iSc));
 
   const durationUpParts = [];
-  if (hotNotCooling > 0.45) durationUpParts.push("inflation is still hot and not cooling this window");
+  if (hotNotCooling > 0.45) durationUpParts.push(`inflation is still hot and not cooling ${win}`);
   if (tightW(tSc) > 0.55 && realZ < 0.35) durationUpParts.push("funding is tight");
   if (tpZ < -0.35) durationUpParts.push("term premium is compressed — duration is not paid");
   if (easeW(gSc) > 0.55 && tightW(iSc) < 0.4 && hotNotCooling < 0.45 && tightW(tSc) < 0.45 && tpZ >= -0.2) {
@@ -937,7 +945,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
       realZ > 0.35 || tpZ > 0.35
         ? "Duration is paid — wide term premium or high real yields open room for long bonds if inflation isn’t fighting you."
         : coolingRelief > 0.3
-          ? "Inflation is still high but cooling this window — duration gets a look if funding isn’t fighting you."
+          ? `Inflation is still high but cooling ${win} — duration gets a look if funding isn’t fighting you.`
           : "Long bonds can work again — cooler inflation and softer funding open room for duration if credit stays calm.";
   } else {
     durationDir = "mixed";
@@ -952,7 +960,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   } else if (realZ > 0.45 && durationDir !== "rising" && !durationLine.includes("real")) {
     durationLine += " Real 10y yields are high — duration is paid.";
   } else if (realYImp.dir === "up" && durationDir !== "falling") {
-    durationLine += " Real 10y yields are rising this window — discount rates still bite.";
+    durationLine += ` Real 10y yields are rising ${win} — discount rates still bite.`;
   }
   if (tpZ < -0.35 && !durationLine.includes("term premium")) {
     durationLine += " Term premium is compressed — you are not paid for duration risk.";
@@ -968,8 +976,8 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   const creditUpParts = [];
   if (tightW(gSc) > 0.55) creditUpParts.push("growth is soft");
   if (tightW(rSc) > 0.55) creditUpParts.push("fear is expensive");
-  if (Gimp === "down" || gImpSc < -0.25) creditUpParts.push("activity is rolling over this window");
-  if (hyImp.dir === "up") creditUpParts.push("high-yield spreads are widening this window");
+  if (Gimp === "down" || gImpSc < -0.25) creditUpParts.push(`activity is rolling over ${win}`);
+  if (hyImp.dir === "up") creditUpParts.push(`high-yield spreads are widening ${win}`);
   const impulseSlow = creditFlow.dir === "down";
   const chinaSlow = chinaFlow.dir === "down";
   if (impulseSlow && creditUpParts.length) {
@@ -1016,14 +1024,14 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   }
 
   if (creditFlow.dir === "up" && !creditLine.includes("impulse")) {
-    creditLine += ` Bank credit impulse is accelerating this window — private lending is adding fuel.`;
+    creditLine += ` Bank credit impulse is accelerating ${win} — private lending is adding fuel.`;
   } else if (creditFlow.dir === "down" && !creditLine.includes("impulse")) {
-    creditLine += ` Bank credit impulse is decelerating this window — private lending is not confirming easy plumbing.`;
+    creditLine += ` Bank credit impulse is decelerating ${win} — private lending is not confirming easy plumbing.`;
   }
   if (chinaFlow.dir === "up" && !creditLine.includes("China credit")) {
-    creditLine += ` China credit impulse is accelerating this window — Asia’s credit cycle is adding fuel.`;
+    creditLine += ` China credit impulse is accelerating ${win} — Asia’s credit cycle is adding fuel.`;
   } else if (chinaFlow.dir === "down" && !creditLine.includes("China credit")) {
-    creditLine += ` China credit impulse is decelerating this window — Asia’s credit cycle is not confirming easy plumbing.`;
+    creditLine += ` China credit impulse is decelerating ${win} — Asia’s credit cycle is not confirming easy plumbing.`;
   }
 
   const confirm = [];
@@ -1056,7 +1064,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
 
   if (durationDir === "rising" && creditDir === "rising") {
     falsify.push(
-      "Falsify if inflation cools this window and bank credit impulse turns up — both risk calls soften."
+      `Falsify if inflation cools ${win} and bank credit impulse turns up — both risk calls soften.`
     );
   }
 
@@ -1079,11 +1087,11 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
 
   if (sbCorr && sbImp.dir === "up") {
     confirm.push(
-      "Stock–bond correlation is rising this window — diversification is weaker; duration and credit can hurt together."
+      `Stock–bond correlation is rising ${win} — diversification is weaker; duration and credit can hurt together.`
     );
   } else if (sbCorr && sbImp.dir === "down") {
     confirm.push(
-      "Stock–bond correlation is falling this window — classic balancers can still hedge each other."
+      `Stock–bond correlation is falling ${win} — classic balancers can still hedge each other.`
     );
   }
 
@@ -1092,7 +1100,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   }
 
   if (dgs10 && durationDir === "rising" && hzImp(dgs10, horizon).dir === "up") {
-    confirm.push("The 10y yield is rising this window — markets are already marking duration risk up.");
+    confirm.push(`The 10y yield is rising ${win} — markets are already marking duration risk up.`);
   }
 
   const favor = buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts);
