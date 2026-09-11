@@ -551,6 +551,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     0.2 * tightW(lSc) * calm +
     0.5 * spreadZ -
     0.25 * Math.max(0, -spreadZ) * calm;
+  let hyMix = "High yield needs both growth and calm fear; only one side is helping.";
+  if (spreadZ < -0.35) {
+    hyMix =
+      creditDir === "falling" || easeW(gSc) > 0.4
+        ? "Spreads are tight — you are not paid, even though coupons still look collectible."
+        : "Spreads are tight — you are not paid.";
+  }
   const hy = instrumentFromNet(
     "hy",
     "HY",
@@ -559,7 +566,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       ? "Spreads are wide and growth still says coupons get paid."
       : "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
-    "High yield needs both growth and calm fear; only one side is helping.",
+    hyMix,
     0.26,
     -0.26
   );

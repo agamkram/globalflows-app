@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261073";
+import { buildMeaning } from "./meaning.js?v=20261074";
 import {
   buildLights,
   attachImpulse,
@@ -12,8 +12,8 @@ import {
   DEFAULT_IMPULSE,
   TABLE_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261073";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261073";
+} from "./score.js?v=20261074";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261074";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -323,6 +323,7 @@ function fmtValue(n, units) {
     case "pp":
       return `${signed(1)}pp`;
     case "change":
+    case "k change":
       return `${signed(0)}k`;
     case "k":
       return `${fmt(n, 0)}k`;
@@ -420,7 +421,7 @@ function fmtWindowChange(points, units) {
     }
     return { text, dir };
   }
-  if (units === "change" || units === "k") {
+  if (units === "change" || units === "k change" || units === "k") {
     return { text: `${delta >= 0 ? "+" : ""}${delta.toFixed(0)}k`, dir };
   }
   if (first === 0) return { text: "—", dir: null };
