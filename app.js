@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261069";
+import { buildMeaning } from "./meaning.js?v=20261070";
 import {
   buildLights,
   attachImpulse,
@@ -10,9 +10,10 @@ import {
   distanceToCliff,
   clubLight,
   DEFAULT_IMPULSE,
+  TABLE_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261069";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261069";
+} from "./score.js?v=20261070";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261070";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -37,8 +38,8 @@ let REGIME = null;
 
 /** Global row view: values | charts. */
 let globalView = "values";
-/** Table heat and spark length only. Chevrons, duration, credit, and the six classes stay on DEFAULT_IMPULSE. */
-let statHorizon = DEFAULT_IMPULSE;
+/** Table heat and spark length only. Default 3m. Chevrons, duration, credit, and the six classes stay on the 1m turn. */
+let statHorizon = TABLE_IMPULSE;
 /** Markets sub-shelf when on Markets tab. */
 let marketBucket = "all";
 /** Last prints overlaid on Markets Latest (z stays daily). */
@@ -950,7 +951,7 @@ function horizonPhrase(h = DEFAULT_IMPULSE) {
 /**
  * Regime box: short editorial from light states + tensions.
  * Relations and splits — not a rewording of the five dial labels.
- * Leads with the 3m turn in plain language.
+ * Leads with the 1m turn in plain language.
  */
 function hotInflationTurn(snap) {
   return `, ${inflationTurn(snap.lights?.inflation?.impulse?.dir)}`;

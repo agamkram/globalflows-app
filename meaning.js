@@ -1,6 +1,6 @@
 /**
  * Regime → duration risk / credit risk → six asset classes (in / mixed / out).
- * One book: duration, credit, and the six classes read the 3m turn.
+ * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
 import { DEFAULT_IMPULSE } from "./score.js";
@@ -202,7 +202,7 @@ function meanImpulse(parts) {
 }
 
 /**
- * The checklist sets in / mixed / out. The 3m turn may slide the needle
+ * The checklist sets in / mixed / out. The 1m turn may slide the needle
  * (28% weight) but cannot flip the call. The table lookback does not enter
  * this mix. checklistScore may be a continuous net.
  */

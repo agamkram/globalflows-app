@@ -1,11 +1,13 @@
 /**
  * One scoring model: anchor (where it is) + impulse (which way).
- * Lights read levels only. Chevrons use the 3m turn. 1w–6m on the table is row heat.
+ * Chevrons, duration, and the six classes use the 1m turn.
+ * 1w–6m on the table is row heat; the table default is 3m.
  */
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 export const IMPULSE_KEYS = ["1w", "2w", "1m", "3m", "6m"];
-export const DEFAULT_IMPULSE = "3m";
+export const DEFAULT_IMPULSE = "1m";
+export const TABLE_IMPULSE = "3m";
 
 const DAYS = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 };
 

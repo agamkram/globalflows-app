@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Bake today's regime — anchored lights + 3m so-what.
+ * Bake today's regime — anchored lights + 1m so-what.
  *   npm run bake:regime
  */
 import fs from "node:fs/promises";
