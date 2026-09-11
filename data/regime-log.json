@@ -211,16 +211,16 @@
     },
     {
       "date": "2026-09-11",
-      "generatedAt": "2026-09-11T00:01:31.692Z",
-      "headline": "Cash tightening, borrowing tight, growth mid, inflation hot, risk neutral.",
+      "generatedAt": "2026-09-11T14:51:41.218Z",
+      "headline": "Cash neutral, borrowing tight, growth mid, inflation hot, risk risk-on.",
       "lights": {
         "liquidity": {
-          "state": "tight",
-          "score": -0.5270324730115784
+          "state": "neutral",
+          "score": -0.1603270506161907
         },
         "rates": {
           "state": "tight",
-          "score": -0.5679964450917298
+          "score": -0.5752385484268638
         },
         "growth": {
           "state": "neutral",
@@ -228,44 +228,44 @@
         },
         "inflation": {
           "state": "easing",
-          "score": 0.4899590573132599
+          "score": 0.49099014393108353
         },
         "risk": {
-          "state": "neutral",
-          "score": 0.4004868977510336
+          "state": "easing",
+          "score": 0.5892073944118015
         }
       },
-      "duration": "mixed",
+      "duration": "rising",
       "credit": "falling",
       "calls": {
         "treasuries": {
-          "stance": "in",
-          "margin": -0.1513,
+          "stance": "out",
+          "margin": -0.402,
           "parts": {
             "5": "out",
-            "10": "in",
-            "30": "mixed"
+            "10": "out",
+            "30": "out"
           }
         },
         "credit": {
-          "stance": "in",
-          "margin": 0.1903
+          "stance": "mixed",
+          "margin": 0.0619
         },
         "stocks": {
           "stance": "out",
-          "margin": -0.6306
+          "margin": -0.4164
         },
         "crypto": {
-          "stance": "mixed",
-          "margin": -0.2767
+          "stance": "out",
+          "margin": -0.1866
         },
         "gold": {
           "stance": "mixed",
-          "margin": 0.1039
+          "margin": 0.0916
         },
         "cmdty": {
           "stance": "mixed",
-          "margin": 0.0826
+          "margin": 0.0414
         }
       }
     }
