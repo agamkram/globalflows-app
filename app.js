@@ -1,15 +1,18 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261062";
+import { buildMeaning } from "./meaning.js?v=20261064";
 import {
   buildLights,
   attachImpulse,
   memberAnchorScore,
   seriesFacts,
   applyRealRateAnchors,
+  distanceToCliff,
+  clubLight,
   DEFAULT_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261062";
+} from "./score.js?v=20261064";
+import { LIGHT_IDS, lightSheet } from "./light-copy.js?v=20261064";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -449,7 +452,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
-    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Surveys may slide the needle; they cannot flip Strong or Soft while jobs and GDP are still Mid. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — core measures, median, sticky prices, expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
@@ -488,6 +491,17 @@ function bakeLight(id) {
   return REGIME?.lights?.[id] || null;
 }
 
+/** Current vote and story for a component — follows last prints, not the morning file. */
+function liveSheet(id, snap = SNAP) {
+  if (!snap || !id) return null;
+  const c = clubLight(snap, id);
+  return lightSheet(id, { ...c, cliff: distanceToCliff(c.score) });
+}
+
+function morningWord(id) {
+  return bakeLight(id)?.word || null;
+}
+
 function stanceState(stance) {
   if (stance === "in") return "easing";
   if (stance === "out") return "tight";
@@ -503,7 +517,7 @@ function trackPct(score) {
 function lightIsSplit(snap, id) {
   const kinds = (snap?.disagreements || []).map((d) => d.kind);
   if (id === "inflation" && kinds.some((k) => String(k).startsWith("inflation_"))) return true;
-  const voters = REGIME?.lights?.[id]?.voters;
+  const voters = liveSheet(id, snap)?.voters;
   if (!voters?.length) return false;
   return voters.some((v) => v.score > 0.45) && voters.some((v) => v.score < -0.45);
 }
@@ -730,8 +744,8 @@ function openLightSheet(id) {
   }
 
   const h = statHorizon;
-  const baked = bakeLight(id);
-  const word = wordFor(L);
+  const sheet = liveSheet(id, snap);
+  const word = sheet?.word || wordFor(L);
   const titleEl = $("#lightTitle");
   const bodyEl = $("#lightBody");
   const dlg = $("#dlgLight");
@@ -751,12 +765,17 @@ function openLightSheet(id) {
       </tr>`;
     })
     .join("");
-  const teach = baked?.teach
-    ? `<p class="light-teach">${escapeHtml(baked.teach)}</p>`
+  const teach = sheet?.teach
+    ? `<p class="light-teach">${escapeHtml(sheet.teach)}</p>`
     : `<p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>`;
+  const morn = morningWord(id);
+  const moved =
+    morn && sheet?.word && morn !== sheet.word
+      ? `<p class="muted tiny">Moved with the tape — this morning ${escapeHtml(morn)}.</p>`
+      : "";
   const chev = L.impulse?.dir || "flat";
-  const cliff = baked?.cliff;
-  const scoreNum = baked?.score ?? L.score;
+  const scoreNum = sheet?.score ?? L.score;
+  const cliff = sheet?.cliff ?? distanceToCliff(scoreNum);
   const scoreTxt =
     scoreNum != null && Number.isFinite(scoreNum)
       ? `${scoreNum >= 0 ? "+" : ""}${scoreNum.toFixed(2)}`
@@ -770,6 +789,7 @@ function openLightSheet(id) {
   }
   bodyEl.innerHTML = `
     ${teach}
+    ${moved}
     <p class="light-status">${escapeHtml(word)} · ${escapeHtml(scoreTxt)}${cliffBit} · ${h} ${escapeHtml(chev)}</p>
     <div class="light-members">
       <table>
@@ -790,7 +810,6 @@ function lightState(snap, id) {
   return snap.lights?.[id]?.state || "empty";
 }
 
-/** Tensions that belong on the teach sheet when not already baked into the story. */
 /** Tensions that belong on the teach sheet when not already baked into the story. */
 const TEACH_TENSION_ORDER = ["liquidity_vs_gold", "liquidity_vs_btc", "inflation_pce_vs_5y5y"];
 
@@ -1300,25 +1319,31 @@ function openFavorCard(id) {
 
 function openSentence(snap) {
   if (!snap) return;
-  const baked =
-    REGIME?.verdict === "SPOT ON" ? REGIME.lights : null;
   const meaning = buildMeaning(snap, statHorizon);
-
-  const evidence = baked
-    ? ["liquidity", "rates", "growth", "inflation", "risk"]
-        .map((id) => baked[id]?.teach)
-        .filter(Boolean)
-        .map(
-          (line) =>
-            `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
-        )
-        .join("")
-    : regimeEvidence(snap)
+  const sheets = Object.fromEntries(LIGHT_IDS.map((id) => [id, liveSheet(id, snap)]));
+  const evidence = LIGHT_IDS.map((id) => sheets[id]?.teach)
+    .filter(Boolean)
+    .map(
+      (line) =>
+        `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
+    )
+    .join("") || regimeEvidence(snap)
         .map(
           (line) =>
             `<div class="sent-explain"><p class="sent-explain-title">${escapeHtml(line)}</p></div>`
         )
         .join("");
+
+  const movedBits = LIGHT_IDS.map((id) => {
+    const morn = morningWord(id);
+    const now = sheets[id]?.word;
+    if (!morn || !now || morn === now) return null;
+    const label = snap.lights?.[id]?.label || id;
+    return `${label} ${morn} → ${now}`;
+  }).filter(Boolean);
+  const tapeNote = movedBits.length
+    ? `<p class="muted tiny sent-foot">Moved with the tape: ${escapeHtml(movedBits.join("; "))}.</p>`
+    : "";
 
   const extra = teachOnlyTensions(snap);
   const watch = extra.length
@@ -1385,10 +1410,12 @@ function openSentence(snap) {
 
   const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own.</p>`;
 
-  const verified =
-    REGIME?.verdict === "SPOT ON"
-      ? `${axis}<p class="muted tiny sent-foot">Verified bake · ${statHorizon} impulse · tap a component, then “Tap for who voted”.</p>`
-      : `${axis}<p class="muted tiny sent-foot">Tap a component, then “Tap for who voted”.</p>`;
+  const liveFoot = movedBits.length
+    ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${statHorizon} lookback · tap a component, then “Tap for who voted”.`
+    : REGIME?.verdict === "SPOT ON"
+      ? `Verified bake · ${statHorizon} lookback · tap a component, then “Tap for who voted”.`
+      : `Tap a component, then “Tap for who voted”.`;
+  const verified = `${axis}<p class="muted tiny sent-foot">${escapeHtml(liveFoot)}</p>`;
 
   const titleEl = $("#sentenceTitle");
   if (titleEl) titleEl.textContent = "Today’s regime";
@@ -1397,6 +1424,7 @@ function openSentence(snap) {
 
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
+    ${tapeNote}
     ${soWhat}
     ${baseRateHtml()}
     <p class="sent-kicker">Why we say that</p>
@@ -1422,8 +1450,7 @@ function renderLights(snap) {
         L.score != null && Number.isFinite(L.score)
           ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
           : "—";
-      const baked = bakeLight(id);
-      const cliff = baked?.cliff;
+      const cliff = distanceToCliff(L.score);
       const nearFlip =
         cliff != null && Number.isFinite(cliff) && cliff < 0.05
           ? Math.abs(L.score) > 0.45

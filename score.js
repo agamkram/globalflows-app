@@ -36,11 +36,9 @@ export const VOTE_FAMILIES = {
     credit: ["BAMLH0A0HYM2", "NFCI", "BAA10Y", "BBB_OAS", "BAMLC0A0CM"],
     vol: ["VIX"],
   },
-  // Labor and output share one coincident ballot. Six prints in that seat still
-  // peak Mid: amber sat 7pp over the floor implied by sd 0.53. Half weight so
-  // leading (the turn) and survey can move the light. Leading keeps the bump.
-  // Survey is a full ballot: the old 0.5 weight was a scale patch calibration
-  // now handles.
+  // Labor and output share one coincident ballot. Half weight so leading and
+  // survey can still move the needle. Leading may flip the word. Surveys may
+  // not: applySurveyCap keeps Strong/Soft off while coincident is still Mid.
   growth: {
     coincident: { ids: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"], weight: 0.5 },
     leading: { ids: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"], weight: 1.5 },
@@ -276,7 +274,8 @@ export function aggregateVotes(lid, voters, opts = {}) {
   if (!ballots.length) return null;
   const raw = applyStressFloor(lid, weightedTrimmedMean(ballots), ballots);
   if (opts.calibrate === false) return raw;
-  return calibrateLightScore(lid, raw, opts.dist || null);
+  const scored = calibrateLightScore(lid, raw, opts.dist || null);
+  return applySurveyCap(lid, scored, ballots);
 }
 
 /**
@@ -304,6 +303,25 @@ export function applyStressFloor(lid, score, ballots) {
     if (b.score <= STRESS_TRIGGER && (worst == null || b.score < worst)) worst = b.score;
   }
   return worst == null ? score : Math.min(score, worst);
+}
+
+/**
+ * Growth coincident is jobs, claims, GDP, activity. Regional factory surveys
+ * may slide the needle; they cannot flip Strong or Soft while coincident is
+ * still Mid. Leading is not gated. The lookback / chevron is not gated
+ * (impulse calls aggregateVotes with calibrate: false).
+ */
+export function applySurveyCap(lid, score, ballots) {
+  if (lid !== "growth" || score == null || !Number.isFinite(score)) return score;
+  const coincident = (ballots || []).find((b) => b.id === "family:coincident");
+  const survey = (ballots || []).find((b) => b.id === "family:survey");
+  if (!coincident || !survey) return score;
+  if (!Number.isFinite(coincident.score) || !Number.isFinite(survey.score)) return score;
+  if (Math.abs(coincident.score) > 0.45) return score;
+  if (Math.abs(survey.score) <= 0.45) return score;
+  if (score > 0.45) return 0.45;
+  if (score < -0.45) return -0.45;
+  return score;
 }
 
 function clamp(n, lo, hi) {
@@ -887,6 +905,34 @@ export function memberAnchorScore(m, now = Date.now()) {
   if (!isFreshEnoughToVote(m, now)) return null;
   const sc = m.anchor.score;
   return sc != null && Number.isFinite(sc) ? sc : null;
+}
+
+function clubMembers(snap, lid) {
+  const fromSeries = Object.values(snap?.series || {}).filter(
+    (m) => m && m.light === lid && m.status === "ok"
+  );
+  if (fromSeries.length) return fromSeries;
+  return (snap?.lights?.[lid]?.members || [])
+    .map((id) => snap.series?.[id])
+    .filter((m) => m && m.status === "ok");
+}
+
+/** Who is voting this component right now (score + ballots). Word/story live in light-copy.js. */
+export function clubLight(snap, lid, now = Date.now()) {
+  const members = clubMembers(snap, lid);
+  const voters = [];
+  for (const m of members) {
+    const sc = memberAnchorScore(m, now);
+    if (sc == null) continue;
+    const w = Math.max(1, Number(m.weight) || 1);
+    voters.push({ id: m.id, name: m.name, score: sc, weight: w, why: m.anchor?.why });
+  }
+  voters.sort((a, b) => b.score - a.score);
+  const score = aggregateVotes(lid, voters);
+  const state = lightStateFromScore(score).state;
+  const easy = voters.filter((v) => v.score > 0.45);
+  const tight = voters.filter((v) => v.score < -0.45);
+  return { score, state, voters, easy, tight, n: members.length };
 }
 
 export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {

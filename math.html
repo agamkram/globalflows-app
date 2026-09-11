@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/math.html" />
   <meta property="og:title" content="Math — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261062" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261062" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261064" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261064" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261062" />
+  <link rel="stylesheet" href="styles.css?v=20261064" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -234,7 +234,7 @@
         <ul class="about-steps">
           <li><strong>Liquidity</strong> — Fed GDP shares · funding cost · commercial paper · global CBs and the dollar · China credit × 0.5</li>
           <li><strong>Rates</strong> — real yields · nominal yields · the curve · bond vol</li>
-          <li><strong>Growth</strong> — coincident × 0.5 · leading × 1.5 · surveys</li>
+          <li><strong>Growth</strong> — coincident × 0.5 · leading × 1.5 · surveys. If coincident is Mid and surveys are past ±0.45, the word stays Mid; the needle may sit on the cliff. The chevron is not gated.</li>
           <li><strong>Inflation</strong> — realized × 2 · persistence · expectations</li>
           <li><strong>Risk</strong> — credit spreads · volatility</li>
         </ul>
@@ -268,6 +268,8 @@
         <h2>Duration risk and credit risk</h2>
         <p>
           Soft weight 0…1: off at ±0.2, fully on at the colour line ±0.45.
+          The six asset nets use these weights on the <em>score</em>, not only the
+          word — so Neutral Risk at +0.40 is almost fully Risk-on for every net.
           Positive net = that risk is falling. Call at ±0.35.
         </p>
         <p>
@@ -319,7 +321,7 @@ tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261062"></script>
+  <script type="module" src="about.js?v=20261064"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

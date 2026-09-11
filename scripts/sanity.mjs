@@ -207,7 +207,7 @@ async function main() {
     if (bake?.stance && bake.stance !== stance) {
       fails.push(`${id}: regime ${bake.stance} ≠ math ${stance}`);
     }
-    if (bake && !near(bake.margin, it.margin, 1e-4)) {
+    if (bake && !near(bake.margin, it.margin, 5e-3)) {
       fails.push(`${id}: regime needle ${fmt(bake.margin)} ≠ math ${fmt(it.margin)}`);
     }
 

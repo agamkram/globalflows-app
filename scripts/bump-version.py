@@ -22,6 +22,7 @@ SPOTS = {
     "math ?v=": (MATH, r"\?v=(\d+)", "?v={n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
+    "app light-copy ?v=": (APP, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),
 }
 
 

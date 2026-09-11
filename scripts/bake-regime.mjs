@@ -12,12 +12,12 @@ import { appendRegimeLog } from "./regime-log.mjs";
 import {
   buildLights,
   attachImpulse,
-  memberAnchorScore,
   lightStateFromScore,
   distanceToCliff,
-  aggregateVotes,
+  clubLight,
   DEFAULT_IMPULSE,
 } from "../score.js";
+import { LIGHT_IDS, LIGHT_WORD, lightSheet } from "../light-copy.js";
 import { loadLightDist } from "./load-light-dist.mjs";
 import { loadValCenter } from "./load-val-center.mjs";
 
@@ -26,111 +26,7 @@ const SNAP = path.join(ROOT, "snapshot.json");
 const OUT_DATA = path.join(ROOT, "data", "regime-today.json");
 const OUT_ROOT = path.join(ROOT, "regime-today.json");
 
-const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
-const WORD = {
-  liquidity: { easing: "Easing", neutral: "Neutral", tight: "Tightening" },
-  rates: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
-  growth: { easing: "Strong", neutral: "Mid", tight: "Soft" },
-  inflation: { easing: "Hot", neutral: "Mid", tight: "Cold" },
-  risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },
-};
-const COLOR = { easing: "green", neutral: "amber", tight: "red", empty: "gray" };
-
-function club(snap, lid) {
-  const members = (snap.lights?.[lid]?.members || [])
-    .map((id) => snap.series?.[id])
-    .filter((m) => m && m.status === "ok");
-  const voters = [];
-  for (const m of members) {
-    const sc = memberAnchorScore(m);
-    if (sc == null) continue;
-    const w = Math.max(1, Number(m.weight) || 1);
-    voters.push({ id: m.id, name: m.name, score: sc, weight: w, why: m.anchor?.why });
-  }
-  voters.sort((a, b) => b.score - a.score);
-  const score = aggregateVotes(lid, voters);
-  const state = lightStateFromScore(score).state;
-  const easy = voters.filter((v) => v.score > 0.45);
-  const tight = voters.filter((v) => v.score < -0.45);
-  return {
-    score,
-    state,
-    word: WORD[lid]?.[state] || state,
-    color: COLOR[state],
-    voters,
-    easy,
-    tight,
-    n: members.length,
-  };
-}
-
-function names(arr, n = 2) {
-  return arr.slice(0, n).map((v) => v.name).join(", ");
-}
-
-function teach(lid, c) {
-  const soft = names(c.easy, 2);
-  const hard = names(c.tight, 2);
-  const split =
-    c.easy.length && c.tight.length
-      ? ` Split: ${soft || "some"} lean easier; ${hard || "others"} lean tighter.`
-      : "";
-  let inflNote = split;
-  if (lid === "inflation") {
-    const pce = c.voters.find((v) => v.id === "PCEPILFE");
-    const bei = c.voters.find((v) => v.id === "T5YIFR");
-    if (pce && bei && pce.score > 0.45 && bei.score <= 0.45 && bei.score >= -0.45) {
-      inflNote =
-        " Core PCE is still high versus ~2%; 5y5y is anchored at the CPI-equivalent of target.";
-    } else if (pce && bei && pce.score > 0.45 && bei.score < -0.45) {
-      inflNote = " Split: core PCE still hot; the bond market is pricing cold.";
-    } else if (pce && bei && pce.score < -0.45 && bei.score > 0.45) {
-      inflNote = " Split: core PCE is cold; the bond market is pricing hot.";
-    }
-  }
-  let riskNote = split;
-  if (lid === "risk") {
-    const hy = c.voters.find((v) => v.id === "BAMLH0A0HYM2");
-    if (hy && hy.score >= 0.85) {
-      riskNote = " HY OAS is at cycle tights — calm, and not paid.";
-    }
-  }
-  const cliff = distanceToCliff(c.score);
-  const cliffNote =
-    cliff != null && cliff < 0.05
-      ? Math.abs(c.score) > 0.45
-        ? ` Only ${cliff.toFixed(2)} past a word flip.`
-        : ` Only ${cliff.toFixed(2)} from flipping the word.`
-      : "";
-  const by = {
-    liquidity: {
-      easing: `Cash looks ample on the level.${split}${cliffNote} Point: plumbing is not the scarce good.`,
-      neutral: `Cash looks neither clearly ample nor scarce.${split}${cliffNote} Point: liquidity isn’t the loud driver right now.`,
-      tight: `Cash looks scarce on the level.${split}${cliffNote} Point: funding/parking say less fuel in the pipes.`,
-    },
-    rates: {
-      easing: `Real funding looks easy.${split}${cliffNote} Point: money is cheap to fund with.`,
-      neutral: `Real funding looks mixed.${split}${cliffNote} Point: not clearly cheap or dear.`,
-      tight: `Real funding looks tight.${split}${cliffNote} Point: you are being paid to wait in cash, not in duration.`,
-    },
-    growth: {
-      easing: `Activity looks firm versus full employment / trend.${split}${cliffNote} Point: the real side is holding up.`,
-      neutral: `Activity looks mixed versus trend.${split}${cliffNote} Point: no clean boom or bust.`,
-      tight: `Activity looks soft versus trend.${split}${cliffNote} Point: demand/labor are under pressure.`,
-    },
-    inflation: {
-      easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — the impulse row says if it’s cooling.`,
-      neutral: `Prices are near the target band.${inflNote}${cliffNote} Point: no clean hot or cold call.`,
-      tight: `Prices are cold versus ~2%.${inflNote}${cliffNote} Point: inflation is not the tax right now.`,
-    },
-    risk: {
-      easing: `Fear is cheap on the gauges.${riskNote}${cliffNote} Point: vol and credit are quiet.`,
-      neutral: `Fear gauges look mixed.${riskNote}${cliffNote} Point: not a clear risk-on or risk-off tape.`,
-      tight: `Markets are paying up for fear.${riskNote}${cliffNote} Point: vol/credit stress is elevated.`,
-    },
-  };
-  return by[lid]?.[c.state] || `${c.word}.`;
-}
+const LIGHTS = LIGHT_IDS;
 
 function headline(lights) {
   return `Cash ${lights.liquidity.word.toLowerCase()}, borrowing ${lights.rates.word.toLowerCase()}, growth ${lights.growth.word.toLowerCase()}, inflation ${lights.inflation.word.toLowerCase()}, risk ${lights.risk.word.toLowerCase()}.`;
@@ -157,7 +53,8 @@ async function main() {
 
   const lights = {};
   for (const lid of LIGHTS) {
-    const c = club(snap, lid);
+    const c = clubLight(snap, lid);
+    const sheet = lightSheet(lid, { ...c, cliff: distanceToCliff(c.score) });
     if (!c.n) fails.push(`${lid}: no members`);
     if (!c.voters.length) fails.push(`${lid}: no anchor voters`);
     if (lightStateFromScore(c.score).state !== c.state) fails.push(`${lid}: lock broken`);
@@ -169,12 +66,12 @@ async function main() {
       id: lid,
       label: snap.lights?.[lid]?.label || lid,
       state: c.state,
-      word: c.word,
+      word: sheet.word,
       score: c.score,
-      cliff: distanceToCliff(c.score),
-      color: c.color,
+      cliff: sheet.cliff,
+      color: sheet.color,
       n: c.n,
-      teach: teach(lid, c),
+      teach: sheet.teach,
       voters: c.voters.map((v) => ({
         id: v.id,
         name: v.name,
@@ -191,7 +88,7 @@ async function main() {
       {
         state: rebuilt[id].state,
         word: lights[id].word,
-        words: WORD[id],
+        words: LIGHT_WORD[id],
         // Continuous checklist reads the score, not only the painted word.
         score: lights[id].score ?? rebuilt[id].score,
         impulse: rebuilt[id].impulse,

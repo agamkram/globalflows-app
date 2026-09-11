@@ -618,12 +618,15 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   }
   if (cotZ < -0.45) goldOutParts.push("speculative longs are crowded");
   let goldMix = "Gold has no clean job right now.";
-  if (realHigh && easeW(iSc) <= 0.55 && !goldCrisis && !(goldDrain && !dolStrong)) {
+  if (goldInParts.length && goldOutParts.length) {
+    goldMix = `${joinEnglish(goldInParts)}; ${joinEnglish(goldOutParts)} — not a clean overweight.`;
+    goldMix = goldMix.charAt(0).toUpperCase() + goldMix.slice(1);
+  } else if (realHigh && easeW(iSc) <= 0.55 && !goldCrisis && !(goldDrain && !dolStrong)) {
     goldMix =
       "Real yields are high without hot inflation or a crisis bid — not a clean gold overweight.";
   } else if (dolStrong && !goldCrisis && !realLow) {
     goldMix = "The dollar is rising — gold rarely leads that mix without a crisis bid.";
-  } else if (!goldCrisis && !(goldDrain && !dolStrong)) {
+  } else if (!goldCrisis && !(goldDrain && !dolStrong) && !goldInParts.length) {
     goldMix = "Gold has no job right now — don’t treat it as a liquidity vote.";
   }
   const goldNet =
