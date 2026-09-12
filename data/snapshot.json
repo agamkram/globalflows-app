@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T16:46:44.837Z",
+  "generatedAt": "2026-09-11T18:05:09.651Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -154,7 +154,7 @@
   ],
   "lightDist": {
     "version": 1,
-    "fittedAt": "2026-09-11T16:47:05.701Z",
+    "fittedAt": "2026-09-11T18:05:33.894Z",
     "n": 5961,
     "refSd": 0.4963,
     "lights": {
@@ -203,9 +203,9 @@
       "id": "liquidity",
       "label": "Liquidity",
       "state": "neutral",
-      "score": -0.1603270506161907,
-      "n": 7,
-      "nAnchor": 7,
+      "score": -0.16835901896242683,
+      "n": 6,
+      "nAnchor": 6,
       "words": {
         "easing": "Easing",
         "neutral": "Neutral",
@@ -213,7 +213,6 @@
       },
       "members": [
         "CHINA_CREDIT_GDP",
-        "CPFF",
         "SOFR_SPREAD",
         "RESERVES_GDP",
         "NETLIQ_GDP",
@@ -222,7 +221,6 @@
       ],
       "impulseMembers": [
         "CHINA_CREDIT_GDP",
-        "CPFF",
         "SOFR_SPREAD",
         "RESERVES_GDP",
         "NETLIQ_GDP",
@@ -240,7 +238,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.6800569581910111,
+        "score": 0.674461514846292,
         "dir": "up"
       },
       "word": "Neutral"
@@ -336,7 +334,7 @@
       "id": "inflation",
       "label": "Inflation",
       "state": "easing",
-      "score": 0.49099014393108353,
+      "score": 0.4899257627867177,
       "n": 6,
       "nAnchor": 6,
       "words": {
@@ -363,7 +361,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": -0.18707905951963605,
+        "score": -0.17504273201963608,
         "dir": "flat"
       },
       "word": "Hot"
@@ -372,7 +370,7 @@
       "id": "risk",
       "label": "Risk",
       "state": "easing",
-      "score": 0.6112570371634765,
+      "score": 0.6268214690419925,
       "n": 4,
       "nAnchor": 4,
       "words": {
@@ -395,7 +393,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.014687500000000048,
+        "score": 0.033437482118606615,
         "dir": "flat"
       },
       "word": "Risk-on"
@@ -458,6 +456,20 @@
           "score": -0.07369501228299656,
           "prior": 6748567,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 15222,
+          "dir": "flat",
+          "score": 0.14114059851179842,
+          "prior": 6725397,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 94275,
+          "dir": "up",
+          "score": 0.8741315152213766,
+          "prior": 6646344,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -513,6 +525,20 @@
           "score": -0.042602572117232916,
           "prior": 2993349,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -89413,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3080723,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -46355,
+          "dir": "down",
+          "score": -0.9685346888152683,
+          "prior": 3037665,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -568,6 +594,20 @@
           "score": -1.5,
           "prior": 1.25,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 4.276,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 0.46,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 4.599,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 0.137,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -623,6 +663,20 @@
           "score": 1.5,
           "prior": 907324,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 55213,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 828122,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 45149,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 838186,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -632,56 +686,30 @@
       "id": "WSHOSHO",
       "name": "Fed securities held",
       "layer": "liquidity",
-      "street": "liquidity",
-      "causal": "liquidity",
       "units": "USD mn",
       "freq": "weekly",
       "sign": 1,
       "light": null,
       "impulseLight": null,
       "weight": 1,
-      "marketBucket": null,
-      "order": null,
       "note": "Securities the Fed holds outright (QE stock). Core of balance-sheet liquidity.",
-      "sub": "QE bonds Fed still owns",
-      "search": "WSHOSHO",
       "freshness": "live",
-      "source": "FRED API",
+      "source": "fred",
       "sourceUrl": "https://fred.stlouisfed.org/series/WSHOSHO",
-      "latest": 6468269,
-      "asOf": "2026-09-09",
-      "n": 1239,
+      "latest": null,
+      "asOf": null,
+      "n": 0,
       "anchor": {
         "kind": "none",
         "score": null,
-        "why": "no level anchor — flow/impulse only",
+        "why": "empty",
         "votes": false
       },
-      "impulse": {
-        "1w": {
-          "delta": -9,
-          "dir": "flat",
-          "score": -0.00008696298808846695,
-          "prior": 6468278,
-          "priorDate": "2026-09-02"
-        },
-        "2w": {
-          "delta": 6168,
-          "dir": "flat",
-          "score": 0.059598634503296014,
-          "prior": 6462101,
-          "priorDate": "2026-08-26"
-        },
-        "1m": {
-          "delta": 5109,
-          "dir": "flat",
-          "score": 0.04936598957155307,
-          "prior": 6463160,
-          "priorDate": "2026-08-05"
-        }
-      },
-      "status": "ok",
-      "staleDays": 2
+      "impulse": null,
+      "status": "empty",
+      "error": "502 Bad Gateway for https://api.stlouisfed.org/fred/series/observations?series_id=WSHOSHO&api_key=be001e0778d9ba47fbba0ab3d2f3e1de&file_type=json&observation_start=1990-01-01",
+      "street": "liquidity",
+      "causal": "liquidity"
     },
     "M2SL": {
       "id": "M2SL",
@@ -733,6 +761,20 @@
           "score": 0.2767249547764646,
           "prior": 23115.2,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 461.2999999999993,
+          "dir": "up",
+          "score": 1.2417628564045118,
+          "prior": 22756.7,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 804.5999999999985,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 22413.4,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -788,6 +830,20 @@
           "score": 0.5826700561726187,
           "prior": 13903.0305,
           "priorDate": "2026-07-22"
+        },
+        "3m": {
+          "delta": 214.95379999999932,
+          "dir": "up",
+          "score": 0.9572995871137188,
+          "prior": 13818.9105,
+          "priorDate": "2026-05-27"
+        },
+        "6m": {
+          "delta": 486.27399999999943,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 13547.5903,
+          "priorDate": "2026-02-25"
         }
       },
       "status": "ok",
@@ -844,6 +900,20 @@
           "score": -0.186752988047807,
           "prior": 201.4,
           "priorDate": "2025-07-01"
+        },
+        "3m": {
+          "delta": -0.5999999999999943,
+          "dir": "flat",
+          "score": -0.186752988047807,
+          "prior": 201.4,
+          "priorDate": "2025-07-01"
+        },
+        "6m": {
+          "delta": -1,
+          "dir": "down",
+          "score": -0.3112549800796813,
+          "prior": 201.8,
+          "priorDate": "2025-04-01"
         }
       },
       "status": "ok",
@@ -899,6 +969,20 @@
           "score": 1.3154674374135107,
           "prior": 2894.6884,
           "priorDate": "2026-07-22"
+        },
+        "3m": {
+          "delta": 58.160699999999906,
+          "dir": "up",
+          "score": 1.22933274718371,
+          "prior": 2898.7635,
+          "priorDate": "2026-05-27"
+        },
+        "6m": {
+          "delta": 169.98019999999997,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2786.944,
+          "priorDate": "2026-02-25"
         }
       },
       "status": "ok",
@@ -954,6 +1038,20 @@
           "score": 0.8821932317073966,
           "prior": 38514009,
           "priorDate": "2025-10-01"
+        },
+        "3m": {
+          "delta": 551412,
+          "dir": "up",
+          "score": 0.8821932317073966,
+          "prior": 38514009,
+          "priorDate": "2025-10-01"
+        },
+        "6m": {
+          "delta": 1427868.40444237,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 37637552.59555763,
+          "priorDate": "2025-07-01"
         }
       },
       "status": "ok",
@@ -1009,6 +1107,20 @@
           "score": -0.48588355558318824,
           "prior": 3509458.162625652,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 74016.75681858975,
+          "dir": "up",
+          "score": 1.32841327923102,
+          "prior": 3408368.863294862,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": 57513.03729550773,
+          "dir": "up",
+          "score": 1.032213322444206,
+          "prior": 3424872.582817944,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -1064,6 +1176,20 @@
           "score": -0.3073106053302184,
           "prior": 5941248,
           "priorDate": "2026-07-31"
+        },
+        "3m": {
+          "delta": -224139,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 6136317,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": -264286,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 6176464,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -1119,6 +1245,20 @@
           "score": 0.035512795852710416,
           "prior": 6442957,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -197010,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 6643630,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -391085,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 6837705,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -1174,6 +1314,20 @@
           "score": 0.2500000000000002,
           "prior": 3.64,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.020000000000000018,
+          "dir": "up",
+          "score": -0.2500000000000002,
+          "prior": 3.6,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.029999999999999805,
+          "dir": "down",
+          "score": 0.37499999999999756,
+          "prior": 3.65,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -1229,6 +1383,20 @@
           "score": 0,
           "prior": 3.63,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.009999999999999787,
+          "dir": "flat",
+          "score": -0.12499999999999734,
+          "prior": 3.62,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": 0.1250000000000029,
+          "prior": 3.64,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1238,56 +1406,30 @@
       "id": "CPFF",
       "name": "Commercial paper stress",
       "layer": "liquidity",
-      "street": "liquidity",
-      "causal": "liquidity",
       "units": "%",
       "freq": "daily",
       "sign": -1,
       "light": "liquidity",
       "impulseLight": null,
       "weight": 1,
-      "marketBucket": null,
-      "order": null,
       "note": "90-day AA financial commercial paper minus the fed funds rate — what it costs a bank or a large company to roll unsecured short-term debt, over the policy rate. The price of funding rather than the quantity of reserves, which is why it stays honest in a crisis: 242bp at the October 2008 peak and 197bp in March 2020, against 22bp today. Daily from 1997, so it covers the whole 2003 archive. Band is the measured 2003-2026 distribution: 3bp is the 25th percentile, 21bp the 75th, 75bp roughly the 97th — normal variation reads neutral and only genuine stress reads tight.",
-      "sub": "3-month commercial paper vs fed funds",
-      "search": "CPFF",
       "freshness": "live",
-      "source": "FRED API",
+      "source": "fred",
       "sourceUrl": "https://fred.stlouisfed.org/series/CPFF",
-      "latest": 0.21,
-      "asOf": "2026-09-09",
-      "n": 6744,
+      "latest": null,
+      "asOf": null,
+      "n": 0,
       "anchor": {
-        "kind": "cp_ff",
-        "score": 0,
-        "why": "commercial paper 21bp over fed funds — 21bp is typical, 242bp was October 2008",
-        "votes": true
+        "kind": "none",
+        "score": null,
+        "why": "empty",
+        "votes": false
       },
-      "impulse": {
-        "1w": {
-          "delta": 0.03,
-          "dir": "up",
-          "score": -0.375,
-          "prior": 0.18,
-          "priorDate": "2026-09-02"
-        },
-        "2w": {
-          "delta": 0.03999999999999998,
-          "dir": "up",
-          "score": -0.4999999999999997,
-          "prior": 0.17,
-          "priorDate": "2026-08-24"
-        },
-        "1m": {
-          "delta": -0.060000000000000026,
-          "dir": "down",
-          "score": 0.7500000000000003,
-          "prior": 0.27,
-          "priorDate": "2026-08-10"
-        }
-      },
-      "status": "ok",
-      "staleDays": 2
+      "impulse": null,
+      "status": "empty",
+      "error": "502 Bad Gateway for https://api.stlouisfed.org/fred/series/observations?series_id=CPFF&api_key=be001e0778d9ba47fbba0ab3d2f3e1de&file_type=json&observation_start=1990-01-01",
+      "street": "liquidity",
+      "causal": "liquidity"
     },
     "DFEDTAR": {
       "id": "DFEDTAR",
@@ -1339,6 +1481,20 @@
           "score": 0,
           "prior": 1,
           "priorDate": "2008-11-15"
+        },
+        "3m": {
+          "delta": -1,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 2,
+          "priorDate": "2008-09-15"
+        },
+        "6m": {
+          "delta": -1,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 2,
+          "priorDate": "2008-06-16"
         }
       },
       "status": "stale",
@@ -1394,6 +1550,20 @@
           "score": -0.7500000000000007,
           "prior": 3.89,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.16000000000000014,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.79,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.2400000000000002,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.71,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1449,6 +1619,20 @@
           "score": -1.5,
           "prior": 4.25,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.2999999999999998,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.13,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.7899999999999996,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.64,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1504,6 +1688,20 @@
           "score": -1.5,
           "prior": 4.41,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.34000000000000075,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.27,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.8200000000000003,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.79,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1559,6 +1757,20 @@
           "score": -1.375000000000004,
           "prior": 4.72,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.28000000000000025,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.55,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.6200000000000001,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.21,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1614,6 +1826,20 @@
           "score": -0.3551136363636393,
           "prior": 5.25,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.25,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 5.03,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.41999999999999993,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.86,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1669,6 +1895,20 @@
           "score": -1.1249999999999996,
           "prior": 0.48,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": -0.010000000000000009,
+          "dir": "flat",
+          "score": -0.1250000000000001,
+          "prior": 0.4,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.12,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 0.51,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -1724,6 +1964,20 @@
           "score": 1.5,
           "prior": 0.81,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.2799999999999999,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 0.67,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.3999999999999999,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 0.55,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -1779,6 +2033,20 @@
           "score": -0.5000000000000004,
           "prior": 2.16,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.3700000000000001,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 1.83,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.9900000000000002,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 1.21,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1834,6 +2102,20 @@
           "score": -0.37499999999999756,
           "prior": 2.43,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.25,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.21,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.6099999999999999,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 1.85,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -1889,6 +2171,20 @@
           "score": 1.5,
           "prior": 2.23,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.06000000000000005,
+          "dir": "up",
+          "score": 0.7500000000000007,
+          "prior": 2.4,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.16999999999999993,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.63,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -1944,6 +2240,20 @@
           "score": 1.5,
           "prior": 2.27,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.10999999999999988,
+          "dir": "up",
+          "score": 1.3749999999999984,
+          "prior": 2.29,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.020000000000000018,
+          "dir": "up",
+          "score": 0.2500000000000002,
+          "prior": 2.38,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -1999,6 +2309,20 @@
           "score": 0.09374999999999939,
           "prior": 2.31,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.1599999999999997,
+          "dir": "up",
+          "score": 0.49999999999999906,
+          "prior": 2.18,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.20999999999999996,
+          "dir": "up",
+          "score": 0.6562499999999999,
+          "prior": 2.13,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -2054,6 +2378,20 @@
           "score": 0.6960195031556665,
           "prior": 119.3881,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -2.009900000000002,
+          "dir": "down",
+          "score": 1.063905695788715,
+          "prior": 120.0831,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": -1.4177999999999997,
+          "dir": "down",
+          "score": 0.7504878329714108,
+          "prior": 119.491,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -2109,6 +2447,20 @@
           "score": -0.23672055427251534,
           "prior": 107.84,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 1.2800000000000011,
+          "dir": "up",
+          "score": -0.7390300230946889,
+          "prior": 106.97,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 1.9000000000000057,
+          "dir": "up",
+          "score": -1.0969976905311811,
+          "prior": 106.35,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -2164,6 +2516,20 @@
           "score": 0.9562499999999974,
           "prior": 3.0465,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0.06000000000000005,
+          "dir": "up",
+          "score": -0.7500000000000007,
+          "prior": 2.91,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": 0.15578947370000007,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.8142105263,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -2219,6 +2585,20 @@
           "score": 1.5,
           "prior": 4.9416,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0.09529999999999994,
+          "dir": "up",
+          "score": -1.1912499999999993,
+          "prior": 4.7007,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": 0.31340000000000057,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.4826,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -2274,6 +2654,20 @@
           "score": -0.2500000000000002,
           "prior": 2.65,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0.32499999999999973,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.345,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": 0.6099999999999999,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.06,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -2329,6 +2723,20 @@
           "score": -1.5,
           "prior": 3.18,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.5,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.03,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.5599999999999996,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.97,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2384,6 +2792,20 @@
           "score": -1.5,
           "prior": 4.4979,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.2812999999999999,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.4537,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.5912000000000006,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 4.1438,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -2439,6 +2861,20 @@
           "score": -1.3124999999999998,
           "prior": 2.815,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.238,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.682,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.7189999999999999,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 2.201,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -2494,6 +2930,20 @@
           "score": -1.5,
           "prior": 77.91999816894531,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 12.639999389648438,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 69.44999694824219,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -13.210006713867188,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 95.30000305175781,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -2519,7 +2969,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DX-Y.NYB",
-      "latest": 99.06900024414062,
+      "latest": 99.09600067138672,
       "asOf": "2026-09-11",
       "n": 11898,
       "anchor": {
@@ -2530,25 +2980,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.09100341796875,
+          "delta": -0.06400299072265625,
           "dir": "flat",
-          "score": 0.057411638444219294,
+          "score": 0.040366784664005534,
           "prior": 99.16000366210938,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.6309967041015625,
+          "delta": -0.6039962768554688,
           "dir": "down",
-          "score": 0.39807905509453395,
+          "score": 0.38094138055731624,
           "prior": 99.69999694824219,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.9410018920898438,
+          "delta": -0.91400146484375,
           "dir": "down",
-          "score": 0.5936530913876227,
+          "score": 0.5764621293059796,
           "prior": 100.01000213623047,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.6539993286132812,
+          "dir": "down",
+          "score": 0.4124783821889639,
+          "prior": 99.75,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.2639999389648438,
+          "dir": "down",
+          "score": 0.7972067051149263,
+          "prior": 100.36000061035156,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2574,7 +3038,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EURUSD=X",
-      "latest": 1.1603620052337646,
+      "latest": 1.1602274179458618,
       "asOf": "2026-09-11",
       "n": 5912,
       "anchor": {
@@ -2585,25 +3049,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.002469301223754883,
+          "delta": -0.002603888511657715,
           "dir": "flat",
-          "score": -0.030866265296936035,
+          "score": -0.032548606395721436,
           "prior": 1.1628313064575195,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -0.00527501106262207,
+          "delta": -0.005409598350524902,
           "dir": "flat",
-          "score": -0.06593763828277588,
+          "score": -0.06761997938156128,
           "prior": 1.1656370162963867,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": 0.007358431816101074,
+          "delta": 0.007223844528198242,
           "dir": "flat",
-          "score": 0.09198039770126343,
+          "score": 0.09029805660247803,
           "prior": 1.1530035734176636,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.0026324987411499023,
+          "dir": "flat",
+          "score": 0.03290623426437378,
+          "prior": 1.157594919204712,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.008060812950134277,
+          "dir": "flat",
+          "score": 0.10076016187667847,
+          "prior": 1.1521666049957275,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2629,7 +3107,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/JPY=X",
-      "latest": 153.6719970703125,
+      "latest": 153.677001953125,
       "asOf": "2026-09-11",
       "n": 7746,
       "anchor": {
@@ -2640,25 +3118,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.988006591796875,
+          "delta": -1.983001708984375,
           "dir": "down",
-          "score": 0.8085429639497299,
+          "score": 0.806481160071871,
           "prior": 155.66000366210938,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -5.6490020751953125,
+          "delta": -5.6439971923828125,
           "dir": "down",
           "score": 1.5,
           "prior": 159.3209991455078,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": -5.656005859375,
+          "delta": -5.6510009765625,
           "dir": "down",
           "score": 1.5,
           "prior": 159.3280029296875,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -6.4530029296875,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 160.1300048828125,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -5.52899169921875,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 159.20599365234375,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2714,6 +3206,20 @@
           "score": 0.43773328180723586,
           "prior": 6.743299961090088,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.07909965515136719,
+          "dir": "down",
+          "score": 0.7382665797644425,
+          "prior": 6.7754998207092285,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.1724996566772461,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 6.868899822235107,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2739,7 +3245,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/GBPUSD=X",
-      "latest": 1.3522101640701294,
+      "latest": 1.352630853652954,
       "asOf": "2026-09-11",
       "n": 5924,
       "anchor": {
@@ -2750,25 +3256,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.0009697675704956055,
+          "delta": -0.0005490779876708984,
           "dir": "flat",
-          "score": -0.012122094631195068,
+          "score": -0.0068634748458862305,
           "prior": 1.353179931640625,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -0.007501482963562012,
+          "delta": -0.007080793380737305,
           "dir": "flat",
-          "score": -0.09376853704452515,
+          "score": -0.08850991725921631,
           "prior": 1.3597116470336914,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": 0.0024274587631225586,
+          "delta": 0.0028481483459472656,
           "dir": "flat",
-          "score": 0.030343234539031982,
+          "score": 0.03560185432434082,
           "prior": 1.3497827053070068,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.011249303817749023,
+          "dir": "flat",
+          "score": 0.1406162977218628,
+          "prior": 1.341381549835205,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.017380118370056152,
+          "dir": "flat",
+          "score": 0.2172514796257019,
+          "prior": 1.335250735282898,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2794,7 +3314,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/AUDUSD=X",
-      "latest": 0.7178235650062561,
+      "latest": 0.7177205085754395,
       "asOf": "2026-09-11",
       "n": 5288,
       "anchor": {
@@ -2805,25 +3325,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.002306520938873291,
+          "delta": -0.0024095773696899414,
           "dir": "flat",
-          "score": -0.028831511735916138,
+          "score": -0.030119717121124268,
           "prior": 0.7201300859451294,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -0.0016863346099853516,
+          "delta": -0.001789391040802002,
           "dir": "flat",
-          "score": -0.021079182624816895,
+          "score": -0.022367388010025024,
           "prior": 0.7195098996162415,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": 0.011433780193328857,
+          "delta": 0.011330723762512207,
           "dir": "flat",
-          "score": 0.14292225241661072,
+          "score": 0.1416340470314026,
           "prior": 0.7063897848129272,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.012930333614349365,
+          "dir": "flat",
+          "score": 0.16162917017936707,
+          "prior": 0.7047901749610901,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.01019066572189331,
+          "dir": "flat",
+          "score": 0.12738332152366638,
+          "prior": 0.7075298428535461,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2849,7 +3383,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/MXN=X",
-      "latest": 16.968000411987305,
+      "latest": 16.957000732421875,
       "asOf": "2026-09-11",
       "n": 5933,
       "anchor": {
@@ -2860,25 +3394,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.05784034729003906,
+          "delta": 0.046840667724609375,
           "dir": "flat",
-          "score": -0.21304936455998394,
+          "score": -0.17264502012968663,
           "prior": 16.910160064697266,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": 0.0045013427734375,
+          "delta": -0.0064983367919921875,
           "dir": "flat",
-          "score": -0.01658026382066157,
+          "score": 0.023951526328766282,
           "prior": 16.963499069213867,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": -0.09090042114257812,
+          "delta": -0.10190010070800781,
           "dir": "down",
-          "score": 0.33482297168012254,
+          "score": 0.3755827103358787,
           "prior": 17.058900833129883,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.2896099090576172,
+          "dir": "down",
+          "score": 1.0674422677527278,
+          "prior": 17.246610641479492,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.8772983551025391,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 17.834299087524414,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -2904,40 +3452,54 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/STICKCPIM159SFRBATL",
-      "latest": 2.76315474,
-      "asOf": "2026-07-01",
-      "n": 439,
+      "latest": 2.741335256,
+      "asOf": "2026-08-01",
+      "n": 440,
       "anchor": {
         "kind": "cpi_yoy",
-        "score": 0.38157737,
-        "why": "2.8% YoY vs ~2% target",
+        "score": 0.3706676280000001,
+        "why": "2.7% YoY vs ~2% target",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": -0.0795938559999998,
+          "delta": -0.02181948399999989,
           "dir": "flat",
-          "score": -0.24873079999999936,
-          "prior": 2.842748596,
-          "priorDate": "2026-06-01"
+          "score": -0.06818588749999965,
+          "prior": 2.76315474,
+          "priorDate": "2026-07-01"
         },
         "2w": {
-          "delta": -0.0795938559999998,
+          "delta": -0.02181948399999989,
           "dir": "flat",
-          "score": -0.24873079999999936,
-          "prior": 2.842748596,
-          "priorDate": "2026-06-01"
+          "score": -0.06818588749999965,
+          "prior": 2.76315474,
+          "priorDate": "2026-07-01"
         },
         "1m": {
-          "delta": -0.0795938559999998,
+          "delta": -0.02181948399999989,
           "dir": "flat",
-          "score": -0.24873079999999936,
-          "prior": 2.842748596,
-          "priorDate": "2026-06-01"
+          "score": -0.06818588749999965,
+          "prior": 2.76315474,
+          "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.3762008899999998,
+          "dir": "down",
+          "score": -1.1756277812499993,
+          "prior": 3.117536146,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.22674018299999998,
+          "dir": "down",
+          "score": -0.7085630718749999,
+          "prior": 2.968075439,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
-      "staleDays": 72
+      "staleDays": 41
     },
     "INDPRO": {
       "id": "INDPRO",
@@ -2989,6 +3551,20 @@
           "score": 0.12567491861168292,
           "prior": 102.7868,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 0.47409999999999286,
+          "dir": "up",
+          "score": 0.2876990773239925,
+          "prior": 102.5198,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 1.9551000000000016,
+          "dir": "up",
+          "score": 1.186417350930493,
+          "prior": 101.0388,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3044,6 +3620,20 @@
           "score": 1.5,
           "prior": 21,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": 99,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 63,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 318,
+          "dir": "up",
+          "score": 1.5,
+          "prior": -156,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -3099,6 +3689,20 @@
           "score": 0,
           "prior": 4.1,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.20000000000000018,
+          "dir": "down",
+          "score": 1.0000000000000009,
+          "prior": 4.3,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.3000000000000007,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 4.4,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -3154,6 +3758,20 @@
           "score": 1.0964912280701715,
           "prior": 5.8,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 5.7,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": -0.09999999999999964,
+          "dir": "down",
+          "score": 1.0964912280701715,
+          "prior": 5.8,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -3209,6 +3827,20 @@
           "score": 0,
           "prior": 2.5,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": -0.20000000000000018,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 2.7,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": -0.10000000000000009,
+          "dir": "down",
+          "score": 1.250000000000001,
+          "prior": 2.6,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -3264,6 +3896,20 @@
           "score": -1.5,
           "prior": 200000,
           "priorDate": "2026-08-01"
+        },
+        "3m": {
+          "delta": -24000,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 230000,
+          "priorDate": "2026-06-06"
+        },
+        "6m": {
+          "delta": -7000,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 213000,
+          "priorDate": "2026-03-07"
         }
       },
       "status": "ok",
@@ -3319,6 +3965,20 @@
           "score": 0.8807779030439684,
           "prior": 1799000,
           "priorDate": "2026-07-25"
+        },
+        "3m": {
+          "delta": -12000,
+          "dir": "down",
+          "score": 0.4227733934611049,
+          "prior": 1786000,
+          "priorDate": "2026-05-30"
+        },
+        "6m": {
+          "delta": -73000,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 1847000,
+          "priorDate": "2026-02-28"
         }
       },
       "status": "ok",
@@ -3374,6 +4034,20 @@
           "score": 1.5,
           "prior": -0.3053858967240419,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -4.293729751915243,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 6.861087630318408,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 5.137671429742152,
+          "dir": "up",
+          "score": 1.5,
+          "prior": -2.5703135513389874,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3429,6 +4103,20 @@
           "score": -1.250000000000001,
           "prior": 2,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 1.9,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": -0.10000000000000009,
+          "dir": "down",
+          "score": -1.250000000000001,
+          "prior": 2,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3484,6 +4172,20 @@
           "score": -0.46809550864918004,
           "prior": 3.2355360570331726,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.24942539878858305,
+          "dir": "down",
+          "score": -0.779454371214322,
+          "prior": 3.335170893054018,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.6148666370645817,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.7006121313300167,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -3539,6 +4241,20 @@
           "score": -0.36586467819623314,
           "prior": 768072,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 4505,
+          "dir": "up",
+          "score": 0.3687293904416175,
+          "prior": 759097,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 29099,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 734503,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3594,6 +4310,20 @@
           "score": 1.5,
           "prior": 7.7039783680447504,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -5.7969444468320095,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 17.7956772539283,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 2.115321347421494,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 9.883411459674797,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3649,6 +4379,20 @@
           "score": -1.5,
           "prior": 1415,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -175,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1414,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": -146,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1385,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3704,6 +4448,20 @@
           "score": 1.5,
           "prior": 1374,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 10,
+          "dir": "up",
+          "score": 0.43614794138171664,
+          "prior": 1423,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 40,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1393,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3759,6 +4517,20 @@
           "score": 0.15362585015415986,
           "prior": 3.303856050706311,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.813598361293999,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 4.166614684049641,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 0.9190122123824196,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.4340041103732224,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -3814,6 +4586,20 @@
           "score": -0.06360815807397724,
           "prior": 2.4665177892309265,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.37677888496376877,
+          "dir": "down",
+          "score": -1.1774340155117773,
+          "prior": 2.8229420636110225,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.026299298116772007,
+          "dir": "flat",
+          "score": -0.08218530661491252,
+          "prior": 2.4724624767640258,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -3869,6 +4655,20 @@
           "score": -0.04939012809297705,
           "prior": 3.71697056247684,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -0.10065750483079228,
+          "dir": "down",
+          "score": -0.31455470259622587,
+          "prior": 3.8018232263178797,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 0.8259574163928862,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.8752083050942012,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3924,6 +4724,20 @@
           "score": 0.0016516830006474414,
           "prior": 3.343614465473621,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 0.014315590924862676,
+          "dir": "flat",
+          "score": 0.04473622164019586,
+          "prior": 3.3298274131089656,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 0.23948521469785433,
+          "dir": "up",
+          "score": 0.7483912959307948,
+          "prior": 3.104657789335974,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -3979,6 +4793,20 @@
           "score": -1.2499999999999982,
           "prior": 4.6,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -0.5,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 4.7,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 0.20000000000000018,
+          "dir": "up",
+          "score": 0.6250000000000006,
+          "prior": 4,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -4034,6 +4862,20 @@
           "score": -1.5,
           "prior": 2.684743341425966,
           "priorDate": "2026-01-01"
+        },
+        "3m": {
+          "delta": -0.5870717944099546,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.684743341425966,
+          "priorDate": "2026-01-01"
+        },
+        "6m": {
+          "delta": 0.10837188621792837,
+          "dir": "up",
+          "score": 1.3546485777241046,
+          "prior": 1.9892996607980828,
+          "priorDate": "2025-10-01"
         }
       },
       "status": "ok",
@@ -4089,6 +4931,20 @@
           "score": 1.5,
           "prior": 6.0701722278988735,
           "priorDate": "2026-01-01"
+        },
+        "3m": {
+          "delta": 0.49137990031167256,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 6.0701722278988735,
+          "priorDate": "2026-01-01"
+        },
+        "6m": {
+          "delta": 1.2058631000597675,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 5.3556890281507785,
+          "priorDate": "2025-10-01"
         }
       },
       "status": "ok",
@@ -4114,7 +4970,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HG=F",
-      "latest": 6.552499771118164,
+      "latest": 6.55049991607666,
       "asOf": "2026-09-11",
       "n": 6537,
       "anchor": {
@@ -4125,25 +4981,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.04450035095214844,
+          "delta": -0.046500205993652344,
           "dir": "down",
-          "score": -0.4244596767127642,
+          "score": -0.4436703933802874,
           "prior": 6.5970001220703125,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.00950002670288086,
+          "delta": -0.011499881744384766,
           "dir": "flat",
-          "score": -0.09061452722931294,
+          "score": -0.10972332161398297,
           "prior": 6.561999797821045,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.04450035095214844,
+          "delta": -0.046500205993652344,
           "dir": "down",
-          "score": -0.4244596767127642,
+          "score": -0.4436703933802874,
           "prior": 6.5970001220703125,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.11999988555908203,
+          "dir": "up",
+          "score": 1.144949689875678,
+          "prior": 6.430500030517578,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.8359999656677246,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 5.7144999504089355,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4169,36 +5039,50 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EVIX",
-      "latest": 15.800000190734863,
+      "latest": 15.680000305175781,
       "asOf": "2026-09-11",
       "n": 9243,
       "anchor": {
         "kind": "vix",
-        "score": 0.2399999618530273,
-        "why": "VIX 15.8",
+        "score": 0.26399993896484375,
+        "why": "VIX 15.7",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 1.2700004577636719,
+          "delta": 1.1500005722045898,
           "dir": "up",
-          "score": -0.39687514305114746,
+          "score": -0.3593751788139343,
           "prior": 14.529999732971191,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 1.369999885559082,
+          "delta": 1.25,
           "dir": "up",
-          "score": -0.42812496423721313,
+          "score": -0.390625,
           "prior": 14.430000305175781,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 1.25,
+          "delta": 1.130000114440918,
           "dir": "up",
-          "score": -0.390625,
+          "score": -0.35312503576278687,
           "prior": 14.550000190734863,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -2,
+          "dir": "down",
+          "score": 0.625,
+          "prior": 17.68000030517578,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -11.510000228881836,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 27.190000534057617,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4254,6 +5138,20 @@
           "score": 0.06250000000000006,
           "prior": 2.72,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": -0.07999999999999963,
+          "dir": "flat",
+          "score": 0.24999999999999883,
+          "prior": 2.78,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.46999999999999975,
+          "dir": "down",
+          "score": 1.4687499999999991,
+          "prior": 3.17,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -4309,6 +5207,20 @@
           "score": -0.1250000000000001,
           "prior": 0.79,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.050000000000000044,
+          "dir": "up",
+          "score": -0.6250000000000006,
+          "prior": 0.75,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.10999999999999999,
+          "dir": "down",
+          "score": 1.3749999999999998,
+          "prior": 0.91,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -4364,6 +5276,20 @@
           "score": 0.28749999999999887,
           "prior": -0.541,
           "priorDate": "2026-07-31"
+        },
+        "3m": {
+          "delta": -0.05599999999999994,
+          "dir": "down",
+          "score": 0.6999999999999992,
+          "prior": -0.508,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": -0.07399999999999995,
+          "dir": "down",
+          "score": 0.9249999999999994,
+          "prior": -0.49,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -4419,6 +5345,20 @@
           "score": 0.025000000000000022,
           "prior": -0.586,
           "priorDate": "2026-07-31"
+        },
+        "3m": {
+          "delta": -0.04299999999999993,
+          "dir": "down",
+          "score": 0.5374999999999991,
+          "prior": -0.545,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": -0.09199999999999997,
+          "dir": "down",
+          "score": 1.1499999999999997,
+          "prior": -0.496,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -4444,7 +5384,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EGSPC",
-      "latest": 7667.81005859375,
+      "latest": 7672.580078125,
       "asOf": "2026-09-11",
       "n": 11769,
       "anchor": {
@@ -4455,25 +5395,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -50.7900390625,
+          "delta": -46.02001953125,
           "dir": "down",
-          "score": -0.4139874901893983,
+          "score": -0.3748740568903927,
           "prior": 7718.60009765625,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -43.94970703125,
+          "delta": -39.1796875,
           "dir": "down",
-          "score": -0.3582322290801357,
+          "score": -0.3191534586561673,
           "prior": 7711.759765625,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -80.68994140625,
+          "delta": -75.919921875,
           "dir": "down",
-          "score": -0.6577003472117195,
+          "score": -0.6184353983760658,
           "prior": 7748.5,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 241.1201171875,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 7431.4599609375,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 1040.39013671875,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 6632.18994140625,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4529,6 +5483,20 @@
           "score": 0.37499999999999756,
           "prior": 3.83,
           "priorDate": "2026-09-09"
+        },
+        "3m": {
+          "delta": 0.029999999999999805,
+          "dir": "up",
+          "score": 0.37499999999999756,
+          "prior": 3.83,
+          "priorDate": "2026-08-01"
+        },
+        "6m": {
+          "delta": 0.029999999999999805,
+          "dir": "up",
+          "score": 0.37499999999999756,
+          "prior": 3.83,
+          "priorDate": "2026-05-01"
         }
       },
       "status": "ok",
@@ -4554,7 +5522,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLY",
-      "latest": 113.00499725341797,
+      "latest": 113.08499908447266,
       "asOf": "2026-09-11",
       "n": 6972,
       "anchor": {
@@ -4565,25 +5533,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.9050064086914062,
+          "delta": -1.8250045776367188,
           "dir": "down",
-          "score": -1.0536073929209506,
+          "score": -1.0086464785403755,
           "prior": 114.91000366210938,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -4.2050018310546875,
+          "delta": -4.125,
           "dir": "down",
           "score": -1.5,
           "prior": 117.20999908447266,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -4.885002136230469,
+          "delta": -4.805000305175781,
           "dir": "down",
           "score": -1.5,
           "prior": 117.88999938964844,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -3.2831192016601562,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 116.36811828613281,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 2.6672744750976562,
+          "dir": "up",
+          "score": 1.4741535662840466,
+          "prior": 110.417724609375,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4609,7 +5591,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLP",
-      "latest": 83.5199966430664,
+      "latest": 83.54000091552734,
       "asOf": "2026-09-11",
       "n": 6972,
       "anchor": {
@@ -4620,25 +5602,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.0600051879882812,
+          "delta": -1.0400009155273438,
           "dir": "down",
-          "score": -0.7932270942538105,
+          "score": -0.7780710618639411,
           "prior": 84.58000183105469,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.9300003051757812,
+          "delta": -1.9099960327148438,
           "dir": "down",
-          "score": -1.4442651331631762,
+          "score": -1.428953204889059,
           "prior": 85.44999694824219,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1.5600051879882812,
+          "delta": -1.5400009155273438,
           "dir": "down",
-          "score": -1.1673889866871994,
+          "score": -1.152143358458705,
           "prior": 85.08000183105469,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -1.688629150390625,
+          "dir": "down",
+          "score": -1.2633387687669724,
+          "prior": 85.22863006591797,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -0.14502716064453125,
+          "dir": "flat",
+          "score": -0.10850128610183514,
+          "prior": 83.68502807617188,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4664,7 +5660,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5ENDX",
-      "latest": 29406.966796875,
+      "latest": 29436.455078125,
       "asOf": "2026-09-11",
       "n": 10316,
       "anchor": {
@@ -4675,25 +5671,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -137.18359375,
-          "dir": "down",
-          "score": -0.2915626990229449,
+          "delta": -107.6953125,
+          "dir": "flat",
+          "score": -0.22866058475403686,
           "prior": 29544.150390625,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -26.462890625,
+          "delta": 3.025390625,
           "dir": "flat",
-          "score": -0.05624281740741309,
+          "score": 0.0064235626729053875,
           "prior": 29433.4296875,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -335.6328125,
+          "delta": -306.14453125,
           "dir": "down",
-          "score": -0.7133360922990254,
+          "score": -0.6500114620576035,
           "prior": 29742.599609375,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -199.494140625,
+          "dir": "down",
+          "score": -0.4235694738368168,
+          "prior": 29635.94921875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 5055.724609375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 24380.73046875,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4719,7 +5729,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5ERUT",
-      "latest": 2909.58154296875,
+      "latest": 2909.154296875,
       "asOf": "2026-09-11",
       "n": 9825,
       "anchor": {
@@ -4730,25 +5740,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -66.068359375,
+          "delta": -66.49560546875,
           "dir": "down",
-          "score": -1.4191980530383264,
+          "score": -1.428585395508655,
           "prior": 2975.64990234375,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -62.78857421875,
+          "delta": -63.2158203125,
           "dir": "down",
-          "score": -1.3487458009744542,
+          "score": -1.3581227966407226,
           "prior": 2972.3701171875,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -135.8984375,
+          "delta": -136.32568359375,
           "dir": "down",
           "score": -1.5,
           "prior": 3045.47998046875,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -34.835693359375,
+          "dir": "down",
+          "score": -0.7484067920700214,
+          "prior": 2943.989990234375,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 429.104248046875,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2480.050048828125,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4774,7 +5798,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/GC=F",
-      "latest": 4404.2001953125,
+      "latest": 4405.2001953125,
       "asOf": "2026-09-11",
       "n": 6532,
       "anchor": {
@@ -4785,25 +5809,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -25.599609375,
+          "delta": -24.599609375,
           "dir": "down",
-          "score": -0.3632840277425159,
+          "score": -0.34901378320411003,
           "prior": 4429.7998046875,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -73.89990234375,
+          "delta": -72.89990234375,
           "dir": "down",
-          "score": -1.0487134307382802,
+          "score": -1.0342875906826206,
           "prior": 4478.10009765625,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -4.69970703125,
+          "delta": -3.69970703125,
           "dir": "flat",
-          "score": -0.06669353717520629,
+          "score": -0.052490619994790426,
           "prior": 4408.89990234375,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 190.2001953125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 4215,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -647.2998046875,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 5052.5,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4829,7 +5867,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BTC-USD",
-      "latest": 77846.1171875,
+      "latest": 77082.75,
       "asOf": "2026-09-11",
       "n": 4378,
       "anchor": {
@@ -4840,25 +5878,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1825.8515625,
+          "delta": -2589.21875,
           "dir": "down",
-          "score": -1.4659141236471833,
+          "score": -1.5,
           "prior": 79671.96875,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 15.828125,
-          "dir": "flat",
-          "score": 0.012707863259477356,
+          "delta": -747.5390625,
+          "dir": "down",
+          "score": -0.6061173402123042,
           "prior": 77830.2890625,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 14443.68359375,
+          "delta": 13680.31640625,
           "dir": "up",
           "score": 1.5,
           "prior": 63402.43359375,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 13539.55078125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 63543.19921875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 6114.484375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 70968.265625,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4884,7 +5936,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CL=F",
-      "latest": 99.87000274658203,
+      "latest": 99.81999969482422,
       "asOf": "2026-09-11",
       "n": 6541,
       "anchor": {
@@ -4895,25 +5947,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 8.389999389648438,
+          "delta": 8.339996337890625,
           "dir": "up",
           "score": 1.5,
           "prior": 91.4800033569336,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 16.470001220703125,
+          "delta": 16.419998168945312,
           "dir": "up",
           "score": 1.5,
           "prior": 83.4000015258789,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 16.600006103515625,
+          "delta": 16.550003051757812,
           "dir": "up",
           "score": 1.5,
           "prior": 83.2699966430664,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 14.94000244140625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 84.87999725341797,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 1.1100006103515625,
+          "dir": "up",
+          "score": 0.6950013860856566,
+          "prior": 98.70999908447266,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -4939,7 +6005,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BZ=F",
-      "latest": 105.11000061035156,
+      "latest": 104.52999877929688,
       "asOf": "2026-09-11",
       "n": 4759,
       "anchor": {
@@ -4950,25 +6016,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 8.830001831054688,
+          "delta": 8.25,
           "dir": "up",
           "score": 1.5,
           "prior": 96.27999877929688,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 15.800003051757812,
+          "delta": 15.220001220703125,
           "dir": "up",
           "score": 1.5,
           "prior": 89.30999755859375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 16.12999725341797,
+          "delta": 15.549995422363281,
           "dir": "up",
           "score": 1.5,
           "prior": 88.9800033569336,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 17.199996948242188,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 87.33000183105469,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 1.3899993896484375,
+          "dir": "up",
+          "score": 0.8311007640634712,
+          "prior": 103.13999938964844,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5024,6 +6104,20 @@
           "score": -1.5,
           "prior": -120305.27558637,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -647332.01481925,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 215024.14019777,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": -337692.71225227,
+          "dir": "down",
+          "score": -1.5,
+          "prior": -94615.16236921,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -5049,9 +6143,9 @@
       "freshness": "lagged",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BOGZ1FL263061110Q",
-      "latest": 1512186,
-      "asOf": "2026-01-01",
-      "n": 145,
+      "latest": 1419719,
+      "asOf": "2026-04-01",
+      "n": 146,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -5060,29 +6154,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 64584,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1447602,
-          "priorDate": "2025-10-01"
+          "delta": -92491,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1512210,
+          "priorDate": "2026-01-01"
         },
         "2w": {
-          "delta": 64584,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1447602,
-          "priorDate": "2025-10-01"
+          "delta": -92491,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1512210,
+          "priorDate": "2026-01-01"
         },
         "1m": {
-          "delta": 64584,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1447602,
+          "delta": -92491,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1512210,
+          "priorDate": "2026-01-01"
+        },
+        "3m": {
+          "delta": -92491,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1512210,
+          "priorDate": "2026-01-01"
+        },
+        "6m": {
+          "delta": -27907,
+          "dir": "down",
+          "score": -1.228544169656108,
+          "prior": 1447626,
           "priorDate": "2025-10-01"
         }
       },
       "status": "ok",
-      "staleDays": 253
+      "staleDays": 163
     },
     "TREAST": {
       "id": "TREAST",
@@ -5134,6 +6242,20 @@
           "score": 0.3072460364863146,
           "prior": 4529958,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 72418,
+          "dir": "up",
+          "score": 0.9942420782995633,
+          "prior": 4479919,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 200792,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 4351545,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -5189,6 +6311,20 @@
           "score": 1.1605892773418525,
           "prior": 30870713.09449654,
           "priorDate": "2025-10-01"
+        },
+        "3m": {
+          "delta": 584097.8610532172,
+          "dir": "up",
+          "score": 1.1605892773418525,
+          "prior": 30870713.09449654,
+          "priorDate": "2025-10-01"
+        },
+        "6m": {
+          "delta": 1156529.616858866,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 30298281.33869089,
+          "priorDate": "2025-07-01"
         }
       },
       "status": "ok",
@@ -5244,6 +6380,20 @@
           "score": 0,
           "prior": 3.75,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 3.75,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 3.75,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5299,6 +6449,20 @@
           "score": 0,
           "prior": 3.5,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 3.5,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 3.5,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5354,6 +6518,20 @@
           "score": -0.6471893491124205,
           "prior": 6.69,
           "priorDate": "2026-08-06"
+        },
+        "3m": {
+          "delta": 0.2400000000000002,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 6.52,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.6499999999999995,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 6.11,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -5409,6 +6587,20 @@
           "score": -0.8624999999999994,
           "prior": 1.5316,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 0.09020000000000006,
+          "dir": "up",
+          "score": -1.1275000000000006,
+          "prior": 1.5104,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": 0.3065,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 1.2941,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -5464,6 +6656,20 @@
           "score": -1.12875,
           "prior": 0.4995,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 0.09589999999999999,
+          "dir": "up",
+          "score": -1.1987499999999998,
+          "prior": 0.4939,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": 0.40659999999999996,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 0.1832,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -5519,6 +6725,20 @@
           "score": 1.3749999999999984,
           "prior": 1.09,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.2699999999999999,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 0.93,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 0.63,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 0.57,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -5544,7 +6764,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CHF=X",
-      "latest": 0.815850019454956,
+      "latest": 0.8160600066184998,
       "asOf": "2026-09-11",
       "n": 5978,
       "anchor": {
@@ -5555,25 +6775,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.008340001106262207,
+          "delta": 0.008549988269805908,
           "dir": "flat",
-          "score": -0.10425001382827759,
+          "score": -0.10687485337257385,
           "prior": 0.8075100183486938,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": 0.012090027332305908,
+          "delta": 0.01230001449584961,
           "dir": "flat",
-          "score": -0.15112534165382385,
+          "score": -0.15375018119812012,
           "prior": 0.8037599921226501,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": 0.002950012683868408,
+          "delta": 0.0031599998474121094,
           "dir": "flat",
-          "score": -0.0368751585483551,
+          "score": -0.03949999809265137,
           "prior": 0.8129000067710876,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.021009981632232666,
+          "dir": "up",
+          "score": -0.2626247704029083,
+          "prior": 0.7950500249862671,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.030719995498657227,
+          "dir": "up",
+          "score": -0.38399994373321533,
+          "prior": 0.7853400111198425,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5599,7 +6833,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CAD=X",
-      "latest": 1.3864699602127075,
+      "latest": 1.3863699436187744,
       "asOf": "2026-09-11",
       "n": 5980,
       "anchor": {
@@ -5610,25 +6844,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.007519960403442383,
+          "delta": 0.007419943809509277,
           "dir": "flat",
-          "score": -0.09399950504302979,
+          "score": -0.09274929761886597,
           "prior": 1.3789499998092651,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": 0.0013200044631958008,
+          "delta": 0.0012199878692626953,
           "dir": "flat",
-          "score": -0.01650005578994751,
+          "score": -0.015249848365783691,
           "prior": 1.3851499557495117,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": -0.007590055465698242,
+          "delta": -0.007690072059631348,
           "dir": "flat",
-          "score": 0.09487569332122803,
+          "score": 0.09612590074539185,
           "prior": 1.3940600156784058,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.010870099067687988,
+          "dir": "flat",
+          "score": 0.13587623834609985,
+          "prior": 1.3972400426864624,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 0.023109912872314453,
+          "dir": "up",
+          "score": -0.28887391090393066,
+          "prior": 1.36326003074646,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5654,7 +6902,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BRL=X",
-      "latest": 5.103300094604492,
+      "latest": 5.123199939727783,
       "asOf": "2026-09-11",
       "n": 5494,
       "anchor": {
@@ -5665,25 +6913,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.002300262451171875,
-          "dir": "flat",
-          "score": -0.028171261837069007,
+          "delta": 0.02220010757446289,
+          "dir": "up",
+          "score": -0.2708281425139255,
           "prior": 5.10099983215332,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -0.0577998161315918,
+          "delta": -0.03789997100830078,
           "dir": "down",
-          "score": 0.7078730314221227,
+          "score": 0.4623571626885716,
           "prior": 5.161099910736084,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": -0.09210014343261719,
+          "delta": -0.07220029830932617,
           "dir": "down",
-          "score": 1.1279483584797272,
+          "score": 0.8808008075852402,
           "prior": 5.195400238037109,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.009399890899658203,
+          "dir": "flat",
+          "score": -0.11467309262574936,
+          "prior": 5.113800048828125,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.12069988250732422,
+          "dir": "down",
+          "score": 1.4724669631200444,
+          "prior": 5.243899822235107,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5709,7 +6971,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EURJPY=X",
-      "latest": 178.25599670410156,
+      "latest": 178.25799560546875,
       "asOf": "2026-09-11",
       "n": 6137,
       "anchor": {
@@ -5720,25 +6982,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -2.7490081787109375,
+          "delta": -2.74700927734375,
           "dir": "down",
-          "score": -0.9638554345783773,
+          "score": -0.9631437807366279,
           "prior": 181.0050048828125,
           "priorDate": "2026-09-03"
         },
         "2w": {
-          "delta": -7.3939971923828125,
+          "delta": -7.391998291015625,
           "dir": "down",
           "score": -1.5,
           "prior": 185.64999389648438,
           "priorDate": "2026-08-27"
         },
         "1m": {
-          "delta": -5.4170074462890625,
+          "delta": -5.415008544921875,
           "dir": "down",
           "score": -1.5,
           "prior": 183.67300415039062,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -7.1070098876953125,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 185.36500549316406,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -5.1710052490234375,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 183.4290008544922,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -5794,6 +7070,20 @@
           "score": 1.5,
           "prior": 15.6,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": 1,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 19.6,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 13.500000000000002,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 7.1,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -5849,6 +7139,20 @@
           "score": 1.5,
           "prior": 41.4,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": 47.8,
+          "dir": "up",
+          "score": 1.5,
+          "prior": -0.4,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 31.099999999999998,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 16.3,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -5904,6 +7208,20 @@
           "score": -1.5,
           "prior": 0.06,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -0.18,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 0.1,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": -0.009999999999999995,
+          "dir": "flat",
+          "score": -0.12499999999999993,
+          "prior": -0.07,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -5959,6 +7277,20 @@
           "score": 1.5,
           "prior": 2.71,
           "priorDate": "2026-08-01"
+        },
+        "3m": {
+          "delta": 0.3700000000000001,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.9,
+          "priorDate": "2026-06-06"
+        },
+        "6m": {
+          "delta": 0.6000000000000001,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.67,
+          "priorDate": "2026-03-07"
         }
       },
       "status": "ok",
@@ -6014,6 +7346,20 @@
           "score": 1.5,
           "prior": 1.2048707802041925,
           "priorDate": "2026-05-01"
+        },
+        "3m": {
+          "delta": 0.7489525843861866,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 0.7746990405159249,
+          "priorDate": "2026-03-01"
+        },
+        "6m": {
+          "delta": 0.3580522283143095,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1.165599396587802,
+          "priorDate": "2025-12-01"
         }
       },
       "status": "ok",
@@ -6069,6 +7415,20 @@
           "score": -1.256281407035176,
           "prior": 4060000,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -210000,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 4190000,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -150000,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 4130000,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6124,6 +7484,20 @@
           "score": 1.5,
           "prior": 49.5,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": 5.400000000000006,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 49.8,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": -1.1999999999999957,
+          "dir": "down",
+          "score": -1.358695652173908,
+          "prior": 56.4,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -6179,6 +7553,20 @@
           "score": 1.5,
           "prior": 8.69918203370965,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -2.3357433413227824,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 12.185806291992352,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 5.98221040459983,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 3.867852546069739,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6234,6 +7622,20 @@
           "score": 1.5,
           "prior": 4.80424072675254,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.46610998602467646,
+          "dir": "down",
+          "score": -1.456593706327114,
+          "prior": 5.87973243876263,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 2.0601181723145734,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 3.3535042804233806,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6289,6 +7691,20 @@
           "score": -1.4266608624048716,
           "prior": 2.69355252969239,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.27352895531688004,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.85294861601688,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.26631097688967964,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.84573063758968,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6344,6 +7760,20 @@
           "score": -0.43464412510762496,
           "prior": 2.70627619900861,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.5089256020000601,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.18043027100006,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.14960886797032025,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.82111353697032,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6399,6 +7829,20 @@
           "score": -1.5,
           "prior": 3.16494803224574,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.3191380880902539,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.353947873627483,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 0.07735919606759456,
+          "dir": "up",
+          "score": 0.966989950844932,
+          "prior": 2.9574505894696346,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6454,6 +7898,20 @@
           "score": 0.14667952880242918,
           "prior": 3.004736290991783,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.36699673785667297,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.3834673911526503,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": 0.08330390006381361,
+          "dir": "up",
+          "score": 1.04129875079767,
+          "prior": 2.9331667532321637,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6479,9 +7937,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/CORESTICKM159SFRBATL",
-      "latest": 2.715835582,
-      "asOf": "2026-07-01",
-      "n": 439,
+      "latest": 2.700641247,
+      "asOf": "2026-08-01",
+      "n": 440,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6490,29 +7948,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.09102460200000007,
-          "dir": "down",
-          "score": -1.1378075250000008,
-          "prior": 2.806860184,
-          "priorDate": "2026-06-01"
+          "delta": -0.015194334999999892,
+          "dir": "flat",
+          "score": -0.18992918749999865,
+          "prior": 2.715835582,
+          "priorDate": "2026-07-01"
         },
         "2w": {
-          "delta": -0.09102460200000007,
-          "dir": "down",
-          "score": -1.1378075250000008,
-          "prior": 2.806860184,
-          "priorDate": "2026-06-01"
+          "delta": -0.015194334999999892,
+          "dir": "flat",
+          "score": -0.18992918749999865,
+          "prior": 2.715835582,
+          "priorDate": "2026-07-01"
         },
         "1m": {
-          "delta": -0.09102460200000007,
+          "delta": -0.015194334999999892,
+          "dir": "flat",
+          "score": -0.18992918749999865,
+          "prior": 2.715835582,
+          "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.3906153739999998,
           "dir": "down",
-          "score": -1.1378075250000008,
-          "prior": 2.806860184,
-          "priorDate": "2026-06-01"
+          "score": -1.5,
+          "prior": 3.091256621,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.20326803699999996,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2.903909284,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
-      "staleDays": 72
+      "staleDays": 41
     },
     "EA_HICP": {
       "id": "EA_HICP",
@@ -6564,6 +8036,20 @@
           "score": 1.5,
           "prior": 2.732894474366643,
           "priorDate": "2026-06-01"
+        },
+        "3m": {
+          "delta": -0.06760913473469188,
+          "dir": "down",
+          "score": -0.8451141841836485,
+          "prior": 2.9994001199760145,
+          "priorDate": "2026-04-01"
+        },
+        "6m": {
+          "delta": 1.2961108064340587,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1.635680178807264,
+          "priorDate": "2026-01-01"
         }
       },
       "status": "ok",
@@ -6619,6 +8105,20 @@
           "score": 0.8750000000000008,
           "prior": 1.62,
           "priorDate": "2026-08-10"
+        },
+        "3m": {
+          "delta": 0.020000000000000018,
+          "dir": "up",
+          "score": -0.2500000000000002,
+          "prior": 1.53,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.29000000000000004,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 1.84,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -6674,6 +8174,20 @@
           "score": 0,
           "prior": 0.98,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 0.040000000000000036,
+          "dir": "flat",
+          "score": -0.1250000000000001,
+          "prior": 0.94,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -0.14000000000000012,
+          "dir": "down",
+          "score": 0.4375000000000004,
+          "prior": 1.12,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -6729,6 +8243,20 @@
           "score": -1.5,
           "prior": 10.23,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 1.1399999999999988,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 9.56,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 1.0899999999999999,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 9.61,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -6784,6 +8312,20 @@
           "score": -1.5,
           "prior": 214.16,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 468.68,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 257.2,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 362.99,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 362.89,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -6839,6 +8381,20 @@
           "score": 0.5000000000000001,
           "prior": -0.03,
           "priorDate": "2026-07-01"
+        },
+        "3m": {
+          "delta": -0.17,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 0.1,
+          "priorDate": "2026-05-01"
+        },
+        "6m": {
+          "delta": -0.34,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 0.27,
+          "priorDate": "2026-02-01"
         }
       },
       "status": "ok",
@@ -6864,7 +8420,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
-      "latest": 78.73999786376953,
+      "latest": 78.7249984741211,
       "asOf": "2026-09-11",
       "n": 4887,
       "anchor": {
@@ -6875,25 +8431,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.42000579833984375,
+          "delta": -0.43500518798828125,
           "dir": "down",
-          "score": -0.3333802782374567,
+          "score": -0.3453518548902215,
           "prior": 79.16000366210938,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.5653839111328125,
+          "delta": -0.58038330078125,
           "dir": "down",
-          "score": -0.4487743891857544,
+          "score": -0.46076795175489643,
           "prior": 79.30538177490234,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.43609619140625,
+          "delta": -0.4510955810546875,
           "dir": "down",
-          "score": -0.34615205362396734,
+          "score": -0.35812606366941857,
           "prior": 79.17609405517578,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.03009796142578125,
+          "dir": "flat",
+          "score": -0.023894857104756896,
+          "prior": 78.75509643554688,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 1.873687744140625,
+          "dir": "up",
+          "score": 1.4875260244976012,
+          "prior": 76.85131072998047,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -6919,7 +8489,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
-      "latest": 104.55000305175781,
+      "latest": 104.50499725341797,
       "asOf": "2026-09-11",
       "n": 6069,
       "anchor": {
@@ -6930,25 +8500,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.9300003051757812,
+          "delta": -0.975006103515625,
           "dir": "down",
-          "score": -0.5559542551587622,
+          "score": -0.5831097370583732,
           "prior": 105.4800033569336,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.3554153442382812,
+          "delta": -1.400421142578125,
           "dir": "down",
-          "score": -0.8102673987771661,
+          "score": -0.837532402387295,
           "prior": 105.9054183959961,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1.1263809204101562,
+          "delta": -1.17138671875,
           "dir": "down",
-          "score": -0.673350602302552,
+          "score": -0.7005566417493065,
           "prior": 105.67638397216797,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -3.2028121948242188,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 107.70780944824219,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.1194915771484375,
+          "dir": "down",
+          "score": -0.6695203618072814,
+          "prior": 105.6244888305664,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7004,6 +8588,20 @@
           "score": -1.5,
           "prior": 135.58999633789062,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 4.040008544921875,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 142.97999572753906,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": 7.0800018310546875,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 139.94000244140625,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -7029,7 +8627,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SI=F",
-      "latest": 64.93000030517578,
+      "latest": 65.08000183105469,
       "asOf": "2026-09-11",
       "n": 6534,
       "anchor": {
@@ -7040,25 +8638,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.1169967651367188,
+          "delta": -0.9669952392578125,
           "dir": "down",
-          "score": -1.0751932464642227,
+          "score": -0.9286601222062969,
           "prior": 66.0469970703125,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -2.06500244140625,
+          "delta": -1.9150009155273438,
           "dir": "down",
           "score": -1.5,
           "prior": 66.99500274658203,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.625,
+          "delta": -0.47499847412109375,
           "dir": "down",
-          "score": -0.6016094227075831,
+          "score": -0.4561678518331296,
           "prior": 65.55500030517578,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -2.7789993286132812,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 67.85900115966797,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -15.833999633789062,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 80.91400146484375,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7084,7 +8696,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TLT",
-      "latest": 81.0250015258789,
+      "latest": 80.99500274658203,
       "asOf": "2026-09-11",
       "n": 6069,
       "anchor": {
@@ -7095,25 +8707,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.18499755859375,
+          "delta": -1.214996337890625,
           "dir": "down",
-          "score": -0.9140678311305468,
+          "score": -0.937555016273749,
           "prior": 82.20999908447266,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.5386199951171875,
+          "delta": -1.5686187744140625,
           "dir": "down",
-          "score": -1.1868404552156668,
+          "score": -1.2104286693788169,
           "prior": 82.5636215209961,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.7715606689453125,
+          "delta": -0.8015594482421875,
           "dir": "down",
-          "score": -0.5951563209002845,
+          "score": -0.6185253881882339,
           "prior": 81.79656219482422,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -3.7916412353515625,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 84.7866439819336,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -3.5662765502929688,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 84.561279296875,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7139,7 +8765,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWZ",
-      "latest": 38.310001373291016,
+      "latest": 38.05500030517578,
       "asOf": "2026-09-11",
       "n": 6579,
       "anchor": {
@@ -7150,25 +8776,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.4500007629394531,
+          "delta": 0.19499969482421875,
           "dir": "up",
-          "score": 0.7341437398987944,
+          "score": 0.32025964600652174,
           "prior": 37.86000061035156,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 2.7600021362304688,
+          "delta": 2.5050010681152344,
           "dir": "up",
           "score": 1.5,
           "prior": 35.54999923706055,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 4.450000762939453,
+          "delta": 4.194999694824219,
           "dir": "up",
           "score": 1.5,
           "prior": 33.86000061035156,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 3.285999298095703,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 34.76900100708008,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 2.899677276611328,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 35.15532302856445,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7194,7 +8834,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EFA",
-      "latest": 106.80999755859375,
+      "latest": 106.80000305175781,
       "asOf": "2026-09-11",
       "n": 6297,
       "anchor": {
@@ -7205,25 +8845,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.5400009155273438,
+          "delta": -1.5499954223632812,
           "dir": "down",
-          "score": -0.9011334090487007,
+          "score": -0.9070665836100894,
           "prior": 108.3499984741211,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.910003662109375,
+          "delta": -0.9199981689453125,
           "dir": "down",
-          "score": -0.5324897498535693,
+          "score": -0.5383884261802523,
           "prior": 107.72000122070312,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1.69000244140625,
+          "delta": -1.6999969482421875,
           "dir": "down",
-          "score": -0.9889069843854912,
+          "score": -0.994848372931652,
           "prior": 108.5,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 3.4160079956054688,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 103.38399505615234,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 12.000160217285156,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 94.79984283447266,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7249,7 +8903,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/FEZ",
-      "latest": 69.78500366210938,
+      "latest": 69.77999877929688,
       "asOf": "2026-09-11",
       "n": 6011,
       "anchor": {
@@ -7260,25 +8914,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.8649978637695312,
+          "delta": -0.8700027465820312,
           "dir": "down",
-          "score": -0.7746989130696217,
+          "score": -0.7792372114157962,
           "prior": 70.6500015258789,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.5749969482421875,
+          "delta": -1.5800018310546875,
           "dir": "down",
-          "score": -1.4105796962017565,
+          "score": -1.4151636022988334,
           "prior": 71.36000061035156,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -2.0949935913085938,
+          "delta": -2.0999984741210938,
           "dir": "down",
           "score": -1.5,
           "prior": 71.87999725341797,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 1.8948516845703125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 67.88514709472656,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 8.955886840820312,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 60.82411193847656,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7304,7 +8972,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWJ",
-      "latest": 98.7300033569336,
+      "latest": 98.67500305175781,
       "asOf": "2026-09-11",
       "n": 7671,
       "anchor": {
@@ -7315,25 +8983,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.45000457763671875,
+          "delta": 0.3950042724609375,
           "dir": "up",
-          "score": 0.2848707094703015,
+          "score": 0.25019271614168753,
           "prior": 98.27999877929688,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 2.8600006103515625,
+          "delta": 2.8050003051757812,
           "dir": "up",
           "score": 1.5,
           "prior": 95.87000274658203,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.94000244140625,
+          "delta": 0.8850021362304688,
           "dir": "up",
-          "score": 0.5950587520542683,
+          "score": 0.5605536539521693,
           "prior": 97.79000091552734,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 6.46600341796875,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 92.20899963378906,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 15.765472412109375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 82.90953063964844,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7359,7 +9041,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EEM",
-      "latest": 67.91000366210938,
+      "latest": 67.92500305175781,
       "asOf": "2026-09-11",
       "n": 5891,
       "anchor": {
@@ -7370,25 +9052,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.7899932861328125,
+          "delta": -0.774993896484375,
           "dir": "down",
-          "score": -0.7270590151778993,
+          "score": -0.7130970387055425,
           "prior": 68.69999694824219,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.7700042724609375,
+          "delta": 0.785003662109375,
           "dir": "up",
-          "score": 0.7086624125108132,
+          "score": 0.7223073489514735,
           "prior": 67.13999938964844,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 1.4500045776367188,
+          "delta": 1.4650039672851562,
           "dir": "up",
-          "score": 1.3344909617912393,
+          "score": 1.347997701016706,
           "prior": 66.45999908447266,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.39600372314453125,
+          "dir": "up",
+          "score": 0.3643758790511044,
+          "prior": 67.52899932861328,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 11.418708801269531,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 56.50629425048828,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7414,7 +9110,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/FXI",
-      "latest": 34.53990173339844,
+      "latest": 34.525001525878906,
       "asOf": "2026-09-11",
       "n": 5516,
       "anchor": {
@@ -7425,25 +9121,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.3400993347167969,
+          "delta": -1.3549995422363281,
           "dir": "down",
           "score": -1.5,
           "prior": 35.880001068115234,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.9700965881347656,
+          "delta": -0.9849967956542969,
           "dir": "down",
           "score": -1.5,
           "prior": 35.5099983215332,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.6900978088378906,
+          "delta": -0.7049980163574219,
           "dir": "down",
-          "score": -1.2487329403911545,
+          "score": -1.2762454475001552,
           "prior": 35.22999954223633,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.5019989013671875,
+          "dir": "down",
+          "score": -0.9087597378361159,
+          "prior": 35.027000427246094,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.4449195861816406,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 35.96992111206055,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7469,7 +9179,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/JNK",
-      "latest": 94.76000213623047,
+      "latest": 94.75499725341797,
       "asOf": "2026-09-11",
       "n": 4722,
       "anchor": {
@@ -7480,25 +9190,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.5099945068359375,
+          "delta": -0.5149993896484375,
           "dir": "down",
-          "score": -0.33637247740266946,
+          "score": -0.33969144410340096,
           "prior": 95.2699966430664,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.678497314453125,
+          "delta": -0.683502197265625,
           "dir": "down",
-          "score": -0.4475103545518685,
+          "score": -0.45083519146596374,
           "prior": 95.4384994506836,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.5591583251953125,
+          "delta": -0.5641632080078125,
           "dir": "down",
-          "score": -0.36879901368580986,
+          "score": -0.37211969313013077,
           "prior": 95.31916046142578,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.04058074951171875,
+          "dir": "flat",
+          "score": 0.026766892702230892,
+          "prior": 94.71441650390625,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 2.5949783325195312,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 92.16001892089844,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7524,7 +9248,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/IEF",
-      "latest": 91.18499755859375,
+      "latest": 91.12000274658203,
       "asOf": "2026-09-11",
       "n": 6069,
       "anchor": {
@@ -7535,25 +9259,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.06500244140625,
+          "delta": -1.1299972534179688,
           "dir": "down",
-          "score": -0.7299737278066901,
+          "score": -0.7750749145063236,
           "prior": 92.25,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.3326034545898438,
+          "delta": -1.3975982666015625,
           "dir": "down",
-          "score": -0.9133927525561003,
+          "score": -0.9586247698601413,
           "prior": 92.5176010131836,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1.4422149658203125,
+          "delta": -1.5072097778320312,
           "dir": "down",
-          "score": -0.9885226493080539,
+          "score": -1.0338082558720671,
           "prior": 92.62721252441406,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -2.09423828125,
+          "dir": "down",
+          "score": -1.4364561965845062,
+          "prior": 93.21424102783203,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -2.5510025024414062,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 93.67100524902344,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7579,7 +9317,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SHY",
-      "latest": 81.3949966430664,
+      "latest": 81.375,
       "asOf": "2026-09-11",
       "n": 6069,
       "anchor": {
@@ -7590,25 +9328,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.29500579833984375,
+          "delta": -0.31500244140625,
           "dir": "flat",
-          "score": -0.22652328959596874,
+          "score": -0.2419373589909754,
           "prior": 81.69000244140625,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.25099945068359375,
+          "delta": -0.27099609375,
           "dir": "flat",
-          "score": -0.19273255500602002,
+          "score": -0.20813832085253456,
           "prior": 81.64599609375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.28090667724609375,
+          "delta": -0.3009033203125,
           "dir": "flat",
-          "score": -0.21569713191181042,
+          "score": -0.2311085409466206,
           "prior": 81.6759033203125,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.0364532470703125,
+          "dir": "flat",
+          "score": 0.02799788561467934,
+          "prior": 81.33854675292969,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.28592681884765625,
+          "dir": "flat",
+          "score": 0.21960585164950555,
+          "prior": 81.08907318115234,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7634,7 +9386,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TIP",
-      "latest": 106.04879760742188,
+      "latest": 105.96849822998047,
       "asOf": "2026-09-11",
       "n": 5727,
       "anchor": {
@@ -7645,25 +9397,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.92120361328125,
+          "delta": -1.0015029907226562,
           "dir": "down",
-          "score": -0.5429125754279056,
+          "score": -0.5906843822993523,
           "prior": 106.97000122070312,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.891204833984375,
+          "delta": -0.9715042114257812,
           "dir": "down",
-          "score": -0.5252327549268246,
+          "score": -0.572991164622665,
           "prior": 106.94000244140625,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.8712005615234375,
+          "delta": -0.9514999389648438,
           "dir": "down",
-          "score": -0.5134432103302238,
+          "score": -0.5611926863041824,
           "prior": 106.91999816894531,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -1.7910537719726562,
+          "dir": "down",
+          "score": -1.056359791995437,
+          "prior": 107.75955200195312,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.0806732177734375,
+          "dir": "down",
+          "score": -0.6373788176581984,
+          "prior": 107.0491714477539,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7689,7 +9455,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/PL=F",
-      "latest": 1796.199951171875,
+      "latest": 1799.300048828125,
       "asOf": "2026-09-11",
       "n": 6560,
       "anchor": {
@@ -7700,25 +9466,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -24.800048828125,
+          "delta": -21.699951171875,
           "dir": "down",
-          "score": -0.8629345807222414,
+          "score": -0.7537636366572125,
           "prior": 1821,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -51.4000244140625,
+          "delta": -48.2999267578125,
           "dir": "down",
           "score": -1.5,
           "prior": 1847.5999755859375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 35.0999755859375,
+          "delta": 38.2000732421875,
           "dir": "up",
-          "score": 1.221327543567658,
+          "score": 1.326907415576234,
           "prior": 1761.0999755859375,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 90.10009765625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1709.199951171875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -237.2999267578125,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 2036.5999755859375,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7744,7 +9524,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/NG=F",
-      "latest": 2.815000057220459,
+      "latest": 2.809999942779541,
       "asOf": "2026-09-11",
       "n": 6538,
       "anchor": {
@@ -7755,25 +9535,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.15999984741210938,
+          "delta": -0.16499996185302734,
           "dir": "down",
           "score": -1.5,
           "prior": 2.9749999046325684,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.07299995422363281,
+          "delta": -0.07800006866455078,
           "dir": "down",
-          "score": -0.9124994277954102,
+          "score": -0.9750008583068848,
           "prior": 2.888000011444092,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.01100015640258789,
+          "delta": 0.006000041961669922,
           "dir": "flat",
-          "score": 0.13750195503234863,
+          "score": 0.07500052452087402,
           "prior": 2.803999900817871,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.309999942779541,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.119999885559082,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -0.3210000991821289,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.13100004196167,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7799,7 +9593,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ETH-USD",
-      "latest": 2575.580078125,
+      "latest": 2549.43994140625,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -7810,25 +9604,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 119.501953125,
+          "delta": 93.36181640625,
           "dir": "up",
           "score": 1.5,
           "prior": 2456.078125,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 133.044189453125,
+          "delta": 106.904052734375,
           "dir": "up",
           "score": 1.5,
           "prior": 2442.535888671875,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 697.445068359375,
+          "delta": 671.304931640625,
           "dir": "up",
           "score": 1.5,
           "prior": 1878.135009765625,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 884.3121337890625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1665.1278076171875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 456.87646484375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2092.5634765625,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7854,7 +9662,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EDJI",
-      "latest": 52659.7109375,
+      "latest": 52655.828125,
       "asOf": "2026-09-11",
       "n": 8735,
       "anchor": {
@@ -7865,25 +9673,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -754.5390625,
+          "delta": -758.421875,
           "dir": "down",
-          "score": -0.8955364654815714,
+          "score": -0.9002112183094643,
           "prior": 53414.25,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -900.27734375,
+          "delta": -904.16015625,
           "dir": "down",
-          "score": -1.0685082197119684,
+          "score": -1.073195727384166,
           "prior": 53559.98828125,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1110.55859375,
+          "delta": -1114.44140625,
           "dir": "down",
-          "score": -1.318083803987364,
+          "score": -1.3227897152291725,
           "prior": 53770.26953125,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 1453.56640625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 51202.26171875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 6097.359375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 46558.46875,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7909,7 +9731,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWY",
-      "latest": 189.24000549316406,
+      "latest": 189.77000427246094,
       "asOf": "2026-09-11",
       "n": 6622,
       "anchor": {
@@ -7920,25 +9742,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.3700103759765625,
-          "dir": "flat",
-          "score": 0.12220274692060569,
+          "delta": 0.9000091552734375,
+          "dir": "up",
+          "score": 0.29641445401365163,
           "prior": 188.8699951171875,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 9.040008544921875,
+          "delta": 9.57000732421875,
           "dir": "up",
           "score": 1.5,
           "prior": 180.1999969482422,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 13.370010375976562,
+          "delta": 13.900009155273438,
           "dir": "up",
           "score": 1.5,
           "prior": 175.8699951171875,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -7.67999267578125,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 197.4499969482422,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 65.62000274658203,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 124.1500015258789,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -7964,7 +9800,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/INDA",
-      "latest": 48.47999954223633,
+      "latest": 48.529998779296875,
       "asOf": "2026-09-11",
       "n": 3672,
       "anchor": {
@@ -7975,25 +9811,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.4300003051757812,
+          "delta": -1.3800010681152344,
           "dir": "down",
           "score": -1.5,
           "prior": 49.90999984741211,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.0800018310546875,
+          "delta": -1.0300025939941406,
           "dir": "down",
-          "score": -1.3923291064000753,
+          "score": -1.3265024468143307,
           "prior": 49.560001373291016,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -1.470001220703125,
+          "delta": -1.4200019836425781,
           "dir": "down",
           "score": -1.5,
           "prior": 49.95000076293945,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.1999969482421875,
+          "dir": "up",
+          "score": 0.25756871171546775,
+          "prior": 48.33000183105469,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.4699974060058594,
+          "dir": "up",
+          "score": 0.6052923679012672,
+          "prior": 48.060001373291016,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8019,7 +9869,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EMB",
-      "latest": 93.56500244140625,
+      "latest": 93.54499816894531,
       "asOf": "2026-09-11",
       "n": 4711,
       "anchor": {
@@ -8030,25 +9880,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.904998779296875,
+          "delta": -0.9250030517578125,
           "dir": "down",
-          "score": -0.604525433978117,
+          "score": -0.6180201172322616,
           "prior": 94.47000122070312,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.9104690551757812,
+          "delta": -0.9304733276367188,
           "dir": "down",
-          "score": -0.6081794951496083,
+          "score": -0.6216749598120238,
           "prior": 94.47547149658203,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.9602584838867188,
+          "delta": -0.9802627563476562,
           "dir": "down",
-          "score": -0.6414380770256932,
+          "score": -0.6549406539201524,
           "prior": 94.52526092529297,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -1.5782852172851562,
+          "dir": "down",
+          "score": -1.0544959966985097,
+          "prior": 95.12328338623047,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 1.61407470703125,
+          "dir": "up",
+          "score": 1.078407944455364,
+          "prior": 91.93092346191406,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8074,7 +9938,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/AGG",
-      "latest": 96.125,
+      "latest": 96.06500244140625,
       "asOf": "2026-09-11",
       "n": 5775,
       "anchor": {
@@ -8085,25 +9949,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.875,
+          "delta": -0.93499755859375,
           "dir": "down",
-          "score": -0.5689206762028608,
+          "score": -0.6083104765208596,
           "prior": 97,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.0277175903320312,
+          "delta": -1.0877151489257812,
           "dir": "down",
-          "score": -0.668216898785456,
+          "score": -0.7076687147260137,
           "prior": 97.15271759033203,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.967926025390625,
+          "delta": -1.027923583984375,
           "dir": "down",
-          "score": -0.6293407187195221,
+          "score": -0.6687682544765361,
           "prior": 97.09292602539062,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -1.6837081909179688,
+          "dir": "down",
+          "score": -1.0954224666423962,
+          "prior": 97.74871063232422,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.1439590454101562,
+          "dir": "down",
+          "score": -0.7442610578367893,
+          "prior": 97.2089614868164,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8129,7 +10007,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/PA=F",
-      "latest": 1323,
+      "latest": 1322.5,
       "asOf": "2026-09-11",
       "n": 6571,
       "anchor": {
@@ -8140,25 +10018,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -67.0999755859375,
+          "delta": -67.5999755859375,
           "dir": "down",
           "score": -1.5,
           "prior": 1390.0999755859375,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -105.5999755859375,
+          "delta": -106.0999755859375,
           "dir": "down",
           "score": -1.5,
           "prior": 1428.5999755859375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -47.199951171875,
+          "delta": -47.699951171875,
           "dir": "down",
           "score": -1.5,
           "prior": 1370.199951171875,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 46.300048828125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1276.199951171875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -231.5999755859375,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1554.0999755859375,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8184,7 +10076,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/RB=F",
-      "latest": 3.1540000438690186,
+      "latest": 3.1189000606536865,
       "asOf": "2026-09-11",
       "n": 6496,
       "anchor": {
@@ -8195,25 +10087,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.06060004234313965,
+          "delta": -0.09570002555847168,
           "dir": "down",
-          "score": -0.7575005292892456,
+          "score": -1.196250319480896,
           "prior": 3.214600086212158,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.33590006828308105,
+          "delta": -0.3710000514984131,
           "dir": "down",
           "score": -1.5,
           "prior": 3.4899001121520996,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.0002999305725097656,
-          "dir": "flat",
-          "score": 0.0037491321563720703,
+          "delta": -0.034800052642822266,
+          "dir": "down",
+          "score": -0.4350006580352783,
           "prior": 3.153700113296509,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.06910014152526855,
+          "dir": "up",
+          "score": 0.8637517690658569,
+          "prior": 3.049799919128418,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.0775001049041748,
+          "dir": "up",
+          "score": 0.9687513113021851,
+          "prior": 3.0413999557495117,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8239,7 +10145,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HO=F",
-      "latest": 4.818600177764893,
+      "latest": 4.764500141143799,
       "asOf": "2026-09-11",
       "n": 6535,
       "anchor": {
@@ -8250,25 +10156,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.2783999443054199,
+          "delta": 0.22429990768432617,
           "dir": "up",
           "score": 1.5,
           "prior": 4.540200233459473,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.4619002342224121,
+          "delta": 0.40780019760131836,
           "dir": "up",
           "score": 1.5,
           "prior": 4.3566999435424805,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.5146002769470215,
+          "delta": 0.46050024032592773,
           "dir": "up",
           "score": 1.5,
           "prior": 4.303999900817871,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 1.3601000308990479,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 3.404400110244751,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.7498002052307129,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 4.014699935913086,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8324,6 +10244,20 @@
           "score": 1.5,
           "prior": 61.020999908447266,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 34.72700119018555,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 46.77299880981445,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 31.384998321533203,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 50.1150016784668,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8349,7 +10283,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZC=F",
-      "latest": 534,
+      "latest": 529.5,
       "asOf": "2026-09-11",
       "n": 6544,
       "anchor": {
@@ -8360,25 +10294,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 22,
+          "delta": 17.5,
           "dir": "up",
           "score": 1.5,
           "prior": 512,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 22,
+          "delta": 17.5,
           "dir": "up",
           "score": 1.5,
           "prior": 512,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 77,
+          "delta": 72.5,
           "dir": "up",
           "score": 1.5,
           "prior": 457,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 116.75,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 412.75,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 77,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 452.5,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8404,7 +10352,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZW=F",
-      "latest": 727,
+      "latest": 723.75,
       "asOf": "2026-09-11",
       "n": 6556,
       "anchor": {
@@ -8415,25 +10363,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 11,
+          "delta": 7.75,
           "dir": "up",
-          "score": 0.9456671251719395,
+          "score": 0.6692573402417962,
           "prior": 716,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -40,
+          "delta": -43.25,
           "dir": "down",
           "score": -1.5,
           "prior": 767,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 74.25,
+          "delta": 71,
           "dir": "up",
           "score": 1.5,
           "prior": 652.75,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 139.25,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 584.5,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 105.25,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 618.5,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8459,7 +10421,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZS=F",
-      "latest": 1305.5,
+      "latest": 1296.75,
       "asOf": "2026-09-11",
       "n": 6536,
       "anchor": {
@@ -8470,25 +10432,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 11.75,
-          "dir": "up",
-          "score": 0.5625239371888165,
+          "delta": 3,
+          "dir": "flat",
+          "score": 0.14459224985540775,
           "prior": 1293.75,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 29.25,
+          "delta": 20.5,
           "dir": "up",
-          "score": 1.400325545767905,
+          "score": 0.9880470406786196,
           "prior": 1276.25,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 140.75,
+          "delta": 132,
           "dir": "up",
           "score": 1.5,
           "prior": 1164.75,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 183.25,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1113.5,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 85.75,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1211,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8514,7 +10490,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BNB-USD",
-      "latest": 730.8499755859375,
+      "latest": 724.1400146484375,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8525,25 +10501,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 9.58953857421875,
-          "dir": "up",
-          "score": 0.8200672927548005,
+          "delta": 2.87957763671875,
+          "dir": "flat",
+          "score": 0.24853425947231655,
           "prior": 721.2604370117188,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 39.73297119140625,
+          "delta": 33.02301025390625,
           "dir": "up",
           "score": 1.5,
           "prior": 691.1170043945312,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 121.170166015625,
+          "delta": 114.460205078125,
           "dir": "up",
           "score": 1.5,
           "prior": 609.6798095703125,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 120.6334228515625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 603.506591796875,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 68.258056640625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 655.8819580078125,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8569,7 +10559,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XRP-USD",
-      "latest": 1.375,
+      "latest": 1.3574999570846558,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8580,25 +10570,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.023959040641784668,
+          "delta": -0.041459083557128906,
           "dir": "down",
-          "score": -0.29948800802230835,
+          "score": -0.5182385444641113,
           "prior": 1.3989590406417847,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.008188962936401367,
-          "dir": "flat",
-          "score": -0.10236203670501709,
+          "delta": -0.025689005851745605,
+          "dir": "down",
+          "score": -0.32111257314682007,
           "prior": 1.3831889629364014,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.37062597274780273,
+          "delta": 0.3531259298324585,
           "dir": "up",
           "score": 1.5,
           "prior": 1.0043740272521973,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.22544097900390625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 1.1320589780807495,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -0.04140806198120117,
+          "dir": "down",
+          "score": -0.5176007747650146,
+          "prior": 1.398908019065857,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8624,7 +10628,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SOL-USD",
-      "latest": 102.16000366210938,
+      "latest": 101.26000213623047,
       "asOf": "2026-09-11",
       "n": 2346,
       "anchor": {
@@ -8635,25 +10639,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.21051788330078125,
-          "dir": "flat",
-          "score": 0.12879177011207202,
+          "delta": -0.689483642578125,
+          "dir": "down",
+          "score": -0.42556514667220596,
           "prior": 101.9494857788086,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -1.966949462890625,
+          "delta": -2.8669509887695312,
           "dir": "down",
-          "score": -1.2033509888788285,
+          "score": -1.5,
           "prior": 104.126953125,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 26.63451385498047,
+          "delta": 25.734512329101562,
           "dir": "up",
           "score": 1.5,
           "prior": 75.5254898071289,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 34.51072692871094,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 66.74927520751953,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 13.106712341308594,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 88.15328979492188,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8679,7 +10697,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TRX-USD",
-      "latest": 0.3357783257961273,
+      "latest": 0.33670923113822937,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8690,25 +10708,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.004241317510604858,
+          "delta": 0.005172222852706909,
           "dir": "flat",
-          "score": 0.05301646888256073,
+          "score": 0.06465278565883636,
           "prior": 0.33153700828552246,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.005572676658630371,
+          "delta": -0.00464177131652832,
           "dir": "flat",
-          "score": -0.06965845823287964,
+          "score": -0.058022141456604004,
           "prior": 0.3413510024547577,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.0000406801700592041,
+          "delta": 0.0008902251720428467,
           "dir": "flat",
-          "score": -0.0005085021257400513,
+          "score": 0.011127814650535583,
           "prior": 0.3358190059661865,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.021456241607666016,
+          "dir": "up",
+          "score": 0.2682030200958252,
+          "prior": 0.31525298953056335,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.04327124357223511,
+          "dir": "up",
+          "score": 0.5408905446529388,
+          "prior": 0.29343798756599426,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8734,7 +10766,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYPE32196-USD",
-      "latest": 81.93000030517578,
+      "latest": 80.83000183105469,
       "asOf": "2026-09-11",
       "n": 651,
       "anchor": {
@@ -8745,25 +10777,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -2.5316085815429688,
+          "delta": -3.6316070556640625,
           "dir": "down",
           "score": -1.5,
           "prior": 84.46160888671875,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 1.0404434204101562,
-          "dir": "up",
-          "score": 0.7936984442013576,
+          "delta": -0.0595550537109375,
+          "dir": "flat",
+          "score": -0.046049619851716204,
           "prior": 80.88955688476562,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 25.919776916503906,
+          "delta": 24.819778442382812,
           "dir": "up",
           "score": 1.5,
           "prior": 56.010223388671875,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 21.456809997558594,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 59.373191833496094,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 44.38031005859375,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 36.44969177246094,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8789,7 +10835,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZEC-USD",
-      "latest": 1178.6300048828125,
+      "latest": 1166.1500244140625,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8800,25 +10846,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 154.413330078125,
+          "delta": 141.933349609375,
           "dir": "up",
           "score": 1.5,
           "prior": 1024.2166748046875,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 377.8880615234375,
+          "delta": 365.4080810546875,
           "dir": "up",
           "score": 1.5,
           "prior": 800.741943359375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 688.8621215820312,
+          "delta": 676.3821411132812,
           "dir": "up",
           "score": 1.5,
           "prior": 489.76788330078125,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 754.8287048339844,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 411.3213195800781,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 958.1586761474609,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 207.99134826660156,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8844,7 +10904,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DOGE-USD",
-      "latest": 0.08562000095844269,
+      "latest": 0.08432000130414963,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8855,25 +10915,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.000804997980594635,
+          "delta": -0.0004950016736984253,
           "dir": "flat",
-          "score": 0.010062474757432938,
+          "score": -0.006187520921230316,
           "prior": 0.08481500297784805,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.00040099769830703735,
+          "delta": -0.000899001955986023,
           "dir": "flat",
-          "score": 0.005012471228837967,
+          "score": -0.011237524449825287,
           "prior": 0.08521900326013565,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.01602800190448761,
+          "delta": 0.01472800225019455,
           "dir": "flat",
-          "score": 0.20035002380609512,
+          "score": 0.18410002812743187,
           "prior": 0.06959199905395508,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.0016440004110336304,
+          "dir": "flat",
+          "score": -0.02055000513792038,
+          "prior": 0.08596400171518326,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -0.011624999344348907,
+          "dir": "flat",
+          "score": -0.14531249180436134,
+          "prior": 0.09594500064849854,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8899,7 +10973,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XMR-USD",
-      "latest": 516.05029296875,
+      "latest": 514.0722045898438,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -8910,25 +10984,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -5.07958984375,
+          "delta": -7.05767822265625,
           "dir": "down",
-          "score": -0.6152004360040155,
+          "score": -0.858060180997248,
           "prior": 521.1298828125,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 44.11041259765625,
+          "delta": 42.13232421875,
           "dir": "up",
           "score": 1.5,
           "prior": 471.93988037109375,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 123.61959838867188,
+          "delta": 121.64151000976562,
           "dir": "up",
           "score": 1.5,
           "prior": 392.4306945800781,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 160.84820556640625,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 353.2239990234375,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 155.56182861328125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 358.5103759765625,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -8954,7 +11042,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LEO-USD",
-      "latest": 9.107250213623047,
+      "latest": 9.109848022460938,
       "asOf": "2026-09-11",
       "n": 2671,
       "anchor": {
@@ -8965,25 +11053,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.1749401092529297,
+          "delta": -0.17234230041503906,
           "dir": "down",
-          "score": -1.20055522488587,
+          "score": -1.1823900628618997,
           "prior": 9.282190322875977,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -0.3182706832885742,
+          "delta": -0.3156728744506836,
           "dir": "down",
           "score": -1.5,
           "prior": 9.425520896911621,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": -0.025472640991210938,
+          "delta": -0.022874832153320312,
           "dir": "flat",
-          "score": -0.17481018140571522,
+          "score": -0.15693752585746276,
           "prior": 9.132722854614258,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.4991283416748047,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.608976364135742,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.036815643310546875,
+          "dir": "up",
+          "score": 0.25258134946224853,
+          "prior": 9.07303237915039,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9009,7 +11111,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LINK-USD",
-      "latest": 11.78499984741211,
+      "latest": 11.630999565124512,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -9020,25 +11122,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.1464366912841797,
-          "dir": "up",
-          "score": 0.7766052883972671,
+          "delta": -0.007563591003417969,
+          "dir": "flat",
+          "score": -0.04064349199453886,
           "prior": 11.63856315612793,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.3516407012939453,
+          "delta": 0.19764041900634766,
           "dir": "up",
-          "score": 1.5,
+          "score": 1.0620347906241618,
           "prior": 11.433359146118164,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 3.1142425537109375,
+          "delta": 2.96024227142334,
           "dir": "up",
           "score": 1.5,
           "prior": 8.670757293701172,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 3.7753067016601562,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 7.8556928634643555,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 2.542975425720215,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 9.088024139404297,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9064,7 +11180,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ADA-USD",
-      "latest": 0.20969000458717346,
+      "latest": 0.20524999499320984,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -9075,25 +11191,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.0015849918127059937,
+          "delta": -0.006025001406669617,
           "dir": "flat",
-          "score": -0.01981239765882492,
+          "score": -0.07531251758337021,
           "prior": 0.21127499639987946,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.006627008318901062,
+          "delta": 0.002186998724937439,
           "dir": "flat",
-          "score": 0.08283760398626328,
+          "score": 0.027337484061717987,
           "prior": 0.2030629962682724,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.027284011244773865,
+          "delta": 0.02284400165081024,
           "dir": "up",
-          "score": 0.3410501405596733,
+          "score": 0.285550020635128,
           "prior": 0.1824059933423996,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.03541000187397003,
+          "dir": "up",
+          "score": 0.4426250234246254,
+          "prior": 0.1698399931192398,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -0.060443997383117676,
+          "dir": "down",
+          "score": -0.755549967288971,
+          "prior": 0.2656939923763275,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9119,7 +11249,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLM-USD",
-      "latest": 0.1817770004272461,
+      "latest": 0.17824700474739075,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -9130,25 +11260,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.00228099524974823,
+          "delta": -0.0012490004301071167,
           "dir": "flat",
-          "score": 0.028512440621852875,
+          "score": -0.015612505376338959,
           "prior": 0.17949600517749786,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 0.0023140013217926025,
+          "delta": -0.0012159943580627441,
           "dir": "flat",
-          "score": 0.028925016522407532,
+          "score": -0.015199929475784302,
           "prior": 0.1794629991054535,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 0.022467002272605896,
-          "dir": "up",
-          "score": 0.2808375284075737,
+          "delta": 0.01893700659275055,
+          "dir": "flat",
+          "score": 0.23671258240938187,
           "prior": 0.1593099981546402,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.009939000010490417,
+          "dir": "flat",
+          "score": -0.12423750013113022,
+          "prior": 0.18818600475788116,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.014299005270004272,
+          "dir": "flat",
+          "score": 0.1787375658750534,
+          "prior": 0.16394799947738647,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9174,7 +11318,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BCH-USD",
-      "latest": 233.3800048828125,
+      "latest": 229.0500030517578,
       "asOf": "2026-09-11",
       "n": 3229,
       "anchor": {
@@ -9185,25 +11329,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -14.800521850585938,
+          "delta": -19.130523681640625,
           "dir": "down",
           "score": -1.5,
           "prior": 248.18052673339844,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": -14.577774047851562,
+          "delta": -18.90777587890625,
           "dir": "down",
           "score": -1.5,
           "prior": 247.95777893066406,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 20.992706298828125,
+          "delta": 16.662704467773438,
           "dir": "up",
           "score": 1.5,
           "prior": 212.38729858398438,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 27.042648315429688,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 202.00735473632812,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -231.65516662597656,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 460.7051696777344,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9229,7 +11387,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LTC-USD",
-      "latest": 53.95500183105469,
+      "latest": 53.52000045776367,
       "asOf": "2026-09-11",
       "n": 4378,
       "anchor": {
@@ -9240,25 +11398,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 3.172985076904297,
+          "delta": 2.7379837036132812,
           "dir": "up",
           "score": 1.5,
           "prior": 50.78201675415039,
           "priorDate": "2026-09-04"
         },
         "2w": {
-          "delta": 4.636100769042969,
+          "delta": 4.201099395751953,
           "dir": "up",
           "score": 1.5,
           "prior": 49.31890106201172,
           "priorDate": "2026-08-28"
         },
         "1m": {
-          "delta": 9.103309631347656,
+          "delta": 8.66830825805664,
           "dir": "up",
           "score": 1.5,
           "prior": 44.85169219970703,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 10.473876953125,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 43.04612350463867,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": -1.7859344482421875,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 55.30593490600586,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9312,6 +11484,20 @@
           "score": 0.1841753044126681,
           "prior": 5839.593000000001,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -40.03600000000006,
+          "dir": "down",
+          "score": -0.4272346304806752,
+          "prior": 5896.888,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": 49.245999999999185,
+          "dir": "up",
+          "score": 0.5255169500612188,
+          "prior": 5807.606000000001,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok"
@@ -9369,6 +11555,20 @@
           "score": 1.5,
           "prior": -10.999999999999988,
           "priorDate": "2026-08-11"
+        },
+        "3m": {
+          "delta": 2.0000000000000018,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -14.999999999999991,
+          "priorDate": "2026-06-11"
+        },
+        "6m": {
+          "delta": -2.9999999999999805,
+          "dir": "down",
+          "score": 1.5,
+          "prior": -10.000000000000009,
+          "priorDate": "2026-03-12"
         }
       },
       "status": "ok",
@@ -9427,6 +11627,20 @@
           "score": -0.04260257211723694,
           "prior": 9.214255120949396,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -0.275234926876033,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.483213510678702,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.32472585429870016,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 9.53270443810137,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -9485,6 +11699,20 @@
           "score": 0.18417530441266483,
           "prior": 17.97568532921161,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -0.12324053026303616,
+          "dir": "down",
+          "score": -0.42723463048067356,
+          "prior": 18.15205325261606,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.1964331460834714,
+          "dir": "down",
+          "score": -0.6809695025005854,
+          "prior": 18.225245868436495,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -9538,6 +11766,20 @@
           "score": 0.1186359828571135,
           "prior": 21.18102811025193,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -0.059404630147231074,
+          "dir": "flat",
+          "score": -0.17495571216982278,
+          "prior": 21.280714515691752,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.15153302255920664,
+          "dir": "down",
+          "score": -0.44628790404694674,
+          "prior": 21.372842908103728,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -9591,6 +11833,20 @@
           "score": 1.5,
           "prior": -3.994841672351572,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": 1.2347487154556598,
+          "dir": "up",
+          "score": 1.5,
+          "prior": -4.146508971461561,
+          "priorDate": "2026-06-10"
+        },
+        "6m": {
+          "delta": -0.7107530913003961,
+          "dir": "down",
+          "score": -1.5,
+          "prior": -2.201007164705505,
+          "priorDate": "2026-03-11"
         }
       },
       "status": "ok",
@@ -9644,6 +11900,20 @@
           "score": 1.5,
           "prior": -1.257234827745347,
           "priorDate": "2026-08-05"
+        },
+        "3m": {
+          "delta": -1.5026347758135983,
+          "dir": "down",
+          "score": 1.5,
+          "prior": -0.7246221052318237,
+          "priorDate": "2026-06-05"
+        },
+        "6m": {
+          "delta": 3.021260483570676,
+          "dir": "up",
+          "score": -1.5,
+          "prior": -5.248517364616098,
+          "priorDate": "2026-03-06"
         }
       },
       "status": "ok",
@@ -9697,6 +11967,20 @@
           "score": -1.5,
           "prior": 3.5058333333333334,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": 0.3857000000000004,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.342633333333333,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.5658999999999996,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 3.162433333333334,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9748,6 +12032,20 @@
           "score": -1.5,
           "prior": 0.5282858247171731,
           "priorDate": "2026-08-12"
+        },
+        "3m": {
+          "delta": -0.32507105806013403,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 0.6974818042798094,
+          "priorDate": "2026-06-12"
+        },
+        "6m": {
+          "delta": 0.4296488635370234,
+          "dir": "up",
+          "score": 1.5,
+          "prior": -0.057238117317348014,
+          "priorDate": "2026-03-13"
         }
       },
       "status": "ok",
@@ -9801,6 +12099,20 @@
           "score": 1.5,
           "prior": 2.803533374130062,
           "priorDate": "2026-07-22"
+        },
+        "3m": {
+          "delta": -0.6981887940987273,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.700932726319677,
+          "priorDate": "2026-05-27"
+        },
+        "6m": {
+          "delta": -0.9619384631757892,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.964682395396739,
+          "priorDate": "2026-02-25"
         }
       },
       "status": "ok"
@@ -9853,6 +12165,20 @@
           "score": 1.5,
           "prior": 2.5999999999999943,
           "priorDate": "2025-07-01"
+        },
+        "3m": {
+          "delta": 0.30000000000001137,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 2.5999999999999943,
+          "priorDate": "2025-07-01"
+        },
+        "6m": {
+          "delta": -0.5,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 3.4000000000000057,
+          "priorDate": "2025-04-01"
         }
       },
       "status": "ok"
@@ -9904,6 +12230,20 @@
           "score": 1.5,
           "prior": 3.3854288864729076,
           "priorDate": "2026-01-01"
+        },
+        "3m": {
+          "delta": 1.0784516947216272,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 3.3854288864729076,
+          "priorDate": "2026-01-01"
+        },
+        "6m": {
+          "delta": 1.0974912138418391,
+          "dir": "up",
+          "score": 1.5,
+          "prior": 3.3663893673526957,
+          "priorDate": "2025-10-01"
         }
       },
       "status": "ok"
@@ -9956,6 +12296,20 @@
           "score": 0.37499999999999756,
           "prior": 1.37,
           "priorDate": "2026-09-09"
+        },
+        "3m": {
+          "delta": 0.040000000000000036,
+          "dir": "up",
+          "score": 0.5000000000000004,
+          "prior": 1.3599999999999999,
+          "priorDate": "2026-08-01"
+        },
+        "6m": {
+          "delta": -0.5200000000000002,
+          "dir": "down",
+          "score": -1.5,
+          "prior": 1.9200000000000002,
+          "priorDate": "2026-05-01"
         }
       },
       "status": "ok",
@@ -10009,13 +12363,36 @@
           "score": -1.5,
           "prior": 74.98456719142251,
           "priorDate": "2026-07-28"
+        },
+        "3m": {
+          "delta": 2.320126076967952,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 91.07245310241818,
+          "priorDate": "2026-06-02"
+        },
+        "6m": {
+          "delta": 38.40360607241678,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 54.988973106969354,
+          "priorDate": "2026-03-03"
         }
       },
       "status": "ok",
       "staleDays": 10
     }
   },
-  "errors": [],
+  "errors": [
+    {
+      "id": "WSHOSHO",
+      "error": "502 Bad Gateway for https://api.stlouisfed.org/fred/series/observations?series_id=WSHOSHO&api_key=be001e0778d9ba47fbba0ab3d2f3e1de&file_type=json&observation_start=1990-01-01"
+    },
+    {
+      "id": "CPFF",
+      "error": "502 Bad Gateway for https://api.stlouisfed.org/fred/series/observations?series_id=CPFF&api_key=be001e0778d9ba47fbba0ab3d2f3e1de&file_type=json&observation_start=1990-01-01"
+    }
+  ],
   "formula": {
     "lights": "Lights = weighted mean of voter anchors (correlated families first). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the word. Inflation upside = hot vs ~2%.",
     "netLiquidity": "WALCL(bn) − TGA − ON RRP",
