@@ -6,7 +6,16 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=300"
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/regime-today.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     },
@@ -15,7 +24,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=300"
+          "value": "no-store"
         }
       ]
     },
@@ -35,15 +44,15 @@
       ]
     },
     {
-      "source": "/(.*)\\.(js|mjs|css|webmanifest|html)",
+      "source": "/(.*)\\.(js|mjs|css|webmanifest|html|json)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     },
     {
       "source": "/",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     }
   ]

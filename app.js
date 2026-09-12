@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261074";
+import { buildMeaning } from "./meaning.js?v=20261079";
 import {
   buildLights,
   attachImpulse,
@@ -12,8 +12,8 @@ import {
   DEFAULT_IMPULSE,
   TABLE_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261074";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261074";
+} from "./score.js?v=20261079";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261079";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -228,10 +228,15 @@ function pullMarketsLive(force = false) {
       const t = Date.parse(data.pulledAt);
       livePulledAt = Number.isFinite(t) ? t : Date.now();
       liveState = "ok";
-      await applyLiveQuotes(liveQuotes);
+      if (force) await applyLiveQuotes(liveQuotes);
       if (SNAP) {
-        refreshViews();
-        if (globalView === "charts" || [...rowFlip].length) paintSparks();
+        if (force) {
+          refreshViews();
+          if (globalView === "charts" || [...rowFlip].length) paintSparks();
+        } else {
+          renderTable(viewOf(SNAP));
+          syncMarketsLiveUi();
+        }
       } else syncMarketsLiveUi();
     } catch (_) {
       liveState = livePulledAt ? "ok" : "err";
@@ -520,6 +525,127 @@ function trackPct(score) {
   return Math.max(4, Math.min(96, ((s + 1) / 2) * 100));
 }
 
+function fmtLightScore(n) {
+  return `${n >= 0 ? "+" : ""}${n.toFixed(2)}`;
+}
+
+/**
+ * First open: needles and scores travel from center. The word is blank until
+ * they stop — blank is not Mid. Once only; later paints must not replay it.
+ */
+let settlePhase = "pending";
+let settleDirty = false;
+const SETTLE_MS = 1100;
+
+function easeOutCubic(t) {
+  return 1 - (1 - t) ** 3;
+}
+
+function settleMarksAndScores() {
+  const lights = $("#lights");
+  const favor = $("#favorStrip");
+  const marks = [
+    ...(lights?.querySelectorAll(".track-mark") || []),
+    ...(favor?.querySelectorAll(".track-mark") || []),
+  ];
+  const scores = [...(lights?.querySelectorAll(".score[data-target]") || [])];
+  return { marks, scores };
+}
+
+function parkSettleStart(root) {
+  if (!root || settlePhase !== "pending") return;
+  document.documentElement.classList.add("gf-open-settle");
+  for (const m of root.querySelectorAll(".track-mark")) m.style.left = "50%";
+  for (const s of root.querySelectorAll(".score[data-target]")) {
+    s.textContent = fmtLightScore(0);
+  }
+}
+
+function afterOpenSettle() {
+  // Table 3m/6m and last prints only. Do not rebuild the five or the six —
+  // that was the extra crypto jump after they had already stopped.
+  hydrateImpulseFromSparks().then(() => {
+    if (SNAP) renderTable(viewOf(SNAP));
+  });
+  pullMarketsLive();
+}
+
+function startOpenSettle() {
+  if (settlePhase !== "pending") return;
+  const { marks, scores } = settleMarksAndScores();
+  if (!marks.length) {
+    settlePhase = "done";
+    afterOpenSettle();
+    return;
+  }
+  settlePhase = "playing";
+  document.documentElement.classList.add("gf-open-settle");
+
+  const from = 50;
+  const markTo = marks.map((m) => {
+    const n = parseFloat(m.getAttribute("data-to") || m.style.left);
+    return Number.isFinite(n) ? n : from;
+  });
+  const scoreTo = scores.map((s) => Number(s.dataset.target));
+  for (const m of marks) m.style.left = `${from}%`;
+  for (let i = 0; i < scores.length; i++) {
+    if (Number.isFinite(scoreTo[i])) scores[i].textContent = fmtLightScore(0);
+  }
+
+  let kicked = false;
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    for (let i = 0; i < marks.length; i++) {
+      if (marks[i].isConnected) marks[i].style.left = `${markTo[i]}%`;
+    }
+    for (let i = 0; i < scores.length; i++) {
+      if (Number.isFinite(scoreTo[i])) {
+        scores[i].textContent = fmtLightScore(scoreTo[i]);
+      }
+    }
+    document.documentElement.classList.add("gf-open-arrive");
+    document.documentElement.classList.remove("gf-open-run");
+    settlePhase = "arriving";
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove("gf-open-settle");
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("gf-open-arrive");
+        settlePhase = "done";
+        afterOpenSettle();
+      }, 200);
+    });
+  };
+  const kick = () => {
+    if (kicked) return;
+    kicked = true;
+    document.documentElement.classList.add("gf-open-run");
+    void document.documentElement.offsetHeight;
+    for (let i = 0; i < marks.length; i++) {
+      marks[i].style.left = `${markTo[i]}%`;
+    }
+    let t0 = null;
+    const tick = (now) => {
+      if (finished) return;
+      if (t0 == null) t0 = now;
+      const t = Math.min(1, (now - t0) / SETTLE_MS);
+      const e = easeOutCubic(t);
+      for (let i = 0; i < scores.length; i++) {
+        if (!Number.isFinite(scoreTo[i])) continue;
+        scores[i].textContent = fmtLightScore(scoreTo[i] * e);
+      }
+      if (t < 1) requestAnimationFrame(tick);
+      else finish();
+    };
+    requestAnimationFrame(tick);
+    window.setTimeout(finish, SETTLE_MS + 80);
+  };
+  // Hold center on screen, then travel. Timeout not rAF: iOS may withhold
+  // frames until sparks/live finish, which used to skip the whole move.
+  window.setTimeout(kick, 140);
+}
+
 function lightIsSplit(snap, id) {
   const kinds = (snap?.disagreements || []).map((d) => d.kind);
   if (id === "inflation" && kinds.some((k) => String(k).startsWith("inflation_"))) return true;
@@ -541,7 +667,7 @@ function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
       : `<i class="track-cut track-cut-lo"></i><i class="track-mid"></i><i class="track-cut track-cut-hi"></i>`;
   return `<span class="${cls}" data-state="${escapeHtml(
     state || "neutral"
-  )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%"></i></span></span>`;
+  )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%" data-to="${pct}"></i></span></span>`;
 }
 
 /** Parent-class proxies. Credit / commodities judged on their splits. */
@@ -657,6 +783,10 @@ function itemClash(it) {
 function renderFavorStrip() {
   const el = $("#favorStrip");
   if (!el || !SNAP) return;
+  if (settlePhase === "playing" || settlePhase === "arriving") {
+    settleDirty = true;
+    return;
+  }
   try {
     const snap = viewOf(SNAP);
     const favor = buildMeaning(snap, DEFAULT_IMPULSE).favor;
@@ -727,6 +857,7 @@ function renderFavorStrip() {
         </button>`;
       })
       .join("");
+    parkSettleStart(el);
   } catch (err) {
     console.warn("renderFavorStrip failed", err);
   }
@@ -1468,6 +1599,11 @@ function openSentence(snap) {
 function renderLights(snap) {
   const root = $("#lights");
   if (!root) return;
+  if (settlePhase === "playing" || settlePhase === "arriving") {
+    settleDirty = true;
+    applyScrollSpyUi();
+    return;
+  }
   const order = ["liquidity", "rates", "growth", "inflation", "risk"];
   const spyLight =
     activeLayer === "all" && comparePhase === "off" && scrollStreet
@@ -1476,10 +1612,9 @@ function renderLights(snap) {
   root.innerHTML = order
     .map((id) => {
       const L = snap.lights?.[id] || { state: "empty", label: id };
-      const score =
-        L.score != null && Number.isFinite(L.score)
-          ? `${L.score >= 0 ? "+" : ""}${L.score.toFixed(2)}`
-          : "—";
+      const scoreNum =
+        L.score != null && Number.isFinite(L.score) ? L.score : null;
+      const score = scoreNum != null ? fmtLightScore(scoreNum) : "—";
       const cliff = distanceToCliff(L.score);
       const nearFlip =
         cliff != null && Number.isFinite(cliff) && cliff < 0.05
@@ -1506,7 +1641,9 @@ function renderLights(snap) {
         <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
         <span class="word">${escapeHtml(word)}</span>
-        <span class="score">${escapeHtml(score)}</span>
+        <span class="score"${
+          scoreNum != null ? ` data-target="${scoreNum}"` : ""
+        }>${escapeHtml(score)}</span>
         ${trackHtml(L.score, L.state || "empty")}
       </button>`;
     })
@@ -1521,6 +1658,7 @@ function renderLights(snap) {
     selectLight(card.dataset.id);
   };
   root.onpointerup = null;
+  parkSettleStart(root);
 }
 
 
@@ -2055,7 +2193,16 @@ async function hydrateImpulseFromSparks() {
     const pts = sparkLive[id];
     if (!pts?.length) continue;
     const facts = seriesFacts(pts, specFromRow(s));
-    s.impulse = { ...(s.impulse || {}), ...facts.impulse };
+    // Keep the baked 1w/2w/1m — that turn sits the six. Only fill table windows
+    // (3m/6m) and any lookback the bake left empty.
+    const next = { ...(s.impulse || {}) };
+    for (const [k, v] of Object.entries(facts.impulse || {})) {
+      const cur = next[k];
+      const empty =
+        !cur || (cur.dir == null && cur.score == null && cur.delta == null);
+      if (k === "3m" || k === "6m" || empty) next[k] = v;
+    }
+    s.impulse = next;
   }
 }
 
@@ -2292,10 +2439,7 @@ async function boot() {
   renderTabs(SNAP);
   renderTable(snap);
   renderFavorStrip();
-  hydrateImpulseFromSparks().then(() => {
-    if (SNAP) refreshViews();
-  });
-  pullMarketsLive();
+  startOpenSettle();
   setInterval(syncMarketsLiveUi, 15000);
 
   try {

@@ -708,6 +708,20 @@ body.page-about::before {
   overflow: visible;
   transform: translateY(calc(-5px * var(--ui-scale)));
 }
+/* First open: word waits until the needle stops. Space stays reserved. */
+html.gf-open-settle .light .word {
+  opacity: 0;
+}
+html.gf-open-arrive .light .word {
+  transition: opacity 0.18s ease-out;
+}
+html.gf-open-run .track-mark {
+  transition: left 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.gf-open-settle .light[data-near-flip="true"] .score {
+  color: var(--muted);
+  font-weight: inherit;
+}
 
 .light .score {
   font-family: var(--mono);

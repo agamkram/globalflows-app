@@ -7,6 +7,7 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
   <meta name="theme-color" content="#0b0e13" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="GlobalFlows" />
@@ -17,26 +18,21 @@
   <script>
     (function () {
       try {
-        var host = location.hostname || "";
-        var local =
-          host === "localhost" ||
-          host === "127.0.0.1" ||
-          /^192\.168\./.test(host) ||
-          /^10\./.test(host) ||
-          /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
-        if (local && navigator.serviceWorker) {
+        // Every open, including the home-screen app: drop leftover workers and
+        // Cache Storage so the book is not yesterday’s JS.
+        if (navigator.serviceWorker) {
           navigator.serviceWorker.getRegistrations().then(function (regs) {
             regs.forEach(function (r) {
               r.unregister();
             });
           });
-          if (window.caches && caches.keys) {
-            caches.keys().then(function (keys) {
-              keys.forEach(function (k) {
-                caches.delete(k);
-              });
+        }
+        if (window.caches && caches.keys) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (k) {
+              caches.delete(k);
             });
-          }
+          });
         }
         var r = document.documentElement;
         var n = window.navigator;
@@ -101,13 +97,13 @@
     }
   </script>
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261074" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261074" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261074" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261079" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261079" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261079" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261074" />
+  <link rel="stylesheet" href="styles.css?v=20261079" />
 </head>
 <body>
   <div class="app" id="app">
@@ -133,7 +129,7 @@
           rel="noopener noreferrer"
           title="Oil price charts (oilprice.com)"
           aria-label="Oil price charts on oilprice.com"
-        ><img src="oilprice-32.png?v=20261074" width="16" height="16" alt="" /></a>
+        ><img src="oilprice-32.png?v=20261079" width="16" height="16" alt="" /></a>
         <a
           href="https://bubblincrude.markmaga.com"
           class="nav-link nav-link-icon"
@@ -141,7 +137,7 @@
           rel="noopener noreferrer"
           title="BubblinCrude"
           aria-label="BubblinCrude"
-        ><img src="bubblincrude-32.png?v=20261074" srcset="bubblincrude-64.png?v=20261074 2x" width="16" height="16" alt="" /></a>
+        ><img src="bubblincrude-32.png?v=20261079" srcset="bubblincrude-64.png?v=20261079 2x" width="16" height="16" alt="" /></a>
         <a class="nav-link nav-link-sm" href="./about.html">About</a>
       </nav>
     </div>
@@ -270,7 +266,7 @@
     </form>
   </dialog>
 
-  <script type="module" src="app.js?v=20261074"></script>
+  <script type="module" src="app.js?v=20261079"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

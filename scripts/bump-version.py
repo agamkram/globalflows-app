@@ -15,6 +15,7 @@ INDEX = ROOT / "index.html"
 ABOUT = ROOT / "about.html"
 MATH = ROOT / "math.html"
 APP = ROOT / "app.js"
+MEANING = ROOT / "meaning.js"
 
 SPOTS = {
     "index ?v=": (INDEX, r"\?v=(\d+)", "?v={n}"),
@@ -23,6 +24,7 @@ SPOTS = {
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app light-copy ?v=": (APP, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),
+    "meaning score ?v=": (MEANING, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
 }
 
 
