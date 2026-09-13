@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261080";
+import { buildMeaning } from "./meaning.js?v=20261093";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261080";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261080";
+} from "./score.js?v=20261093";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261093";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -84,14 +84,41 @@ try {
 
 const MARKET_BUCKETS = [
   { id: "all", label: "All" },
-  { id: "equities", label: "Equities" },
-  { id: "credit", label: "Credit" },
   { id: "duration", label: "Duration" },
+  { id: "credit", label: "Credit" },
+  { id: "equities", label: "Equities" },
+  { id: "crypto", label: "Crypto" },
   { id: "metals", label: "Metals" },
   { id: "energy", label: "Energy" },
   { id: "ag", label: "Ag" },
-  { id: "crypto", label: "Crypto" },
 ];
+const MARKET_BUCKET_ORDER = MARKET_BUCKETS.filter((b) => b.id !== "all").map((b) => b.id);
+const BUCKET_TO_FAVOR = {
+  duration: "treasuries",
+  credit: "credit",
+  equities: "stocks",
+  crypto: "crypto",
+  metals: "gold",
+  energy: "cmdty",
+  ag: "cmdty",
+};
+
+/** Keep order; split so the two rows land as close to the same length as possible. */
+function splitBucketRows(items) {
+  const weights = items.map((b) => b.label.length);
+  let best = Math.ceil(items.length / 2);
+  let bestDiff = Infinity;
+  for (let i = 2; i <= items.length - 2; i++) {
+    const a = weights.slice(0, i).reduce((s, x) => s + x, 0);
+    const b = weights.slice(i).reduce((s, x) => s + x, 0);
+    const d = Math.abs(a - b);
+    if (d < bestDiff) {
+      bestDiff = d;
+      best = i;
+    }
+  }
+  return [items.slice(0, best), items.slice(best)];
+}
 
 const COMPARE_MAX = 10;
 
@@ -469,6 +496,8 @@ const LIGHT_BLURB = {
 
 /** Which component is selected (blue border). Table shows that component’s full Street shelf. */
 let focusLight = "liquidity";
+/** Last component named on the details chip — stays up on All / FX / Markets. */
+let hintLight = "liquidity";
 
 /** Street shelf when a light is focused — lights own these; tabs keep All / FX / Markets. */
 const LIGHT_TO_TAB = {
@@ -494,6 +523,8 @@ const STREET_TABS = new Set(["all", "fx", "markets"]);
 let activeLayer = "liquidity";
 /** All-view scroll spy: which street section is in view (layer id). */
 let scrollStreet = null;
+/** Markets All: which bucket section is in view. */
+let scrollBucket = null;
 
 function bakeLight(id) {
   return REGIME?.lights?.[id] || null;
@@ -872,8 +903,10 @@ function selectLight(id) {
     return;
   }
   focusLight = id;
+  hintLight = id;
   activeLayer = LIGHT_TO_TAB[id] || id;
   scrollStreet = null;
+  scrollBucket = null;
   if (comparePhase !== "pick") {
     comparePhase = "off";
     compareList = [];
@@ -881,6 +914,11 @@ function selectLight(id) {
     clubSavedAs = null;
   }
   refreshViews();
+  requestAnimationFrame(() => {
+    const se = document.scrollingElement || document.documentElement;
+    se.scrollTop = 0;
+    window.scrollTo(0, 0);
+  });
 }
 
 function openLightSheet(id) {
@@ -892,7 +930,6 @@ function openLightSheet(id) {
     return;
   }
 
-  const h = DEFAULT_IMPULSE;
   const sheet = liveSheet(id, snap);
   const word = sheet?.word || wordFor(L);
   const titleEl = $("#lightTitle");
@@ -907,17 +944,6 @@ function openLightSheet(id) {
   titleEl.textContent = inflTurn
     ? `${L.label || id} · ${word}, ${inflTurn}`
     : `${L.label || id} · ${word}`;
-  const members = (L.members || [])
-    .map((mid) => snap.series?.[mid])
-    .filter((s) => s && memberAnchorScore(s) != null);
-  const rows = members
-    .map((s) => {
-      return `<tr data-mid="${s.id}">
-        <td>${escapeHtml(s.name)}</td>
-        <td>${fmtValue(s.latest, s.units)}</td>
-      </tr>`;
-    })
-    .join("");
   const teach = sheet?.teach
     ? `<p class="light-teach">${escapeHtml(sheet.teach)}</p>`
     : `<p>${escapeHtml(LIGHT_BLURB[id] || "")}</p>`;
@@ -926,30 +952,9 @@ function openLightSheet(id) {
     morn && sheet?.word && morn !== sheet.word
       ? `<p class="muted tiny">Moved with the tape — this morning ${escapeHtml(morn)}.</p>`
       : "";
-  const chev = L.impulse?.dir || "flat";
-  const scoreNum = sheet?.score ?? L.score;
-  const cliff = sheet?.cliff ?? distanceToCliff(scoreNum);
-  const scoreTxt =
-    scoreNum != null && Number.isFinite(scoreNum)
-      ? `${scoreNum >= 0 ? "+" : ""}${scoreNum.toFixed(2)}`
-      : "—";
-  let cliffBit = "";
-  if (cliff != null && Number.isFinite(cliff)) {
-    cliffBit =
-      Math.abs(scoreNum) > 0.45
-        ? ` · ${cliff.toFixed(2)} past a word flip`
-        : ` · ${cliff.toFixed(2)} from flipping`;
-  }
   bodyEl.innerHTML = `
     ${teach}
     ${moved}
-    <p class="light-status">${escapeHtml(word)} · ${escapeHtml(scoreTxt)}${cliffBit} · ${h} ${escapeHtml(chev)}</p>
-    <div class="light-members">
-      <table>
-        <thead><tr><th>Name</th><th>Latest</th></tr></thead>
-        <tbody>${rows || `<tr><td colspan="2" class="empty">no members</td></tr>`}</tbody>
-      </table>
-    </div>
   `;
   try {
     if (!dlg.open) dlg.showModal();
@@ -1466,8 +1471,6 @@ function openFavorCard(id) {
 
   const titleEl = $("#sentenceTitle");
   if (titleEl) titleEl.textContent = it.name;
-  const fullBtn = $("#btnFullRegime");
-  if (fullBtn) fullBtn.hidden = false;
 
   $("#sentenceBody").innerHTML = `
     <div class="sent-explain rubric-row"><p class="sent-explain-title">
@@ -1573,16 +1576,14 @@ function openSentence(snap) {
   const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own.</p>`;
 
   const liveFoot = movedBits.length
-    ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${DEFAULT_IMPULSE} turn · tap a component, then Voters.`
+    ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${DEFAULT_IMPULSE} turn`
     : REGIME?.verdict === "SPOT ON"
-      ? `Verified bake · ${DEFAULT_IMPULSE} turn · tap a component, then Voters.`
-      : `Tap a component, then Voters.`;
+      ? `Verified bake · ${DEFAULT_IMPULSE} turn`
+      : `${DEFAULT_IMPULSE} turn`;
   const verified = `${axis}<p class="muted tiny sent-foot">${escapeHtml(liveFoot)}</p>`;
 
   const titleEl = $("#sentenceTitle");
   if (titleEl) titleEl.textContent = "Today’s regime";
-  const fullBtn = $("#btnFullRegime");
-  if (fullBtn) fullBtn.hidden = true;
 
   $("#sentenceBody").innerHTML = `
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
@@ -1713,6 +1714,7 @@ function renderTabs(snap) {
     activeLayer = b.dataset.layer;
     focusLight = null;
     scrollStreet = null;
+    scrollBucket = null;
     // Keep picks when browsing streets to build a club; wipe only outside pick.
     if (comparePhase !== "pick") {
       exitCompareToStreets();
@@ -1777,6 +1779,20 @@ function sortSeries(a, b) {
   return ao - bo || a.name.localeCompare(b.name);
 }
 
+/** Who is voting this component right now — same set as the blue mark. */
+function isVotingNow(s, layer, snap) {
+  const lid = layer === "all" ? s.light : layer;
+  if (!lid) return false;
+  return (snap?.lights?.[lid]?.members || []).includes(s.id);
+}
+
+/** Current voters first, then the rest of the street. */
+function sortStreet(a, b, layer, snap) {
+  const av = isVotingNow(a, layer, snap) ? 0 : 1;
+  const bv = isVotingNow(b, layer, snap) ? 0 : 1;
+  return av - bv || sortSeries(a, b);
+}
+
 function isMarketsSeries(s) {
   return (
     s.street === "markets" ||
@@ -1807,7 +1823,7 @@ function seriesList(snap, layer) {
         "markets",
       ];
       const d = order.indexOf(a.layer) - order.indexOf(b.layer);
-      return d || sortSeries(a, b);
+      return d || sortStreet(a, b, a.layer, snap);
     });
   }
 
@@ -1815,11 +1831,20 @@ function seriesList(snap, layer) {
     all = all.filter(isMarketsSeries);
     if (marketBucket !== "all") {
       all = all.filter((s) => s.marketBucket === marketBucket);
+      return all.sort(sortSeries);
     }
-    return all.sort(sortSeries);
+    return all.sort((a, b) => {
+      const ao = MARKET_BUCKET_ORDER.indexOf(a.marketBucket);
+      const bo = MARKET_BUCKET_ORDER.indexOf(b.marketBucket);
+      const ai = ao < 0 ? 99 : ao;
+      const bi = bo < 0 ? 99 : bo;
+      return ai - bi || sortSeries(a, b);
+    });
   }
 
-  return all.filter((s) => s.layer === layer).sort(sortSeries);
+  return all
+    .filter((s) => s.layer === layer || s.light === layer)
+    .sort((a, b) => sortStreet(a, b, layer, snap));
 }
 
 function renderMarketBuckets() {
@@ -1834,12 +1859,13 @@ function renderMarketBuckets() {
     el.innerHTML = "";
     return;
   }
-  el.innerHTML = MARKET_BUCKETS.map(
-    (b) =>
-      `<button type="button" class="btn tiny-btn" data-bucket="${b.id}" aria-pressed="${
-        marketBucket === b.id ? "true" : "false"
-      }">${b.label}</button>`
-  ).join("");
+  const chip = (b) =>
+    `<button type="button" class="btn tiny-btn" data-bucket="${b.id}" aria-pressed="${
+      marketBucket === b.id ? "true" : "false"
+    }">${b.label}</button>`;
+  el.innerHTML = splitBucketRows(MARKET_BUCKETS)
+    .map((row) => `<div class="market-bucket-row">${row.map(chip).join("")}</div>`)
+    .join("");
   el.onclick = (e) => {
     const b = e.target.closest("[data-bucket]");
     if (!b) return;
@@ -1968,32 +1994,79 @@ function syncStreetSelection() {
   });
 }
 
-/** All only: which street block is under the read line → light / FX·Markets button. */
+/** All: street under the pin. Markets All: bucket under the pin. */
 function syncScrollSpy() {
-  if (activeLayer !== "all" || comparePhase !== "off") {
-    if (scrollStreet != null) {
+  const clear = () => {
+    if (scrollStreet != null || scrollBucket != null) {
       scrollStreet = null;
+      scrollBucket = null;
       applyScrollSpyUi();
     }
+  };
+  if (comparePhase !== "off") {
+    clear();
     return;
   }
-  const rows = [...document.querySelectorAll("#heatBody tr[data-street]")];
-  if (!rows.length) return;
 
   const pin = $("#pinStack");
   const pinBottom = pin?.getBoundingClientRect().bottom ?? 0;
-  // Read line just under the stuck pin (or under where the pin sits in flow).
   const probe = Math.max(pinBottom, 0) + 4;
-  let current = rows[0].dataset.street || null;
-  for (const tr of rows) {
-    if (tr.getBoundingClientRect().top <= probe) {
-      current = tr.dataset.street || current;
-    } else {
-      break;
+
+  if (activeLayer === "all") {
+    scrollBucket = null;
+    const rows = [...document.querySelectorAll("#heatBody tr[data-street]")];
+    if (!rows.length) {
+      clear();
+      return;
     }
+    let current = rows[0].dataset.street || null;
+    for (const tr of rows) {
+      if (tr.getBoundingClientRect().top <= probe) {
+        current = tr.dataset.street || current;
+      } else {
+        break;
+      }
+    }
+    scrollStreet = current;
+    if (current === "markets") {
+      let buck = null;
+      for (const tr of rows) {
+        if (tr.getBoundingClientRect().top <= probe) {
+          if (tr.dataset.bucket) buck = tr.dataset.bucket;
+        } else {
+          break;
+        }
+      }
+      scrollBucket = buck;
+    } else {
+      scrollBucket = null;
+    }
+    applyScrollSpyUi();
+    return;
   }
-  scrollStreet = current;
-  applyScrollSpyUi();
+
+  if (activeLayer === "markets" && !focusLight && marketBucket === "all") {
+    scrollStreet = null;
+    const rows = [...document.querySelectorAll("#heatBody tr[data-bucket]")];
+    if (!rows.length) {
+      clear();
+      return;
+    }
+    let current = rows[0].dataset.bucket || null;
+    for (const tr of rows) {
+      if (!tr.dataset.bucket) continue;
+      if (tr.getBoundingClientRect().top <= probe) {
+        current = tr.dataset.bucket || current;
+      } else {
+        break;
+      }
+    }
+    scrollBucket = current;
+    applyScrollSpyUi();
+    return;
+  }
+
+  clear();
 }
 
 function applyScrollSpyUi() {
@@ -2007,6 +2080,24 @@ function applyScrollSpyUi() {
     el.setAttribute("aria-pressed", on ? "true" : "false");
   });
   syncStreetSelection();
+
+  const onMarkets =
+    activeLayer === "markets" && !focusLight && comparePhase === "off";
+  const bucketForFavor = onMarkets
+    ? marketBucket !== "all"
+      ? marketBucket
+      : scrollBucket
+    : onAll && scrollStreet === "markets"
+      ? scrollBucket
+      : null;
+  document.querySelectorAll("#marketBuckets [data-bucket]").forEach((el) => {
+    const on = onMarkets && marketBucket === "all" && scrollBucket && el.dataset.bucket === scrollBucket;
+    el.dataset.scrollOn = on ? "true" : "false";
+  });
+  const spyFavor = bucketForFavor ? BUCKET_TO_FAVOR[bucketForFavor] : null;
+  document.querySelectorAll("#favorStrip [data-favor-id]").forEach((el) => {
+    el.dataset.focus = spyFavor && el.dataset.favorId === spyFavor ? "true" : "false";
+  });
 }
 
 function refreshViews() {
@@ -2075,6 +2166,24 @@ function renderThead(rows) {
   }
 }
 
+function syncComponentHint(snap) {
+  const hint = $("#streetHint");
+  if (!hint) return;
+  const lid = focusLight || hintLight;
+  const L = lid ? snap?.lights?.[lid] : null;
+  if (!lid || !L) {
+    hint.hidden = true;
+    hint.dataset.light = "";
+    return;
+  }
+  const label = L.label || lid;
+  hint.hidden = false;
+  hint.dataset.light = lid;
+  hint.textContent = label;
+  hint.title = "Tap for details";
+  hint.setAttribute("aria-label", `${label}, tap for details`);
+}
+
 function renderTable(snap) {
   if (!snap) return;
   // All keeps the full book even if a light is visually spy-focused.
@@ -2108,10 +2217,7 @@ function renderTable(snap) {
         : { label: activeLayer });
   }
   $("#layerTitle").textContent = layerMeta.label || activeLayer;
-  const hint = $("#streetHint");
-  if (hint) {
-    hint.dataset.light = focusLight || "liquidity";
-  }
+  syncComponentHint(snap);
   syncMarketsLiveUi();
 
   const body = $("#heatBody");
@@ -2123,15 +2229,19 @@ function renderTable(snap) {
       const view = rowView(s.id);
       const data =
         view === "charts" ? chartCell(s) : valuesCells(s);
+      const pack = streetId === "all" ? s.light : focusLight || TAB_TO_LIGHT[streetId] || streetId;
       const voter =
-        s.light && (snap.lights?.[s.light]?.members || []).includes(s.id)
+        pack &&
+        s.light === pack &&
+        (snap.lights?.[s.light]?.members || []).includes(s.id)
           ? s.light
           : "";
       const picked = compareList.includes(s.id);
       const street = s.layer || s.street || "";
+      const bucket = s.marketBucket || "";
       return `<tr data-id="${s.id}" data-view="${view}"${
         street ? ` data-street="${escapeHtml(street)}"` : ""
-      }${voter ? ` data-voter="${escapeHtml(voter)}"` : ""}${
+      }${bucket ? ` data-bucket="${escapeHtml(bucket)}"` : ""}${voter ? ` data-voter="${escapeHtml(voter)}"` : ""}${
         picked && comparePhase === "pick" ? ` data-compare="1"` : ""
       }>
         <td class="name-cell"><span class="name-stack"><span class="name">${escapeHtml(s.name)}</span><span class="sub">${escapeHtml(seriesSub(s))}</span></span></td>
@@ -2457,8 +2567,12 @@ async function boot() {
     pullMarketsLive(true);
   });
   $("#streetHint")?.addEventListener("click", () => {
-    const id = $("#streetHint")?.dataset.light || focusLight || "liquidity";
+    const id = $("#streetHint")?.dataset.light || focusLight;
     if (id) openLightSheet(id);
+  });
+  $("#btnRegime")?.addEventListener("click", () => {
+    if (!SNAP) return;
+    openSentence(viewOf(SNAP));
   });
   $("#btnViewMode").onclick = () => {
     setGlobalView(globalView === "values" ? "charts" : "values");
@@ -2529,10 +2643,6 @@ async function boot() {
     const cell = e.target.closest?.("[data-favor-id]");
     if (!cell || !SNAP) return;
     openFavorCard(cell.dataset.favorId);
-  });
-  $("#btnFullRegime")?.addEventListener("click", () => {
-    if (!SNAP) return;
-    openSentence(viewOf(SNAP));
   });
 
   let tabFitTimer = 0;

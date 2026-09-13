@@ -113,6 +113,13 @@ html.pwa-standalone body {
   width: 100%;
 }
 
+.dials-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
 .topbar-nav {
   display: flex;
   flex-wrap: wrap;
@@ -193,47 +200,9 @@ html.pwa-standalone body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   justify-content: flex-end;
-  margin-top: 4px;
-}
-
-.light-members {
-  overflow: visible;
-  max-height: none;
-  margin: 4px 0 0;
-  border: none;
-  border-radius: 0;
-}
-
-.light-members table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.78rem;
-}
-
-.light-members th,
-.light-members td {
-  padding: 3px 0;
-  text-align: right;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-  white-space: nowrap;
-  vertical-align: baseline;
-}
-
-.light-members tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.light-members th:first-child,
-.light-members td:first-child {
-  text-align: left;
-  padding-right: 10px;
-  white-space: normal;
-}
-
-.light-members thead {
-  display: none;
+  margin-top: 2px;
 }
 
 .btn {
@@ -320,6 +289,11 @@ html.pwa-standalone body {
 .pin-stack .lights {
   overflow: visible;
   /* keep focus ring from clipping at the pin edge */
+  padding: 1px;
+}
+
+.pin-stack .favor-strip {
+  overflow: visible;
   padding: 1px;
 }
 
@@ -427,6 +401,14 @@ body.page-about::before {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  position: relative;
+  z-index: 1;
+}
+
+.favor-cell[data-focus="true"] {
+  z-index: 3;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .favor-cell:focus,
@@ -866,9 +848,9 @@ html.gf-open-settle .light[data-near-flip="true"] .score {
 }
 
 .dlg-body .sent-story {
-  margin: 0 0 8px;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  margin: 0 0 6px;
+  font-size: 0.86rem;
+  line-height: 1.35;
 }
 
 .dlg-body .sent-kicker {
@@ -999,9 +981,22 @@ html.gf-open-settle .light[data-near-flip="true"] .score {
 
 .market-buckets {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
-  padding: 4px 2px 2px;
+  padding: 0;
+}
+
+.market-bucket-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+
+.market-buckets .btn.tiny-btn[data-scroll-on="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .market-buckets[hidden] {
@@ -1355,17 +1350,19 @@ html {
 
 .heat-colhead {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 8px;
   width: 100%;
-  padding: 2px 0 0;
+  padding: 2px 2px 0;
   margin: 0;
   border-top: 1px solid var(--line);
   background: var(--bg);
 }
 
 .heat-colhead .regime-horizon {
-  margin: 0;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .heat .th-full {
@@ -1480,11 +1477,11 @@ html {
 
 .dlg {
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--bg2);
   color: var(--text);
   padding: 0;
-  max-width: min(520px, calc(100% - 24px));
+  max-width: min(420px, calc(100% - 24px));
 }
 
 /* Tap sheets: no scroll — content clips; background locked via body.dlg-open */
@@ -1502,12 +1499,20 @@ html {
 
 .dlg-tap[open] .dlg-body {
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   flex: 1 1 auto;
   min-height: 0;
 }
 
-/* Light “who voted”: hug the list — do not inherit the 85dvh tap-sheet shell */
+.dlg-tap .btn {
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  border-radius: 6px;
+  line-height: 1.2;
+  align-self: flex-end;
+}
+
+/* Component story: hug the paragraph — do not inherit the 85dvh tap-sheet shell */
 #dlgLight.dlg-tap[open] {
   height: max-content;
   max-height: min(92dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 16px));
@@ -1520,7 +1525,7 @@ html {
   height: auto;
   max-height: none;
   overflow: visible;
-  padding: 12px 14px;
+  padding: 10px 12px;
 }
 
 #dlgLight.dlg-tap[open] .dlg-body {
@@ -1528,20 +1533,13 @@ html {
   overflow: visible;
   min-height: 0;
   max-height: none;
-  margin-bottom: 8px;
-}
-
-#dlgLight .light-status {
-  margin: 0 0 6px;
-  font-size: 0.78rem;
-  line-height: 1.3;
-  color: var(--muted);
+  margin-bottom: 6px;
 }
 
 #dlgLight .light-teach {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.3;
 }
 
 body.dlg-open {
@@ -1578,8 +1576,8 @@ body.dlg-open dialog {
   bottom: auto !important;
   transform: translateX(-50%) !important;
   margin: 0 !important;
-  width: min(680px, calc(100vw - 16px)) !important;
-  max-width: min(680px, calc(100vw - 16px)) !important;
+  width: min(640px, calc(100vw - 16px)) !important;
+  max-width: min(640px, calc(100vw - 16px)) !important;
   height: calc(100dvh - var(--safe-t) - var(--safe-b) - 16px) !important;
   max-height: calc(100dvh - var(--safe-t) - var(--safe-b) - 16px) !important;
   overflow: hidden;
@@ -1601,8 +1599,8 @@ body.dlg-open dialog {
 #dlgSentence[open] > form > h3 {
   flex: 0 0 auto;
   margin: 0;
-  padding: 14px 18px 8px;
-  font-size: 1.05rem;
+  padding: 10px 12px 6px;
+  font-size: 0.95rem;
 }
 
 #dlgSentence[open] .dlg-body {
@@ -1612,25 +1610,23 @@ body.dlg-open dialog {
   flex: 1 1 auto;
   min-height: 0;
   margin-bottom: 0;
-  padding: 4px 18px 14px;
-  font-size: 0.92rem;
-  line-height: 1.42;
+  padding: 2px 12px 8px;
+  font-size: 0.86rem;
+  line-height: 1.35;
 }
 
 #dlgSentence[open] .dlg-actions {
   flex: 0 0 auto;
-  padding: 10px 18px calc(14px + var(--safe-b));
+  padding: 6px 12px calc(10px + var(--safe-b));
   justify-content: flex-end;
 }
 
-#btnFullRegime:not([hidden]) {
-  margin-right: auto;
-}
-
-/* Instrument tap: hug the copy. Full regime keeps the tall topsheet. */
+/* Instrument tap: hug the copy. Regime keeps the tall topsheet. */
 #dlgSentence.dlg-hug[open] {
+  width: min(420px, calc(100vw - 24px)) !important;
+  max-width: min(420px, calc(100vw - 24px)) !important;
   height: auto !important;
-  max-height: min(85dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 16px)) !important;
+  max-height: min(80dvh, calc(100dvh - var(--safe-t) - var(--safe-b) - 16px)) !important;
 }
 
 #dlgSentence.dlg-hug[open] form {
@@ -1642,6 +1638,11 @@ body.dlg-open dialog {
 #dlgSentence.dlg-hug[open] .dlg-body {
   flex: 0 0 auto !important;
   overflow: visible;
+  padding: 2px 12px 6px;
+}
+
+#dlgSentence.dlg-hug[open] .dlg-actions {
+  padding: 4px 12px 10px;
 }
 
 .dlg-head {
@@ -1676,8 +1677,8 @@ body.dlg-open dialog {
 
 .dlg-topsheet .dlg-body {
   margin-bottom: 0;
-  padding: 4px 12px 10px;
-  font-size: 0.82rem;
+  padding: 2px 12px 8px;
+  font-size: 0.8rem;
   line-height: 1.3;
   overflow: visible;
 }
@@ -1691,23 +1692,24 @@ body.dlg-open dialog {
 }
 
 .dlg form {
-  padding: 16px;
+  padding: 10px 12px;
 }
 
 .dlg h3 {
-  margin: 0 0 10px;
+  margin: 0 0 6px;
+  font-size: 0.92rem;
 }
 
 .dlg-body {
-  font-size: 0.88rem;
-  line-height: 1.45;
-  margin-bottom: 14px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  margin-bottom: 8px;
 }
 
 .dlg-body .light-teach {
-  margin: 0 0 8px;
-  font-size: 0.86rem;
-  line-height: 1.4;
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  line-height: 1.35;
   color: var(--text);
 }
 
