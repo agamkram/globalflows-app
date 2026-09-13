@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261093";
+import { buildMeaning } from "./meaning.js?v=20261165";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261093";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261093";
+} from "./score.js?v=20261165";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261165";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -33,6 +33,19 @@ function unlockPageScroll() {
   window.scrollTo(0, scrollLockY);
 }
 
+/** Which row the open tap-sheet sits under: the five, or the six. */
+let sheetAnchor = "lights";
+
+function placeSheetBelow(which) {
+  if (which) sheetAnchor = which;
+  const el =
+    sheetAnchor === "favor" ? $("#favorStrip") : $("#lights");
+  const gap = 6;
+  const bottom = el && !el.hidden ? el.getBoundingClientRect().bottom : 0;
+  const top = Math.max(8, Math.ceil(bottom + gap));
+  document.documentElement.style.setProperty("--sheet-top", `${top}px`);
+}
+
 let SNAP = null;
 /** Daily regime bake (spot-on components + teach). Null if missing. */
 let REGIME = null;
@@ -41,7 +54,7 @@ let REGIME = null;
 let globalView = "values";
 /** Table heat and spark length only. Default 3m. Chevrons, duration, credit, and the six classes stay on the 1m turn. */
 let statHorizon = TABLE_IMPULSE;
-/** Markets sub-shelf when on Markets tab. */
+/** Markets sub-shelf when on Markets tab — unused; shelves are titled rows. */
 let marketBucket = "all";
 /** Last prints overlaid on Markets Latest (z stays daily). */
 let liveQuotes = {};
@@ -83,7 +96,6 @@ try {
 }
 
 const MARKET_BUCKETS = [
-  { id: "all", label: "All" },
   { id: "duration", label: "Duration" },
   { id: "credit", label: "Credit" },
   { id: "equities", label: "Equities" },
@@ -92,32 +104,29 @@ const MARKET_BUCKETS = [
   { id: "energy", label: "Energy" },
   { id: "ag", label: "Ag" },
 ];
-const MARKET_BUCKET_ORDER = MARKET_BUCKETS.filter((b) => b.id !== "all").map((b) => b.id);
-const BUCKET_TO_FAVOR = {
-  duration: "treasuries",
-  credit: "credit",
-  equities: "stocks",
-  crypto: "crypto",
-  metals: "gold",
-  energy: "cmdty",
-  ag: "cmdty",
-};
+const MARKET_BUCKET_ORDER = MARKET_BUCKETS.map((b) => b.id);
+const MARKET_BUCKET_LABEL = Object.fromEntries(
+  MARKET_BUCKETS.map((b) => [b.id, b.label])
+);
 
-/** Keep order; split so the two rows land as close to the same length as possible. */
-function splitBucketRows(items) {
-  const weights = items.map((b) => b.label.length);
-  let best = Math.ceil(items.length / 2);
-  let bestDiff = Infinity;
-  for (let i = 2; i <= items.length - 2; i++) {
-    const a = weights.slice(0, i).reduce((s, x) => s + x, 0);
-    const b = weights.slice(i).reduce((s, x) => s + x, 0);
-    const d = Math.abs(a - b);
-    if (d < bestDiff) {
-      bestDiff = d;
-      best = i;
-    }
-  }
-  return [items.slice(0, best), items.slice(best)];
+function sectionLabel(kind, id, snap) {
+  if (kind === "bucket") return MARKET_BUCKET_LABEL[id] || id;
+  return (
+    snap?.lights?.[id]?.label ||
+    (snap?.layers || []).find((l) => l.id === id)?.label ||
+    id
+  );
+}
+
+function sectionRow(kind, id, snap) {
+  const label = escapeHtml(sectionLabel(kind, id, snap));
+  const attr =
+    kind === "bucket"
+      ? ` data-bucket="${escapeHtml(id)}"`
+      : ` data-street="${escapeHtml(id)}"`;
+  return `<tr class="heat-section"${attr} aria-hidden="true">
+    <td colspan="2"><span class="heat-section-label">${label}</span></td>
+  </tr>`;
 }
 
 const COMPARE_MAX = 10;
@@ -158,11 +167,6 @@ function fmtAsOf(d) {
 }
 
 /** Search key for detail — not shown in table rows (keeps rows single-line). */
-function seriesSub(s) {
-  const key = s.sub || s.search || s.id;
-  return s.freshness === "lagged" ? `${key} · lagged` : key;
-}
-
 function liveQuote(s) {
   const q = s && liveQuotes[s.id];
   if (!q || !Number.isFinite(q.price)) return null;
@@ -494,10 +498,10 @@ const LIGHT_BLURB = {
     "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
 };
 
-/** Which component is selected (blue border). Table shows that component’s full Street shelf. */
-let focusLight = "liquidity";
+/** Which component is selected (accent border). Null = All. Table follows that street. */
+let focusLight = null;
 /** Last component named on the details chip — stays up on All / FX / Markets. */
-let hintLight = "liquidity";
+let hintLight = null;
 
 /** Street shelf when a light is focused — lights own these; tabs keep All / FX / Markets. */
 const LIGHT_TO_TAB = {
@@ -520,7 +524,7 @@ const TAB_TO_LIGHT = {
 /** Tabs with no matching light (All / FX / Markets). */
 const STREET_TABS = new Set(["all", "fx", "markets"]);
 
-let activeLayer = "liquidity";
+let activeLayer = "all";
 /** All-view scroll spy: which street section is in view (layer id). */
 let scrollStreet = null;
 /** Markets All: which bucket section is in view. */
@@ -687,8 +691,8 @@ function lightIsSplit(snap, id) {
 }
 
 /**
- * Gauge rail. Lights keep ±0.45 ticks (where the word flips). Asset needles
- * only mark center — in/out is the color, not a light threshold.
+ * Gauge rail. The five tick 0 and ±0.45 on a ±1 rail (the number can still
+ * run to ±1.5). The six only mark center — in/out is the colour, not a colour line.
  */
 function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   const pct = trackPct(score).toFixed(1);
@@ -855,7 +859,7 @@ function renderFavorStrip() {
           clash ? ", history disagrees" : ""
         }. Tap for why."`;
         const titleHtml = escapeHtml(title);
-        // Treasuries: 5c cash / 10 / 30 duration. Credit: IG / HY. No averaged parent needle.
+        // Treasuries: 5 cash / 10 / 30 duration. Credit: IG / HY. No averaged parent needle.
         const kids = it.tenors?.length ? it.tenors : it.splits?.length ? it.splits : null;
         if (kids) {
           return `<button type="button" class="favor-cell favor-ust" data-favor-id="${escapeHtml(
@@ -914,8 +918,27 @@ function selectLight(id) {
     clubSavedAs = null;
   }
   refreshViews();
+  scrollTableToTop();
+}
+
+/** Chip, box, and table title follow the component only while you are on it. */
+function clearLightFocus() {
+  const streetWasLight = !STREET_TABS.has(activeLayer);
+  if (!focusLight && !streetWasLight) {
+    if (SNAP) syncComponentHint(viewOf(SNAP));
+    return;
+  }
+  focusLight = null;
+  if (streetWasLight) activeLayer = "all";
+  refreshViews();
+}
+
+function scrollTableToTop() {
+  const se = document.scrollingElement || document.documentElement;
+  se.scrollTop = 0;
+  if (document.body) document.body.scrollTop = 0;
+  window.scrollTo(0, 0);
   requestAnimationFrame(() => {
-    const se = document.scrollingElement || document.documentElement;
     se.scrollTop = 0;
     window.scrollTo(0, 0);
   });
@@ -923,6 +946,7 @@ function selectLight(id) {
 
 function openLightSheet(id) {
   if (!SNAP || !id) return;
+  $("#dlgSentence")?.close();
   const snap = viewOf(SNAP);
   const L = snap.lights?.[id];
   if (!L) {
@@ -959,6 +983,9 @@ function openLightSheet(id) {
   try {
     if (!dlg.open) dlg.showModal();
     lockPageScroll();
+    placeSheetBelow("lights");
+    requestAnimationFrame(() => placeSheetBelow("lights"));
+    if (SNAP) syncComponentHint(viewOf(SNAP));
   } catch (err) {
     console.warn("openLightSheet: showModal failed", err);
   }
@@ -1370,38 +1397,62 @@ function childFavorLine(child, parentWhy) {
     child.stance === "in" ? "In" : child.stance === "out" ? "Out" : "Mixed";
   // Strip keeps short names (IG / HY); the tap spells them out.
   const title = child.label || child.name;
-  const badge = `<strong data-state="${stanceState(child.stance)}">${escapeHtml(
+  const badge = `<span class="rubric-name">${escapeHtml(
     title
-  )} ${word}</strong>`;
+  )}</span> <strong data-state="${stanceState(child.stance)}">${escapeHtml(
+    word
+  )}</strong>`;
   const parent = String(parentWhy ?? "").trim();
   const why = String(child.why ?? "").trim();
   if (why && why !== parent) {
-    return `<span class="rubric-split">${badge}<span class="muted sent-hint"> — ${escapeHtml(
+    return `<span class="rubric-split">${badge} <span class="muted sent-hint">${escapeHtml(
       child.why
     )}</span></span>`;
   }
   return `<span class="rubric-split">${badge}</span>`;
 }
 
-function analogHtml(br) {
-  if (!br) return "";
+function analogVerdictWord(br) {
+  if (br.weak) {
+    if (br.verdict === "coinflip") return "Loose history, no lean";
+    return `Loose history, ${
+      br.verdict === "disagrees" ? "argues the other way" : `leans ${br.lean}`
+    }`;
+  }
+  if (br.verdict === "agrees") return "History agrees";
+  if (br.verdict === "disagrees") return "History disagrees";
+  if (br.verdict === "coinflip") return "No lean in the record";
+  return `History leans ${br.lean}`;
+}
+
+function analogRateText(br, label) {
+  const name = escapeHtml(label || br.name);
   const sign = br.median > 0 ? "+" : "";
-  const fell = Number.isFinite(br.up) ? Math.max(0, 100 - br.up) : null;
-  const verdictWord = br.weak
-    ? br.verdict === "coinflip"
-      ? "Loose history, no lean"
-      : `Loose history, ${br.verdict === "disagrees" ? "argues the other way" : `leans ${br.lean}`}`
-    : br.verdict === "agrees"
-      ? "History agrees"
-      : br.verdict === "disagrees"
-        ? "History disagrees"
-        : br.verdict === "coinflip"
-          ? "No lean in the record"
-          : `History leans ${br.lean}`;
+  const vs = Number.isFinite(br.baseUp)
+    ? ` (normally ${br.baseUp}% up; median ${sign}${br.median}%)`
+    : Number.isFinite(br.median)
+      ? ` (median ${sign}${br.median}%)`
+      : "";
+  return `${name} rose in ${br.up}% of them over ${br.hz}${vs}`;
+}
+
+function analogHtml(br, { part = "full", label } = {}) {
+  if (!br) return "";
+  const verdictWord = analogVerdictWord(br);
+  if (part === "verdict") {
+    return `<span class="rubric-base" data-verdict="${br.verdict}">
+    <strong>${escapeHtml(verdictWord)}</strong>
+    <span class="muted"> — ${br.n} days over ${escapeHtml(br.hz)}.</span>
+  </span>`;
+  }
+  if (part === "rate") {
+    return `<span class="rubric-base rubric-analog-rate" data-verdict="${br.verdict}">
+    <span class="muted">${analogRateText(br, label)}.</span>
+  </span>`;
+  }
+  const sign = br.median > 0 ? "+" : "";
   let rateLine = `after days like today, ${escapeHtml(br.name)} ran ${sign}${br.median}% over ${br.hz} and rose ${br.up}% of the time`;
-  if (br.stance === "out" && fell != null) {
-    rateLine = `this has happened ${br.n} times; ${escapeHtml(br.name)} fell in ${fell}% of them over ${br.hz}`;
-  } else if (br.stance === "in" && Number.isFinite(br.up)) {
+  if ((br.stance === "out" || br.stance === "in") && Number.isFinite(br.up)) {
     rateLine = `this has happened ${br.n} times; ${escapeHtml(br.name)} rose in ${br.up}% of them over ${br.hz}`;
   }
   const vs =
@@ -1420,34 +1471,46 @@ function analogHtml(br) {
 
 function favorItemExtras(it, { withAnalog = true } = {}) {
   const extras = [];
-  if (it.tenors?.length) {
-    for (const tn of it.tenors) {
-      extras.push(childFavorLine(tn, it.why));
-      if (withAnalog) extras.push(analogHtml(childAnalog(tn)));
+  const kids = it.tenors?.length ? it.tenors : it.splits || [];
+  if (kids.length) {
+    if (withAnalog) {
+      extras.push(
+        analogHtml(favorBaseRate(it.id, it.stance) || childAnalog(kids[0]), {
+          part: "verdict",
+        })
+      );
     }
-  }
-  if (it.splits?.length) {
-    for (const sp of it.splits) {
-      extras.push(childFavorLine(sp, it.why));
-      if (withAnalog) extras.push(analogHtml(childAnalog(sp)));
+    for (const kid of kids) {
+      extras.push(childFavorLine(kid, it.why));
+      if (withAnalog) {
+        extras.push(
+          analogHtml(childAnalog(kid), {
+            part: "rate",
+            label: kid.label || kid.name,
+          })
+        );
+      }
     }
   }
   if (it.note) {
     extras.push(`<span class="muted sent-hint">${escapeHtml(it.note)}</span>`);
   }
-  if (withAnalog && !it.tenors?.length && !it.splits?.length) {
+  if (withAnalog && !kids.length) {
     extras.push(analogHtml(favorBaseRate(it.id, it.stance)));
   }
   return extras.filter(Boolean);
 }
 
-function showSentenceDialog({ hug = false } = {}) {
+function showSentenceDialog({ hug = false, below = "lights" } = {}) {
   const dlg = $("#dlgSentence");
   if (!dlg) return;
   dlg.classList.toggle("dlg-hug", hug);
   try {
     if (!dlg.open) dlg.showModal();
     lockPageScroll();
+    placeSheetBelow(below);
+    requestAnimationFrame(() => placeSheetBelow(below));
+    if (SNAP) syncComponentHint(viewOf(SNAP));
   } catch (err) {
     console.warn("showSentenceDialog: showModal failed", err);
   }
@@ -1460,6 +1523,8 @@ function showSentenceDialog({ hug = false } = {}) {
 
 function openFavorCard(id) {
   if (!SNAP || !id) return;
+  $("#dlgLight")?.close();
+  clearLightFocus();
   const snap = viewOf(SNAP);
   const meaning = buildMeaning(snap, DEFAULT_IMPULSE);
   const it = meaning.favor.items.find((x) => x.id === id);
@@ -1475,15 +1540,17 @@ function openFavorCard(id) {
   $("#sentenceBody").innerHTML = `
     <div class="sent-explain rubric-row"><p class="sent-explain-title">
       <strong data-state="${st}">${word}</strong>
-      <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
+      <span class="muted sent-hint">${escapeHtml(it.why)}</span></p>
       ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
     </div>
   `;
-  showSentenceDialog({ hug: true });
+  showSentenceDialog({ hug: true, below: "favor" });
 }
 
 function openSentence(snap) {
   if (!snap) return;
+  $("#dlgLight")?.close();
+  clearLightFocus();
   const meaning = buildMeaning(snap, DEFAULT_IMPULSE);
   const sheets = Object.fromEntries(LIGHT_IDS.map((id) => [id, liveSheet(id, snap)]));
   const evidence = LIGHT_IDS.map((id) => sheets[id]?.teach)
@@ -1552,7 +1619,7 @@ function openSentence(snap) {
         return `<div class="sent-explain rubric-row"><p class="sent-explain-title">
           <span class="rubric-name">${escapeHtml(it.name)}</span>
           <strong data-state="${st}">${word}</strong>
-          <span class="muted sent-hint"> — ${escapeHtml(it.why)}</span></p>
+          <span class="muted sent-hint">${escapeHtml(it.why)}</span></p>
           ${extras.length ? `<div class="rubric-extra">${extras.join("")}</div>` : ""}
         </div>`;
       })
@@ -1607,10 +1674,6 @@ function renderLights(snap) {
     return;
   }
   const order = ["liquidity", "rates", "growth", "inflation", "risk"];
-  const spyLight =
-    activeLayer === "all" && comparePhase === "off" && scrollStreet
-      ? TAB_TO_LIGHT[scrollStreet] || null
-      : null;
   root.innerHTML = order
     .map((id) => {
       const L = snap.lights?.[id] || { state: "empty", label: id };
@@ -1624,8 +1687,7 @@ function renderLights(snap) {
             ? `${cliff.toFixed(2)} past flip`
             : `${cliff.toFixed(2)} from flip`
           : null;
-      const on =
-        spyLight != null ? spyLight === id : focusLight === id;
+      const on = focusLight === id || streetSpyLight() === id;
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
       const word = wordFor(L);
@@ -1638,9 +1700,9 @@ function renderLights(snap) {
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
         tip ? ` title="${escapeHtml(tip)}"` : ""
       } aria-label="${escapeHtml(
-        `${L.label || id}, ${spoken}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
+        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
       )}">
-        <span class="impulse-chev" data-dir="${chev}" aria-hidden="true"></span>
+        <span class="impulse-chev" data-dir="${chev}" title="1m turn" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
         <span class="word">${escapeHtml(word)}</span>
         <span class="score"${
@@ -1665,35 +1727,6 @@ function renderLights(snap) {
 
 
 
-function fitTabs() {
-  const tabs = $("#tabs");
-  if (!tabs) return;
-  const buttons = [...tabs.querySelectorAll("button")];
-  if (!buttons.length) return;
-
-  const apply = (px) => {
-    for (const b of buttons) {
-      b.style.fontSize = `${px}px`;
-      b.style.paddingLeft = px < 10 ? "1px" : "2px";
-      b.style.paddingRight = px < 10 ? "1px" : "2px";
-      b.style.letterSpacing = px < 10 ? "-0.04em" : "-0.02em";
-    }
-  };
-
-  const overflowing = () =>
-    tabs.scrollWidth > tabs.clientWidth + 1 ||
-    buttons.some((b) => b.scrollWidth > b.clientWidth + 1);
-
-  // One row, full labels: shrink type until nothing clips.
-  let size = 11.5;
-  const min = 7.5;
-  apply(size);
-  while (size > min && overflowing()) {
-    size -= 0.25;
-    apply(size);
-  }
-}
-
 function renderTabs(snap) {
   const tabs = $("#tabs");
   const layers = (snap.layers || []).filter((l) => STREET_TABS.has(l.id));
@@ -1701,11 +1734,9 @@ function renderTabs(snap) {
   tabs.innerHTML = items
     .map((l) => {
       const full = l.label || l.id;
-      return `<button type="button" role="tab" data-layer="${l.id}" title="${escapeHtml(
+      return `<button type="button" class="btn tiny-btn" role="tab" data-layer="${l.id}" title="${escapeHtml(
         full
-      )}" aria-selected="${
-        !focusLight && l.id === activeLayer ? "true" : "false"
-      }">${escapeHtml(full)}</button>`;
+      )}">${escapeHtml(full)}</button>`;
     })
     .join("");
   tabs.onclick = (e) => {
@@ -1721,12 +1752,9 @@ function renderTabs(snap) {
     }
     syncStreetSelection();
     refreshViews();
+    scrollTableToTop();
   };
-  requestAnimationFrame(() => {
-    fitTabs();
-    requestAnimationFrame(fitTabs);
-    syncMarketsLiveUi();
-  });
+  requestAnimationFrame(syncMarketsLiveUi);
 }
 
 function nextFreeCompareSlot() {
@@ -1793,6 +1821,18 @@ function sortStreet(a, b, layer, snap) {
   return av - bv || sortSeries(a, b);
 }
 
+/** Street in the All book: current voters sit with their component, even if
+ * the print is filed on another shelf (5y5y votes Inflation, filed on Rates).
+ * Anything with a Markets shelf tag sits under Markets — same set as the tab. */
+function bookStreet(s, snap) {
+  const lid = s.light;
+  if (lid && (snap?.lights?.[lid]?.members || []).includes(s.id)) return lid;
+  if (s.marketBucket || s.street === "markets" || s.layer === "markets") {
+    return "markets";
+  }
+  return s.layer || s.street || "";
+}
+
 function isMarketsSeries(s) {
   return (
     s.street === "markets" ||
@@ -1822,17 +1862,23 @@ function seriesList(snap, layer) {
         "fx",
         "markets",
       ];
-      const d = order.indexOf(a.layer) - order.indexOf(b.layer);
-      return d || sortStreet(a, b, a.layer, snap);
+      const as = bookStreet(a, snap);
+      const bs = bookStreet(b, snap);
+      const d = order.indexOf(as) - order.indexOf(bs);
+      if (d) return d;
+      if (as === "markets") {
+        const ao = MARKET_BUCKET_ORDER.indexOf(a.marketBucket);
+        const bo = MARKET_BUCKET_ORDER.indexOf(b.marketBucket);
+        const ai = ao < 0 ? 99 : ao;
+        const bi = bo < 0 ? 99 : bo;
+        return ai - bi || sortSeries(a, b);
+      }
+      return sortStreet(a, b, as || a.layer, snap);
     });
   }
 
   if (layer === "markets") {
     all = all.filter(isMarketsSeries);
-    if (marketBucket !== "all") {
-      all = all.filter((s) => s.marketBucket === marketBucket);
-      return all.sort(sortSeries);
-    }
     return all.sort((a, b) => {
       const ao = MARKET_BUCKET_ORDER.indexOf(a.marketBucket);
       const bo = MARKET_BUCKET_ORDER.indexOf(b.marketBucket);
@@ -1847,32 +1893,14 @@ function seriesList(snap, layer) {
     .sort((a, b) => sortStreet(a, b, layer, snap));
 }
 
-function renderMarketBuckets() {
+function hideMarketBuckets() {
   const el = $("#marketBuckets");
-  if (!el) return;
-  const show =
-    !focusLight &&
-    activeLayer === "markets" &&
-    comparePhase === "off";
-  el.hidden = !show;
-  if (!show) {
+  const col = $("#heatColhead");
+  if (el) {
+    el.hidden = true;
     el.innerHTML = "";
-    return;
   }
-  const chip = (b) =>
-    `<button type="button" class="btn tiny-btn" data-bucket="${b.id}" aria-pressed="${
-      marketBucket === b.id ? "true" : "false"
-    }">${b.label}</button>`;
-  el.innerHTML = splitBucketRows(MARKET_BUCKETS)
-    .map((row) => `<div class="market-bucket-row">${row.map(chip).join("")}</div>`)
-    .join("");
-  el.onclick = (e) => {
-    const b = e.target.closest("[data-bucket]");
-    if (!b) return;
-    marketBucket = b.dataset.bucket;
-    refreshViews();
-  };
-  syncMarketsLiveUi();
+  if (col) col.hidden = true;
 }
 
 function syncCompareBtn() {
@@ -1980,18 +2008,78 @@ function setGlobalView(mode) {
 function syncStreetSelection() {
   const tabs = $("#tabs");
   if (!tabs) return;
+  const spyLight = streetSpyLight();
   const spyTab =
+    !focusLight &&
     activeLayer === "all" &&
-    comparePhase === "off" &&
     (scrollStreet === "fx" || scrollStreet === "markets")
       ? scrollStreet
       : null;
   [...tabs.querySelectorAll("button[data-layer]")].forEach((x) => {
     const layer = x.dataset.layer;
-    const on = !focusLight && layer === activeLayer;
-    x.setAttribute("aria-selected", on ? "true" : "false");
+    const selected =
+      !focusLight &&
+      !spyLight &&
+      !spyTab &&
+      layer === activeLayer;
+    x.setAttribute("aria-selected", selected ? "true" : "false");
     x.dataset.scrollOn = spyTab && layer === spyTab ? "true" : "false";
   });
+}
+
+/** All book: which of the five is under the pin. Null at the top (All) or in FX / Markets. */
+function streetSpyLight() {
+  if (focusLight || activeLayer !== "all" || comparePhase !== "off") return null;
+  return TAB_TO_LIGHT[scrollStreet] || null;
+}
+
+/** Last bucket (Ag) is three short rows. They never reach the pin, so the spy
+ * would stay on Energy. Once the page cannot scroll further, take the last bucket. */
+function scrolledToEnd() {
+  const root = document.scrollingElement || document.documentElement;
+  const y = window.scrollY || root.scrollTop || 0;
+  if (y < 8) return false;
+  return y + window.innerHeight >= (root.scrollHeight || document.body.scrollHeight) - 12;
+}
+
+function streetUnderPin(rows, probe) {
+  const root = document.scrollingElement || document.documentElement;
+  const y = window.scrollY || root.scrollTop || 0;
+  if (y < 8) return "all";
+  let current = rows[0]?.dataset.street || null;
+  for (const tr of rows) {
+    if (tr.getBoundingClientRect().top <= probe) {
+      current = tr.dataset.street || current;
+    } else {
+      break;
+    }
+  }
+  return current;
+}
+
+function bucketUnderPin(rows, probe) {
+  const root = document.scrollingElement || document.documentElement;
+  const y = window.scrollY || root.scrollTop || 0;
+  if (y < 8) return "all";
+  let current = null;
+  for (const tr of rows) {
+    const id = tr.dataset.bucket;
+    if (!id) continue;
+    if (tr.getBoundingClientRect().top <= probe) current = id;
+    else break;
+  }
+  if (!current) {
+    current = rows.find((tr) => tr.dataset.bucket)?.dataset.bucket || null;
+  }
+  if (!scrolledToEnd()) return current;
+  const last = [...rows].reverse().find((tr) => tr.dataset.bucket);
+  const lastId = last?.dataset.bucket;
+  if (!lastId) return current;
+  const firstOfLast = rows.find((tr) => tr.dataset.bucket === lastId);
+  if (firstOfLast && firstOfLast.getBoundingClientRect().top > probe) {
+    return lastId;
+  }
+  return current;
 }
 
 /** All: street under the pin. Markets All: bucket under the pin. */
@@ -2019,49 +2107,20 @@ function syncScrollSpy() {
       clear();
       return;
     }
-    let current = rows[0].dataset.street || null;
-    for (const tr of rows) {
-      if (tr.getBoundingClientRect().top <= probe) {
-        current = tr.dataset.street || current;
-      } else {
-        break;
-      }
-    }
-    scrollStreet = current;
-    if (current === "markets") {
-      let buck = null;
-      for (const tr of rows) {
-        if (tr.getBoundingClientRect().top <= probe) {
-          if (tr.dataset.bucket) buck = tr.dataset.bucket;
-        } else {
-          break;
-        }
-      }
-      scrollBucket = buck;
-    } else {
-      scrollBucket = null;
-    }
+    scrollStreet = streetUnderPin(rows, probe);
+    scrollBucket = null;
     applyScrollSpyUi();
     return;
   }
 
-  if (activeLayer === "markets" && !focusLight && marketBucket === "all") {
+  if (activeLayer === "markets" && !focusLight) {
     scrollStreet = null;
     const rows = [...document.querySelectorAll("#heatBody tr[data-bucket]")];
     if (!rows.length) {
       clear();
       return;
     }
-    let current = rows[0].dataset.bucket || null;
-    for (const tr of rows) {
-      if (!tr.dataset.bucket) continue;
-      if (tr.getBoundingClientRect().top <= probe) {
-        current = tr.dataset.bucket || current;
-      } else {
-        break;
-      }
-    }
-    scrollBucket = current;
+    scrollBucket = bucketUnderPin(rows, probe);
     applyScrollSpyUi();
     return;
   }
@@ -2071,33 +2130,12 @@ function syncScrollSpy() {
 
 function applyScrollSpyUi() {
   if (!SNAP) return;
-  const onAll = activeLayer === "all" && comparePhase === "off";
-  const spyLight =
-    onAll && scrollStreet ? TAB_TO_LIGHT[scrollStreet] || null : null;
   document.querySelectorAll("#lights .light[data-id]").forEach((el) => {
-    const on = spyLight != null ? el.dataset.id === spyLight : focusLight === el.dataset.id;
+    const on = focusLight === el.dataset.id || streetSpyLight() === el.dataset.id;
     el.dataset.focus = on ? "true" : "false";
     el.setAttribute("aria-pressed", on ? "true" : "false");
   });
   syncStreetSelection();
-
-  const onMarkets =
-    activeLayer === "markets" && !focusLight && comparePhase === "off";
-  const bucketForFavor = onMarkets
-    ? marketBucket !== "all"
-      ? marketBucket
-      : scrollBucket
-    : onAll && scrollStreet === "markets"
-      ? scrollBucket
-      : null;
-  document.querySelectorAll("#marketBuckets [data-bucket]").forEach((el) => {
-    const on = onMarkets && marketBucket === "all" && scrollBucket && el.dataset.bucket === scrollBucket;
-    el.dataset.scrollOn = on ? "true" : "false";
-  });
-  const spyFavor = bucketForFavor ? BUCKET_TO_FAVOR[bucketForFavor] : null;
-  document.querySelectorAll("#favorStrip [data-favor-id]").forEach((el) => {
-    el.dataset.focus = spyFavor && el.dataset.favorId === spyFavor ? "true" : "false";
-  });
 }
 
 function refreshViews() {
@@ -2105,7 +2143,7 @@ function refreshViews() {
   const snap = viewOf(SNAP);
   renderLights(snap);
   renderTable(snap);
-  renderMarketBuckets();
+  hideMarketBuckets();
   syncStreetSelection();
   syncCompareBtn();
   renderFavorStrip();
@@ -2147,7 +2185,7 @@ function valuesCells(s) {
 function chartCell(s) {
   return `<td class="chart-cell" colspan="${COLSPAN_DATA}">
     <div class="spark-wrap" data-spark="${s.id}">
-      <canvas class="spark" width="600" height="36" aria-hidden="true"></canvas>
+      <canvas class="spark" width="600" height="20" aria-hidden="true"></canvas>
       <span class="spark-chg muted" aria-hidden="true"></span>
       <span class="spark-msg muted"></span>
     </div>
@@ -2168,20 +2206,22 @@ function renderThead(rows) {
 
 function syncComponentHint(snap) {
   const hint = $("#streetHint");
+  const regime = $("#btnRegime");
   if (!hint) return;
-  const lid = focusLight || hintLight;
-  const L = lid ? snap?.lights?.[lid] : null;
-  if (!lid || !L) {
-    hint.hidden = true;
-    hint.dataset.light = "";
-    return;
-  }
-  const label = L.label || lid;
+  const dlg = $("#dlgSentence");
+  const regimeOn = !!(dlg?.open && !dlg.classList.contains("dlg-hug"));
+  const lid = focusLight || hintLight || "liquidity";
+  const L = snap?.lights?.[lid];
+  const label = L?.label || "Liquidity";
+  const lightOn = !!$("#dlgLight")?.open;
+  const hintOn = !regimeOn && !!(focusLight || lightOn);
   hint.hidden = false;
   hint.dataset.light = lid;
   hint.textContent = label;
   hint.title = "Tap for details";
   hint.setAttribute("aria-label", `${label}, tap for details`);
+  hint.setAttribute("aria-pressed", hintOn ? "true" : "false");
+  regime?.setAttribute("aria-pressed", regimeOn ? "true" : "false");
 }
 
 function renderTable(snap) {
@@ -2213,7 +2253,7 @@ function renderTable(snap) {
     layerMeta =
       (snap.layers || []).find((l) => l.id === activeLayer) ||
       (activeLayer === "all"
-        ? { label: "All series" }
+        ? { label: "The book" }
         : { label: activeLayer });
   }
   $("#layerTitle").textContent = layerMeta.label || activeLayer;
@@ -2224,31 +2264,52 @@ function renderTable(snap) {
   const rows = seriesList(snap, streetId);
   renderThead(rows);
 
-  body.innerHTML = rows
-    .map((s) => {
-      const view = rowView(s.id);
-      const data =
-        view === "charts" ? chartCell(s) : valuesCells(s);
-      const pack = streetId === "all" ? s.light : focusLight || TAB_TO_LIGHT[streetId] || streetId;
-      const voter =
-        pack &&
-        s.light === pack &&
-        (snap.lights?.[s.light]?.members || []).includes(s.id)
-          ? s.light
-          : "";
-      const picked = compareList.includes(s.id);
-      const street = s.layer || s.street || "";
-      const bucket = s.marketBucket || "";
-      return `<tr data-id="${s.id}" data-view="${view}"${
-        street ? ` data-street="${escapeHtml(street)}"` : ""
-      }${bucket ? ` data-bucket="${escapeHtml(bucket)}"` : ""}${voter ? ` data-voter="${escapeHtml(voter)}"` : ""}${
-        picked && comparePhase === "pick" ? ` data-compare="1"` : ""
-      }>
-        <td class="name-cell"><span class="name-stack"><span class="name">${escapeHtml(s.name)}</span><span class="sub">${escapeHtml(seriesSub(s))}</span></span></td>
+  const markStreets = streetId === "all" && comparePhase === "off";
+  const markBuckets = streetId === "markets" && comparePhase === "off";
+  let prevStreet = "";
+  let prevBucket = "";
+  const parts = [];
+  for (const s of rows) {
+    const view = rowView(s.id);
+    const data = view === "charts" ? chartCell(s) : valuesCells(s);
+    const pack =
+      streetId === "all"
+        ? s.light
+        : focusLight || TAB_TO_LIGHT[streetId] || streetId;
+    const voter =
+      pack &&
+      s.light === pack &&
+      (snap.lights?.[s.light]?.members || []).includes(s.id)
+        ? s.light
+        : "";
+    const picked = compareList.includes(s.id);
+    const street =
+      streetId === "all" ? bookStreet(s, snap) : s.layer || s.street || "";
+    const bucket = s.marketBucket || "";
+    if (markStreets && street && street !== prevStreet) {
+      parts.push(sectionRow("street", street, snap));
+      prevStreet = street;
+      prevBucket = "";
+    }
+    // Markets stretch of All: same Duration / Credit / … rows as the Markets tab.
+    if (
+      ((markStreets && street === "markets") || markBuckets) &&
+      bucket &&
+      bucket !== prevBucket
+    ) {
+      parts.push(sectionRow("bucket", bucket, snap));
+      prevBucket = bucket;
+    }
+    parts.push(`<tr data-id="${s.id}" data-view="${view}"${
+      street ? ` data-street="${escapeHtml(street)}"` : ""
+    }${bucket ? ` data-bucket="${escapeHtml(bucket)}"` : ""}${
+      voter ? ` data-voter="${escapeHtml(voter)}"` : ""
+    }${picked && comparePhase === "pick" ? ` data-compare="1"` : ""}>
+        <td class="name-cell"><span class="name">${escapeHtml(s.name)}</span></td>
         ${data}
-      </tr>`;
-    })
-    .join("");
+      </tr>`);
+  }
+  body.innerHTML = parts.join("");
 
   body.onclick = (e) => {
     const tr = e.target.closest("tr[data-id]");
@@ -2340,7 +2401,7 @@ function drawSpark(canvas, points) {
 
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const cssW = Math.max(wrap.clientWidth || canvas.clientWidth || 200, 80);
-  const cssH = 32;
+  const cssH = 20;
   canvas.width = Math.floor(cssW * dpr);
   canvas.height = Math.floor(cssH * dpr);
   canvas.style.width = cssW + "px";
@@ -2370,8 +2431,8 @@ function drawSpark(canvas, points) {
   // canvas can't use css vars reliably — resolve
   const styles = getComputedStyle(document.documentElement);
   ctx.strokeStyle = up
-    ? styles.getPropertyValue("--ease").trim() || "#3dcea7"
-    : styles.getPropertyValue("--tight").trim() || "#e86a5c";
+    ? styles.getPropertyValue("--ease").trim() || "#1db87a"
+    : styles.getPropertyValue("--tight").trim() || "#f23645";
   ctx.lineWidth = 1.25;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
@@ -2478,9 +2539,15 @@ function openSeries(s) {
       : `<p class="series-vote muted">Does not vote a regime component — book / output line.</p>`;
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
+  const blurb = s.note || s.sub || "";
+  const lagLine =
+    s.freshness === "lagged"
+      ? `<p class="series-lag">Print lags — as-of can sit months behind the tape.</p>`
+      : "";
   $("#seriesBody").innerHTML = `
     <div class="series-sheet">
-      ${s.note ? `<p class="series-blurb">${escapeHtml(s.note)}</p>` : ""}
+      ${blurb ? `<p class="series-blurb">${escapeHtml(blurb)}</p>` : ""}
+      ${lagLine}
       ${voteLine}
       <p class="series-meta"><code>${escapeHtml(code)}</code> · ${escapeHtml(street || "")} · ${escapeHtml(s.freq || "?")}</p>
       <dl class="series-stats">
@@ -2513,6 +2580,8 @@ function openSeries(s) {
   try {
     if (!dlg.open) dlg.showModal();
     lockPageScroll();
+    placeSheetBelow("lights");
+    requestAnimationFrame(() => placeSheetBelow("lights"));
   } catch (err) {
     console.warn("openSeries: showModal failed", err);
   }
@@ -2520,7 +2589,32 @@ function openSeries(s) {
 
 
 
+/** Block Safari / Chrome pull-down page reload. Normal scroll still works. */
+function lockPullReload() {
+  let y0 = 0;
+  window.addEventListener(
+    "touchstart",
+    (e) => {
+      y0 = e.touches[0] ? e.touches[0].clientY : 0;
+    },
+    { passive: true }
+  );
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (document.body.classList.contains("dlg-open")) return;
+      if (!e.touches[0]) return;
+      const se = document.scrollingElement || document.documentElement;
+      if ((se.scrollTop || 0) <= 0 && e.touches[0].clientY > y0) {
+        e.preventDefault();
+      }
+    },
+    { passive: false }
+  );
+}
+
 async function boot() {
+  lockPullReload();
   try {
     const res = await fetch("./snapshot.json", { cache: "no-store" });
     if (!res.ok) throw new Error("snapshot.json missing — run npm run ingest");
@@ -2555,11 +2649,29 @@ async function boot() {
 
   document.querySelectorAll("dialog.dlg-tap").forEach((dlg) => {
     dlg.addEventListener("click", (e) => {
-      if (e.target === dlg) dlg.close();
+      const r = dlg.getBoundingClientRect();
+      if (
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom
+      ) {
+        dlg.close();
+      }
     });
     dlg.addEventListener("close", () => {
       unlockPageScroll();
+      if (dlg.id === "dlgLight" || dlg.id === "dlgSentence") {
+        clearLightFocus();
+        return;
+      }
+      if (SNAP) syncComponentHint(viewOf(SNAP));
     });
+  });
+  window.addEventListener("resize", () => {
+    if ([...document.querySelectorAll("dialog.dlg-tap")].some((d) => d.open)) {
+      placeSheetBelow();
+    }
   });
 
   syncViewControls();
@@ -2567,7 +2679,7 @@ async function boot() {
     pullMarketsLive(true);
   });
   $("#streetHint")?.addEventListener("click", () => {
-    const id = $("#streetHint")?.dataset.light || focusLight;
+    const id = $("#streetHint")?.dataset.light || focusLight || "liquidity";
     if (id) openLightSheet(id);
   });
   $("#btnRegime")?.addEventListener("click", () => {
@@ -2645,23 +2757,19 @@ async function boot() {
     openFavorCard(cell.dataset.favorId);
   });
 
-  let tabFitTimer = 0;
+  let pinFitTimer = 0;
   const syncPinHeight = () => {
     const pin = $("#pinStack");
     if (!pin) return;
-    // Match the stuck pin's bottom edge — offsetHeight alone was short, so
-    // row .sub lines peeked under the series title while scrolling.
+    // Match the stuck pin's bottom edge — offsetHeight alone was short.
     const top = pin.getBoundingClientRect().top;
     const bottom = pin.getBoundingClientRect().bottom;
     const pinned = Math.max(0, Math.ceil(bottom - Math.min(top, 0)));
     document.documentElement.style.setProperty("--pin-h", `${pinned}px`);
   };
   window.addEventListener("resize", () => {
-    clearTimeout(tabFitTimer);
-    tabFitTimer = setTimeout(() => {
-      fitTabs();
-      syncPinHeight();
-    }, 80);
+    clearTimeout(pinFitTimer);
+    pinFitTimer = setTimeout(syncPinHeight, 80);
   });
   if (window.ResizeObserver) {
     const pin = $("#pinStack");

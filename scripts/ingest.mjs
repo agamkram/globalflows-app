@@ -911,6 +911,8 @@ async function main() {
       light: meta.light || null,
       impulseLight: meta.impulseLight || null,
       weight: meta.weight || 1,
+      marketBucket: meta.marketBucket || null,
+      order: meta.order ?? null,
       note: meta.note || null,
       sub: meta.sub || id,
       search: meta.search || id,

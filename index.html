@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <meta name="theme-color" content="#0b0e13" />
+  <meta name="theme-color" content="#000000" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -97,61 +97,64 @@
     }
   </script>
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261093" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261093" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261093" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261165" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261165" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261165" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261093" />
+  <link rel="stylesheet" href="styles.css?v=20261165" />
 </head>
 <body>
   <div class="app" id="app">
-    <header class="topbar" role="banner">
-      <div class="topbar-title">
-        <h1 class="brand-title">GlobalFlows</h1>
-      </div>
-    </header>
-
-    <div class="dials-toolbar">
-      <div class="dials-actions">
-        <button
-          type="button"
-          class="nav-link nav-link-sm"
-          id="streetHint"
-          title="Tap for details"
-          aria-label="Liquidity, tap for details"
-        >Liquidity</button>
-        <button
-          type="button"
-          class="nav-link nav-link-sm"
-          id="btnRegime"
-          title="Today’s regime"
-          aria-label="Regime"
-        >Regime</button>
-      </div>
-      <nav class="topbar-nav" aria-label="Primary">
-        <a
-          href="https://oilprice.com/oil-price-charts/#prices"
-          class="nav-link nav-link-icon"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Oil price charts (oilprice.com)"
-          aria-label="Oil price charts on oilprice.com"
-        ><img src="oilprice-32.png?v=20261093" width="16" height="16" alt="" /></a>
-        <a
-          href="https://bubblincrude.markmaga.com"
-          class="nav-link nav-link-icon"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="BubblinCrude"
-          aria-label="BubblinCrude"
-        ><img src="bubblincrude-32.png?v=20261093" srcset="bubblincrude-64.png?v=20261093 2x" width="16" height="16" alt="" /></a>
-        <a class="nav-link nav-link-sm" href="./about.html">About</a>
-      </nav>
-    </div>
-
     <div class="pin-stack" id="pinStack">
+      <header class="topbar" role="banner">
+        <div class="topbar-title">
+          <h1 class="brand-title">GlobalFlows</h1>
+        </div>
+      </header>
+
+      <div class="dials-toolbar">
+        <div class="dials-actions">
+          <button
+            type="button"
+            class="nav-link nav-link-sm"
+            id="streetHint"
+            title="Tap for details"
+            aria-label="Liquidity, tap for details"
+            aria-pressed="false"
+            data-light="liquidity"
+          >Liquidity</button>
+          <button
+            type="button"
+            class="nav-link nav-link-sm"
+            id="btnRegime"
+            title="Today’s regime"
+            aria-label="Regime"
+            aria-pressed="false"
+          >Regime</button>
+        </div>
+        <nav class="topbar-nav" aria-label="Primary">
+          <a
+            href="https://oilprice.com/oil-price-charts/#prices"
+            class="nav-link nav-link-icon"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Oil price charts (oilprice.com)"
+            aria-label="Oil price charts on oilprice.com"
+          ><img src="oilprice-32.png?v=20261165" width="16" height="16" alt="" /></a>
+          <a
+            href="https://bubblincrude.markmaga.com"
+            class="nav-link nav-link-icon"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="BubblinCrude"
+            aria-label="BubblinCrude"
+          ><img src="bubblincrude-32.png?v=20261165" srcset="bubblincrude-64.png?v=20261165 2x" width="16" height="16" alt="" /></a>
+          <a class="nav-link nav-link-sm" href="./about.html">About</a>
+        </nav>
+      </div>
+
       <section class="lights" id="lights" aria-label="Regime components"></section>
       <nav
         class="favor-strip"
@@ -159,7 +162,6 @@
         hidden
         aria-label="In and out of favor. Tap a class for why."
       ></nav>
-      <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
       <div class="heatmap-head">
         <div class="heatmap-titles">
           <h2 id="layerTitle">Series</h2>
@@ -197,7 +199,10 @@
             </button>
           </span>
         </div>
-        <div class="heat-controls" role="toolbar" aria-label="Series view">
+      </div>
+      <div class="heat-toolbar" role="toolbar" aria-label="Series view">
+        <nav class="layer-tabs" id="tabs" aria-label="Layers"></nav>
+        <div class="heat-controls">
           <div class="ctrl-group" id="compareSaveGroup" hidden aria-label="Saved clubs">
             <button type="button" class="btn tiny-btn" id="btnCompare_m1" hidden aria-pressed="false" title="Open m1">m1</button>
             <button type="button" class="btn tiny-btn" id="btnCompare_m2" hidden aria-pressed="false" title="Open m2">m2</button>
@@ -210,9 +215,6 @@
           <button type="button" class="btn tiny-btn" id="btnCompare" aria-pressed="false" title="Pick up to 10 series, then Go">Compare</button>
           <button type="button" class="btn tiny-btn" id="btnViewMode" aria-pressed="false">Chart</button>
         </div>
-      </div>
-      <div class="heat-colhead" id="heatColhead">
-        <div class="market-buckets" id="marketBuckets" hidden></div>
         <div
           class="dur-group regime-horizon"
           id="horizonGroup"
@@ -251,7 +253,7 @@
       <h3 id="sentenceTitle">Today’s regime</h3>
       <div id="sentenceBody" class="dlg-body"></div>
       <div class="dlg-actions">
-        <button type="submit" class="btn" value="ok">Close</button>
+        <button type="submit" class="btn tiny-btn" value="ok">Close</button>
       </div>
     </form>
   </dialog>
@@ -261,7 +263,7 @@
       <h3 id="seriesTitle">Name</h3>
       <div id="seriesBody" class="dlg-body"></div>
       <div class="dlg-actions">
-        <button type="submit" class="btn" value="ok">Close</button>
+        <button type="submit" class="btn tiny-btn" value="ok">Close</button>
       </div>
     </form>
   </dialog>
@@ -271,12 +273,12 @@
       <h3 id="lightTitle">Component</h3>
       <div id="lightBody" class="dlg-body"></div>
       <div class="dlg-actions">
-        <button type="submit" class="btn" value="ok">Close</button>
+        <button type="submit" class="btn tiny-btn" value="ok">Close</button>
       </div>
     </form>
   </dialog>
 
-  <script type="module" src="app.js?v=20261093"></script>
+  <script type="module" src="app.js?v=20261165"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

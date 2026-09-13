@@ -1360,7 +1360,7 @@
     {
       "id": "COPPER",
       "name": "Copper",
-      "layer": "growth",
+      "layer": "markets",
       "pipe": "yahoo",
       "yahoo": "HG=F",
       "units": "USD/lb",
@@ -1371,7 +1371,7 @@
       "sub": "Industrial metal / growth",
       "search": "HG=F",
       "causal": "labels",
-      "street": "growth",
+      "street": "markets",
       "note": "Copper futures. \"Dr. Copper\" \u2014 industrial demand / global growth proxy.",
       "marketBucket": "metals",
       "order": 430,
@@ -1405,6 +1405,8 @@
       "sign": -1,
       "light": null,
       "weight": 1,
+      "marketBucket": "metals",
+      "order": 411,
       "sourceUrl": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm",
       "sub": "CFTC gold non-commercial net, 156w index",
       "search": "GOLD_COT",
@@ -1514,7 +1516,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "S&P 500 trailing earnings yield (Multpl). Valuation input for Equities — compared with the 10y real yield as EQUITY_ERP."
+      "note": "S&P 500 trailing earnings yield (Multpl). Valuation input for Equities — compared with the 10y real yield as EQUITY_ERP.",
+      "marketBucket": "equities",
+      "order": 110
     },
     {
       "id": "EQUITY_ERP",
@@ -1531,7 +1535,9 @@
       "causal": "assets",
       "street": "markets",
       "light": null,
-      "note": "S&P earnings yield minus DFII10. Wide = equities cheap vs real duration; tight = not paid for equity risk."
+      "note": "S&P earnings yield minus DFII10. Wide = equities cheap vs real duration; tight = not paid for equity risk.",
+      "marketBucket": "equities",
+      "order": 110
     },
     {
       "id": "XLY",
@@ -2295,7 +2301,7 @@
     {
       "id": "HYG",
       "name": "High-yield bond ETF",
-      "street": "risk",
+      "street": "markets",
       "causal": "risk",
       "pipe": "yahoo",
       "yahoo": "HYG",
@@ -2303,7 +2309,7 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
-      "layer": "risk",
+      "layer": "markets",
       "sub": "High-yield bond price tape",
       "search": "HYG",
       "light": null,
@@ -2314,7 +2320,7 @@
     {
       "id": "LQD",
       "name": "Investment-grade bond ETF",
-      "street": "risk",
+      "street": "markets",
       "causal": "risk",
       "pipe": "yahoo",
       "yahoo": "LQD",
@@ -2322,7 +2328,7 @@
       "freq": "daily",
       "sign": 1,
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
-      "layer": "risk",
+      "layer": "markets",
       "sub": "Investment-grade corporate bond prices",
       "search": "LQD",
       "light": null,

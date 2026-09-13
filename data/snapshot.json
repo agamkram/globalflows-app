@@ -5035,8 +5035,8 @@
     "COPPER": {
       "id": "COPPER",
       "name": "Copper",
-      "layer": "growth",
-      "street": "growth",
+      "layer": "markets",
+      "street": "markets",
       "causal": "labels",
       "units": "USD/lb",
       "freq": "daily",
@@ -5527,8 +5527,8 @@
       "light": null,
       "impulseLight": null,
       "weight": 1,
-      "marketBucket": null,
-      "order": null,
+      "marketBucket": "equities",
+      "order": 110,
       "note": "S&P 500 trailing earnings yield (Multpl). Valuation input for Equities — compared with the 10y real yield as EQUITY_ERP.",
       "sub": "Trailing E/P",
       "search": "SPX_EY",
@@ -8485,8 +8485,8 @@
     "HYG": {
       "id": "HYG",
       "name": "High-yield bond ETF",
-      "layer": "risk",
-      "street": "risk",
+      "layer": "markets",
+      "street": "markets",
       "causal": "risk",
       "units": "USD",
       "freq": "daily",
@@ -8554,8 +8554,8 @@
     "LQD": {
       "id": "LQD",
       "name": "Investment-grade bond ETF",
-      "layer": "risk",
-      "street": "risk",
+      "layer": "markets",
+      "street": "markets",
       "causal": "risk",
       "units": "USD",
       "freq": "daily",
@@ -12395,7 +12395,9 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 2,
+      "marketBucket": "equities",
+      "order": 110
     },
     "GOLD_COT": {
       "id": "GOLD_COT",
@@ -12462,7 +12464,9 @@
         }
       },
       "status": "ok",
-      "staleDays": 5
+      "staleDays": 5,
+      "marketBucket": "metals",
+      "order": 411
     }
   },
   "errors": [],

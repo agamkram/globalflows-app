@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261093";
+import { DEFAULT_IMPULSE } from "./score.js?v=20261165";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -443,7 +443,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const t10Net = d + flight * 0.8 - easeW(iSc) * 0.7 + tpTerm + realPay;
   const t30Net = d + flight * 0.8 - easeW(iSc) + tightW(iSc) * 0.5 + tpTerm + realPay;
   const t5 = gradeTenor("5", t5Net, tenorCtx, 1);
-  t5.name = "5c";
+  t5.name = "5";
   t5.label = "5s (cash)";
   t5.margin = blendMargin(t5.stance, t5Net, rImp);
   const t10 = gradeTenor("10", t10Net, tenorCtx, 2);
@@ -681,7 +681,11 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     cryptoOutParts.push("plumbing is easy while fear is still cheap — late to the liquidity bid");
   }
   if (dolStrong && calmRisk > 0.45) cryptoOutParts.push("the dollar is rising into calm fear");
-  if (realZ > 0.45 && calmRisk > 0.45) cryptoOutParts.push("real yields are high — the high-beta valve is taxed");
+  if (realZ > 0.45 && calmRisk > 0.45) {
+    cryptoOutParts.push(
+      "real yields are high — Bitcoin has to compete with a fat real rate, and fear is still cheap"
+    );
+  }
   const cryptoInParts = [];
   if (tightW(lSc) > 0.45 && fearW > 0.35) {
     cryptoInParts.push("cash is draining into paid fear — the bounce sample");
@@ -690,7 +694,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     cryptoInParts.push("plumbing is easy while fear is already paid");
   }
   if (realZ < -0.35 && fearW > 0.3) {
-    cryptoInParts.push("real yields are low while fear is paid — discount rate helps the valve");
+    cryptoInParts.push("real yields are low while fear is paid — the discount rate helps Bitcoin");
   }
   const cryptoNet =
     0.45 * tightW(lSc) * Math.max(fearW, 0.25) +
@@ -703,8 +707,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "crypto",
     "Crypto",
     cryptoNet,
-    sentence(cryptoInParts, "Drain into fear — Bitcoin is the high-beta bounce valve."),
-    sentence(cryptoOutParts, "Easy plumbing into cheap fear — the high-beta valve usually dumps."),
+    sentence(cryptoInParts, "Drain into fear — Bitcoin is the bounce, not the plumbing vote."),
+    sentence(cryptoOutParts, "Easy plumbing into cheap fear — Bitcoin is late to that bid."),
     "Crypto wants paid fear or a clean drain; complacent easy plumbing is late.",
     0.14,
     -0.24

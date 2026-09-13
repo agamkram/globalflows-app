@@ -17,7 +17,7 @@ export const LIGHT_WORD = {
 
 export const LIGHT_COLOR = {
   easing: "green",
-  neutral: "amber",
+  neutral: "white",
   tight: "red",
   empty: "gray",
 };
