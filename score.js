@@ -796,6 +796,26 @@ function priorPoint(points, days, freq) {
   return best;
 }
 
+/** Chart points for this lookback. Same prints the heat uses when a month or quarter only has one print in the window. */
+export function sliceLookback(points, dur, freq) {
+  if (!points?.length) return [];
+  const days = DAYS[dur] || DAYS[TABLE_IMPULSE];
+  const last = points[points.length - 1];
+  const end = Date.parse(last.date + "T00:00:00Z");
+  const startIso = new Date(end - days * 86400000).toISOString().slice(0, 10);
+  const calendar = points.filter((p) => p.date >= startIso);
+  if (calendar.length >= 2) return calendar;
+  if (freq === "monthly" || freq === "quarterly") {
+    const prior = priorPoint(points, days, freq);
+    if (prior && prior.date !== last.date) {
+      const i = points.findIndex((p) => p.date === prior.date);
+      if (i >= 0) return points.slice(i);
+    }
+    if (points.length >= 2) return points.slice(-2);
+  }
+  return calendar;
+}
+
 function impulseDeadband(spec, latest) {
   const kind = anchorKind(spec.id);
   if (kind === "cpi_yoy" || kind === "pce_yoy" || kind === "mich" || kind === "bei_5y5y" || kind === "wage_yoy" || kind === "ppi_yoy") return 0.08;

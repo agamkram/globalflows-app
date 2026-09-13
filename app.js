@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261079";
+import { buildMeaning } from "./meaning.js?v=20261080";
 import {
   buildLights,
   attachImpulse,
@@ -12,8 +12,9 @@ import {
   DEFAULT_IMPULSE,
   TABLE_IMPULSE,
   IMPULSE_KEYS,
-} from "./score.js?v=20261079";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261079";
+  sliceLookback,
+} from "./score.js?v=20261080";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261080";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -2218,16 +2219,6 @@ async function loadHistory(id) {
   return p;
 }
 
-function sliceDuration(points, dur) {
-  if (!points?.length) return [];
-  const days = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 }[dur] || 91;
-  const last = points[points.length - 1].date;
-  const end = Date.parse(last + "T00:00:00Z");
-  const start = end - days * 86400000;
-  const startIso = new Date(start).toISOString().slice(0, 10);
-  return points.filter((p) => p.date >= startIso);
-}
-
 function drawSpark(canvas, points) {
   const wrap = canvas.parentElement;
   const msg = wrap?.querySelector(".spark-msg");
@@ -2312,7 +2303,8 @@ async function paintSparks() {
         return;
       }
       const dur = chartDuration();
-      const sliced = sliceDuration(hist.points, dur);
+      const series = SNAP?.series?.[id];
+      const sliced = sliceLookback(hist.points, dur, series?.freq);
       if (!sliced.length) {
         if (msg) msg.textContent = `no ${dur} data`;
         if (chgEl) {
@@ -2322,7 +2314,6 @@ async function paintSparks() {
         return;
       }
       drawSpark(canvas, sliced);
-      const series = SNAP?.series?.[id];
       const chg = fmtWindowChange(sliced, series?.units);
       if (chgEl) {
         chgEl.textContent = chg.text;
