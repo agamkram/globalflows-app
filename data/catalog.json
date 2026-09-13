@@ -1396,7 +1396,7 @@
     },
     {
       "id": "GOLD_COT",
-      "name": "Gold speculative positioning",
+      "name": "Gold positioning",
       "layer": "markets",
       "pipe": "derived",
       "derive": "gold_cot",
@@ -1433,7 +1433,7 @@
     },
     {
       "id": "BAMLC0A0CM",
-      "name": "Investment-grade credit spread",
+      "name": "IG credit spread",
       "layer": "risk",
       "pipe": "fred",
       "fred": "BAMLC0A0CM",
@@ -1541,7 +1541,7 @@
     },
     {
       "id": "XLY",
-      "name": "Consumer discretionary ETF",
+      "name": "Consumer disc. ETF",
       "layer": "markets",
       "pipe": "yahoo",
       "yahoo": "XLY",
@@ -1727,7 +1727,7 @@
     },
     {
       "id": "ROW_UST",
-      "name": "Foreign Treasury holdings",
+      "name": "Foreign UST holdings",
       "street": "liquidity",
       "causal": "liquidity",
       "pipe": "fred",
@@ -2319,7 +2319,7 @@
     },
     {
       "id": "LQD",
-      "name": "Investment-grade bond ETF",
+      "name": "IG bond ETF",
       "street": "markets",
       "causal": "risk",
       "pipe": "yahoo",

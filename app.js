@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261166";
+import { buildMeaning } from "./meaning.js?v=20261178";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261166";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261166";
+} from "./score.js?v=20261178";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261178";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -498,7 +498,7 @@ const LIGHT_BLURB = {
     "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
 };
 
-/** Which component is selected (accent border). Null = All. Table follows that street. */
+/** Which component is selected (accent border). Null = none — All scroll-spy owns the ring. */
 let focusLight = null;
 /** Last component named on the details chip — stays up on All / FX / Markets. */
 let hintLight = null;
@@ -529,6 +529,12 @@ let activeLayer = "all";
 let scrollStreet = null;
 /** Markets All: which bucket section is in view. */
 let scrollBucket = null;
+/** Freeze the spy ring while The book auto-scrolls to a shelf. */
+let spyLocked = false;
+let spyLockStreet = null;
+let spyUnlockTimer = 0;
+/** Bumps when a new jump starts so a prior scrollend cannot unlock early. */
+let spyScrollGen = 0;
 
 function bakeLight(id) {
   return REGIME?.lights?.[id] || null;
@@ -899,6 +905,40 @@ function renderFavorStrip() {
   }
 }
 
+function lockScrollSpy(street) {
+  spyLocked = true;
+  spyLockStreet = street ?? null;
+  scrollStreet = spyLockStreet;
+  scrollBucket = null;
+  clearTimeout(spyUnlockTimer);
+  spyUnlockTimer = 0;
+  applyScrollSpyUi();
+}
+
+function unlockScrollSpy() {
+  if (!spyLocked) return;
+  spyLocked = false;
+  spyLockStreet = null;
+  clearTimeout(spyUnlockTimer);
+  spyUnlockTimer = 0;
+  syncScrollSpy();
+}
+
+/** Hold the ring until smooth scroll settles (scrollend), with a timeout fallback. */
+function afterProgrammaticScroll() {
+  const gen = ++spyScrollGen;
+  const finish = () => {
+    if (gen !== spyScrollGen) return;
+    window.removeEventListener("scrollend", finish);
+    clearTimeout(spyUnlockTimer);
+    spyUnlockTimer = 0;
+    unlockScrollSpy();
+  };
+  window.addEventListener("scrollend", finish, { once: true });
+  clearTimeout(spyUnlockTimer);
+  spyUnlockTimer = setTimeout(finish, 1800);
+}
+
 function selectLight(id) {
   if (!SNAP || !id) return;
   const snap = viewOf(SNAP);
@@ -906,10 +946,11 @@ function selectLight(id) {
     console.warn("selectLight: missing light", id);
     return;
   }
-  focusLight = id;
+  const street = LIGHT_TO_TAB[id] || id;
+  // Stay on The book and scroll to the shelf — do not truncate to that street alone.
   hintLight = id;
-  activeLayer = LIGHT_TO_TAB[id] || id;
-  scrollStreet = null;
+  focusLight = null;
+  activeLayer = "all";
   scrollBucket = null;
   if (comparePhase !== "pick") {
     comparePhase = "off";
@@ -917,8 +958,10 @@ function selectLight(id) {
     compareActiveSlot = null;
     clubSavedAs = null;
   }
+  lockScrollSpy(street);
   refreshViews();
-  scrollTableToTop();
+  lockScrollSpy(street);
+  scrollToStreetSection(street);
 }
 
 /** Chip, box, and table title follow the component only while you are on it. */
@@ -934,14 +977,41 @@ function clearLightFocus() {
 }
 
 function scrollTableToTop() {
+  lockScrollSpy(null);
   const se = document.scrollingElement || document.documentElement;
   se.scrollTop = 0;
   if (document.body) document.body.scrollTop = 0;
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  afterProgrammaticScroll();
   requestAnimationFrame(() => {
+    if (!spyLocked) return;
     se.scrollTop = 0;
-    window.scrollTo(0, 0);
   });
+}
+
+/** Put a street’s titled row just under the pin (The book stays intact). */
+function scrollToStreetSection(street) {
+  if (!street) return;
+  lockScrollSpy(street);
+  const go = () => {
+    const pin = $("#pinStack");
+    const pinBottom = pin?.getBoundingClientRect().bottom ?? 0;
+    const row =
+      document.querySelector(
+        `#heatBody tr.heat-section[data-street="${street}"]`
+      ) || document.querySelector(`#heatBody tr[data-street="${street}"]`);
+    if (!row) {
+      unlockScrollSpy();
+      return;
+    }
+    const y =
+      window.scrollY + row.getBoundingClientRect().top - pinBottom - 2;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    lockScrollSpy(street);
+    afterProgrammaticScroll();
+  };
+  // Two frames so the All book has laid out after refreshViews.
+  requestAnimationFrame(() => requestAnimationFrame(go));
 }
 
 function openLightSheet(id) {
@@ -1742,17 +1812,27 @@ function renderTabs(snap) {
   tabs.onclick = (e) => {
     const b = e.target.closest("button[data-layer]");
     if (!b) return;
-    activeLayer = b.dataset.layer;
+    const layer = b.dataset.layer;
+    // All / FX / Markets stay on The book — jump to that shelf, never a second table.
     focusLight = null;
-    scrollStreet = null;
+    activeLayer = "all";
     scrollBucket = null;
     // Keep picks when browsing streets to build a club; wipe only outside pick.
     if (comparePhase !== "pick") {
       exitCompareToStreets();
     }
-    syncStreetSelection();
-    refreshViews();
-    scrollTableToTop();
+    if (layer === "all") {
+      lockScrollSpy(null);
+      refreshViews();
+      syncStreetSelection();
+      scrollTableToTop();
+    } else {
+      lockScrollSpy(layer);
+      refreshViews();
+      syncStreetSelection();
+      scrollToStreetSection(layer);
+    }
+    requestAnimationFrame(syncMarketsLiveUi);
   };
   requestAnimationFrame(syncMarketsLiveUi);
 }
@@ -2084,6 +2164,13 @@ function bucketUnderPin(rows, probe) {
 
 /** All: street under the pin. Markets All: bucket under the pin. */
 function syncScrollSpy() {
+  // Keep the ring on the jump target — do not re-paint every scroll tick
+  // (that retriggers the border and looks like flicker).
+  if (spyLocked) {
+    scrollStreet = spyLockStreet;
+    scrollBucket = null;
+    return;
+  }
   const clear = () => {
     if (scrollStreet != null || scrollBucket != null) {
       scrollStreet = null;
@@ -2101,26 +2188,29 @@ function syncScrollSpy() {
   const probe = Math.max(pinBottom, 0) + 4;
 
   if (activeLayer === "all") {
-    scrollBucket = null;
     const rows = [...document.querySelectorAll("#heatBody tr[data-street]")];
     if (!rows.length) {
       clear();
       return;
     }
-    scrollStreet = streetUnderPin(rows, probe);
+    const next = streetUnderPin(rows, probe);
+    if (next === scrollStreet && scrollBucket == null) return;
+    scrollStreet = next;
     scrollBucket = null;
     applyScrollSpyUi();
     return;
   }
 
   if (activeLayer === "markets" && !focusLight) {
-    scrollStreet = null;
     const rows = [...document.querySelectorAll("#heatBody tr[data-bucket]")];
     if (!rows.length) {
       clear();
       return;
     }
-    scrollBucket = bucketUnderPin(rows, probe);
+    const next = bucketUnderPin(rows, probe);
+    if (next === scrollBucket && scrollStreet == null) return;
+    scrollStreet = null;
+    scrollBucket = next;
     applyScrollSpyUi();
     return;
   }
