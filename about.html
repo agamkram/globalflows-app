@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261182" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261182" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261183" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261183" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261182" />
+  <link rel="stylesheet" href="styles.css?v=20261183" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -87,6 +87,7 @@
           <li><a href="#components">Regime</a></li>
           <li><a href="#sowhat">Asset classes</a></li>
           <li><a href="#baserates">Last time</a></li>
+          <li><a href="#histories">Two histories</a></li>
           <li><a href="#audits">Checks</a></li>
           <li><a href="#limits">Limits</a></li>
           <li><a href="#glossary">Glossary</a></li>
@@ -320,7 +321,7 @@
       <section class="about-block" id="baserates">
         <h2>What happened last time</h2>
         <p>
-          The app finds the days in its 23-year record whose five-component mix most
+          The app finds the days in its 23-year archive whose five-component mix most
           resembles today, and reports what happened next: the median move and how
           often it rose. A base rate, not a forecast.
         </p>
@@ -333,13 +334,47 @@
         </p>
       </section>
 
+      <section class="about-block" id="histories">
+        <h2>Two histories, and only one of them is a record</h2>
+        <p>
+          This is the distinction to hold on to, because everything on the site that
+          cites the past comes from one of two places and they are not worth the same.
+        </p>
+        <p>
+          The <strong>archive</strong> is 2003 to today, about 6,000 days. It is a
+          <strong>replay, not a track record</strong>. The app did not exist in 2003.
+          The archive is today’s rules run backwards over data as it reads
+          <em>now</em>, including figures revised long after the fact, and it is
+          rebuilt from scratch every morning. Change a rule and the whole 23 years
+          changes with it — the day the Growth surveys were allowed to take the word,
+          all 6,000 days were recomputed. Every base rate and every one of the
+          standing checks below stands on it. It is the best available way to ask
+          whether the rules are sane, and it can never be evidence that they work,
+          because it already knows how the story ended.
+        </p>
+        <p>
+          The <strong>forward record</strong> is the other one. Each morning the six
+          calls are written down and never touched again, then marked when the returns
+          arrive. It began in September 2026 and currently holds a handful of days.
+          That is the only test the app cannot flatter, and it is nearly empty — which
+          is the honest state of it, not a placeholder.
+        </p>
+        <p>
+          Where the two are mixed up, the backtest always looks better. So: the archive
+          says a mix like today’s has historically paid this. The forward record says
+          what this app actually called, in advance, and how that went. Only the second
+          one is a claim about the app.
+        </p>
+      </section>
+
       <section class="about-block" id="audits">
         <h2>How we know it is right</h2>
         <p>
           Nothing here has ever broken loudly. Every real bug ran clean, produced a
           plausible number, and stated something false with total confidence. Four
-          standing checks, plus a forward record. The daily bake will not publish if
-          the first check fails.
+          standing checks, plus the forward record. The first three read the archive,
+          so they can catch rules that are broken but cannot prove rules that work.
+          The daily bake will not publish if the first check fails.
         </p>
         <ul class="about-steps">
           <li>
@@ -360,7 +395,8 @@
           <li>
             <strong>Call audit</strong>
             — whether classes called in favor actually outperformed the ones called
-            out, on independent windows, not one episode counted fifty times.
+            out, counted in independent windows, not one episode counted fifty times.
+            Still the archive, so still a backtest.
           </li>
         </ul>
         <p>
@@ -372,12 +408,11 @@
           reporting the turn and calling it the level.
         </p>
         <p>
-          The only test that cannot flatter the app is forward time. Each morning the
-          six calls are written down and later marked. That record began in September
-          2026. It prints empty on purpose until a class has twelve independent windows,
-          and it is not on this site yet — it runs alongside the other three checks and
-          will appear here once there is something in it worth reading. Today that is
-          weeks of overlapping days, which is nothing.
+          The only test that cannot flatter the app is forward time, and that is the
+          forward record described above. It prints empty on purpose until a class has
+          twelve independent windows, and it is not on this site yet — it runs alongside
+          the other three checks and will appear here once there is something in it
+          worth reading. Today it holds weeks of overlapping days, which is nothing.
         </p>
       </section>
 
@@ -393,20 +428,21 @@
             app is reading revised figures.
           </li>
           <li>
-            Bitcoin’s record starts in 2014. Its base rates are not an equal sample
+            Bitcoin’s history starts in 2014. Its base rates are not an equal sample
             beside Treasuries or equities.
           </li>
           <li>
             “In favor” means this mix has historically rewarded owning this, over about
-            a one-month horizon, on the 2003–2026 record. Since 2023, Credit has almost
+            a one-month horizon, in the 2003–2026 archive. Since 2023, Credit has almost
             never printed in and Gold has almost never printed out — this cycle is not
             the whole archive. A base rate, not a target, and not advice.
           </li>
           <li>
-            Bands and checklists were fitted on 2003–2026 and graded on 2003–2026.
-            The exact weights are judgment against maybe five independent macro
-            cycles. That is a real overfitting risk. The forward record is the
-            protection.
+            Bands and checklists were fitted on the 2003–2026 archive and graded on
+            the same 2003–2026 archive. The colour cuts are set from that archive’s own
+            spread, so it cannot independently confirm them. The exact weights are
+            judgment against maybe five independent macro cycles. That is a real
+            overfitting risk, and the forward record is the only protection against it.
           </li>
         </ul>
       </section>
@@ -446,11 +482,23 @@
             <dt id="g-analog">Analog</dt>
             <dd>A past day whose five-component mix resembles today’s. The base rate is what happened next. On a split class: one verdict, then rose-in % per sleeve. A loose match is context, not a second essay.</dd>
           </div>
+          <div>
+            <dt id="g-archive">Archive</dt>
+            <dd>Today’s rules replayed over 2003 to now, rebuilt each morning. A backtest. Change a rule and all 23 years change with it. Every base rate comes from here.</dd>
+          </div>
+          <div>
+            <dt id="g-forward">Forward record</dt>
+            <dd>What the app actually called each morning, written down in advance and never recomputed. Began September 2026. The only number here that is a claim about the app rather than about the rules.</dd>
+          </div>
+          <div>
+            <dt id="g-window">Independent window</dt>
+            <dd>Days are not tries. Hold a call for two months and grade it on the next month’s return and you have about two separate bets, not fifty — every window overlaps its neighbours. Counting the non-overlapping ones stops one long episode looking like a pile of evidence.</dd>
+          </div>
         </dl>
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261182"></script>
+  <script type="module" src="about.js?v=20261183"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

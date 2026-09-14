@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/math.html" />
   <meta property="og:title" content="Math — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261182" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261182" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261183" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261183" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261182" />
+  <link rel="stylesheet" href="styles.css?v=20261183" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -85,6 +85,7 @@
           <li><a href="#lookback">Lookback</a></li>
           <li><a href="#nets">Duration · credit</a></li>
           <li><a href="#calls">Calls</a></li>
+          <li><a href="#archive">Archive</a></li>
         </ul>
       </header>
 
@@ -345,9 +346,53 @@ tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
           lookback does not enter this mix.
         </p>
       </section>
+
+      <section class="about-block" id="archive">
+        <h2>The archive, and how a comparable day is found</h2>
+        <p>
+          The archive is a replay: today’s rules run over 2003 to now, rebuilt from
+          scratch each morning. It is not a record of what the app said. Scores in it
+          are calibrated on an <strong>expanding window</strong> — each day is scored
+          against only the days before it, so 2004 never sees 2015’s distribution. The
+          live score uses the full-sample fit instead, which is why the two are built
+          by different paths on purpose.
+        </p>
+        <p>
+          A comparable day is straight-line distance across the five component scores:
+        </p>
+        <p>
+          <code class="about-ident">d = √( Σ (past<sub>i</sub> − today<sub>i</sub>)² ) over the five components</code>
+        </p>
+        <p>
+          Nearest first, but no two picked days may sit within <strong>21 days</strong>
+          of each other, and at most <strong>40</strong> are kept. Without the gap rule
+          a single quiet stretch would supply all forty and one episode would be
+          reported as forty precedents. The set’s median distance names the match:
+          <code class="about-ident">&lt; 0.35 close · &lt; 0.70 loose · beyond that distant</code>.
+          For scale, a typical day in the archive sits about 0.57 from its own forty
+          nearest, so “loose” is the ordinary result and not by itself a warning.
+        </p>
+        <p>
+          Forward returns are simple percent changes measured in trading days —
+          1w = 5, 2w = 10, 1m = 21, 3m = 63, 6m = 126, 12m = 252 — and
+          equal-weighted where a class has more than one asset: Treasuries from 5s, 10s
+          and 30s; credit from HY and IG; commodity from oil and copper. Bond and equity
+          ETFs use adjusted close, since a coupon is most of a bond’s return. Treasury
+          forwards are synthetic total returns built from yields
+          (<code class="about-ident">daily ≈ y/252 − D·Δy</code>), so the grade matches the
+          5s / 10s / 30s the strip actually names.
+        </p>
+        <p>
+          Grading counts <strong>independent windows</strong>, not days. A call held for
+          58 straight days and graded on a one-month forward return is roughly two
+          separate bets on one episode, not 58, because every window overlaps its
+          neighbours. The count is greedy: take a window, skip everything it covers,
+          take the next.
+        </p>
+      </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261182"></script>
+  <script type="module" src="about.js?v=20261183"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
