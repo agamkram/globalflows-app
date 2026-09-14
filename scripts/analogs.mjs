@@ -18,8 +18,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
  * would inflate the sample and make a handful of episodes look like a base rate.
  * Analogs must sit at least this far apart.
  */
-const MIN_GAP_DAYS = 21;
-const MAX_ANALOGS = 40;
+export const MIN_GAP_DAYS = 21;
+export const MAX_ANALOGS = 40;
+/** Median distance across the picked set that separates close / loose / distant. */
+export const CLOSE_CUT = 0.35;
+export const LOOSE_CUT = 0.7;
 
 function median(a) {
   if (!a.length) return null;
@@ -115,7 +118,7 @@ export async function buildAnalogs(todayScores) {
   // count of loose ones, and the reader should be told which they are looking at.
   const dists = picked.map((p) => p.d);
   const spread = median(dists);
-  const closeness = spread < 0.35 ? "close" : spread < 0.7 ? "loose" : "distant";
+  const closeness = spread < CLOSE_CUT ? "close" : spread < LOOSE_CUT ? "loose" : "distant";
 
   return {
     n: picked.length,
