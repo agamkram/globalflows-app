@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261221";
+import { buildMeaning } from "./meaning.js?v=20261222";
 import {
   buildLights,
   attachImpulse,
@@ -17,8 +17,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261221";
-import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261221";
+} from "./score.js?v=20261222";
+import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261222";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -563,11 +563,11 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
-    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they can take the word; the tap says so — early, not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they slide the needle and the tap flags early — not confirmed; alone they cannot flip Strong or Soft. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — realized core (CPI and PCE) at double weight, persistence (sticky CPI, wages, final-demand PPI), and 5y5y expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
-    "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
+    "Market fear — vol, credit spreads, financial conditions. Risk-on = fear is cheap; Risk-off = fear is expensive. Often last to move.",
 };
 
 /** Which component is selected (accent border). Null = none — All scroll-spy owns the ring. */
