@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-14T01:46:39.281Z",
-  "ingestAt": "2026-09-14T01:43:17.147Z",
+  "generatedAt": "2026-09-14T01:52:01.639Z",
+  "ingestAt": "2026-09-14T01:51:47.057Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -64,7 +64,7 @@
           "name": "Credit",
           "stance": "mixed",
           "why": "Investment grade and high yield are both mixed.",
-          "margin": 0.05414036365631907,
+          "margin": 0.05398632838562722,
           "splits": [
             {
               "id": "ig",
@@ -80,9 +80,9 @@
               "name": "HY",
               "stance": "mixed",
               "why": "Spreads are tight — you are not paid, even though coupons still look collectible.",
-              "net": 0.1315021895294098,
+              "net": 0.131074313777488,
               "label": "High yield",
-              "margin": 0.14201534850455144
+              "margin": 0.14170727796316773
             }
           ]
         },
@@ -91,8 +91,8 @@
           "name": "Equities",
           "stance": "out",
           "why": "Growth is firm while fear is still cheap — late to the expansion.",
-          "net": -0.682371168323533,
-          "margin": -0.42613991646121246,
+          "net": -0.6831199508893963,
+          "margin": -0.42667903990863404,
           "splits": [
             {
               "id": "cyc",
@@ -119,8 +119,8 @@
           "name": "Crypto",
           "stance": "out",
           "why": "Real yields are high — Bitcoin has to compete with a fat real rate, and fear is still cheap.",
-          "net": -0.28959498161029296,
-          "margin": -0.3360542195364342
+          "net": -0.2893543014998369,
+          "margin": -0.3358809298569059
         },
         {
           "id": "gold",
@@ -193,8 +193,8 @@
       "label": "Liquidity",
       "state": "neutral",
       "word": "Neutral",
-      "score": -0.22312226308823785,
-      "cliff": 0.22687773691176216,
+      "score": -0.2236571077781402,
+      "cliff": 0.2263428922218598,
       "color": "white",
       "n": 7,
       "teach": "Cash looks neither clearly ample nor scarce. Split: China credit / GDP leans easier; Net liquidity ÷ GDP, Reserves ÷ GDP lean tighter. Point: liquidity isn’t the loud driver right now.",
@@ -255,8 +255,8 @@
       "label": "Rates",
       "state": "tight",
       "word": "Tight",
-      "score": -0.6031610377992318,
-      "cliff": 0.1531610377992318,
+      "score": -0.6024217687603248,
+      "cliff": 0.15242176876032482,
       "color": "red",
       "n": 7,
       "teach": "Real funding looks tight. Point: you are being paid to wait in cash, not in duration.",
@@ -310,8 +310,8 @@
       "label": "Growth",
       "state": "easing",
       "word": "Strong",
-      "score": 0.7289307991979626,
-      "cliff": 0.27893079919796254,
+      "score": 0.7258582614885323,
+      "cliff": 0.27585826148853226,
       "color": "green",
       "n": 12,
       "teach": "Activity looks firm versus full employment / trend. Regional surveys are at the rail while jobs, claims and GDP are still Mid — the surveys are early, not wrong. Since 2003 the hard data has followed them within a quarter about two thirds of the time. Point: the real side is holding up.",
@@ -407,8 +407,8 @@
       "label": "Inflation",
       "state": "easing",
       "word": "Hot",
-      "score": 0.4804516020940909,
-      "cliff": 0.03045160209409087,
+      "score": 0.47821826894095015,
+      "cliff": 0.028218268940950142,
       "color": "green",
       "n": 6,
       "teach": "Prices are high versus ~2%. Core PCE is still high versus ~2%; 5y5y is anchored at the CPI-equivalent of target. Only 0.03 inside the word. Point: the level is still hot — not cooling.",
@@ -462,8 +462,8 @@
       "label": "Risk",
       "state": "easing",
       "word": "Risk-on",
-      "score": 0.6273518300594731,
-      "cliff": 0.17735183005947314,
+      "score": 0.6260233120782394,
+      "cliff": 0.17602331207823935,
       "color": "green",
       "n": 4,
       "teach": "Fear is cheap on the gauges. HY OAS is at cycle tights — calm, and not paid. Point: vol and credit are quiet.",
@@ -513,10 +513,10 @@
   "analogs": {
     "n": 40,
     "closeness": "loose",
-    "medianDistance": 0.665,
+    "medianDistance": 0.663,
     "windowStart": "2003-01-02",
     "windowEnd": "2026-09-11",
-    "sampleDays": 5992,
+    "sampleDays": 5961,
     "minGapDays": 21,
     "caveats": {
       "start": "Archive starts 2003-01-02 — first common date for DFII5/DFII10 and T5YIFR, with WALCL from 2002-12-18 and ON RRP from 2003-02-07. The 1990–2003 tier (no real yields, no breakevens, no net liquidity) is skipped on purpose.",
@@ -549,7 +549,7 @@
           "name": "S&P 500",
           "n": 40,
           "median": -0.29,
-          "up": 38,
+          "up": 40,
           "best": 3.5,
           "worst": -5.5
         },
@@ -564,7 +564,7 @@
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 0.06,
+          "median": 0.13,
           "up": 50,
           "best": 3.9,
           "worst": -2.9
@@ -588,8 +588,8 @@
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 0.08,
-          "up": 53,
+          "median": 0.04,
+          "up": 50,
           "best": 1.9,
           "worst": -1.8
         },
@@ -605,15 +605,15 @@
           "name": "High yield",
           "n": 40,
           "median": 0.13,
-          "up": 55,
+          "up": 57,
           "best": 1.1,
           "worst": -1.8
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.05,
-          "up": 53,
+          "median": 0.06,
+          "up": 55,
           "best": 1.5,
           "worst": -2.3
         },
@@ -621,31 +621,31 @@
           "name": "Gold",
           "n": 40,
           "median": 0.35,
-          "up": 55,
+          "up": 53,
           "best": 9.7,
           "worst": -8.6
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": 0.3,
-          "up": 63,
+          "median": 0.33,
+          "up": 65,
           "best": 2.2,
           "worst": -2.3
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": -0.22,
+          "median": -0.24,
           "up": 45,
-          "best": 7.5,
+          "best": 6.9,
           "worst": -6
         },
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": -0.38,
-          "up": 48,
+          "median": -0.24,
+          "up": 50,
           "best": 14,
           "worst": -11
         }
@@ -657,37 +657,37 @@
           "median": -0.34,
           "up": 48,
           "best": 5.2,
-          "worst": -6.5
+          "worst": -6
         },
         "XLY": {
           "name": "Cyclicals",
           "n": 40,
-          "median": -0.22,
-          "up": 48,
+          "median": -0.41,
+          "up": 45,
           "best": 7.3,
-          "worst": -8.9
+          "worst": -8.4
         },
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 0.64,
-          "up": 57,
+          "median": 0.37,
+          "up": 55,
           "best": 5.5,
           "worst": -3.3
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 18,
-          "median": 1.49,
-          "up": 56,
+          "n": 17,
+          "median": 1.39,
+          "up": 53,
           "best": 20.7,
           "worst": -29.5
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
-          "median": 0.1,
-          "up": 53,
+          "median": 0,
+          "up": 50,
           "best": 1.3,
           "worst": -0.8
         },
@@ -704,53 +704,53 @@
           "n": 40,
           "median": -0.45,
           "up": 45,
-          "best": 4.9,
+          "best": 3.6,
           "worst": -4.8
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 0.1,
-          "up": 55,
+          "median": 0.15,
+          "up": 57,
           "best": 1.2,
           "worst": -2.2
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.02,
-          "up": 50,
+          "median": -0.12,
+          "up": 48,
           "best": 1.7,
           "worst": -1.9
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 0.07,
-          "up": 50,
-          "best": 9.5,
-          "worst": -5.6
+          "median": 0.45,
+          "up": 53,
+          "best": 10.2,
+          "worst": -9.7
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": -0.16,
-          "up": 48,
-          "best": 2.5,
+          "median": 0.21,
+          "up": 55,
+          "best": 2.7,
           "worst": -3.1
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 1.56,
-          "up": 55,
+          "median": 1.64,
+          "up": 57,
           "best": 14.6,
           "worst": -9.6
         },
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": 2.09,
+          "median": 1.9,
           "up": 60,
           "best": 21.4,
           "worst": -17.7
@@ -768,39 +768,39 @@
         "XLY": {
           "name": "Cyclicals",
           "n": 40,
-          "median": -0.68,
+          "median": -0.84,
           "up": 45,
           "best": 8.2,
-          "worst": -10.1
+          "worst": -10.3
         },
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 0.55,
-          "up": 60,
+          "median": 0.65,
+          "up": 63,
           "best": 6.6,
           "worst": -4.8
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 18,
-          "median": -1.16,
-          "up": 39,
+          "n": 17,
+          "median": -1.52,
+          "up": 35,
           "best": 20.9,
-          "worst": -47.6
+          "worst": -46.4
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
-          "median": 0.19,
-          "up": 57,
+          "median": 0.17,
+          "up": 55,
           "best": 1.9,
           "worst": -2.3
         },
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 0.4,
+          "median": 0.09,
           "up": 53,
           "best": 3.4,
           "worst": -3.4
@@ -810,21 +810,21 @@
           "n": 40,
           "median": 0.24,
           "up": 55,
-          "best": 5.6,
+          "best": 5.8,
           "worst": -6.9
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
           "median": 0.36,
-          "up": 63,
+          "up": 65,
           "best": 1.6,
-          "worst": -2.2
+          "worst": -2.1
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.07,
+          "median": 0.1,
           "up": 53,
           "best": 2.1,
           "worst": -4.1
@@ -832,32 +832,32 @@
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": -0.04,
-          "up": 48,
+          "median": 0.13,
+          "up": 50,
           "best": 13.1,
-          "worst": -17.7
+          "worst": -7.4
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
           "median": -0.02,
-          "up": 45,
-          "best": 2.6,
+          "up": 48,
+          "best": 3,
           "worst": -4
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 0.09,
+          "median": 0.82,
           "up": 50,
           "best": 37.9,
-          "worst": -18.5
+          "worst": -14.3
         },
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": -0.2,
-          "up": 48,
+          "median": -0.21,
+          "up": 50,
           "best": 21,
           "worst": -24.3
         }
@@ -866,47 +866,47 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 0.04,
-          "up": 50,
+          "median": 0.58,
+          "up": 55,
           "best": 11.2,
-          "worst": -15.1
+          "worst": -14.8
         },
         "XLY": {
           "name": "Cyclicals",
           "n": 40,
-          "median": -1.35,
+          "median": -1.34,
           "up": 40,
           "best": 8.4,
-          "worst": -18.9
+          "worst": -19.8
         },
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 0.85,
+          "median": 0.74,
           "up": 68,
           "best": 9.7,
           "worst": -7.2
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 17,
-          "median": -14.57,
-          "up": 18,
-          "best": 29.2,
-          "worst": -43.9
+          "n": 16,
+          "median": -13.54,
+          "up": 19,
+          "best": 27.8,
+          "worst": -44.1
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
-          "median": 0.71,
+          "median": 0.51,
           "up": 68,
-          "best": 4.2,
+          "best": 3.8,
           "worst": -1.6
         },
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 0.56,
+          "median": 0.57,
           "up": 55,
           "best": 7.3,
           "worst": -4.1
@@ -914,7 +914,7 @@
         "UST30": {
           "name": "30y Treasuries",
           "n": 40,
-          "median": 0.56,
+          "median": 0.69,
           "up": 55,
           "best": 12,
           "worst": -9
@@ -922,23 +922,23 @@
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 0.81,
+          "median": 0.92,
           "up": 68,
           "best": 5.3,
-          "worst": -4.3
+          "worst": -4.4
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.21,
+          "median": 0.34,
           "up": 57,
           "best": 6.6,
-          "worst": -2.5
+          "worst": -2.6
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 3.07,
+          "median": 2.72,
           "up": 68,
           "best": 23.9,
           "worst": -13
@@ -946,26 +946,26 @@
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": 0.29,
-          "up": 55,
+          "median": 0.07,
+          "up": 50,
           "best": 5.8,
-          "worst": -7.8
+          "worst": -7.4
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 5.48,
-          "up": 75,
+          "median": 3.63,
+          "up": 70,
           "best": 61.5,
-          "worst": -17.4
+          "worst": -17.2
         },
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": 5.16,
-          "up": 60,
-          "best": 52,
-          "worst": -35.4
+          "median": 2.67,
+          "up": 57,
+          "best": 53.4,
+          "worst": -37.7
         }
       },
       "6m": {
@@ -973,9 +973,9 @@
           "name": "S&P 500",
           "n": 40,
           "median": 3.04,
-          "up": 75,
-          "best": 11.7,
-          "worst": -11.3
+          "up": 70,
+          "best": 12.3,
+          "worst": -7.6
         },
         "XLY": {
           "name": "Cyclicals",
@@ -983,110 +983,110 @@
           "median": -0.19,
           "up": 43,
           "best": 15.5,
-          "worst": -10.9
+          "worst": -10.1
         },
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 3.08,
+          "median": 2.3,
           "up": 75,
-          "best": 14.1,
+          "best": 12.1,
           "worst": -5.4
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 15,
-          "median": -26.04,
-          "up": 27,
-          "best": 101.4,
-          "worst": -55.7
+          "n": 14,
+          "median": -22.36,
+          "up": 36,
+          "best": 92.8,
+          "worst": -55.6
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
-          "median": 2.1,
+          "median": 1.9,
           "up": 78,
-          "best": 5.6,
+          "best": 6,
           "worst": -1.6
         },
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 2.84,
+          "median": 2.53,
           "up": 73,
-          "best": 9.5,
+          "best": 10.1,
           "worst": -3.9
         },
         "UST30": {
           "name": "30y Treasuries",
           "n": 40,
-          "median": 2.4,
-          "up": 55,
-          "best": 16.1,
+          "median": 2.87,
+          "up": 57,
+          "best": 17.2,
           "worst": -8.5
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 2.77,
-          "up": 90,
+          "median": 3.16,
+          "up": 93,
           "best": 7.1,
-          "worst": -2.4
+          "worst": -0.7
         },
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 2.03,
-          "up": 73,
-          "best": 10,
+          "median": 2.52,
+          "up": 75,
+          "best": 10.4,
           "worst": -2.4
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 7.97,
-          "up": 85,
+          "median": 7.89,
+          "up": 88,
           "best": 47.3,
-          "worst": -14.2
+          "worst": -16.3
         },
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": -0.03,
-          "up": 50,
-          "best": 6.5,
+          "median": -0.67,
+          "up": 48,
+          "best": 10.1,
           "worst": -10.5
         },
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 12.88,
-          "up": 75,
+          "median": 11.75,
+          "up": 70,
           "best": 89.3,
-          "worst": -20.5
+          "worst": -17.6
         },
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": 8.37,
+          "median": 8.12,
           "up": 55,
-          "best": 46.1,
-          "worst": -36.2
+          "best": 52.1,
+          "worst": -34.3
         }
       },
       "12m": {
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 8.48,
-          "up": 98,
+          "median": 8.14,
+          "up": 100,
           "best": 20.1,
-          "worst": -0.5
+          "worst": 0.2
         },
         "XLY": {
           "name": "Cyclicals",
           "n": 40,
-          "median": 6.96,
+          "median": 7.49,
           "up": 85,
           "best": 21.4,
           "worst": -6
@@ -1094,47 +1094,47 @@
         "XLP": {
           "name": "Defensives",
           "n": 40,
-          "median": 11.66,
+          "median": 11.97,
           "up": 98,
-          "best": 20.1,
+          "best": 19,
           "worst": -0.3
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 14,
-          "median": 22.19,
-          "up": 64,
-          "best": 79.2,
-          "worst": -46.5
+          "n": 13,
+          "median": 27.05,
+          "up": 69,
+          "best": 88.4,
+          "worst": -45.3
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
           "median": 4.19,
           "up": 95,
-          "best": 9.1,
+          "best": 9.2,
           "worst": -1.3
         },
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 5.66,
-          "up": 83,
+          "median": 5.82,
+          "up": 85,
           "best": 15.4,
           "worst": -4.4
         },
         "UST30": {
           "name": "30y Treasuries",
           "n": 40,
-          "median": 6.97,
-          "up": 75,
+          "median": 7.7,
+          "up": 80,
           "best": 29.5,
           "worst": -10.8
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 6.99,
+          "median": 6.93,
           "up": 100,
           "best": 11.8,
           "worst": 1.5
@@ -1142,18 +1142,18 @@
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 6.37,
-          "up": 90,
-          "best": 18.4,
+          "median": 6.44,
+          "up": 93,
+          "best": 18.5,
           "worst": -1.8
         },
         "GOLD": {
           "name": "Gold",
           "n": 40,
-          "median": 18.6,
-          "up": 95,
-          "best": 76.8,
-          "worst": -3.4
+          "median": 18.55,
+          "up": 98,
+          "best": 79.3,
+          "worst": -0.5
         },
         "DXY": {
           "name": "Dollar",
@@ -1161,7 +1161,7 @@
           "median": -1.23,
           "up": 45,
           "best": 12.7,
-          "worst": -9.7
+          "worst": -9.4
         },
         "COPPER": {
           "name": "Copper",
@@ -1169,7 +1169,7 @@
           "median": 26.77,
           "up": 75,
           "best": 122.9,
-          "worst": -17.3
+          "worst": -17.6
         },
         "WTI": {
           "name": "Oil",
@@ -1186,402 +1186,402 @@
         "SPX": {
           "median": 0.36,
           "up": 59,
-          "n": 5987
+          "n": 5956
         },
         "XLY": {
           "median": 0.35,
           "up": 57,
-          "n": 5987
+          "n": 5956
         },
         "XLP": {
           "median": 0.28,
           "up": 57,
-          "n": 5987
+          "n": 5956
         },
         "BTC": {
           "median": 0.6,
           "up": 54,
-          "n": 3023
+          "n": 3009
         },
         "UST5": {
           "median": 0.04,
           "up": 53,
-          "n": 5987
+          "n": 5956
         },
         "UST10": {
           "median": 0.07,
           "up": 53,
-          "n": 5987
+          "n": 5956
         },
         "UST30": {
           "median": 0.08,
           "up": 53,
-          "n": 5987
+          "n": 5956
         },
         "HYG": {
           "median": 0.16,
-          "up": 59,
-          "n": 5987
+          "up": 60,
+          "n": 5956
         },
         "LQD": {
           "median": 0.14,
           "up": 57,
-          "n": 5987
+          "n": 5956
         },
         "GOLD": {
           "median": 0.33,
           "up": 56,
-          "n": 5987
+          "n": 5956
         },
         "DXY": {
           "median": 0,
           "up": 50,
-          "n": 5987
+          "n": 5956
         },
         "COPPER": {
           "median": 0.25,
           "up": 54,
-          "n": 5987
+          "n": 5956
         },
         "WTI": {
-          "median": 0.41,
-          "up": 53,
-          "n": 5987
+          "median": 0.42,
+          "up": 54,
+          "n": 5956
         }
       },
       "2w": {
         "SPX": {
-          "median": 0.7,
+          "median": 0.69,
           "up": 62,
-          "n": 5982
+          "n": 5951
         },
         "XLY": {
-          "median": 0.68,
+          "median": 0.67,
           "up": 59,
-          "n": 5982
+          "n": 5951
         },
         "XLP": {
           "median": 0.54,
           "up": 61,
-          "n": 5982
+          "n": 5951
         },
         "BTC": {
-          "median": 1.21,
+          "median": 1.23,
           "up": 55,
-          "n": 3018
+          "n": 3004
         },
         "UST5": {
           "median": 0.08,
           "up": 55,
-          "n": 5982
+          "n": 5951
         },
         "UST10": {
           "median": 0.11,
           "up": 53,
-          "n": 5982
+          "n": 5951
         },
         "UST30": {
-          "median": 0.12,
+          "median": 0.13,
           "up": 52,
-          "n": 5982
+          "n": 5951
         },
         "HYG": {
-          "median": 0.29,
+          "median": 0.3,
           "up": 62,
-          "n": 5982
+          "n": 5951
         },
         "LQD": {
-          "median": 0.27,
+          "median": 0.28,
           "up": 59,
-          "n": 5982
+          "n": 5951
         },
         "GOLD": {
-          "median": 0.44,
+          "median": 0.45,
           "up": 56,
-          "n": 5982
+          "n": 5951
         },
         "DXY": {
           "median": 0.01,
           "up": 50,
-          "n": 5982
+          "n": 5951
         },
         "COPPER": {
-          "median": 0.43,
+          "median": 0.44,
           "up": 54,
-          "n": 5982
+          "n": 5951
         },
         "WTI": {
-          "median": 0.76,
+          "median": 0.74,
           "up": 55,
-          "n": 5982
+          "n": 5951
         }
       },
       "1m": {
         "SPX": {
           "median": 1.39,
           "up": 66,
-          "n": 5971
+          "n": 5940
         },
         "XLY": {
-          "median": 1.41,
+          "median": 1.43,
           "up": 63,
-          "n": 5971
+          "n": 5940
         },
         "XLP": {
-          "median": 1,
+          "median": 1.01,
           "up": 64,
-          "n": 5971
+          "n": 5940
         },
         "BTC": {
           "median": 2.86,
           "up": 57,
-          "n": 3007
+          "n": 2993
         },
         "UST5": {
           "median": 0.16,
           "up": 57,
-          "n": 5971
+          "n": 5940
         },
         "UST10": {
           "median": 0.25,
           "up": 55,
-          "n": 5971
+          "n": 5940
         },
         "UST30": {
           "median": 0.28,
           "up": 53,
-          "n": 5971
+          "n": 5940
         },
         "HYG": {
-          "median": 0.62,
+          "median": 0.63,
           "up": 66,
-          "n": 5971
+          "n": 5940
         },
         "LQD": {
           "median": 0.48,
           "up": 62,
-          "n": 5971
+          "n": 5940
         },
         "GOLD": {
-          "median": 0.76,
+          "median": 0.78,
           "up": 57,
-          "n": 5971
+          "n": 5940
         },
         "DXY": {
-          "median": 0,
+          "median": 0.01,
           "up": 50,
-          "n": 5971
+          "n": 5940
         },
         "COPPER": {
-          "median": 0.95,
+          "median": 0.97,
           "up": 56,
-          "n": 5971
+          "n": 5940
         },
         "WTI": {
-          "median": 1.13,
+          "median": 1.12,
           "up": 54,
-          "n": 5971
+          "n": 5940
         }
       },
       "3m": {
         "SPX": {
-          "median": 3.51,
+          "median": 3.57,
           "up": 72,
-          "n": 5929
+          "n": 5898
         },
         "XLY": {
-          "median": 3.66,
-          "up": 69,
-          "n": 5929
+          "median": 3.63,
+          "up": 70,
+          "n": 5898
         },
         "XLP": {
-          "median": 2.66,
+          "median": 2.68,
           "up": 72,
-          "n": 5929
+          "n": 5898
         },
         "BTC": {
           "median": 7.72,
           "up": 58,
-          "n": 2965
+          "n": 2951
         },
         "UST5": {
-          "median": 0.39,
+          "median": 0.4,
           "up": 60,
-          "n": 5929
+          "n": 5898
         },
         "UST10": {
-          "median": 0.65,
-          "up": 58,
-          "n": 5929
+          "median": 0.64,
+          "up": 59,
+          "n": 5898
         },
         "UST30": {
-          "median": 0.94,
+          "median": 0.91,
           "up": 56,
-          "n": 5929
+          "n": 5898
         },
         "HYG": {
-          "median": 1.66,
-          "up": 74,
-          "n": 5929
+          "median": 1.67,
+          "up": 75,
+          "n": 5898
         },
         "LQD": {
-          "median": 1.31,
+          "median": 1.32,
           "up": 65,
-          "n": 5929
+          "n": 5898
         },
         "GOLD": {
-          "median": 2.77,
+          "median": 2.78,
           "up": 63,
-          "n": 5929
+          "n": 5898
         },
         "DXY": {
           "median": 0.03,
           "up": 50,
-          "n": 5929
+          "n": 5898
         },
         "COPPER": {
-          "median": 2.24,
-          "up": 58,
-          "n": 5929
+          "median": 2.28,
+          "up": 59,
+          "n": 5898
         },
         "WTI": {
-          "median": 2.9,
+          "median": 2.81,
           "up": 58,
-          "n": 5929
+          "n": 5898
         }
       },
       "6m": {
         "SPX": {
-          "median": 6.2,
+          "median": 6.31,
           "up": 76,
-          "n": 5866
+          "n": 5835
         },
         "XLY": {
-          "median": 6.81,
+          "median": 6.79,
           "up": 74,
-          "n": 5866
+          "n": 5835
         },
         "XLP": {
           "median": 5.21,
           "up": 79,
-          "n": 5866
+          "n": 5835
         },
         "BTC": {
-          "median": 28.27,
-          "up": 64,
-          "n": 2902
+          "median": 28.54,
+          "up": 65,
+          "n": 2888
         },
         "UST5": {
           "median": 0.84,
           "up": 64,
-          "n": 5866
+          "n": 5835
         },
         "UST10": {
           "median": 1.33,
           "up": 60,
-          "n": 5866
+          "n": 5835
         },
         "UST30": {
-          "median": 1.35,
+          "median": 1.37,
           "up": 55,
-          "n": 5866
+          "n": 5835
         },
         "HYG": {
-          "median": 3.1,
-          "up": 79,
-          "n": 5866
+          "median": 3.13,
+          "up": 80,
+          "n": 5835
         },
         "LQD": {
-          "median": 2.46,
+          "median": 2.47,
           "up": 70,
-          "n": 5866
+          "n": 5835
         },
         "GOLD": {
-          "median": 5.78,
+          "median": 5.8,
           "up": 69,
-          "n": 5866
+          "n": 5835
         },
         "DXY": {
-          "median": -0.14,
+          "median": -0.15,
           "up": 49,
-          "n": 5866
+          "n": 5835
         },
         "COPPER": {
-          "median": 4.01,
+          "median": 3.94,
           "up": 59,
-          "n": 5866
+          "n": 5835
         },
         "WTI": {
-          "median": 5.08,
+          "median": 5.05,
           "up": 58,
-          "n": 5866
+          "n": 5835
         }
       },
       "12m": {
         "SPX": {
-          "median": 12.18,
+          "median": 12.26,
           "up": 83,
-          "n": 5740
+          "n": 5709
         },
         "XLY": {
           "median": 14.7,
           "up": 82,
-          "n": 5740
+          "n": 5709
         },
         "XLP": {
-          "median": 9.82,
+          "median": 10.03,
           "up": 89,
-          "n": 5740
+          "n": 5709
         },
         "BTC": {
-          "median": 73.31,
-          "up": 72,
-          "n": 2776
+          "median": 72.93,
+          "up": 73,
+          "n": 2762
         },
         "UST5": {
-          "median": 2.15,
+          "median": 2.16,
           "up": 70,
-          "n": 5740
+          "n": 5709
         },
         "UST10": {
-          "median": 3.56,
+          "median": 3.61,
           "up": 67,
-          "n": 5740
+          "n": 5709
         },
         "UST30": {
-          "median": 3.12,
+          "median": 3.19,
           "up": 61,
-          "n": 5740
+          "n": 5709
         },
         "HYG": {
-          "median": 6.24,
+          "median": 6.27,
           "up": 82,
-          "n": 5740
+          "n": 5709
         },
         "LQD": {
           "median": 4.8,
-          "up": 79,
-          "n": 5740
+          "up": 80,
+          "n": 5709
         },
         "GOLD": {
-          "median": 10.54,
+          "median": 10.51,
           "up": 73,
-          "n": 5740
+          "n": 5709
         },
         "DXY": {
-          "median": -0.02,
+          "median": -0.05,
           "up": 50,
-          "n": 5740
+          "n": 5709
         },
         "COPPER": {
-          "median": 7.51,
+          "median": 7.72,
           "up": 58,
-          "n": 5740
+          "n": 5709
         },
         "WTI": {
-          "median": 6.17,
+          "median": 6.3,
           "up": 57,
-          "n": 5740
+          "n": 5709
         }
       }
     }
