@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261183" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261183" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261184" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261184" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261183" />
+  <link rel="stylesheet" href="styles.css?v=20261184" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -371,8 +371,8 @@
         <h2>How we know it is right</h2>
         <p>
           Nothing here has ever broken loudly. Every real bug ran clean, produced a
-          plausible number, and stated something false with total confidence. Four
-          standing checks, plus the forward record. The first three read the archive,
+          plausible number, and stated something false with total confidence. Five
+          standing checks, plus the forward record. Three of them read the archive,
           so they can catch rules that are broken but cannot prove rules that work.
           The daily bake will not publish if the first check fails.
         </p>
@@ -381,6 +381,15 @@
             <strong>Sanity</strong>
             — recomputes all eleven boxes independently and confirms they match what
             was published.
+          </li>
+          <li>
+            <strong>Plumbing audit</strong>
+            — the machinery rather than the rules. That today’s reading and the
+            23-year replay are scored by one model and not two; that a band edited
+            in the code actually reached the data; that every series prints with a
+            scale; that the forward record holds no day that has not happened; and
+            that the numbers quoted on this page and on Math are still the numbers
+            in the code. Each of those has gone wrong at least once, silently.
           </li>
           <li>
             <strong>Band audit</strong>
@@ -498,7 +507,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261183"></script>
+  <script type="module" src="about.js?v=20261184"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

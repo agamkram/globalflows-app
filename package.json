@@ -22,7 +22,8 @@
     "refresh:markets": "npm run ingest:markets && npm run bake:regime",
     "sanity": "node scripts/sanity.mjs",
     "serve": "python3 serve-https.py",
-    "verify": "npm run sanity && npm run audit:bands && npm run audit:episodes && npm run audit:calls"
+    "verify": "npm run sanity && npm run audit:plumbing && npm run audit:bands && npm run audit:episodes && npm run audit:calls",
+    "audit:plumbing": "node scripts/audit-plumbing.mjs"
   },
   "engines": {
     "node": ">=20"
