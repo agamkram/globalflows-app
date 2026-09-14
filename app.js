@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261187";
+import { buildMeaning } from "./meaning.js?v=20261192";
 import {
   buildLights,
   attachImpulse,
@@ -9,41 +9,100 @@ import {
   applyRealRateAnchors,
   distanceToCliff,
   clubLight,
+  tallyVotes,
+  lightStateFromScore,
+  VOTE_FAMILIES,
+  familyIds,
   DEFAULT_IMPULSE,
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261187";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261187";
+} from "./score.js?v=20261192";
+import { LIGHT_IDS, LIGHT_WORD, lightSheet, inflationTurn } from "./light-copy.js?v=20261192";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
-/** iOS lets the document scroll under dialogs unless body is position:fixed. */
+/**
+ * iOS scrolls under dialogs unless body is position:fixed. That unsticks the
+ * pin, so the sheet must be measured first and the pin translated back into
+ * the clear band above the dim.
+ */
 let scrollLockY = 0;
+/** Which row the open tap-sheet sits under: the five, or the six. */
+let sheetAnchor = "lights";
+/** Frozen viewport Y while a sheet is open — sticky is gone after lock. */
+let sheetTopPx = 8;
+let sheetFrozen = false;
+
+function sheetAnchorEl() {
+  return sheetAnchor === "favor" ? $("#favorStrip") : $("#lights");
+}
+
+function applySheetTop(top) {
+  sheetTopPx = top;
+  document.documentElement.style.setProperty("--sheet-top", `${top}px`);
+}
+
+function measureSheetTop(which) {
+  if (which) sheetAnchor = which;
+  const el = sheetAnchorEl();
+  const gap = 6;
+  const bottom = el && !el.hidden ? el.getBoundingClientRect().bottom : 0;
+  return Math.max(8, Math.ceil(bottom + gap));
+}
+
+function placeSheetBelow(which, { force = false } = {}) {
+  if (which) sheetAnchor = which;
+  if (sheetFrozen && !force) {
+    applySheetTop(sheetTopPx);
+    return sheetTopPx;
+  }
+  applySheetTop(measureSheetTop(which));
+  return sheetTopPx;
+}
+
+/** Keep the sticky pin visible through the clear backdrop band after lock. */
+function pinChromeWhileOpen() {
+  const pin = $("#pinStack");
+  if (!pin) return;
+  pin.style.transform = "";
+  const top = pin.getBoundingClientRect().top;
+  if (Math.abs(top) > 0.5) pin.style.transform = `translateY(${-top}px)`;
+}
+
+function unpinChrome() {
+  const pin = $("#pinStack");
+  if (pin) pin.style.transform = "";
+}
+
 function lockPageScroll() {
   if (document.body.classList.contains("dlg-open")) return;
   scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
   document.body.classList.add("dlg-open");
   document.body.style.top = `-${scrollLockY}px`;
+  sheetFrozen = true;
+  pinChromeWhileOpen();
 }
+
 function unlockPageScroll() {
   if ([...document.querySelectorAll("dialog.dlg-tap")].some((d) => d.open)) return;
+  sheetFrozen = false;
+  unpinChrome();
   document.body.classList.remove("dlg-open");
   document.body.style.top = "";
   window.scrollTo(0, scrollLockY);
 }
 
-/** Which row the open tap-sheet sits under: the five, or the six. */
-let sheetAnchor = "lights";
-
-function placeSheetBelow(which) {
-  if (which) sheetAnchor = which;
-  const el =
-    sheetAnchor === "favor" ? $("#favorStrip") : $("#lights");
-  const gap = 6;
-  const bottom = el && !el.hidden ? el.getBoundingClientRect().bottom : 0;
-  const top = Math.max(8, Math.ceil(bottom + gap));
-  document.documentElement.style.setProperty("--sheet-top", `${top}px`);
+/** Measure under the stuck pin, then open — never remasure after lock. */
+function openTapDialog(dlg, anchor) {
+  placeSheetBelow(anchor, { force: true });
+  if (!dlg.open) dlg.showModal();
+  lockPageScroll();
+  applySheetTop(sheetTopPx);
+  requestAnimationFrame(() => {
+    pinChromeWhileOpen();
+    applySheetTop(sheetTopPx);
+  });
 }
 
 let SNAP = null;
@@ -290,6 +349,17 @@ function fmt(n, digits = 2) {
   });
 }
 
+function signedScore(n) {
+  if (n == null || !Number.isFinite(n)) return "—";
+  const s = n.toFixed(2);
+  return n > 0 ? `+${s}` : s;
+}
+
+function wordOfScore(lid, score) {
+  const st = lightStateFromScore(score).state;
+  return LIGHT_WORD[lid]?.[st] || st;
+}
+
 /**
  * Render a stock of money already denominated in billions. FRED publishes most
  * balance-sheet series in millions, so the raw print has to be scaled by its own
@@ -493,7 +563,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
-    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Surveys may slide the needle; they cannot flip Strong or Soft while jobs and GDP are still Mid. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they can take the word; the tap says so — early, not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — realized core (CPI and PCE) at double weight, persistence (sticky CPI, wages, final-demand PPI), and 5y5y expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
@@ -1016,6 +1086,125 @@ function scrollToStreetSection(street) {
   requestAnimationFrame(() => requestAnimationFrame(go));
 }
 
+/** How related prints share a ballot — same names Math uses. */
+const TAP_FAMILY = {
+  liquidity: {
+    fed: "Fed vs GDP",
+    funding: "Funding cost",
+    stress: "Commercial paper",
+    global: "G4 and the dollar",
+  },
+  rates: {
+    real: "Real yields",
+    nominal: "Nominal yields",
+    curve: "The curve",
+    vol: "Bond vol",
+  },
+  growth: {
+    coincident: "Labor and output",
+    leading: "Leading prints",
+    survey: "Factory surveys",
+  },
+  inflation: {
+    realized: "Core prices",
+    persistence: "Persistence",
+    expected: "Expectations",
+  },
+  risk: {
+    credit: "Credit spreads",
+    vol: "Volatility",
+  },
+};
+
+function familyWeightNote(w) {
+  if (w === 0.5) return "half weight";
+  if (w === 1.5) return "1.5× weight";
+  if (w === 2) return "double weight";
+  if (w && w !== 1) return `${w}× weight`;
+  return "";
+}
+
+/**
+ * Roster plus the two numbers: the rows together, then the score on the box.
+ * The table already lists every series; this is the arithmetic, grouped the
+ * way the votes actually combine.
+ */
+function tapMathHtml(id, snap) {
+  const c = clubLight(snap, id);
+  const voters = c?.voters || [];
+  if (!voters.length) return "";
+  const byId = Object.fromEntries(voters.map((v) => [v.id, v]));
+  const { score: together, ballots } = tallyVotes(id, voters, { calibrate: false });
+  const { score: onBox } = tallyVotes(id, voters, {
+    calibrate: true,
+    dist: snap.lightDist,
+  });
+  const families = VOTE_FAMILIES[id] || {};
+  const used = new Set();
+  const blocks = [];
+  for (const [fname, spec] of Object.entries(families)) {
+    const ids = familyIds(spec);
+    const members = ids.map((vid) => byId[vid]).filter(Boolean);
+    if (!members.length) continue;
+    members.forEach((m) => used.add(m.id));
+    const ballot = ballots.find((b) => b.id === `family:${fname}`);
+    const wNote = familyWeightNote(ballot?.weight ?? 1);
+    const famScore = ballot?.score;
+    const label = TAP_FAMILY[id]?.[fname] || fname;
+    blocks.push(`<div class="tap-fam">
+      <div class="tap-fam-head">
+        <span>${escapeHtml(label)}${wNote ? ` <span class="muted">${escapeHtml(wNote)}</span>` : ""}</span>
+        <span class="tap-math-sc" data-state="${escapeHtml(lightStateFromScore(famScore).state)}">${signedScore(famScore)} ${escapeHtml(wordOfScore(id, famScore))}</span>
+      </div>
+      <ul>${members
+        .map(
+          (m) =>
+            `<li><span>${escapeHtml(m.name)}</span><span class="tap-math-sc">${signedScore(m.score)}</span></li>`
+        )
+        .join("")}</ul>
+    </div>`);
+  }
+  const leftovers = voters.filter((v) => !used.has(v.id));
+  if (leftovers.length) {
+    blocks.push(`<div class="tap-fam">
+      <ul>${leftovers
+        .map(
+          (m) =>
+            `<li><span>${escapeHtml(m.name)}</span><span class="tap-math-sc">${signedScore(m.score)}</span></li>`
+        )
+        .join("")}</ul>
+    </div>`);
+  }
+  const wTogether = wordOfScore(id, together);
+  const wBox = wordOfScore(id, onBox);
+  const name = snap.lights?.[id]?.label || id;
+  const scaleNote =
+    wTogether === wBox
+      ? `The rows already read ${wTogether}. We asked how unusual that is for ${name}’s own mix and matched it to the other four. The word stayed ${wTogether}.`
+      : `The rows together read ${wTogether}. We asked how unusual that is for ${name}’s own mix, then matched the five so a word here means the same kind of unusual as the same word on the others. That stretch printed ${wBox}.`;
+  const stress = ballots.filter(
+    (b) => b.id === "family:funding" || b.id === "family:stress"
+  );
+  const worst = stress.reduce(
+    (a, b) => (Number.isFinite(b.score) && (a == null || b.score < a) ? b.score : a),
+    null
+  );
+  const stressNote =
+    id === "liquidity" && worst != null && worst <= -0.5
+      ? `<p class="muted tiny">Funding stress is holding Liquidity at least this tight — the other ballots cannot talk it back up.</p>`
+      : "";
+  return `<div class="tap-math">
+    <p class="tap-math-kicker">How the number is made</p>
+    ${blocks.join("")}
+    <div class="tap-math-sum">
+      <div>Rows together <span class="tap-math-sc" data-state="${escapeHtml(lightStateFromScore(together).state)}">${signedScore(together)} ${escapeHtml(wTogether)}</span></div>
+      <div>On the box <span class="tap-math-sc" data-state="${escapeHtml(lightStateFromScore(onBox).state)}">${signedScore(onBox)} ${escapeHtml(wBox)}</span></div>
+    </div>
+    <p class="muted tiny">${escapeHtml(scaleNote)}</p>
+    ${stressNote}
+  </div>`;
+}
+
 function openLightSheet(id) {
   if (!SNAP || !id) return;
   $("#dlgSentence")?.close();
@@ -1051,12 +1240,10 @@ function openLightSheet(id) {
   bodyEl.innerHTML = `
     ${teach}
     ${moved}
+    ${tapMathHtml(id, snap)}
   `;
   try {
-    if (!dlg.open) dlg.showModal();
-    lockPageScroll();
-    placeSheetBelow("lights");
-    requestAnimationFrame(() => placeSheetBelow("lights"));
+    openTapDialog(dlg, "lights");
     if (SNAP) syncComponentHint(viewOf(SNAP));
   } catch (err) {
     console.warn("openLightSheet: showModal failed", err);
@@ -1578,10 +1765,7 @@ function showSentenceDialog({ hug = false, below = "lights" } = {}) {
   if (!dlg) return;
   dlg.classList.toggle("dlg-hug", hug);
   try {
-    if (!dlg.open) dlg.showModal();
-    lockPageScroll();
-    placeSheetBelow(below);
-    requestAnimationFrame(() => placeSheetBelow(below));
+    openTapDialog(dlg, below);
     if (SNAP) syncComponentHint(viewOf(SNAP));
   } catch (err) {
     console.warn("showSentenceDialog: showModal failed", err);
@@ -2672,10 +2856,7 @@ function openSeries(s) {
   const dlg = $("#dlgSeries");
   if (!dlg) return;
   try {
-    if (!dlg.open) dlg.showModal();
-    lockPageScroll();
-    placeSheetBelow("lights");
-    requestAnimationFrame(() => placeSheetBelow("lights"));
+    openTapDialog(dlg, "lights");
   } catch (err) {
     console.warn("openSeries: showModal failed", err);
   }
@@ -2764,7 +2945,9 @@ async function boot() {
   });
   window.addEventListener("resize", () => {
     if ([...document.querySelectorAll("dialog.dlg-tap")].some((d) => d.open)) {
-      placeSheetBelow();
+      // Sticky is gone while locked — keep the frozen top and re-pin chrome.
+      pinChromeWhileOpen();
+      applySheetTop(sheetTopPx);
     }
   });
 

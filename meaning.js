@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261187";
+import { DEFAULT_IMPULSE } from "./score.js?v=20261192";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -131,6 +131,27 @@ function easeW(score) {
 /** Soft “tight” weight 0..1. 0 at ≥ −0.2, 1 at ≤ −0.45. */
 function tightW(score) {
   return Math.max(0, Math.min(1, (-0.2 - score) / (0.45 - 0.2)));
+}
+
+/**
+ * The six read the Inflation score, not only the painted word. They still
+ * must not say Hot while the box is Mid. “near Hot” is the score past the
+ * soft ramp and short of the colour line.
+ */
+function inflationHeatTalk(iSc, I) {
+  if (I === "easing") return "Hot";
+  if (easeW(iSc) > 0.55) return "near Hot";
+  return null;
+}
+
+/**
+ * Same permission on Liquidity. The six may treat a lean as a tax; they
+ * still must not say draining while the box is Neutral.
+ */
+function liquidityTightTalk(lSc, L) {
+  if (L === "tight") return "Tightening";
+  if (tightW(lSc) > 0.45) return "near Tightening";
+  return null;
 }
 
 /**
@@ -734,11 +755,20 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // days and lost ~6% median over the next month (2022 bear). Easy plumbing
   // is the bid — including into calm (trend), not "late." Tight plumbing is out.
   const cryptoOutParts = [];
-  if (tightW(lSc) > 0.45) {
+  const lTight = liquidityTightTalk(lSc, L);
+  if (lTight === "Tightening") {
     cryptoOutParts.push("cash is draining — Bitcoin usually pays the liquidity tax");
+  } else if (lTight) {
+    cryptoOutParts.push(
+      "Liquidity is Neutral; the lean is enough that Bitcoin treats it as a drain"
+    );
   }
-  if (tightW(lSc) > 0.45 && fearW > 0.45) {
-    cryptoOutParts.push("drain into paid fear — that bounce sample fails for Bitcoin");
+  if (lTight && fearW > 0.45) {
+    cryptoOutParts.push(
+      lTight === "Tightening"
+        ? "drain into paid fear — that bounce sample fails for Bitcoin"
+        : "leaning tight into paid fear — that bounce sample fails for Bitcoin"
+    );
   }
   if (realZ > 0.45 && calmRisk > 0.45 && easeW(lSc) < 0.45) {
     cryptoOutParts.push(
@@ -775,7 +805,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Crypto",
     cryptoNet,
     sentence(cryptoInParts, "Easy plumbing — Bitcoin is a liquidity bid, not a bounce trade."),
-    sentence(cryptoOutParts, "Draining cash — Bitcoin usually pays that tax."),
+    sentence(
+      cryptoOutParts,
+      lTight === "Tightening"
+        ? "Draining cash — Bitcoin usually pays that tax."
+        : "Bitcoin usually pays when plumbing is tight or leaning that way."
+    ),
     "Crypto wants easy plumbing; a drain is out, not a bounce.",
     0.14,
     -0.24
@@ -800,8 +835,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (dolSoft && tightW(iSc) > 0.55) {
     goldInParts.push("the dollar is soft and inflation is cold — deflation-fear bid");
   }
+  const iHeat = inflationHeatTalk(iSc, I);
   if (realHigh && easeW(iSc) > 0.55) {
-    goldInParts.push("inflation is hot and real yields are high — gold’s inflation wage");
+    goldInParts.push(`inflation is ${iHeat} and real yields are high — gold’s inflation wage`);
   }
   if (cotZ > 0.45) goldInParts.push("speculative longs are light — the crowding tax is off");
   const goldOutParts = [];
@@ -818,7 +854,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     goldMix = goldMix.charAt(0).toUpperCase() + goldMix.slice(1);
   } else if (realHigh && easeW(iSc) <= 0.55 && !goldCrisis && !(goldDrain && !dolStrong)) {
     goldMix =
-      "Real yields are high without hot inflation or a crisis bid — not a clean gold overweight.";
+      "Real yields are high without Hot inflation or a crisis bid — not a clean gold overweight.";
   } else if (dolStrong && !goldCrisis && !realLow) {
     goldMix = "The dollar is rising — gold rarely leads that mix without a crisis bid.";
   } else if (!goldCrisis && !(goldDrain && !dolStrong) && !goldInParts.length) {
@@ -858,7 +894,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const oilInParts = [];
   if (tightW(gSc) > 0.55 && fearW > 0.4) oilInParts.push("growth is soft into expensive fear — the bounce sample");
   if (dolZ < -0.35) oilInParts.push("the dollar isn’t taxing dollar oil");
-  if (easeW(iSc) > 0.55) oilInParts.push("inflation is hot — crude’s price bid");
+  if (easeW(iSc) > 0.55) oilInParts.push(`inflation is ${inflationHeatTalk(iSc, I)} — crude’s price bid`);
   if (wtiImp.dir === "up") oilInParts.push(`crude is firm ${win}`);
   const oilOutParts = [];
   if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
@@ -1012,7 +1048,14 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     0.25 * easeW(gSc) * (1 - tightW(iSc));
 
   const durationUpParts = [];
-  if (hotNotCooling > 0.45) durationUpParts.push(`inflation is still hot and not cooling ${win}`);
+  const iHeat = inflationHeatTalk(iSc, I);
+  if (hotNotCooling > 0.45) {
+    durationUpParts.push(
+      iHeat
+        ? `inflation is still ${iHeat} and not cooling ${win}`
+        : `inflation is still heating and not cooling ${win}`
+    );
+  }
   if (tightW(tSc) > 0.55 && realZ < 0.35) durationUpParts.push("funding is tight");
   if (tpZ < -0.35) durationUpParts.push("term premium is compressed — duration is not paid");
   if (easeW(gSc) > 0.55 && tightW(iSc) < 0.4 && hotNotCooling < 0.45 && tightW(tSc) < 0.45 && tpZ >= -0.2) {
@@ -1042,7 +1085,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     durationDir = "mixed";
     durationLabel = "Duration risk mixed";
     durationLine = coolingRelief > 0.3
-      ? "Hot but cooling — the level still taxes duration; the turn is the reason not to treat 30s as a clean avoid."
+      ? `${iHeat || "near Hot"} but cooling — the level still taxes duration; the turn is the reason not to treat 30s as a clean avoid.`
       : "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid.";
   }
 

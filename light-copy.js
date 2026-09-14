@@ -61,13 +61,18 @@ export function teachLight(lid, c) {
     }
   }
   let growthNote = split;
-  let growthPoint = "no clean boom or bust";
+  let growthPoint =
+    c.state === "easing"
+      ? "the real side is holding up"
+      : c.state === "tight"
+        ? "demand/labor are under pressure"
+        : "no clean boom or bust";
   if (lid === "growth") {
     const surveyLoud = (c.voters || []).some(
       (v) => (v.id === "EMPIRE_MFG" || v.id === "PHILLY_MFG") && Math.abs(v.score) > 0.45
     );
     // The ballot average is what votes, not any single print — claims alone can
-    // sit past the rail while jobs, GDP and the activity indexes are still flat.
+    // sit past the rail while jobs and GDP are still flat.
     const coin = (c.voters || []).filter((v) =>
       ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"].includes(v.id)
     );
@@ -76,11 +81,27 @@ export function teachLight(lid, c) {
       Math.abs(coin.reduce((a, v) => a + v.score, 0) / coin.length) <= 0.45;
     if (surveyLoud && coincidentMid) {
       const tick = c.score > 0 ? "Strong" : "Soft";
+      const pay = coin.find((v) => v.id === "PAYEMS");
+      const gdp = coin.find((v) => v.id === "GDPC1");
+      const claims = coin.find((v) => v.id === "ICSA");
+      const jobsMid = !pay || Math.abs(pay.score) <= 0.45;
+      const gdpMid = !gdp || Math.abs(gdp.score) <= 0.45;
+      const midBits = [];
+      if (jobsMid) midBits.push("jobs");
+      if (gdpMid) midBits.push("GDP");
+      const midBit = midBits.length
+        ? `${midBits.join(" and ")} ${midBits.length === 1 ? "is" : "are"} still Mid`
+        : "the coincident ballot is still inside the band";
+      const claimsBit =
+        claims && Math.abs(claims.score) > 0.45 ? " Claims have already moved." : "";
       growthNote =
-        ` Regional surveys are at the rail while jobs, claims and GDP are still Mid — the surveys are early, not wrong.` +
+        ` Regional surveys are at the rail while ${midBit} — the surveys are early, not wrong.` +
+        claimsBit +
         ` Since 2003 the hard data has followed them within a quarter about two thirds of the time.`;
       if (c.state === "neutral") {
         growthPoint = `the surveys are calling ${tick.toLowerCase()} before the hard data has moved`;
+      } else {
+        growthPoint = "early, not confirmed";
       }
     }
   }
@@ -110,9 +131,9 @@ export function teachLight(lid, c) {
       tight: `Real funding looks tight.${split}${cliffNote} Point: you are being paid to wait in cash, not in duration.`,
     },
     growth: {
-      easing: `Activity looks firm versus full employment / trend.${growthNote}${cliffNote} Point: the real side is holding up.`,
+      easing: `Activity looks firm versus full employment / trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
       neutral: `Activity looks mixed versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
-      tight: `Activity looks soft versus trend.${split}${cliffNote} Point: demand/labor are under pressure.`,
+      tight: `Activity looks soft versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
     },
     inflation: {
       easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — ${inflationTurn(c.impulse?.dir)}.`,

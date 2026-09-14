@@ -1673,6 +1673,70 @@ body.dlg-open dialog {
   color: var(--text);
 }
 
+.tap-math {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.tap-math-kicker {
+  margin: 0 0 8px;
+  font: 600 0.68rem var(--sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tap-fam {
+  margin: 0 0 8px;
+}
+
+.tap-fam-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.tap-fam ul {
+  list-style: none;
+  margin: 3px 0 0;
+  padding: 0 0 0 10px;
+  border-left: 1px solid var(--line);
+}
+
+.tap-fam li {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.tap-math-sc {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.tap-math-sc[data-state="easing"] { color: var(--ease); }
+.tap-math-sc[data-state="neutral"] { color: var(--neutral); }
+.tap-math-sc[data-state="tight"] { color: var(--tight); }
+
+.tap-math-sum {
+  margin: 8px 0 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tap-math-sum > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .dlg-body .series-blurb {
   margin: 0 0 6px;
   font-size: 0.82rem;
