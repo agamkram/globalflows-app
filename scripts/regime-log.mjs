@@ -38,6 +38,10 @@ export async function appendRegimeLog(bake) {
   const date = new Date(bake.generatedAt || Date.now()).toLocaleDateString("en-CA", {
     timeZone: "America/New_York",
   });
+  // No cash session on Sat/Sun — a weekend stamp inflates the forward record
+  // without a return to grade against. Skip; the next weekday bake covers it.
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  if (weekday === 0 || weekday === 6) return null;
   const entry = {
     date,
     generatedAt: bake.generatedAt,

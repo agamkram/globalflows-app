@@ -130,6 +130,13 @@ jobs:
           fi
           echo "Verdict SPOT ON."
 
+      - name: Full verify (plumbing, boot, bands, episodes, calls)
+        id: verify
+        if: success()
+        run: |
+          set -euo pipefail
+          npm run verify
+
       - name: Commit and push bake files
         id: commit
         if: ${{ success() && (github.event_name != 'workflow_dispatch' || inputs.dry_run != true) }}

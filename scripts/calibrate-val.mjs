@@ -21,9 +21,9 @@ const SPECS = [
   {
     id: "BAMLH0A0HYM2",
     scale: 1.5,
-    median: 4.0,
+    median: 3.5,
     source: "band-mid",
-    why: "ICE HY OAS on FRED is ~3y of cycle tights; the centre is the long-run typical (band mid), not this download.",
+    why: "ICE HY OAS on FRED is ~3y of cycle tights (archive median ~3.05). Centre sits at 3.5 — between that sample and the long-run typical of 4 — so the valuation leg still separates days inside this regime without treating cycle-tights as normal.",
   },
   { id: "BAA10Y", scale: 0.7 },
   { id: "EQUITY_ERP", scale: 1.5 },

@@ -154,7 +154,7 @@
   ],
   "lightDist": {
     "version": 1,
-    "fittedAt": "2026-09-14T04:21:44.755Z",
+    "fittedAt": "2026-09-14T05:00:23.451Z",
     "n": 5992,
     "refSd": 0.5307,
     "lights": {
@@ -163,20 +163,20 @@
         "sd": 0.5201
       },
       "rates": {
-        "mean": 0.2345,
-        "sd": 0.5218
+        "mean": 0.2344,
+        "sd": 0.5215
       },
       "growth": {
-        "mean": -0.0067,
-        "sd": 0.4268
+        "mean": -0.0078,
+        "sd": 0.4266
       },
       "inflation": {
-        "mean": -0.0384,
-        "sd": 0.3981
+        "mean": -0.036,
+        "sd": 0.4002
       },
       "risk": {
-        "mean": 0.0636,
-        "sd": 0.5308
+        "mean": 0.0633,
+        "sd": 0.5307
       }
     },
     "sampleFrom": "2003-01-02",
@@ -12507,14 +12507,14 @@
       "sampleTo": "2026-09-10"
     },
     "BAMLH0A0HYM2": {
-      "median": 4,
+      "median": 3.5,
       "scale": 1.5,
-      "n": 788,
+      "n": 792,
       "source": "band-mid",
-      "archiveMedian": 3.05,
-      "sampleFrom": "2023-09-11",
+      "archiveMedian": 3.055,
+      "sampleFrom": "2023-09-05",
       "sampleTo": "2026-09-10",
-      "why": "ICE HY OAS on FRED is ~3y of cycle tights; the centre is the long-run typical (band mid), not this download."
+      "why": "ICE HY OAS on FRED is ~3y of cycle tights (archive median ~3.05). Centre sits at 3.5 — between that sample and the long-run typical of 4 — so the valuation leg still separates days inside this regime without treating cycle-tights as normal."
     },
     "BAA10Y": {
       "median": 2.24,
@@ -12528,18 +12528,18 @@
     "EQUITY_ERP": {
       "median": 3.71,
       "scale": 1.5,
-      "n": 287,
+      "n": 286,
       "source": "archive-median",
       "archiveMedian": 3.71,
       "sampleFrom": "2003-02-01",
       "sampleTo": "2026-09-11"
     },
     "SPX_EY": {
-      "median": 4.465,
+      "median": 4.47,
       "scale": 1,
-      "n": 288,
+      "n": 287,
       "source": "archive-median",
-      "archiveMedian": 4.465,
+      "archiveMedian": 4.47,
       "sampleFrom": "2003-01-01",
       "sampleTo": "2026-09-11"
     }

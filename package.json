@@ -18,11 +18,12 @@
     "ingest:markets": "node scripts/ingest-markets.mjs",
     "markets:live": "node scripts/markets-live.mjs",
     "mint:icons": "python3 scripts/mint-icons.py",
-    "refresh": "npm run ingest && npm run fetch:vintages && (npm run bake:history || echo bake:history skipped) && npm run calibrate:lights && npm run calibrate:val && npm run bake:regime && npm run sanity && npm run score:log",
+    "refresh": "npm run ingest && npm run fetch:vintages && npm run bake:history && npm run calibrate:lights && npm run calibrate:val && npm run bake:regime && npm run sanity && npm run score:log",
     "refresh:markets": "npm run ingest:markets && npm run bake:regime",
     "sanity": "node scripts/sanity.mjs",
     "serve": "python3 serve-https.py",
-    "verify": "npm run sanity && npm run audit:plumbing && npm run audit:bands && npm run audit:episodes && npm run audit:calls",
+    "audit:boot": "node scripts/audit-boot.mjs",
+    "verify": "npm run sanity && npm run audit:plumbing && npm run audit:boot && npm run audit:bands && npm run audit:episodes && npm run audit:calls",
     "audit:plumbing": "node scripts/audit-plumbing.mjs"
   },
   "engines": {

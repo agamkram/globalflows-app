@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261186";
+import { DEFAULT_IMPULSE } from "./score.js?v=20261187";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -27,7 +27,7 @@ function seriesOk(snap, id) {
 const VAL_CENTER_DEFAULT = {
   THREEFFTP10: { median: 1.06, scale: 0.75 },
   DFII10: { median: 1.05, scale: 0.8 },
-  BAMLH0A0HYM2: { median: 4.0, scale: 1.5 },
+  BAMLH0A0HYM2: { median: 3.5, scale: 1.5 },
   BAA10Y: { median: 2.24, scale: 0.7 },
   // Earnings yield − 10y real (2003–2026). Wide = equities cheap.
   EQUITY_ERP: { median: 3.71, scale: 1.5 },
@@ -613,13 +613,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       : "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
     hyMix,
-    0.26,
+    0.22,
     -0.26
   );
   hy.label = "High yield";
   hy.margin = blendMargin(hy.stance, hy.net, meanImpulse([gImp, kImp, hyImp]));
 
-  let creditStance = netCall((ig.net + hy.net) / 2, 0.24, -0.26);
+  let creditStance = netCall((ig.net + hy.net) / 2, 0.2, -0.26);
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
@@ -729,42 +729,54 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   stocks.margin = blendMargin(stocks.stance, stocks.net, meanImpulse([gImp, kImp]));
   stocks.splits = [cyc, def];
 
-  // Crypto on 1m: easy plumbing into cheap fear is late (dump). Drain into fear
-  // is the bounce. Keep a mild easy-plumbing bid when fear is already paid.
+  // Crypto on 1m follows Liquidity. The old "drain into paid fear = bounce"
+  // rule was an equities heuristic: in 2021+ it put Crypto in on tight+tight
+  // days and lost ~6% median over the next month (2022 bear). Easy plumbing
+  // is the bid — including into calm (trend), not "late." Tight plumbing is out.
   const cryptoOutParts = [];
-  if (easeW(lSc) > 0.55 && calmRisk > 0.55) {
-    cryptoOutParts.push("plumbing is easy while fear is still cheap — late to the liquidity bid");
+  if (tightW(lSc) > 0.45) {
+    cryptoOutParts.push("cash is draining — Bitcoin usually pays the liquidity tax");
   }
-  if (dolStrong && calmRisk > 0.45) cryptoOutParts.push("the dollar is rising into calm fear");
-  if (realZ > 0.45 && calmRisk > 0.45) {
+  if (tightW(lSc) > 0.45 && fearW > 0.45) {
+    cryptoOutParts.push("drain into paid fear — that bounce sample fails for Bitcoin");
+  }
+  if (realZ > 0.45 && calmRisk > 0.45 && easeW(lSc) < 0.45) {
     cryptoOutParts.push(
-      "real yields are high — Bitcoin has to compete with a fat real rate, and fear is still cheap"
+      "real yields are high into calm without easy plumbing — Bitcoin competes with a fat real rate"
     );
   }
-  const cryptoInParts = [];
-  if (tightW(lSc) > 0.45 && fearW > 0.35) {
-    cryptoInParts.push("cash is draining into paid fear — the bounce sample");
+  if (dolStrong && calmRisk > 0.45 && easeW(lSc) < 0.45) {
+    cryptoOutParts.push("the dollar is rising into calm without easy plumbing");
   }
-  if (easeW(lSc) > 0.55 && fearW > 0.45) {
+  const cryptoInParts = [];
+  if (easeW(lSc) > 0.55) {
+    cryptoInParts.push("plumbing is easy — Bitcoin’s liquidity bid");
+  }
+  if (easeW(lSc) > 0.45 && fearW > 0.45) {
     cryptoInParts.push("plumbing is easy while fear is already paid");
   }
-  if (realZ < -0.35 && fearW > 0.3) {
-    cryptoInParts.push("real yields are low while fear is paid — the discount rate helps Bitcoin");
+  if (easeW(lSc) > 0.45 && calmRisk > 0.45) {
+    cryptoInParts.push("plumbing is easy into calm — the trend sample, not late");
+  }
+  if (realZ < -0.35 && easeW(lSc) > 0.35) {
+    cryptoInParts.push("real yields are low while plumbing is easy — the discount rate helps Bitcoin");
   }
   const cryptoNet =
-    0.45 * tightW(lSc) * Math.max(fearW, 0.25) +
-    0.35 * easeW(lSc) * fearW -
-    0.75 * easeW(lSc) * calmRisk -
-    0.3 * realZ * calmRisk -
-    (dolStrong ? 0.35 : 0) * Math.max(calmRisk, 0.3) +
-    0.2 * fearW;
+    0.55 * easeW(lSc) +
+    0.25 * easeW(lSc) * fearW +
+    0.2 * easeW(lSc) * calmRisk -
+    0.7 * tightW(lSc) -
+    0.25 * tightW(lSc) * fearW -
+    0.25 * Math.max(realZ, 0) * calmRisk * (1 - easeW(lSc)) -
+    (dolStrong ? 0.25 : 0) * Math.max(calmRisk, 0.3) * (1 - easeW(lSc)) +
+    0.1 * fearW;
   const crypto = instrumentFromNet(
     "crypto",
     "Crypto",
     cryptoNet,
-    sentence(cryptoInParts, "Drain into fear — Bitcoin is the bounce, not the plumbing vote."),
-    sentence(cryptoOutParts, "Easy plumbing into cheap fear — Bitcoin is late to that bid."),
-    "Crypto wants paid fear or a clean drain; complacent easy plumbing is late.",
+    sentence(cryptoInParts, "Easy plumbing — Bitcoin is a liquidity bid, not a bounce trade."),
+    sentence(cryptoOutParts, "Draining cash — Bitcoin usually pays that tax."),
+    "Crypto wants easy plumbing; a drain is out, not a bounce.",
     0.14,
     -0.24
   );
@@ -797,6 +809,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     goldOutParts.push("real 10y yields are low without a crisis bid — gold lags easy-money risk-on");
   }
   if (cotZ < -0.45) goldOutParts.push("speculative longs are crowded");
+  if (easeW(lSc) > 0.55 && easeW(rSc) > 0.55 && !goldCrisis) {
+    goldOutParts.push("plumbing is easy into risk-on — gold usually lags that bid");
+  }
   let goldMix = "Gold has no clean job right now.";
   if (goldInParts.length && goldOutParts.length) {
     goldMix = `${joinEnglish(goldInParts)}; ${joinEnglish(goldOutParts)} — not a clean overweight.`;
@@ -814,7 +829,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     (goldDrain && !dolStrong ? 0.4 : 0) +
     (dolSoft && tightW(iSc) > 0.55 ? 0.45 : 0) +
     (realHigh && easeW(iSc) > 0.55 ? 0.5 : 0) -
-    (realLow && !goldCrisis ? 0.65 : 0) +
+    (realLow && !goldCrisis ? 0.65 : 0) -
+    (easeW(lSc) > 0.55 && easeW(rSc) > 0.55 && !goldCrisis ? 0.45 : 0) +
     0.35 * cotZ;
   const gold = instrumentFromNet(
     "gold",

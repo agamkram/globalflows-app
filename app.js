@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261186";
+import { buildMeaning } from "./meaning.js?v=20261187";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261186";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261186";
+} from "./score.js?v=20261187";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261187";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
