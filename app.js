@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261184";
+import { buildMeaning } from "./meaning.js?v=20261185";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261184";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261184";
+} from "./score.js?v=20261185";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261185";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1774,7 +1774,7 @@ function renderLights(snap) {
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
         tip ? ` title="${escapeHtml(tip)}"` : ""
       } aria-label="${escapeHtml(
-        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${heldNote ? `, ${heldNote}` : ""}${split ? ", voters disagree" : ""}`
+        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" title="1m turn" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
