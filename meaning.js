@@ -3,8 +3,8 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore } from "./score.js?v=20261195";
-import { chipWord } from "./light-copy.js?v=20261195";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore } from "./score.js?v=20261220";
+import { chipWord } from "./light-copy.js?v=20261220";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -137,7 +137,7 @@ function inflationHeatTalk(iSc) {
 function liquidityTightTalk(lSc) {
   const band = chipBandFromScore(lSc);
   if (band === "tight") return "Tightening";
-  if (band === "leaningTight") return "leaning tightening";
+  if (band === "leaningTight") return "leaning tight";
   return null;
 }
 
@@ -747,13 +747,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (lTight === "Tightening") {
     cryptoOutParts.push("cash is draining — Bitcoin usually pays the liquidity tax");
   } else if (lTight) {
-    cryptoOutParts.push("leaning tightening — Bitcoin usually pays the liquidity tax");
+    cryptoOutParts.push("leaning tight — Bitcoin usually pays the liquidity tax");
   }
   if (lTight && fearW > 0.45) {
     cryptoOutParts.push(
       lTight === "Tightening"
         ? "drain into paid fear — that bounce sample fails for Bitcoin"
-        : "leaning tightening into paid fear — that bounce sample fails for Bitcoin"
+        : "leaning tight into paid fear — that bounce sample fails for Bitcoin"
     );
   }
   if (realZ > 0.45 && calmRisk > 0.45 && easeW(lSc) < 0.45) {

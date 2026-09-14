@@ -5,7 +5,7 @@
  * Math stays in score.js (one module in the browser). This file is only words.
  */
 
-import { chipBandFromScore } from "./score.js?v=20261195";
+import { chipBandFromScore } from "./score.js?v=20261220";
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 
@@ -22,37 +22,37 @@ export const LIGHT_WORD = {
 export const CHIP_WORD = {
   liquidity: {
     easing: "Easing",
-    leaningEasing: "leaning easing",
+    leaningEasing: "Leaning easy",
     neutral: "Neutral",
-    leaningTight: "leaning tightening",
+    leaningTight: "Leaning tight",
     tight: "Tightening",
   },
   rates: {
     easing: "Easy",
-    leaningEasing: "leaning easy",
+    leaningEasing: "Leaning easy",
     neutral: "Neutral",
-    leaningTight: "leaning tight",
+    leaningTight: "Leaning tight",
     tight: "Tight",
   },
   growth: {
     easing: "Strong",
-    leaningEasing: "leaning strong",
+    leaningEasing: "Leaning strong",
     neutral: "Mid",
-    leaningTight: "leaning soft",
+    leaningTight: "Leaning soft",
     tight: "Soft",
   },
   inflation: {
     easing: "Hot",
-    leaningEasing: "leaning hot",
+    leaningEasing: "Leaning hot",
     neutral: "Mid",
-    leaningTight: "leaning cold",
+    leaningTight: "Leaning cold",
     tight: "Cold",
   },
   risk: {
     easing: "Risk-on",
-    leaningEasing: "leaning risk-on",
+    leaningEasing: "Leaning risk-on",
     neutral: "Neutral",
-    leaningTight: "leaning risk-off",
+    leaningTight: "Leaning risk-off",
     tight: "Risk-off",
   },
 };
@@ -179,9 +179,9 @@ export function teachLight(lid, c) {
   const by = {
     liquidity: {
       easing: `Cash looks ample on the level.${split}${cliffNote} Point: plumbing is not the scarce good.`,
-      leaningEasing: `Cash is leaning easing.${split}${cliffNote} Point: still inside ${midName} — not Easing yet.`,
+      leaningEasing: `Cash is leaning easy.${split}${cliffNote} Point: still inside ${midName} — not Easing yet.`,
       neutral: `Cash looks neither clearly ample nor scarce.${split}${cliffNote} Point: liquidity isn’t the loud driver right now.`,
-      leaningTight: `Cash is leaning tightening.${split}${cliffNote} Point: still inside ${midName} — not Tightening yet.`,
+      leaningTight: `Cash is leaning tight.${split}${cliffNote} Point: still inside ${midName} — not Tightening yet.`,
       tight: `Cash looks scarce on the level.${split}${cliffNote} Point: funding/parking say less fuel in the pipes.`,
     },
     rates: {

@@ -38,7 +38,7 @@ async function smokeMeaning() {
   if (lightStateFromScore(0.42).state !== "neutral") {
     throw new Error("lean must not change colour: +0.42 should stay white");
   }
-  if (chipWord("inflation", 0.42) !== "leaning hot") {
+  if (chipWord("inflation", 0.42) !== "Leaning hot") {
     throw new Error(`chipWord inflation 0.42 = ${chipWord("inflation", 0.42)}`);
   }
   const meaning = buildMeaning(

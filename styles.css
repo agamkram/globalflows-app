@@ -56,10 +56,10 @@
   --safe-r: env(safe-area-inset-right, 0px);
   --pwa-fill-h: 100%;
   --pwa-extra-b: 0px;
-  /* Phone is 1.0 (94 / 3 / 75 at 16px). From 721px the strip scales together. */
+  /* Phone is 1.0 (100 / 3 / 80 at 16px). From 721px the strip scales together. */
   --ui-scale: 1;
-  --lights-h: calc(5.875rem * var(--ui-scale));
-  --favor-h: calc(4.6875rem * var(--ui-scale));
+  --lights-h: calc(6.25rem * var(--ui-scale));
+  --favor-h: calc(5rem * var(--ui-scale));
   --lights-favor-gap: calc(0.1875rem * var(--ui-scale));
   --favor-tenor-gap: calc(0.4375rem * var(--ui-scale));
   --lights-col: calc(4.5rem * var(--ui-scale));
@@ -468,9 +468,9 @@ body.page-about::before {
 }
 
 .favor-title {
-  font-size: calc(0.48rem * var(--ui-scale));
-  font-weight: 600;
-  color: #fff;
+  font-size: calc(0.52rem * var(--ui-scale));
+  font-weight: 400;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   line-height: 1.15;
@@ -539,7 +539,7 @@ body.page-about::before {
   align-items: center;
   column-gap: 3px;
   background: transparent;
-  font: 600 calc(0.58rem * var(--ui-scale)) var(--mono);
+  font: 400 calc(0.58rem * var(--ui-scale)) var(--mono);
   line-height: 1.25;
   letter-spacing: 0.02em;
   width: 100%;
@@ -547,7 +547,7 @@ body.page-about::before {
 }
 
 .favor-tenor b {
-  font-weight: 600;
+  font-weight: 400;
   color: #fff;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -631,9 +631,10 @@ body.page-about::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: calc(5px * var(--ui-scale));
-  padding: calc(8px * var(--ui-scale)) calc(3px * var(--ui-scale));
+  /* Chevron stays at the two-line height; word slot is reserved so the box never reshuffles. */
+  justify-content: flex-start;
+  gap: calc(2px * var(--ui-scale));
+  padding: calc(2px * var(--ui-scale)) calc(3px * var(--ui-scale)) calc(3px * var(--ui-scale));
   height: var(--lights-h);
   min-height: var(--lights-h);
   min-width: 0;
@@ -678,22 +679,22 @@ body.page-about::before {
 }
 
 .impulse-chev {
-  font-size: calc(0.58rem * var(--ui-scale));
+  font-size: calc(0.64rem * var(--ui-scale));
   line-height: 1;
-  font-weight: 700;
+  font-weight: 400;
   height: calc(12px * var(--ui-scale));
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1px;
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
-  transform: translateY(calc(-4px * var(--ui-scale)));
   letter-spacing: -0.02em;
 }
 .impulse-chev::after {
   content: "1m";
-  font-weight: 600;
+  font-weight: 400;
   color: var(--muted);
   font-size: 0.92em;
 }
@@ -729,31 +730,37 @@ body.page-about::before {
 }
 
 .light .lbl {
-  font-size: calc(0.52rem * var(--ui-scale));
+  font-size: calc(0.58rem * var(--ui-scale));
+  font-weight: 400;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   line-height: 1.1;
+  height: 1.1em;
+  flex-shrink: 0;
+  margin-top: calc(3px * var(--ui-scale));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 
 .light .word {
   font-size: calc(0.64rem * var(--ui-scale));
-  font-weight: 600;
+  font-weight: 400;
   margin: 0;
   white-space: normal;
   line-height: 1.15;
+  /* Two-line band + the old score offset, so the word centers title→value. */
+  height: calc(2 * 1.15em + 5px * var(--ui-scale));
+  min-height: calc(2 * 1.15em + 5px * var(--ui-scale));
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 /* First open: word waits until the needle stops. Space stays reserved. */
 html.gf-open-settle .light .word {
@@ -768,17 +775,18 @@ html.gf-open-run .track-mark {
 
 .light .score {
   font-family: var(--mono);
-  font-size: calc(0.58rem * var(--ui-scale));
+  font-size: calc(0.6rem * var(--ui-scale));
   color: var(--muted);
   margin: 0;
   line-height: 1;
+  height: 1em;
+  flex-shrink: 0;
   text-align: center;
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transform: translateY(calc(-5px * var(--ui-scale)));
 }
 
 /* The five: −1 left, +1 right; ticks at 0 and ±0.45. The six: center only. */
@@ -793,6 +801,8 @@ html.gf-open-run .track-mark {
 }
 .light .track {
   max-width: 100%;
+  /* Absolute: value +5, needle +3 → give back the 5 the score carries. */
+  margin: calc(9px * var(--ui-scale)) 0 0;
 }
 .track-sm {
   max-width: 44px;
