@@ -6,7 +6,7 @@
  * The distribution checks in audit:bands ask whether a light is well-shaped.
  * They cannot ask whether it is correct. Liquidity passed every one of them
  * while calling the GFC, COVID and the 2022 tightening "ample" — the sd was
- * right, the centre drift was right, the amber share was inside its warn line,
+ * right, the centre drift was right, the mid share was inside its warn line,
  * and the light was confidently wrong about all three events it most needed to
  * read. What exposed it was lining it up against those events and reading off
  * what it said at the time.
@@ -150,7 +150,7 @@ const EPISODES = [
   },
 ];
 
-const COLOUR = { easing: "green", neutral: "amber", tight: "red" };
+const COLOUR = { easing: "green", neutral: "mid", tight: "red" };
 
 function pad(s, n) {
   s = String(s);
@@ -189,8 +189,8 @@ async function main() {
       fails.push(`${ep.light}/${ep.name}: no archive coverage`);
       continue;
     }
-    const share = { green: 0, amber: 0, red: 0 };
-    for (const r of win) share[COLOUR[r.st[i]] || "amber"]++;
+    const share = { green: 0, mid: 0, red: 0 };
+    for (const r of win) share[COLOUR[r.st[i]] || "mid"]++;
     for (const k of Object.keys(share)) share[k] /= win.length;
     const mean = win.reduce((a, r) => a + (r.s[i] ?? 0), 0) / win.length;
 
@@ -229,7 +229,7 @@ async function main() {
 
     console.log(
       `  ${pad(ep.name, 28)} green ${pad(Math.round(share.green * 100) + "%", 5)}` +
-        ` amber ${pad(Math.round(share.amber * 100) + "%", 5)}` +
+        ` mid ${pad(Math.round(share.mid * 100) + "%", 5)}` +
         ` red ${pad(Math.round(share.red * 100) + "%", 5)}` +
         ` mean ${(mean >= 0 ? "+" : "") + mean.toFixed(2)}${pad(turnNote, 13)}   ` +
         `${ok && turnOk ? "ok" : ok ? "WRONG — did not move" : `WRONG — expected ${need}`}`

@@ -40,9 +40,11 @@ const WORD = {
   inflation: { easing: "Hot", neutral: "Mid", tight: "Cold" },
   risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },
 };
-const COLOR = { easing: "green", neutral: "amber", tight: "red", empty: "gray" };
+// The names the app actually paints: --ease green, --neutral white, --tight red.
+// The middle is not a third colour, so do not invent one here either.
+const COLOR = { easing: "green", neutral: "white", tight: "red", empty: "gray" };
 const FAVOR_WORD = { in: "in", mixed: "mixed", out: "out" };
-const FAVOR_COLOR = { in: "green", mixed: "amber", out: "red" };
+const FAVOR_COLOR = { in: "green", mixed: "white", out: "red" };
 
 function fmt(n, d = 2) {
   if (n == null || !Number.isFinite(n)) return "—";
@@ -108,7 +110,7 @@ async function main() {
   if (regime?.generatedAt) lines.push(`regime ${regime.generatedAt}`);
   lines.push("");
   lines.push("Lights = weighted mean of voter anchors (families first). Lookback does not recolor lights.");
-  lines.push("Score > +0.45 → green · < −0.45 → red · else amber.");
+  lines.push("Score > +0.45 → green · < −0.45 → red · else the middle, painted white.");
   lines.push("");
 
   const mathLights = {};
@@ -175,7 +177,7 @@ async function main() {
   lines.push(
     `Asset classes = checklist from the five components (+ duration / credit). The ${DEFAULT_IMPULSE} turn slides the needle only; the table lookback does not rewrite the call.`
   );
-  lines.push("in → green · mixed → amber · out → red.");
+  lines.push("in → green · mixed → white · out → red.");
   if (meaning?.duration?.label) {
     lines.push(`  duration  ${meaning.duration.label}  (${meaning.duration.dir || "—"})`);
   }

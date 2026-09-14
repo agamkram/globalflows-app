@@ -86,6 +86,14 @@ function renderAboutMeta(snap, regime) {
     }
   }
 
+  // Read the asset version off this page's own stylesheet link, so a stale cache
+  // shows a stale number here instead of having to be argued about.
+  const build = $("#aboutBuild");
+  if (build) {
+    const href = document.querySelector('link[rel="stylesheet"][href*="styles.css"]')?.getAttribute("href") || "";
+    build.textContent = /\?v=(\d+)/.exec(href)?.[1] || "—";
+  }
+
   const nDerived = derivedCount(snap);
   const note = $("#mathLiveNote");
   if (note) {

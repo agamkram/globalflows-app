@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/math.html" />
   <meta property="og:title" content="Math — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261180" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261180" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261181" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261181" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261180" />
+  <link rel="stylesheet" href="styles.css?v=20261181" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -234,7 +234,7 @@
         <ul class="about-steps">
           <li><strong>Liquidity</strong> — Fed GDP shares · funding cost · commercial paper · global CBs and the dollar · China credit × 0.5</li>
           <li><strong>Rates</strong> — real yields · nominal yields · the curve · bond vol</li>
-          <li><strong>Growth</strong> — coincident × 0.5 · leading × 1.5 · surveys. If coincident is Mid and surveys are past ±0.45, the word stays Mid; the needle may sit on the cliff. The chevron is not gated.</li>
+          <li><strong>Growth</strong> — coincident × 0.5 · leading × 1.5 · surveys. If coincident is Mid and surveys are past ±0.45, the word stays Mid and the score is clamped to the cliff. The chevron is not gated, and neither are the six: ±0.45 is already full weight in the asset nets, so the clamp changes the word and nothing downstream of it.</li>
           <li><strong>Inflation</strong> — realized × 2 · persistence · expectations</li>
           <li><strong>Risk</strong> — credit spreads · volatility</li>
         </ul>
@@ -258,8 +258,11 @@
       <section class="about-block" id="lookback">
         <h2>Lookback, and when a series stops voting</h2>
         <p>
-          1w = 7 calendar days, 2w = 14, 1m = 30, 3m = 91, 6m = 182. Monthly: one
-          step back under ~six weeks. Quarterly: same latest quarter on 1w and 1m.
+          1w = 7 calendar days, 2w = 14, 1m = 30, 3m = 91, 6m = 182. A series too
+          slow to fill the window steps back whole prints instead. Monthly: one step
+          back on 1w / 2w / 1m, three on 3m, six on 6m. Quarterly: one step back on
+          1w / 2w / 1m / 3m, two on 6m — so a weekly lookback on a quarterly series
+          is still the last quarter-on-quarter change, not a flat line.
           Stale (does not vote): 14d daily, 21d weekly, 85d monthly, 190d quarterly.
         </p>
         <p>
@@ -271,10 +274,18 @@
       <section class="about-block" id="nets">
         <h2>Duration risk and credit risk</h2>
         <p>
-          Soft weight 0…1: off at ±0.2, fully on at the colour line ±0.45.
-          The six asset nets use these weights on the <em>score</em>, not only the
-          word — so Neutral Risk at +0.40 is almost fully Risk-on for every net.
-          Positive net = that risk is falling. Call at ±0.35.
+          Soft weight 0…1, fully on at the colour line ±0.45. The six asset nets use
+          these weights on the <em>score</em>, not only the word — so Neutral Risk at
+          +0.40 is almost fully Risk-on for every net. Positive net = that risk is
+          falling. Call at ±0.35.
+        </p>
+        <p>
+          The two weights are not mirrors: <code>easeW</code> ramps over 0.65 from
+          −0.2, <code>tightW</code> over 0.25 from −0.2. A score of exactly 0.00
+          therefore returns <code>easeW 0.31</code> and <code>tightW 0.00</code>.
+          Deliberate — fear and drain must be clearly present before they price,
+          while ample conditions are the resting state — and it tilts every net
+          slightly toward reflation.
         </p>
         <p>
           <code class="about-ident">easeW = clip((score + 0.2) / 0.65, 0, 1)
@@ -317,7 +328,14 @@ tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
           at −0.35. Equities 0.10 / −0.18; Crypto 0.14 / −0.24; Gold ±0.18.
           Credit parent 0.24 / −0.26; HY ±0.26; oil, copper, and the commodity
           parent 0.12 / −0.22. 5 (cash) is on the Treasuries strip and out of the
-          parent net.
+          parent net and the parent needle — the long end is the Treasuries call.
+        </p>
+        <p>
+          These cuts are not one shared scale. Each net is fitted against its own
+          spread, and the spreads differ: the 10s and 30s nets can run to about
+          ±3.3, the equity net to about ±1.1, the 5s net to exactly ±1. So ±0.35 is
+          roughly a tenth of the range on the long end and about a third of it on
+          the front end. Read a threshold against its own class, never across two.
         </p>
         <p>
           <code class="about-ident">needle = 0.72 × checklist + 0.28 × 1m turn</code>
@@ -329,7 +347,7 @@ tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261180"></script>
+  <script type="module" src="about.js?v=20261181"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

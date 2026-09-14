@@ -18,7 +18,7 @@
  *
  * After the voters, LIGHT COMPOSITES checks the five lights themselves: colour
  * mix and composite sd over the archive, plus each family ballot's sd. Family
- * averaging can compress a light onto amber while every member still looks fine.
+ * averaging can compress a light onto mid while every member still looks fine.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -42,8 +42,8 @@ const SINCE = "2015-01-01";
 const LIGHT_SINCE = "2003-01-01";
 const PIN_WARN = 0.5; // flag a voter pinned on more than half the days
 const FLAT_WARN = 0.15; // flag a voter whose score barely moves
-const AMBER_CLIFF = 0.45; // score at which a light leaves amber
-const AMBER_EXCESS_WARN = 0.05; // amber share this far over its own implied floor
+const MID_CLIFF = 0.45; // score at which a light leaves mid
+const MID_EXCESS_WARN = 0.05; // mid share this far over its own implied floor
 
 /** Standard normal CDF (Abramowitz & Stegun 7.1.26 erf). */
 function normalCdf(z) {
@@ -177,11 +177,11 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
   for (let i = 0; i < LIGHT_IDS.length; i++) {
     const vals = scored.map((r) => r.s[i]).filter(Number.isFinite);
     const green = vals.filter((v) => lightStateFromScore(v).state === "easing").length / vals.length;
-    const amber = vals.filter((v) => lightStateFromScore(v).state === "neutral").length / vals.length;
+    const mid = vals.filter((v) => lightStateFromScore(v).state === "neutral").length / vals.length;
     const red = vals.filter((v) => lightStateFromScore(v).state === "tight").length / vals.length;
     byLight[LIGHT_IDS[i]] = {
       green,
-      amber,
+      mid,
       red,
       sd: stdev(vals),
       rawSd: RAW_SD[LIGHT_IDS[i]],
@@ -265,16 +265,16 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
   for (const lid of LIGHT_IDS) {
     const L = byLight[lid];
     const flags = [];
-    // Judge amber against what the cliffs imply for this light's own spread, not
+    // Judge mid against what the cliffs imply for this light's own spread, not
     // a flat 60%: a normally distributed composite at the shared calibrated sd
-    // with cliffs at ±0.45 is amber 60% of the time by construction, so the flat
+    // with cliffs at ±0.45 is mid 60% of the time by construction, so the flat
     // line flagged Inflation for sitting exactly where the arithmetic puts it.
     // Only an excess over that floor says the composite is peaked — that its
     // ballots are averaging each other into the middle.
-    const impliedAmber = L.sd > 0 ? 2 * normalCdf(AMBER_CLIFF / L.sd) - 1 : null;
-    if (impliedAmber != null && L.amber - impliedAmber > AMBER_EXCESS_WARN) {
+    const impliedMid = L.sd > 0 ? 2 * normalCdf(MID_CLIFF / L.sd) - 1 : null;
+    if (impliedMid != null && L.mid - impliedMid > MID_EXCESS_WARN) {
       flags.push(
-        `AMBER ${Math.round(L.amber * 100)}% vs ${Math.round(impliedAmber * 100)}% implied by its spread`
+        `MID ${Math.round(L.mid * 100)}% vs ${Math.round(impliedMid * 100)}% implied by its spread`
       );
     }
     if (medianRawSd > 0 && L.rawSd < QUIET_SD_FRAC * medianRawSd) {
@@ -286,7 +286,7 @@ async function auditLightComposites(catalog, coreAt, problems, fails) {
     console.log(
       `  ${pad(lid.toUpperCase(), 10)}` +
         ` green ${pad(Math.round(L.green * 100) + "%", 4)}` +
-        ` amber ${pad(Math.round(L.amber * 100) + "%", 4)}` +
+        ` mid ${pad(Math.round(L.mid * 100) + "%", 4)}` +
         ` red ${pad(Math.round(L.red * 100) + "%", 4)}` +
         `  sd ${L.sd.toFixed(3)}  raw-sd ${L.rawSd.toFixed(3)}` +
         (flags.length ? `   <-- ${flags.join(" ")}` : "")

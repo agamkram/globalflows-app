@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261180";
+import { DEFAULT_IMPULSE } from "./score.js?v=20261181";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -118,6 +118,11 @@ function lightUnit(lights, id) {
 /**
  * Soft “easing” weight 0..1 from a continuous score.
  * 0 at ≤ −0.2, 1 at ≥ +0.45 — no cliff at the paint threshold alone.
+ *
+ * Deliberately not the mirror of tightW: easing ramps over 0.65 from −0.2, tight
+ * over 0.25 from −0.2, so a component sitting at exactly 0.00 carries about a
+ * third of an easing vote and no tight vote. Fear and drain have to be clearly
+ * present before they price; ample conditions are the resting state. Math says so.
  */
 function easeW(score) {
   return Math.max(0, Math.min(1, (score - -0.2) / (0.45 - -0.2)));
@@ -189,6 +194,9 @@ function joinEnglish(parts) {
   const a = (parts || []).filter(Boolean);
   if (!a.length) return "";
   if (a.length === 1) return a[0];
+  // Several of these clauses carry their own em dash. Comma-joining them reads
+  // as one run-on with a stray dash in the middle, so switch to semicolons.
+  if (a.some((p) => p.includes("—"))) return a.join("; ");
   if (a.length === 2) return `${a[0]} and ${a[1]}`;
   return `${a.slice(0, -1).join(", ")}, and ${a[a.length - 1]}`;
 }
@@ -507,17 +515,19 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const ustAvgNet = 0.5 * t10Net + 0.5 * t30Net;
   const ustStance = netCall(ustAvgNet, 0.35, -0.35);
   let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
+  // The parent is the long end, so its reason may not credit the 5s. Policy is
+  // the Rates call; it is reported on the strip, not voted here.
   if (tenorSet.size === 1 && ustStance === t10.stance) {
     if (ustStance === "out") {
       ustWhy =
         tpZ < -0.35
-          ? "The curve is taxed — term premium is compressed and duration is not paid."
-          : "The whole curve is taxed — policy, duration, and inflation aren’t paying.";
+          ? "The long end is taxed — term premium is compressed and duration is not paid. 5s are out on the Rates call."
+          : "The long end is taxed — duration and inflation aren’t paying, and the 5s are out on the Rates call.";
     } else if (ustStance === "in") {
       ustWhy =
         tpZ > 0.35 || realZ > 0.35
-          ? "The whole curve can work — duration is paid on term premium or real yield."
-          : "The whole curve can work — policy, duration, and inflation aren’t the tax.";
+          ? "The long end can work — duration is paid on term premium or real yield, and the 5s agree."
+          : "The long end can work — duration and inflation aren’t the tax, and the 5s agree.";
     } else {
       ustWhy = "The whole curve is mixed — no clean duration bid.";
     }
@@ -535,8 +545,10 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     id: "treasuries",
     name: "Treasuries",
     stance: ustStance,
+    // Long end only, to match the call. Averaging the 5s in gave a parent needle
+    // more extreme than either long tenor whenever policy was taxing the front.
+    margin: clampMargin((t10.margin + t30.margin) / 2),
     why: ustWhy,
-    margin: clampMargin((t5.margin + t10.margin + t30.margin) / 3),
     tenors: [t5, t10, t30],
   };
 
@@ -1203,6 +1215,34 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
       );
     } else if (wtiDir === "down") {
       confirm.push("Oil is soft with the real cycle out — the tape is confirming.");
+    }
+  }
+
+  // Watch is a promise on the About page, so the sheet must never come up empty.
+  // The named combinations above are the interesting cases; this is the floor.
+  if (!falsify.length) {
+    const lean = growthLean(gSc, G);
+    const late = (lean === "firm" || lean === "strong-tick") && easeW(rSc) > 0.55;
+    if (late) {
+      falsify.push(
+        `Falsify if Risk turns Risk-off ${win} — the late-cycle read on equities and copper rests on fear staying cheap.`
+      );
+    } else if (durationDir === "rising") {
+      falsify.push(
+        `Falsify if inflation cools ${win} or term premium widens — the duration call softens.`
+      );
+    } else if (durationDir === "falling") {
+      falsify.push(
+        `Falsify if inflation turns back up ${win} — duration is the first call to go.`
+      );
+    } else if (creditDir === "rising") {
+      falsify.push(
+        `Falsify if high-yield spreads tighten ${win} while growth holds — the credit call softens.`
+      );
+    } else {
+      falsify.push(
+        `Falsify if Growth or Risk flips its word ${win} — the six read those two hardest.`
+      );
     }
   }
 

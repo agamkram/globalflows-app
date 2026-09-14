@@ -26,6 +26,11 @@ function names(arr, n = 2) {
   return arr.slice(0, n).map((v) => v.name).join(", ");
 }
 
+/** "Reserves ÷ GDP leans" vs "Reserves ÷ GDP, Net liquidity ÷ GDP lean". */
+function leans(arr, n = 2) {
+  return Math.min((arr || []).length, n) === 1 ? "leans" : "lean";
+}
+
 /** Inflation chevron: down = cooling, up = heating, flat = not cooling. */
 export function inflationTurn(dir) {
   if (dir === "down") return "cooling";
@@ -39,7 +44,8 @@ export function teachLight(lid, c) {
   const hard = names(c.tight || [], 2);
   const split =
     c.easy?.length && c.tight?.length
-      ? ` Split: ${soft || "some"} lean easier; ${hard || "others"} lean tighter.`
+      ? ` Split: ${soft || "some"} ${soft ? leans(c.easy) : "lean"} easier;` +
+        ` ${hard || "others"} ${hard ? leans(c.tight) : "lean"} tighter.`
       : "";
   let inflNote = split;
   if (lid === "inflation") {
@@ -55,13 +61,21 @@ export function teachLight(lid, c) {
     }
   }
   let growthNote = split;
+  let growthPoint = "no clean boom or bust";
   if (lid === "growth") {
     const surveyLoud = (c.voters || []).some(
       (v) => (v.id === "EMPIRE_MFG" || v.id === "PHILLY_MFG") && Math.abs(v.score) > 0.45
     );
-    if (c.state === "neutral" && surveyLoud && Math.abs(c.score) >= 0.4) {
+    const tick = c.uncapped > 0 ? "Strong" : "Soft";
+    if (c.held) {
       growthNote =
-        " The coincident ballot (jobs, GDP, activity) is still Mid. Regional surveys are at the rail — they sit the needle on the Strong tick; they cannot take the word.";
+        ` The coincident ballot (jobs, claims, GDP, activity) is still Mid, so the word is held at Mid.` +
+        ` Regional surveys are at the rail and set the needle on the ${tick} tick — they cannot take the word,` +
+        ` but the six asset classes read the tick, not the word.`;
+      growthPoint = `the hard data is mid, and the calls are trading the ${tick} tick`;
+    } else if (c.state === "neutral" && surveyLoud && Math.abs(c.score) >= 0.4) {
+      growthNote =
+        " The coincident ballot (jobs, claims, GDP, activity) is still Mid. Regional surveys are at the rail — they sit the needle on the Strong tick; they cannot take the word.";
     }
   }
   let riskNote = split;
@@ -71,11 +85,13 @@ export function teachLight(lid, c) {
       riskNote = " HY OAS is at cycle tights — calm, and not paid.";
     }
   }
-  const cliff = c.cliff;
+  // A held word sits on the cut on purpose — reporting zero distance to it would
+  // read as a near-flip. The growth note already says it is being held.
+  const cliff = c.held ? null : c.cliff;
   const cliffNote =
     cliff != null && cliff < 0.05
       ? Math.abs(c.score) > 0.45
-        ? ` Only ${cliff.toFixed(2)} past a word flip.`
+        ? ` Only ${cliff.toFixed(2)} inside the word.`
         : ` Only ${cliff.toFixed(2)} from flipping the word.`
       : "";
   const by = {
@@ -91,7 +107,7 @@ export function teachLight(lid, c) {
     },
     growth: {
       easing: `Activity looks firm versus full employment / trend.${growthNote}${cliffNote} Point: the real side is holding up.`,
-      neutral: `Activity looks mixed versus trend.${growthNote}${cliffNote} Point: no clean boom or bust.`,
+      neutral: `Activity looks mixed versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
       tight: `Activity looks soft versus trend.${split}${cliffNote} Point: demand/labor are under pressure.`,
     },
     inflation: {

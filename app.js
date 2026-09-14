@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261180";
+import { buildMeaning } from "./meaning.js?v=20261181";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261180";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261180";
+} from "./score.js?v=20261181";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261181";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -485,15 +485,17 @@ function wordFor(light) {
   return light.words?.[light.state] || light.state;
 }
 
+/** Fallback only — the tap normally shows the live story from light-copy.js. Keep
+ *  the rosters here matching the catalog, or this quietly names the wrong voters. */
 const LIGHT_BLURB = {
   liquidity:
-    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are the SOFR spread, reserves and net liquidity versus GDP, the dollar’s 12-month change, and G4 balance-sheet growth.",
+    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are reserves and net liquidity versus GDP, the funding spread, commercial paper, G4 balance-sheet growth with the dollar’s 12-month change, and China credit at half weight.",
   rates:
-    "Borrowing costs — policy rate, short yields, mortgages, the curve, global 10ys. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
+    "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
     "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. Surveys may slide the needle; they cannot flip Strong or Soft while jobs and GDP are still Mid. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
-    "Underlying prices — core measures, median, sticky prices, expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
+    "Underlying prices — realized core (CPI and PCE) at double weight, persistence (sticky CPI, wages, final-demand PPI), and 5y5y expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
     "Market fear — vol, credit spreads, financial conditions. On = fear is cheap; off = fear is expensive. Often last to move.",
 };
@@ -546,7 +548,7 @@ function liveSheet(id, snap = SNAP) {
   const c = clubLight(snap, id);
   return lightSheet(id, {
     ...c,
-    cliff: distanceToCliff(c.score),
+    cliff: c.held ? null : distanceToCliff(c.score),
     impulse: snap.lights?.[id]?.impulse,
   });
 }
@@ -1185,7 +1187,7 @@ function horizonPhrase(h = DEFAULT_IMPULSE) {
 
 /**
  * Regime box: short editorial from light states + tensions.
- * Relations and splits — not a rewording of the five dial labels.
+ * Relations and splits — not a rewording of the five component words.
  * Leads with the 1m turn in plain language.
  */
 function hotInflationTurn(snap) {
@@ -1303,7 +1305,7 @@ function regimeEvidence(snap) {
         : `Growth: activity still firm while underlying inflation cooled.`
     );
   } else if (gr === "easing" && inf === "easing") {
-    beats.push(`Growth: activity firm and underlying inflation still hot — both dials lean the same way.`);
+    beats.push(`Growth: activity firm and underlying inflation still hot — both components lean the same way.`);
   } else if (gr === "tight" && inf === "easing") {
     beats.push(`Growth: activity soft while underlying inflation still hot — an ugly mix.`);
   } else if (gr === "tight" && inf === "tight") {
@@ -1365,9 +1367,9 @@ function regimeEvidence(snap) {
   } else {
     const st = lightState(snap, "rates");
     if (st === "easing") {
-      beats.push(`Borrowing: short rates, mortgages, and the dollar look easy overall.`);
+      beats.push(`Borrowing: real yields, mortgages, and global 10ys look easy overall.`);
     } else if (st === "tight") {
-      beats.push(`Borrowing: short rates, mortgages, or the dollar look expensive overall.`);
+      beats.push(`Borrowing: real yields, mortgages, or global 10ys look expensive overall.`);
     } else if (st === "neutral") {
       beats.push(`Borrowing: no loud easy/tight call once the club is combined.`);
     }
@@ -1705,8 +1707,10 @@ function openSentence(snap) {
       .slice(0, 2)
       .map(
         (line) =>
+          // The "Watch" label already says what the line is for; leading with
+          // "Falsify if" again is jargon on top of a label.
           `<div class="sent-explain sent-explain-flag"><p class="sent-explain-title"><strong data-state="neutral">Watch</strong>
-          <span class="muted sent-hint"> — ${escapeHtml(line.replace(/^Falsify if /i, "Falsify if "))}</span></p></div>`
+          <span class="muted sent-hint"> — ${escapeHtml(line.replace(/^Falsify if /i, ""))}</span></p></div>`
       )
       .join("")}`;
 
@@ -1750,13 +1754,16 @@ function renderLights(snap) {
       const scoreNum =
         L.score != null && Number.isFinite(L.score) ? L.score : null;
       const score = scoreNum != null ? fmtLightScore(scoreNum) : "—";
-      const cliff = distanceToCliff(L.score);
+      // A word held on the cut by the survey cap is not a near-flip — it is the
+      // opposite, a word that is being kept where it is.
+      const cliff = L.held ? null : distanceToCliff(L.score);
       const nearFlip =
         cliff != null && Number.isFinite(cliff) && cliff < 0.05
           ? Math.abs(L.score) > 0.45
-            ? `${cliff.toFixed(2)} past flip`
+            ? `${cliff.toFixed(2)} inside the word`
             : `${cliff.toFixed(2)} from flip`
           : null;
+      const heldNote = L.held ? "word held at Mid" : null;
       const on = focusLight === id || streetSpyLight() === id;
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
@@ -1764,13 +1771,13 @@ function renderLights(snap) {
       const inflTurn =
         id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
       const spoken = inflTurn ? `${word}, ${inflTurn}` : word;
-      const tip = [inflTurn ? spoken : null, nearFlip].filter(Boolean).join(" · ");
+      const tip = [inflTurn ? spoken : null, nearFlip, heldNote].filter(Boolean).join(" · ");
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
         tip ? ` title="${escapeHtml(tip)}"` : ""
       } aria-label="${escapeHtml(
-        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
+        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${heldNote ? `, ${heldNote}` : ""}${split ? ", voters disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" title="1m turn" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>

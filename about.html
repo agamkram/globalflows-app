@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/about.html" />
   <meta property="og:title" content="About — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261180" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261180" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261181" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261181" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261180" />
+  <link rel="stylesheet" href="styles.css?v=20261181" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -121,8 +121,10 @@
         <h2>Where the numbers come from</h2>
         <p>
           Public sources: FRED, the New York Fed, Yahoo Finance, Bundesbank, Bank
-          of England, Japan’s Ministry of Finance, and S&amp;P earnings yield from
-          multpl. A morning job at 8:47 New York time — after the 8:30 prints, before
+          of England, Japan’s Ministry of Finance, S&amp;P earnings yield from
+          multpl, and the CFTC gold positioning report (via FuturesBench). China’s
+          credit stock is the BIS series, carried on FRED. Every row names its own
+          source when you tap it. A morning job at 8:47 New York time — after the 8:30 prints, before
           the open — pulls the book, rebuilds the archive from 2003, refits the
           calibration, bakes today’s regime, then runs the sanity check. If the
           check fails, the bake does not publish.
@@ -150,6 +152,10 @@
           <div>
             <span class="status-label">Archive</span>
             <span class="status-value" id="aboutArchive">—</span>
+          </div>
+          <div>
+            <span class="status-label">Build</span>
+            <span class="status-value" id="aboutBuild">—</span>
           </div>
         </div>
       </section>
@@ -191,7 +197,7 @@
           Mixed are the word, the needle, and the tap. Neither end means good or bad.
           Green on Inflation is Hot: prices are running, not the app approving. That
           is the one trap. On the six asset classes, green is in favor and red is
-          out of favor. Mixed is the word and the needle lean, not a third paint job.
+          out of favor. Mixed is the word and the needle lean, not a third colour.
         </p>
         <div class="about-legend" aria-label="Regime colours">
           <span><i class="swatch ease"></i> Green — reflationary: easier, stronger, hotter, risk-on</span>
@@ -204,14 +210,25 @@
           stay on the 1m turn. The table buttons do not rewrite the six classes.
         </p>
         <p>
-          Dollars are made in more than one place. Liquidity watches G4 balance
-          sheets and the broad dollar, not only the Fed. Rates includes German, UK,
-          and Japanese 10-years. Growth and Inflation are still US reads. Growth’s
-          coincident ballot is jobs, claims, GDP, and the activity indexes. Regional
-          factory surveys may slide the needle; they cannot flip Strong or Soft
-          while coincident is still Mid. China’s credit stock lags two to three
-          quarters, so it votes Liquidity at half weight; the China balance-sheet
-          leg is FX reserves, not the PBoC total.
+          Dollars are made in more than one place. Liquidity watches four balance
+          sheets, not only the Fed: the Fed, the ECB, the Bank of Japan, and China.
+          The app calls that set G4 — note it is not the usual G4, because the Bank
+          of England is not in it and the China leg is FX reserves rather than the
+          PBoC total, which FRED does not carry. Reserves are the part that recycles
+          into world markets. Rates includes German, UK, and Japanese 10-years.
+          Growth and Inflation are still US reads. China’s credit stock lags two to
+          three quarters, so it votes Liquidity at half weight.
+        </p>
+        <p>
+          Growth’s coincident ballot is jobs, claims, GDP, and the activity indexes.
+          Regional factory surveys cannot flip Strong or Soft while coincident is
+          still Mid — <strong>but that cap holds the word, not the reach</strong>.
+          It pins the score at the colour line, which is exactly where the asset
+          classes already count a component as fully Strong. So on a day like that
+          the box reads Mid while the surveys are the reason Equities and copper are
+          out. The tap says so when it happens. If you want the honest version:
+          two regional surveys can drive four of the six calls without ever changing
+          a word on the screen.
         </p>
       </section>
 
@@ -227,9 +244,15 @@
         </p>
         <p>
           The six read the <strong>score</strong> on each component, not only the
-          painted word. Soft weight is off at ±0.2 and fully on at the colour line
-          ±0.45, so Neutral Risk at +0.40 is almost Risk-on for every net: fear still
-          looks cheap. A mix that looks late — Growth on the Strong tick (or Strong)
+          painted word. A score counts as fully reflationary at the colour line
+          +0.45 and fully contractionary at −0.45, so Neutral Risk at +0.40 is
+          almost Risk-on for every net: fear still looks cheap. The two sides are
+          not mirrors. The reflationary side starts counting from −0.2 and the
+          contractionary side only from −0.2 downward, so a component sitting at
+          exactly 0.00 carries about a third of a reflationary vote and no
+          contractionary one. That is deliberate — drain and fear have to be clearly
+          present before they price, while ample conditions are the resting state —
+          and it does tilt every net slightly toward reflation. A mix that looks late — Growth on the Strong tick (or Strong)
           while fear is still cheap — takes Equities, copper, and often high yield out
           even when the Growth word is still Mid. The six read the score; they do
           not steal Strong from the box. Over the full 2003–2026 record that overlay
@@ -261,7 +284,8 @@
           <li>
             <strong>Treasuries</strong>
             — 5 on the strip is cash (the Rates call). 10 and 30 are duration. The
-            parent call is the long end only.
+            parent call and the parent needle are the long end only; the 5s are
+            reported next to them, not voted into them.
           </li>
           <li>
             <strong>Credit</strong>
@@ -356,7 +380,10 @@
         <p>
           The only test that cannot flatter the app is forward time. Each morning the
           six calls are written down and later marked. That record began in September
-          2026. It prints empty on purpose until a class has twelve independent windows.
+          2026. It prints empty on purpose until a class has twelve independent windows,
+          and it is not on this site yet — it runs alongside the other three checks and
+          will appear here once there is something in it worth reading. Today that is
+          weeks of overlapping days, which is nothing.
         </p>
       </section>
 
@@ -429,7 +456,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261180"></script>
+  <script type="module" src="about.js?v=20261181"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
