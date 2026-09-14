@@ -5,7 +5,7 @@
  * Math stays in score.js (one module in the browser). This file is only words.
  */
 
-import { chipBandFromScore } from "./score.js?v=20261220";
+import { chipBandFromScore } from "./score.js?v=20261221";
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 

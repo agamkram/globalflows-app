@@ -1,25 +1,41 @@
 #!/usr/bin/env python3
-"""Mint GlobalFlows PWA icons — three lights on #0b0e13 (matches brand mark)."""
+"""Mint GlobalFlows PWA icons — three lights on black, current ease / pick / tight."""
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
-BG = (11, 14, 19, 255)
-GREEN = (61, 206, 167, 255)
-AMBER = (230, 184, 77, 255)
-RED = (232, 106, 92, 255)
-COLORS = (GREEN, AMBER, RED)
+BG = (0, 0, 0, 255)           # --bg
+EASE = (29, 184, 122, 255)    # --ease  #1db87a
+PICK = (230, 184, 77, 255)    # --pick  #e6b84d
+TIGHT = (242, 54, 69, 255)    # --tight #f23645
+COLORS = (EASE, PICK, TIGHT)
+
+
+def _glow(size, cx, cy, r, color):
+    """Soft halo matching the on-screen dot (box-shadow: 0 0 8px)."""
+    if size < 96:
+        return Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    overlay = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    d = ImageDraw.Draw(overlay)
+    gr = r * 1.32
+    d.ellipse([cx - gr, cy - gr, cx + gr, cy + gr], fill=(*color[:3], 48))
+    return overlay.filter(ImageFilter.GaussianBlur(radius=max(1.2, r * 0.16)))
 
 
 def draw_mark(size, *, pad_frac=0.22, radius_frac=0.10):
     img = Image.new("RGBA", (size, size), BG)
-    d = ImageDraw.Draw(img)
     cy = size / 2
     usable = size * (1 - 2 * pad_frac)
     r = max(2, size * radius_frac)
     gap = usable / 2
     x0 = size / 2 - gap
+    glows = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    for i, c in enumerate(COLORS):
+        cx = x0 + i * gap
+        glows = Image.alpha_composite(glows, _glow(size, cx, cy, r, c))
+    img = Image.alpha_composite(img, glows)
+    d = ImageDraw.Draw(img)
     for i, c in enumerate(COLORS):
         cx = x0 + i * gap
         d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=c)
