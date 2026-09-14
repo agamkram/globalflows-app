@@ -164,26 +164,25 @@ export function getLightDist() {
     : null;
 }
 
-/** Fit mean/sd per light and median sd as REF from parallel raw score arrays. */
+/** Fit mean/sd per light from parallel raw score arrays. REF is a constant. */
 export function fitLightDist(rawByLight, meta = {}) {
   const lights = {};
-  const sds = [];
   let n = 0;
   for (const lid of LIGHT_IDS) {
     const vals = (rawByLight[lid] || []).filter(Number.isFinite);
     n = Math.max(n, vals.length);
     if (vals.length < 2) {
       lights[lid] = { mean: 0, sd: 1 };
-      sds.push(1);
       continue;
     }
     const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
     const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length);
     lights[lid] = { mean, sd: sd > 1e-9 ? sd : 1 };
-    sds.push(lights[lid].sd);
   }
-  sds.sort((a, b) => a - b);
-  const refSd = sds[Math.floor(sds.length / 2)] || 0.53;
+  // Fixed, for the reason spelled out in bake-history's expandDistNow: a REF
+  // taken from the middle component lets any component rescale the other four.
+  // The live path and the archive must use the same rule or they diverge.
+  const refSd = LIGHT_CALIB_SD;
   return {
     version: 1,
     fittedAt: new Date().toISOString(),

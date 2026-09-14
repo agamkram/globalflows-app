@@ -425,15 +425,19 @@ async function main() {
   }
   function expandDistNow() {
     const lights = {};
-    const sds = [];
     for (const id of LIGHT_IDS) {
       const s = run[id];
       const sd = s.n > 1 ? Math.sqrt(s.m2 / s.n) : 1;
       lights[id] = { mean: s.mean, sd: sd > 1e-9 ? sd : 1 };
-      sds.push(lights[id].sd);
     }
-    sds.sort((a, b) => a - b);
-    return { lights, refSd: sds[Math.floor(sds.length / 2)] || 0.53 };
+    // REF is a fixed constant, not the median of the five running sds. When it
+    // was the median, whichever component happened to sit in the middle set the
+    // scale for all five, and it was refitted every day. Retiring one Liquidity
+    // voter then rewrote Rates across 23 years — its raw composite identical to
+    // the last decimal, its calibrated score moved by up to 0.12 — and dropped
+    // the 2006-07 plateau from red to mid. Components must not rescale each
+    // other. Held fixed, that plateau reads red on 89% of days instead of 50%.
+    return { lights, refSd: LIGHT_CALIB_SD };
   }
   for (const date of grid) {
     const series = {};
