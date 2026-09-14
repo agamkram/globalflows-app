@@ -39,8 +39,9 @@ export const VOTE_FAMILIES = {
     vol: ["VIX"],
   },
   // Labor and output share one coincident ballot. Half weight so leading and
-  // survey can still move the needle. Leading may flip the word. Surveys may
-  // not: applySurveyCap keeps Strong/Soft off while coincident is still Mid.
+  // survey can still move the needle — when the surveys are loud and coincident
+  // is still Mid, coincident has followed the surveys within a quarter about
+  // two thirds of the time since 2003, against a coin flip on every other day.
   growth: {
     coincident: { ids: ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"], weight: 0.5 },
     leading: { ids: ["PERMIT", "HOUST", "DGORDER", "JTSJOL"], weight: 1.5 },
@@ -267,23 +268,17 @@ export function buildBallots(lid, voters) {
 /**
  * Build light (or impulse) ballots: family-average first, then weighted trimmed mean.
  * Level scores are calibrated; pass `{ calibrate: false }` for impulse / raw archive.
- *
- * Returns the uncapped score alongside the published one. When the survey cap is
- * holding the word, the score sits exactly on ±0.45 by fiat, and anything that
- * measures distance to the colour cut would read zero and call it a near-flip.
  * @param {string} lid
  * @param {{ id: string, score: number, weight?: number }[]} voters
  * @param {{ calibrate?: boolean, dist?: object }} [opts]
- * @returns {{ score: number|null, uncapped: number|null, held: boolean, ballots: object[] }}
+ * @returns {{ score: number|null, ballots: object[] }}
  */
 export function tallyVotes(lid, voters, opts = {}) {
   const ballots = buildBallots(lid, voters);
-  if (!ballots.length) return { score: null, uncapped: null, held: false, ballots };
+  if (!ballots.length) return { score: null, ballots };
   const raw = applyStressFloor(lid, weightedTrimmedMean(ballots), ballots);
-  if (opts.calibrate === false) return { score: raw, uncapped: raw, held: false, ballots };
-  const uncapped = calibrateLightScore(lid, raw, opts.dist || null);
-  const score = applySurveyCap(lid, uncapped, ballots);
-  return { score, uncapped, held: score !== uncapped, ballots };
+  if (opts.calibrate === false) return { score: raw, ballots };
+  return { score: calibrateLightScore(lid, raw, opts.dist || null), ballots };
 }
 
 export function aggregateVotes(lid, voters, opts = {}) {
@@ -315,38 +310,6 @@ export function applyStressFloor(lid, score, ballots) {
     if (b.score <= STRESS_TRIGGER && (worst == null || b.score < worst)) worst = b.score;
   }
   return worst == null ? score : Math.min(score, worst);
-}
-
-/**
- * Growth coincident is jobs, claims, GDP, activity. Regional factory surveys
- * may slide the needle; they cannot flip Strong or Soft while coincident is
- * still Mid. Leading is not gated. The lookback / chevron is not gated
- * (impulse calls aggregateVotes with calibrate: false).
- *
- * The cap holds the word, not the reach. It clamps to exactly ±0.45, which is
- * where the soft weights in meaning.js already reach 1 — so the six asset
- * classes read a capped Growth exactly as if it had never been capped. That is
- * deliberate: the box refuses to call Strong off two regional surveys, while
- * the calls still price the tick. Anything that reports how far the score sits
- * from the colour cut must read `held` first, or it will call a held word a
- * near-flip.
- */
-export function surveyCapLimit(lid, ballots) {
-  if (lid !== "growth") return null;
-  const coincident = (ballots || []).find((b) => b.id === "family:coincident");
-  const survey = (ballots || []).find((b) => b.id === "family:survey");
-  if (!coincident || !survey) return null;
-  if (!Number.isFinite(coincident.score) || !Number.isFinite(survey.score)) return null;
-  if (Math.abs(coincident.score) > 0.45) return null;
-  if (Math.abs(survey.score) <= 0.45) return null;
-  return 0.45;
-}
-
-export function applySurveyCap(lid, score, ballots) {
-  if (score == null || !Number.isFinite(score)) return score;
-  const cap = surveyCapLimit(lid, ballots);
-  if (cap == null) return score;
-  return Math.max(-cap, Math.min(cap, score));
 }
 
 function clamp(n, lo, hi) {
@@ -973,11 +936,11 @@ export function clubLight(snap, lid, now = Date.now()) {
     voters.push({ id: m.id, name: m.name, score: sc, weight: w, why: m.anchor?.why });
   }
   voters.sort((a, b) => b.score - a.score);
-  const { score, uncapped, held } = tallyVotes(lid, voters);
+  const { score } = tallyVotes(lid, voters);
   const state = lightStateFromScore(score).state;
   const easy = voters.filter((v) => v.score > 0.45);
   const tight = voters.filter((v) => v.score < -0.45);
-  return { score, uncapped, held, state, voters, easy, tight, n: members.length };
+  return { score, state, voters, easy, tight, n: members.length };
 }
 
 export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {
@@ -1015,7 +978,7 @@ export function buildLights(snap, now = Date.now(), opts = {}) {
       if (sc == null) continue;
       voters.push({ id, score: sc, weight: Math.max(1, Number(row.weight) || 1) });
     }
-    const { score, uncapped, held } = tallyVotes(lid, voters, { calibrate, dist });
+    const { score } = tallyVotes(lid, voters, { calibrate, dist });
     const { state } = lightStateFromScore(score);
     const m = meta.find((x) => x.id === lid) || baked[lid];
     out[lid] = {
@@ -1023,8 +986,6 @@ export function buildLights(snap, now = Date.now(), opts = {}) {
       label: m?.label || baked[lid]?.label || lid,
       state,
       score,
-      uncapped,
-      held,
       n: voterIds.length,
       nAnchor: voters.length,
       words: {

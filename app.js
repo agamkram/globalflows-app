@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261181";
+import { buildMeaning } from "./meaning.js?v=20261182";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261181";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261181";
+} from "./score.js?v=20261182";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261182";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -548,7 +548,7 @@ function liveSheet(id, snap = SNAP) {
   const c = clubLight(snap, id);
   return lightSheet(id, {
     ...c,
-    cliff: c.held ? null : distanceToCliff(c.score),
+    cliff: distanceToCliff(c.score),
     impulse: snap.lights?.[id]?.impulse,
   });
 }
@@ -1754,16 +1754,13 @@ function renderLights(snap) {
       const scoreNum =
         L.score != null && Number.isFinite(L.score) ? L.score : null;
       const score = scoreNum != null ? fmtLightScore(scoreNum) : "—";
-      // A word held on the cut by the survey cap is not a near-flip — it is the
-      // opposite, a word that is being kept where it is.
-      const cliff = L.held ? null : distanceToCliff(L.score);
+      const cliff = distanceToCliff(L.score);
       const nearFlip =
         cliff != null && Number.isFinite(cliff) && cliff < 0.05
           ? Math.abs(L.score) > 0.45
             ? `${cliff.toFixed(2)} inside the word`
             : `${cliff.toFixed(2)} from flip`
           : null;
-      const heldNote = L.held ? "word held at Mid" : null;
       const on = focusLight === id || streetSpyLight() === id;
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
@@ -1771,7 +1768,7 @@ function renderLights(snap) {
       const inflTurn =
         id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
       const spoken = inflTurn ? `${word}, ${inflTurn}` : word;
-      const tip = [inflTurn ? spoken : null, nearFlip, heldNote].filter(Boolean).join(" · ");
+      const tip = [inflTurn ? spoken : null, nearFlip].filter(Boolean).join(" · ");
       return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
         on ? "true" : "false"
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${

@@ -31,7 +31,13 @@ export async function appendRegimeLog(bake) {
     "data/regime-history.json is a replay of the current model over revised data; " +
     "this is the contemporaneous record.";
 
-  const date = (bake.generatedAt || new Date().toISOString()).slice(0, 10);
+  // The trading day this call belongs to, not the UTC calendar day. A re-bake
+  // after 8pm New York is already tomorrow in UTC, which would file the call
+  // against a session that has not opened and grade it against returns that do
+  // not exist yet. The 8:47 job never sees this; an evening re-run does.
+  const date = new Date(bake.generatedAt || Date.now()).toLocaleDateString("en-CA", {
+    timeZone: "America/New_York",
+  });
   const entry = {
     date,
     generatedAt: bake.generatedAt,

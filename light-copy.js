@@ -66,16 +66,22 @@ export function teachLight(lid, c) {
     const surveyLoud = (c.voters || []).some(
       (v) => (v.id === "EMPIRE_MFG" || v.id === "PHILLY_MFG") && Math.abs(v.score) > 0.45
     );
-    const tick = c.uncapped > 0 ? "Strong" : "Soft";
-    if (c.held) {
+    // The ballot average is what votes, not any single print — claims alone can
+    // sit past the rail while jobs, GDP and the activity indexes are still flat.
+    const coin = (c.voters || []).filter((v) =>
+      ["PAYEMS", "UNRATE", "ICSA", "GDPC1", "CFNAI", "WEI"].includes(v.id)
+    );
+    const coincidentMid =
+      coin.length > 0 &&
+      Math.abs(coin.reduce((a, v) => a + v.score, 0) / coin.length) <= 0.45;
+    if (surveyLoud && coincidentMid) {
+      const tick = c.score > 0 ? "Strong" : "Soft";
       growthNote =
-        ` The coincident ballot (jobs, claims, GDP, activity) is still Mid, so the word is held at Mid.` +
-        ` Regional surveys are at the rail and set the needle on the ${tick} tick — they cannot take the word,` +
-        ` but the six asset classes read the tick, not the word.`;
-      growthPoint = `the hard data is mid, and the calls are trading the ${tick} tick`;
-    } else if (c.state === "neutral" && surveyLoud && Math.abs(c.score) >= 0.4) {
-      growthNote =
-        " The coincident ballot (jobs, claims, GDP, activity) is still Mid. Regional surveys are at the rail — they sit the needle on the Strong tick; they cannot take the word.";
+        ` Regional surveys are at the rail while jobs, claims and GDP are still Mid — the surveys are early, not wrong.` +
+        ` Since 2003 the hard data has followed them within a quarter about two thirds of the time.`;
+      if (c.state === "neutral") {
+        growthPoint = `the surveys are calling ${tick.toLowerCase()} before the hard data has moved`;
+      }
     }
   }
   let riskNote = split;
@@ -85,9 +91,7 @@ export function teachLight(lid, c) {
       riskNote = " HY OAS is at cycle tights — calm, and not paid.";
     }
   }
-  // A held word sits on the cut on purpose — reporting zero distance to it would
-  // read as a near-flip. The growth note already says it is being held.
-  const cliff = c.held ? null : c.cliff;
+  const cliff = c.cliff;
   const cliffNote =
     cliff != null && cliff < 0.05
       ? Math.abs(c.score) > 0.45
