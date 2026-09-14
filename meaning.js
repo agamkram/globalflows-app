@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261178";
+import { DEFAULT_IMPULSE } from "./score.js?v=20261180";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -126,6 +126,39 @@ function easeW(score) {
 /** Soft “tight” weight 0..1. 0 at ≥ −0.2, 1 at ≤ −0.45. */
 function tightW(score) {
   return Math.max(0, Math.min(1, (-0.2 - score) / (0.45 - 0.2)));
+}
+
+/**
+ * The six read the score; the five keep the word. If Growth is still Mid and
+ * the needle is on the Strong (or Soft) tick, name the tick — do not steal
+ * Firm / Soft from the box.
+ */
+function growthLean(gSc, G) {
+  if (G === "easing") return "firm";
+  if (G === "tight") return "soft";
+  if (easeW(gSc) > 0.55) return "strong-tick";
+  if (tightW(gSc) > 0.55) return "soft-tick";
+  return "mid";
+}
+
+function growthLeanStrip(lean) {
+  if (lean === "firm") return "Firm growth";
+  if (lean === "soft") return "Soft growth";
+  if (lean === "strong-tick") return "Growth on the Strong tick";
+  if (lean === "soft-tick") return "Growth on the Soft tick";
+  return "";
+}
+
+function growthIsFirmTalk(lean) {
+  if (lean === "strong-tick") return "growth is sitting on the Strong tick";
+  if (lean === "soft") return "growth is soft";
+  return "growth is firm";
+}
+
+function growthIntoFearTalk(lean) {
+  if (lean === "strong-tick") return "Growth sitting on the Strong tick into cheap fear";
+  if (lean === "soft") return "Soft growth into cheap fear";
+  return "Firm growth into cheap fear";
 }
 
 /** Map a continuous net to in / mixed / out. */
@@ -345,20 +378,20 @@ function pairFromStrip({ durationDir, creditDir, billsPay, stocks, treasuries, f
 }
 
 /** One line for the face of the strip. Empty if there is nothing worth saying. */
-function stripSoWhat({ gSc, rSc, stocks, treasuries }) {
+function stripSoWhat({ gSc, rSc, G, stocks, treasuries }) {
   const t5 = treasuries?.tenors?.find((t) => t.id === "5");
   const t10 = treasuries?.tenors?.find((t) => t.id === "10");
-  const firm = easeW(gSc) > 0.55;
-  const soft = tightW(gSc) > 0.55;
+  const lean = growthLean(gSc, G);
+  const growHead = growthLeanStrip(lean);
+  const lateGrowth = lean === "firm" || lean === "strong-tick";
   const cheap = easeW(rSc) > 0.55;
   const dear = tightW(rSc) > 0.55;
   const left = [];
-  if (firm) left.push("Firm growth");
-  else if (soft) left.push("Soft growth");
+  if (growHead) left.push(growHead);
   if (cheap) left.push("cheap fear");
   else if (dear) left.push("expensive fear");
   const right = [];
-  if (stocks?.stance === "out" && firm && cheap) right.push("equities late");
+  if (stocks?.stance === "out" && lateGrowth && cheap) right.push("equities late");
   else if (stocks?.stance === "out") right.push("equities out");
   else if (stocks?.stance === "in") right.push("equities in");
   if (t10?.stance === "in") right.push("10s paid");
@@ -388,6 +421,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const gSc = lightUnit(lights, "growth");
   const iSc = lightUnit(lights, "inflation");
   const rSc = lightUnit(lights, "risk");
+  const gLean = growthLean(gSc, G);
   const d = durScore(durationDir);
   const flight = tightW(rSc) * (1 - easeW(iSc));
   const rImp = lightImpulse(lights, "rates");
@@ -617,7 +651,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   }
   const stocksOutParts = [];
   if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
-    stocksOutParts.push("growth is firm while fear is still cheap — late to the expansion");
+    stocksOutParts.push(
+      `${growthIsFirmTalk(gLean)} while fear is still cheap — late to the expansion`
+    );
   }
   if (tightW(lSc) > 0.55 && calmRisk > 0.55 && easeW(gSc) > 0.4) {
     stocksOutParts.push("cash is draining into a still-calm tape");
@@ -642,7 +678,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Cy",
     cycNet,
     sentence(stocksInParts, "Risk premium is open — cyclicals usually lead the bounce."),
-    sentence(stocksOutParts, "Firm growth with cheap fear — cyclicals are late to that expansion."),
+    sentence(
+      stocksOutParts,
+      gLean === "strong-tick"
+        ? "Growth on the Strong tick with cheap fear — cyclicals are late to that expansion."
+        : "Firm growth with cheap fear — cyclicals are late to that expansion."
+    ),
     "Cyclicals want paid fear, not complacent strength; only one side is helping."
   );
   cyc.label = "Cyclicals";
@@ -654,7 +695,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     fearW > 0.55
       ? "Fear is expensive — defensives are the ballast inside the risk-premium bid."
       : "Soft growth into fear — defensives usually hold up better than the cycle.",
-    "Firm growth and calm fear — defensives usually lag that mix.",
+    gLean === "strong-tick"
+      ? "Growth on the Strong tick and calm fear — defensives usually lag that mix."
+      : "Firm growth and calm fear — defensives usually lag that mix.",
     "Defensives want expensive fear or soft growth; complacent strength leaves them mixed."
   );
   def.label = "Defensives";
@@ -791,7 +834,9 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (wtiImp.dir === "up") oilInParts.push(`crude is firm ${win}`);
   const oilOutParts = [];
   if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
-    oilOutParts.push("growth is firm while fear is still cheap — late to the industrial bid");
+    oilOutParts.push(
+      `${growthIsFirmTalk(gLean)} while fear is still cheap — late to the industrial bid`
+    );
   }
   if (dolZ > 0.35) oilOutParts.push("the dollar is rising");
   if (tightW(iSc) > 0.55) oilOutParts.push("inflation is cold — crude rarely leads");
@@ -809,7 +854,10 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Oi",
     oilNet,
     sentence(oilInParts, "Soft growth into fear or a cooperative dollar — oil usually gets paid."),
-    sentence(oilOutParts, "Firm growth into cheap fear or a rising dollar — oil rarely leads."),
+    sentence(
+      oilOutParts,
+      `${growthIntoFearTalk(gLean)} or a rising dollar — oil rarely leads.`
+    ),
     "Oil wants paid fear or a soft dollar; complacent strength is late.",
     0.12,
     -0.22
@@ -826,7 +874,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Cu",
     copperNet,
     "Soft growth into fear — copper’s bounce sample.",
-    "Firm growth into cheap fear — copper is late to that industrial bid.",
+    `${growthIntoFearTalk(gLean)} — copper is late to that industrial bid.`,
     "Copper wants paid fear or soft growth; complacent strength leaves it mixed.",
     0.12,
     -0.22
@@ -841,7 +889,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       cmdtyStance === "in"
         ? "Oil and copper are both in — soft growth into fear or a cooperative dollar."
         : cmdtyStance === "out"
-          ? "Oil and copper are both out — firm growth into cheap fear or a rising dollar."
+          ? `Oil and copper are both out — ${growthIntoFearTalk(gLean).toLowerCase()} or a rising dollar.`
           : "Oil and copper are both mixed.";
   } else if (cmdtyStance === "in") {
     cmdtyWhy = `Commodities lean in — oil ${oil.stance}, copper ${copper.stance}.`;
@@ -868,7 +916,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       fallback: { line: pairLine, why: pairWhy },
     }),
     items,
-    stripLine: stripSoWhat({ gSc, rSc, stocks, treasuries }),
+    stripLine: stripSoWhat({ gSc, rSc, G, stocks, treasuries }),
   };
 }
 
@@ -940,7 +988,11 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   if (tightW(tSc) > 0.55 && realZ < 0.35) durationUpParts.push("funding is tight");
   if (tpZ < -0.35) durationUpParts.push("term premium is compressed — duration is not paid");
   if (easeW(gSc) > 0.55 && tightW(iSc) < 0.4 && hotNotCooling < 0.45 && tightW(tSc) < 0.45 && tpZ >= -0.2) {
-    durationUpParts.push("firm growth is keeping a premium in the long end");
+    durationUpParts.push(
+      G === "easing"
+        ? "firm growth is keeping a premium in the long end"
+        : "a Growth score on the Strong tick is keeping a premium in the long end"
+    );
   }
 
   if (durNet <= -0.35) {
@@ -1021,7 +1073,11 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     creditDir = "falling";
     creditLabel = "Credit risk falling";
     creditLine =
-      "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible.";
+      G === "easing"
+        ? "Credit risk is being paid down — firm growth and quiet risk premia say cash flows still look collectible."
+        : G === "neutral"
+          ? "Credit risk is being paid down — the Growth score is still on the Strong side of Mid, and risk premia are quiet, so cash flows still look collectible."
+          : "Credit risk is being paid down — quiet risk premia say cash flows still look collectible.";
   } else if (impulseSlow && creditNet > -0.2) {
     creditDir = "mixed";
     creditLabel = "Credit risk mixed";

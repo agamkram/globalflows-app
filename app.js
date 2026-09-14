@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261178";
+import { buildMeaning } from "./meaning.js?v=20261180";
 import {
   buildLights,
   attachImpulse,
@@ -13,8 +13,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261178";
-import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261178";
+} from "./score.js?v=20261180";
+import { LIGHT_IDS, lightSheet, inflationTurn } from "./light-copy.js?v=20261180";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -1710,7 +1710,7 @@ function openSentence(snap) {
       )
       .join("")}`;
 
-  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own.</p>`;
+  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own. Between the cuts, the word and the needle.</p>`;
 
   const liveFoot = movedBits.length
     ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${DEFAULT_IMPULSE} turn`
