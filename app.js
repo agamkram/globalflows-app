@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261192";
+import { buildMeaning } from "./meaning.js?v=20261195";
 import {
   buildLights,
   attachImpulse,
@@ -17,8 +17,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261192";
-import { LIGHT_IDS, LIGHT_WORD, lightSheet, inflationTurn } from "./light-copy.js?v=20261192";
+} from "./score.js?v=20261195";
+import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261195";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -356,8 +356,7 @@ function signedScore(n) {
 }
 
 function wordOfScore(lid, score) {
-  const st = lightStateFromScore(score).state;
-  return LIGHT_WORD[lid]?.[st] || st;
+  return chipWord(lid, score);
 }
 
 /**
@@ -552,7 +551,8 @@ function fmtChg(n) {
 
 function wordFor(light) {
   if (!light || light.state === "empty") return "—";
-  return light.words?.[light.state] || light.state;
+  if (light.score != null && Number.isFinite(light.score)) return chipWord(light.id, light.score);
+  return light.word || light.words?.[light.state] || light.state;
 }
 
 /** Fallback only — the tap normally shows the live story from light-copy.js. Keep
@@ -1948,7 +1948,7 @@ function renderLights(snap) {
       const on = focusLight === id || streetSpyLight() === id;
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
-      const word = wordFor(L);
+      const word = scoreNum != null ? chipWord(id, scoreNum) : "—";
       const inflTurn =
         id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
       const spoken = inflTurn ? `${word}, ${inflTurn}` : word;

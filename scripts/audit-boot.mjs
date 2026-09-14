@@ -20,7 +20,27 @@ async function smokeMeaning() {
   const snap = JSON.parse(await fs.readFile(path.join(ROOT, "data", "snapshot.json"), "utf8"));
   const regime = JSON.parse(await fs.readFile(path.join(ROOT, "data", "regime-today.json"), "utf8"));
   const { buildMeaning } = await import(pathToFileURL(path.join(ROOT, "meaning.js")).href);
-  const { LIGHT_IDS } = await import(pathToFileURL(path.join(ROOT, "score.js")).href);
+  const { LIGHT_IDS, chipBandFromScore, lightStateFromScore } = await import(
+    pathToFileURL(path.join(ROOT, "score.js")).href
+  );
+  const { chipWord } = await import(pathToFileURL(path.join(ROOT, "light-copy.js")).href);
+  const bands = [
+    [0.46, "easing"],
+    [0.42, "leaningEasing"],
+    [0.0, "neutral"],
+    [-0.32, "leaningTight"],
+    [-0.46, "tight"],
+  ];
+  for (const [sc, want] of bands) {
+    const got = chipBandFromScore(sc);
+    if (got !== want) throw new Error(`chipBandFromScore(${sc}) = ${got}, want ${want}`);
+  }
+  if (lightStateFromScore(0.42).state !== "neutral") {
+    throw new Error("lean must not change colour: +0.42 should stay white");
+  }
+  if (chipWord("inflation", 0.42) !== "leaning hot") {
+    throw new Error(`chipWord inflation 0.42 = ${chipWord("inflation", 0.42)}`);
+  }
   const meaning = buildMeaning(
     { ...snap, lights: regime.lights, valCenter: snap.valCenter },
     regime.defaultImpulse || "1m"
@@ -41,7 +61,7 @@ async function main() {
     process.exit(1);
   }
 
-  for (const file of ["app.js", "meaning.js", "score.js"]) {
+  for (const file of ["app.js", "meaning.js", "score.js", "light-copy.js"]) {
     const r = spawnSync(process.execPath, ["--check", path.join(ROOT, file)], {
       encoding: "utf8",
     });

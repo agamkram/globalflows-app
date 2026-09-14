@@ -154,7 +154,7 @@ async function main() {
   }
   for (const lid of LIGHTS) {
     const L = lights[lid];
-    console.log(`  ${L.word.padEnd(11)} ${lid}  ${L.score >= 0 ? "+" : ""}${(L.score ?? 0).toFixed(2)}`);
+    console.log(`  ${L.word.padEnd(20)} ${lid}  ${L.score >= 0 ? "+" : ""}${(L.score ?? 0).toFixed(2)}`);
   }
   if (analogs) {
     console.log(

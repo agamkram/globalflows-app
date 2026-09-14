@@ -5,8 +5,11 @@
  * Math stays in score.js (one module in the browser). This file is only words.
  */
 
+import { chipBandFromScore } from "./score.js?v=20261195";
+
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 
+/** Three-way colour band — teach paragraphs still key off this. */
 export const LIGHT_WORD = {
   liquidity: { easing: "Easing", neutral: "Neutral", tight: "Tightening" },
   rates: { easing: "Easy", neutral: "Neutral", tight: "Tight" },
@@ -14,6 +17,50 @@ export const LIGHT_WORD = {
   inflation: { easing: "Hot", neutral: "Mid", tight: "Cold" },
   risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },
 };
+
+/** Chip / headline / the six. Lean is not a modifier on Mid — it is the word. */
+export const CHIP_WORD = {
+  liquidity: {
+    easing: "Easing",
+    leaningEasing: "leaning easing",
+    neutral: "Neutral",
+    leaningTight: "leaning tightening",
+    tight: "Tightening",
+  },
+  rates: {
+    easing: "Easy",
+    leaningEasing: "leaning easy",
+    neutral: "Neutral",
+    leaningTight: "leaning tight",
+    tight: "Tight",
+  },
+  growth: {
+    easing: "Strong",
+    leaningEasing: "leaning strong",
+    neutral: "Mid",
+    leaningTight: "leaning soft",
+    tight: "Soft",
+  },
+  inflation: {
+    easing: "Hot",
+    leaningEasing: "leaning hot",
+    neutral: "Mid",
+    leaningTight: "leaning cold",
+    tight: "Cold",
+  },
+  risk: {
+    easing: "Risk-on",
+    leaningEasing: "leaning risk-on",
+    neutral: "Neutral",
+    leaningTight: "leaning risk-off",
+    tight: "Risk-off",
+  },
+};
+
+export function chipWord(lid, score) {
+  const band = chipBandFromScore(score);
+  return CHIP_WORD[lid]?.[band] || LIGHT_WORD[lid]?.[band] || band;
+}
 
 export const LIGHT_COLOR = {
   easing: "green",
@@ -60,13 +107,22 @@ export function teachLight(lid, c) {
       inflNote = " Split: core PCE is cold; the bond market is pricing hot.";
     }
   }
+  const band = chipBandFromScore(c.score);
+  const word = chipWord(lid, c.score);
+  const fullEase = LIGHT_WORD[lid]?.easing || "the green word";
+  const fullTight = LIGHT_WORD[lid]?.tight || "the red word";
+  const midName = LIGHT_WORD[lid]?.neutral || "the middle";
   let growthNote = split;
   let growthPoint =
-    c.state === "easing"
+    band === "easing"
       ? "the real side is holding up"
-      : c.state === "tight"
+      : band === "tight"
         ? "demand/labor are under pressure"
-        : "no clean boom or bust";
+        : band === "leaningEasing"
+          ? "leaning strong, not Strong yet"
+          : band === "leaningTight"
+            ? "leaning soft, not Soft yet"
+            : "no clean boom or bust";
   if (lid === "growth") {
     const surveyLoud = (c.voters || []).some(
       (v) => (v.id === "EMPIRE_MFG" || v.id === "PHILLY_MFG") && Math.abs(v.score) > 0.45
@@ -98,7 +154,7 @@ export function teachLight(lid, c) {
         ` Regional surveys are at the rail while ${midBit} — the surveys are early, not wrong.` +
         claimsBit +
         ` Since 2003 the hard data has followed them within a quarter about two thirds of the time.`;
-      if (c.state === "neutral") {
+      if (band === "neutral") {
         growthPoint = `the surveys are calling ${tick.toLowerCase()} before the hard data has moved`;
       } else {
         growthPoint = "early, not confirmed";
@@ -113,47 +169,58 @@ export function teachLight(lid, c) {
     }
   }
   const cliff = c.cliff;
+  const nextFull = c.score > 0 ? fullEase : fullTight;
   const cliffNote =
     cliff != null && cliff < 0.05
       ? Math.abs(c.score) > 0.45
-        ? ` Only ${cliff.toFixed(2)} inside the word.`
-        : ` Only ${cliff.toFixed(2)} from flipping the word.`
+        ? ` Only ${cliff.toFixed(2)} inside ${word}.`
+        : ` Only ${cliff.toFixed(2)} from ${nextFull}.`
       : "";
   const by = {
     liquidity: {
       easing: `Cash looks ample on the level.${split}${cliffNote} Point: plumbing is not the scarce good.`,
+      leaningEasing: `Cash is leaning easing.${split}${cliffNote} Point: still inside ${midName} — not Easing yet.`,
       neutral: `Cash looks neither clearly ample nor scarce.${split}${cliffNote} Point: liquidity isn’t the loud driver right now.`,
+      leaningTight: `Cash is leaning tightening.${split}${cliffNote} Point: still inside ${midName} — not Tightening yet.`,
       tight: `Cash looks scarce on the level.${split}${cliffNote} Point: funding/parking say less fuel in the pipes.`,
     },
     rates: {
       easing: `Real funding looks easy.${split}${cliffNote} Point: money is cheap to fund with.`,
+      leaningEasing: `Real funding is leaning easy.${split}${cliffNote} Point: still inside ${midName} — not Easy yet.`,
       neutral: `Real funding looks mixed.${split}${cliffNote} Point: not clearly cheap or dear.`,
+      leaningTight: `Real funding is leaning tight.${split}${cliffNote} Point: still inside ${midName} — not Tight yet.`,
       tight: `Real funding looks tight.${split}${cliffNote} Point: you are being paid to wait in cash, not in duration.`,
     },
     growth: {
       easing: `Activity looks firm versus full employment / trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
+      leaningEasing: `Activity is leaning strong versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
       neutral: `Activity looks mixed versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
+      leaningTight: `Activity is leaning soft versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
       tight: `Activity looks soft versus trend.${growthNote}${cliffNote} Point: ${growthPoint}.`,
     },
     inflation: {
       easing: `Prices are high versus ~2%.${inflNote}${cliffNote} Point: the level is still hot — ${inflationTurn(c.impulse?.dir)}.`,
+      leaningEasing: `Prices are leaning hot versus ~2%.${inflNote}${cliffNote} Point: still inside ${midName} — not Hot yet.`,
       neutral: `Prices are near the target band.${inflNote}${cliffNote} Point: no clean hot or cold call.`,
+      leaningTight: `Prices are leaning cold versus ~2%.${inflNote}${cliffNote} Point: still inside ${midName} — not Cold yet.`,
       tight: `Prices are cold versus ~2%.${inflNote}${cliffNote} Point: inflation is not the tax right now.`,
     },
     risk: {
       easing: `Fear is cheap on the gauges.${riskNote}${cliffNote} Point: vol and credit are quiet.`,
+      leaningEasing: `Fear is leaning risk-on.${riskNote}${cliffNote} Point: still inside ${midName} — not a full Risk-on tape.`,
       neutral: `Fear gauges look mixed.${riskNote}${cliffNote} Point: not a clear risk-on or risk-off tape.`,
+      leaningTight: `Fear is leaning risk-off.${riskNote}${cliffNote} Point: still inside ${midName} — not a full Risk-off tape.`,
       tight: `Markets are paying up for fear.${riskNote}${cliffNote} Point: vol/credit stress is elevated.`,
     },
   };
-  return by[lid]?.[c.state] || `${c.word || c.state}.`;
+  return by[lid]?.[band] || `${word}.`;
 }
 
 /** Club + story + distance to a word flip. `c` is clubLight() plus cliff. */
 export function lightSheet(lid, c) {
   const painted = {
     ...c,
-    word: LIGHT_WORD[lid]?.[c.state] || c.state,
+    word: chipWord(lid, c.score),
     color: LIGHT_COLOR[c.state],
   };
   return {

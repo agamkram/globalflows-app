@@ -3,14 +3,17 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE } from "./score.js?v=20261192";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore } from "./score.js?v=20261195";
+import { chipWord } from "./light-copy.js?v=20261195";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
 }
 
 function wordOf(lights, id) {
-  return lights?.[id]?.word || lights?.[id]?.words?.[lights[id].state] || stateOf(lights, id);
+  const L = lights?.[id];
+  if (L?.score != null && Number.isFinite(L.score)) return chipWord(id, L.score);
+  return L?.word || L?.words?.[L.state] || stateOf(lights, id);
 }
 
 function seriesOk(snap, id) {
@@ -116,31 +119,14 @@ function lightUnit(lights, id) {
 }
 
 /**
- * Soft “easing” weight 0..1 from a continuous score.
- * 0 at ≤ −0.2, 1 at ≥ +0.45 — no cliff at the paint threshold alone.
- *
- * Deliberately not the mirror of tightW: easing ramps over 0.65 from −0.2, tight
- * over 0.25 from −0.2, so a component sitting at exactly 0.00 carries about a
- * third of an easing vote and no tight vote. Fear and drain have to be clearly
- * present before they price; ample conditions are the resting state. Math says so.
+ * The six read the Inflation score, not only the word. They still must not
+ * say Hot while the box is Mid. “leaning hot” is the score past the soft ramp
+ * and short of the colour line — same word as the chip.
  */
-function easeW(score) {
-  return Math.max(0, Math.min(1, (score - -0.2) / (0.45 - -0.2)));
-}
-
-/** Soft “tight” weight 0..1. 0 at ≥ −0.2, 1 at ≤ −0.45. */
-function tightW(score) {
-  return Math.max(0, Math.min(1, (-0.2 - score) / (0.45 - 0.2)));
-}
-
-/**
- * The six read the Inflation score, not only the painted word. They still
- * must not say Hot while the box is Mid. “near Hot” is the score past the
- * soft ramp and short of the colour line.
- */
-function inflationHeatTalk(iSc, I) {
-  if (I === "easing") return "Hot";
-  if (easeW(iSc) > 0.55) return "near Hot";
+function inflationHeatTalk(iSc) {
+  const band = chipBandFromScore(iSc);
+  if (band === "easing") return "Hot";
+  if (band === "leaningEasing") return "leaning hot";
   return null;
 }
 
@@ -148,9 +134,10 @@ function inflationHeatTalk(iSc, I) {
  * Same permission on Liquidity. The six may treat a lean as a tax; they
  * still must not say draining while the box is Neutral.
  */
-function liquidityTightTalk(lSc, L) {
-  if (L === "tight") return "Tightening";
-  if (tightW(lSc) > 0.45) return "near Tightening";
+function liquidityTightTalk(lSc) {
+  const band = chipBandFromScore(lSc);
+  if (band === "tight") return "Tightening";
+  if (band === "leaningTight") return "leaning tightening";
   return null;
 }
 
@@ -160,29 +147,30 @@ function liquidityTightTalk(lSc, L) {
  * Firm / Soft from the box.
  */
 function growthLean(gSc, G) {
-  if (G === "easing") return "firm";
-  if (G === "tight") return "soft";
-  if (easeW(gSc) > 0.55) return "strong-tick";
-  if (tightW(gSc) > 0.55) return "soft-tick";
+  const band = chipBandFromScore(gSc);
+  if (band === "easing" || G === "easing") return "firm";
+  if (band === "tight" || G === "tight") return "soft";
+  if (band === "leaningEasing") return "leaning-strong";
+  if (band === "leaningTight") return "leaning-soft";
   return "mid";
 }
 
 function growthLeanStrip(lean) {
   if (lean === "firm") return "Firm growth";
   if (lean === "soft") return "Soft growth";
-  if (lean === "strong-tick") return "Growth on the Strong tick";
-  if (lean === "soft-tick") return "Growth on the Soft tick";
+  if (lean === "leaning-strong") return "Growth leaning strong";
+  if (lean === "leaning-soft") return "Growth leaning soft";
   return "";
 }
 
 function growthIsFirmTalk(lean) {
-  if (lean === "strong-tick") return "growth is sitting on the Strong tick";
+  if (lean === "leaning-strong") return "growth is leaning strong";
   if (lean === "soft") return "growth is soft";
   return "growth is firm";
 }
 
 function growthIntoFearTalk(lean) {
-  if (lean === "strong-tick") return "Growth sitting on the Strong tick into cheap fear";
+  if (lean === "leaning-strong") return "Growth leaning strong into cheap fear";
   if (lean === "soft") return "Soft growth into cheap fear";
   return "Firm growth into cheap fear";
 }
@@ -412,7 +400,7 @@ function stripSoWhat({ gSc, rSc, G, stocks, treasuries }) {
   const t10 = treasuries?.tenors?.find((t) => t.id === "10");
   const lean = growthLean(gSc, G);
   const growHead = growthLeanStrip(lean);
-  const lateGrowth = lean === "firm" || lean === "strong-tick";
+  const lateGrowth = lean === "firm" || lean === "leaning-strong";
   const cheap = easeW(rSc) > 0.55;
   const dear = tightW(rSc) > 0.55;
   const left = [];
@@ -713,8 +701,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     sentence(stocksInParts, "Risk premium is open — cyclicals usually lead the bounce."),
     sentence(
       stocksOutParts,
-      gLean === "strong-tick"
-        ? "Growth on the Strong tick with cheap fear — cyclicals are late to that expansion."
+      gLean === "leaning-strong"
+        ? "Growth leaning strong with cheap fear — cyclicals are late to that expansion."
         : "Firm growth with cheap fear — cyclicals are late to that expansion."
     ),
     "Cyclicals want paid fear, not complacent strength; only one side is helping."
@@ -728,8 +716,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     fearW > 0.55
       ? "Fear is expensive — defensives are the ballast inside the risk-premium bid."
       : "Soft growth into fear — defensives usually hold up better than the cycle.",
-    gLean === "strong-tick"
-      ? "Growth on the Strong tick and calm fear — defensives usually lag that mix."
+    gLean === "leaning-strong"
+      ? "Growth leaning strong and calm fear — defensives usually lag that mix."
       : "Firm growth and calm fear — defensives usually lag that mix.",
     "Defensives want expensive fear or soft growth; complacent strength leaves them mixed."
   );
@@ -755,19 +743,17 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // days and lost ~6% median over the next month (2022 bear). Easy plumbing
   // is the bid — including into calm (trend), not "late." Tight plumbing is out.
   const cryptoOutParts = [];
-  const lTight = liquidityTightTalk(lSc, L);
+  const lTight = liquidityTightTalk(lSc);
   if (lTight === "Tightening") {
     cryptoOutParts.push("cash is draining — Bitcoin usually pays the liquidity tax");
   } else if (lTight) {
-    cryptoOutParts.push(
-      "Liquidity is Neutral; the lean is enough that Bitcoin treats it as a drain"
-    );
+    cryptoOutParts.push("leaning tightening — Bitcoin usually pays the liquidity tax");
   }
   if (lTight && fearW > 0.45) {
     cryptoOutParts.push(
       lTight === "Tightening"
         ? "drain into paid fear — that bounce sample fails for Bitcoin"
-        : "leaning tight into paid fear — that bounce sample fails for Bitcoin"
+        : "leaning tightening into paid fear — that bounce sample fails for Bitcoin"
     );
   }
   if (realZ > 0.45 && calmRisk > 0.45 && easeW(lSc) < 0.45) {
@@ -835,7 +821,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   if (dolSoft && tightW(iSc) > 0.55) {
     goldInParts.push("the dollar is soft and inflation is cold — deflation-fear bid");
   }
-  const iHeat = inflationHeatTalk(iSc, I);
+  const iHeat = inflationHeatTalk(iSc);
   if (realHigh && easeW(iSc) > 0.55) {
     goldInParts.push(`inflation is ${iHeat} and real yields are high — gold’s inflation wage`);
   }
@@ -894,7 +880,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const oilInParts = [];
   if (tightW(gSc) > 0.55 && fearW > 0.4) oilInParts.push("growth is soft into expensive fear — the bounce sample");
   if (dolZ < -0.35) oilInParts.push("the dollar isn’t taxing dollar oil");
-  if (easeW(iSc) > 0.55) oilInParts.push(`inflation is ${inflationHeatTalk(iSc, I)} — crude’s price bid`);
+  if (easeW(iSc) > 0.55) oilInParts.push(`inflation is ${inflationHeatTalk(iSc)} — crude’s price bid`);
   if (wtiImp.dir === "up") oilInParts.push(`crude is firm ${win}`);
   const oilOutParts = [];
   if (easeW(gSc) > 0.55 && calmRisk > 0.55) {
@@ -1048,7 +1034,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     0.25 * easeW(gSc) * (1 - tightW(iSc));
 
   const durationUpParts = [];
-  const iHeat = inflationHeatTalk(iSc, I);
+  const iHeat = inflationHeatTalk(iSc);
   if (hotNotCooling > 0.45) {
     durationUpParts.push(
       iHeat
@@ -1062,7 +1048,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     durationUpParts.push(
       G === "easing"
         ? "firm growth is keeping a premium in the long end"
-        : "a Growth score on the Strong tick is keeping a premium in the long end"
+        : "growth leaning strong is keeping a premium in the long end"
     );
   }
 
@@ -1085,7 +1071,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     durationDir = "mixed";
     durationLabel = "Duration risk mixed";
     durationLine = coolingRelief > 0.3
-      ? `${iHeat || "near Hot"} but cooling — the level still taxes duration; the turn is the reason not to treat 30s as a clean avoid.`
+      ? `${iHeat || "leaning hot"} but cooling — the level still taxes duration; the turn is the reason not to treat 30s as a clean avoid.`
       : "Duration is split — parts of the rates complex ease while inflation or growth still keep long bonds from a clean bid.";
   }
 
@@ -1281,7 +1267,7 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
   // The named combinations above are the interesting cases; this is the floor.
   if (!falsify.length) {
     const lean = growthLean(gSc, G);
-    const late = (lean === "firm" || lean === "strong-tick") && easeW(rSc) > 0.55;
+    const late = (lean === "firm" || lean === "leaning-strong") && easeW(rSc) > 0.55;
     if (late) {
       falsify.push(
         `Falsify if Risk turns Risk-off ${win} — the late-cycle read on equities and copper rests on fear staying cheap.`

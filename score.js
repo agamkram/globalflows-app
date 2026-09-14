@@ -18,6 +18,41 @@ export function lightStateFromScore(score) {
   return { state: "neutral", score };
 }
 
+/**
+ * Soft easing weight 0..1 from a continuous score.
+ * 0 at ≤ −0.2, 1 at ≥ +0.45. Not the mirror of tightW: easing ramps over 0.65
+ * from −0.2, tight over 0.25 from −0.2, so a component at 0.00 carries about a
+ * third of an easing vote and no tight vote. Drain and fear have to be clearly
+ * present; ample is the resting state.
+ */
+export function easeW(score) {
+  if (score == null || !Number.isFinite(score)) return 0;
+  return Math.max(0, Math.min(1, (score - -0.2) / (0.45 - -0.2)));
+}
+
+/** Soft tight weight 0..1. 0 at ≥ −0.2, 1 at ≤ −0.45. */
+export function tightW(score) {
+  if (score == null || !Number.isFinite(score)) return 0;
+  return Math.max(0, Math.min(1, (-0.2 - score) / (0.45 - 0.2)));
+}
+
+/** Lean starts where the six already talk. Colour / full word stay at ±0.45. */
+export const CHIP_LEAN_EASE = 0.55;
+export const CHIP_LEAN_TIGHT = 0.45;
+
+/**
+ * Five-state chip band. Colour is still three-way from lightStateFromScore.
+ * leaningEasing when easeW > 0.55; leaningTight when tightW > 0.45.
+ */
+export function chipBandFromScore(score) {
+  if (score == null || !Number.isFinite(score)) return "empty";
+  const { state } = lightStateFromScore(score);
+  if (state === "easing" || state === "tight" || state === "empty") return state;
+  if (easeW(score) > CHIP_LEAN_EASE) return "leaningEasing";
+  if (tightW(score) > CHIP_LEAN_TIGHT) return "leaningTight";
+  return "neutral";
+}
+
 /** Signed distance to the nearest colour cliff (−0.45 / +0.45). */
 export function distanceToCliff(score) {
   if (score == null || !Number.isFinite(score)) return null;

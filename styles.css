@@ -742,14 +742,17 @@ body.page-about::before {
 }
 
 .light .word {
-  font-size: calc(0.72rem * var(--ui-scale));
+  font-size: calc(0.64rem * var(--ui-scale));
   font-weight: 600;
   margin: 0;
-  white-space: nowrap;
-  line-height: 1.2;
+  white-space: normal;
+  line-height: 1.15;
   text-align: center;
   max-width: 100%;
-  overflow: visible;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   transform: translateY(calc(-5px * var(--ui-scale)));
 }
 /* First open: word waits until the needle stops. Space stays reserved. */
