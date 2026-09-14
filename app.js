@@ -489,7 +489,7 @@ function wordFor(light) {
  *  the rosters here matching the catalog, or this quietly names the wrong voters. */
 const LIGHT_BLURB = {
   liquidity:
-    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are reserves and net liquidity versus GDP, the funding spread, commercial paper, G4 balance-sheet growth with the dollar’s 12-month change, and China credit at half weight.",
+    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are reserves and net liquidity versus GDP, the funding spread, commercial paper, and G4 balance-sheet growth with the dollar’s 12-month change.",
   rates:
     "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:

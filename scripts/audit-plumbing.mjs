@@ -233,6 +233,50 @@ lines.push("5. Claims on About and Math vs the code");
   if (!bad) ok(`${claims.filter((c) => c.value != null).length} stated constants match the code`);
 }
 
+/* ── 6. Every seated voter must actually reach the number ─────────────────────
+ * The band audit stops at the voter and never follows the vote downstream, so a
+ * voter can be perfectly well-shaped and still be discarded before it counts.
+ * The trimmed mean did this to reserves and net liquidity for years: they sat in
+ * the table, they moved, they were ejected every day, and nothing said so.
+ *
+ * Nudge each voter and watch its component. No movement, no vote. */
+lines.push("");
+lines.push("6. Voter influence — does every seated voter reach its component?");
+{
+  const NUDGE = 0.5;
+  // Voters that are silent on purpose belong here with the reason. A one-way
+  // gate is a design choice; being quietly trimmed away is not.
+  const SILENT_BY_DESIGN = new Map();
+  let seated = 0;
+  let mute = 0;
+  for (const lid of LIGHT_IDS) {
+    const voters = clubLight(snap, lid)?.voters || [];
+    if (voters.length < 2) continue;
+    const base = tallyVotes(lid, voters, { dist: snap.lightDist }).score;
+    if (base == null) continue;
+    for (const v of voters) {
+      seated++;
+      const move = (d) =>
+        tallyVotes(
+          lid,
+          voters.map((x) =>
+            x.id === v.id ? { ...x, score: Math.max(-1, Math.min(1, x.score + d)) } : x
+          ),
+          { dist: snap.lightDist }
+        ).score;
+      const influence = Math.max(Math.abs(move(NUDGE) - base), Math.abs(move(-NUDGE) - base));
+      if (influence > 1e-9) continue;
+      if (SILENT_BY_DESIGN.has(`${lid}/${v.id}`)) continue;
+      mute++;
+      fail(
+        `${lid}/${v.id}: seated and scoring ${(v.score >= 0 ? "+" : "") + v.score.toFixed(2)}, but ` +
+          `moving it ±${NUDGE} does not move ${lid} at all — it is in the table and not in the number`
+      );
+    }
+  }
+  if (!mute) ok(`all ${seated} seated voters move their component`);
+}
+
 lines.push("");
 if (fails.length) {
   lines.push(`FAIL — ${fails.length} plumbing problem(s); the model may be fine and still be reported wrong.`);

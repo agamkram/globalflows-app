@@ -61,8 +61,15 @@ export const VOTE_FAMILIES = {
     curve: ["T10Y2Y"],
     vol: ["MOVE"],
   },
-  // Two Fed-balance-sheet/GDP ratios share one ballot. China credit/GDP is its
-  // own half-weight seat — a slow stock must not flatten the global ballot.
+  // Two Fed-balance-sheet/GDP ratios share one ballot.
+  //
+  // China credit/GDP used to hold a half-weight seat here and no longer votes.
+  // It is a stock that ratchets: it reached the top of its 2003–2026 band and
+  // will not come back down, so it printed +1.00 every day — a constant, not a
+  // signal. BIS also lags two to three quarters, so the seat was filled by a
+  // reading up to 13 months old. China still reaches Liquidity through FX
+  // reserves in the G4 balance-sheet ballot, which is monthly.
+  //
   // Quantity and price get separate ballots and must not be averaged together:
   // reserve abundance and funding stress both peak in a crisis, so folding them
   // into one ballot cancels the only voter that was right. In October 2008 the
@@ -73,7 +80,6 @@ export const VOTE_FAMILIES = {
     funding: ["SOFR_SPREAD"],
     stress: ["CPFF"],
     global: ["GLOBAL_CB_YOY", "DOLLAR_YOY"],
-    china: { ids: ["CHINA_CREDIT_GDP"], weight: 0.5 },
   },
 };
 
@@ -103,13 +109,23 @@ export function weightedMean(items) {
 }
 
 /** Drop the highest and lowest score once when there are enough ballots.
- * Need ≥5 seats — with 3–4 (Growth coincident/leading/survey, Rates) trim
- * throws away the only Strong/Soft votes and pins the light Mid. */
+ *
+ * Needs ≥6 seats. At 5 the trim discards two of five — 40% of the evidence —
+ * and Liquidity was the only light with exactly five. It spent years throwing
+ * away the Fed ballot (reserves and net liquidity) at the low end and China at
+ * the high end, so the component named for balance sheets was decided by two
+ * funding spreads. The voters were in the table, moved, and never reached the
+ * number. Below the threshold, every ballot counts.
+ *
+ * At 3–4 (Growth coincident/leading/survey, Rates) trim would throw away the
+ * only Strong/Soft votes and pin the light Mid, which is the same failure in a
+ * louder form.
+ */
 export function weightedTrimmedMean(items) {
   const ok = (items || []).filter(
     (it) => Number.isFinite(it?.score) && Number.isFinite(it?.weight) && it.weight > 0
   );
-  if (ok.length < 5) return weightedMean(ok);
+  if (ok.length < 6) return weightedMean(ok);
   const sorted = [...ok].sort((a, b) => a.score - b.score);
   return weightedMean(sorted.slice(1, -1));
 }
