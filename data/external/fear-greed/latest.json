@@ -1,0 +1,50 @@
+{
+  "source": "fear-greed",
+  "fetchedAt": "2026-09-14T23:47:29.414Z",
+  "asOf": "2026-09-14",
+  "score": 31.0571428571429,
+  "rating": "fear",
+  "previousClose": 33.3428571428571,
+  "previous1Week": 45.228571428571435,
+  "previous1Month": 64.31428571428572,
+  "previous1Year": 61.34285714285714,
+  "subs": {
+    "market_momentum_sp500": {
+      "score": 25.4,
+      "rating": "fear",
+      "timestamp": 1789418088000
+    },
+    "stock_price_strength": {
+      "score": 3.6,
+      "rating": "extreme fear",
+      "timestamp": 1789428721000
+    },
+    "stock_price_breadth": {
+      "score": 9,
+      "rating": "extreme fear",
+      "timestamp": 1789428721000
+    },
+    "put_call_options": {
+      "score": 35.8,
+      "rating": "fear",
+      "timestamp": 1789419263000
+    },
+    "market_volatility_vix": {
+      "score": 50,
+      "rating": "neutral",
+      "timestamp": 1789416901000
+    },
+    "junk_bond_demand": {
+      "score": 64.6,
+      "rating": "greed",
+      "timestamp": 1789425000000
+    },
+    "safe_haven_demand": {
+      "score": 29,
+      "rating": "fear",
+      "timestamp": 1789415999000
+    }
+  },
+  "historyPoints": 1411,
+  "note": "Unofficial CNN page feed. Fragile. Equity-centric mood gauge."
+}

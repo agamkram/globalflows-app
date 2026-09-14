@@ -1,0 +1,113 @@
+{
+  "title": "GlobalFlows external shelf",
+  "purpose": "Gather and sort outside reads beside the app. Not wired into bake or score.",
+  "updated": "2026-09-14T23:47:29.414Z",
+  "sources": [
+    {
+      "id": "cot",
+      "name": "CFTC Commitments of Traders",
+      "access": "free",
+      "whoGets": "agent",
+      "period": "weekly",
+      "asOf": "Tuesday report date",
+      "available": "Friday publish (typical)",
+      "type": "futures positioning by trader category",
+      "endpoints": {
+        "tff": "https://publicreporting.cftc.gov/resource/gpe5-46if.json",
+        "disaggregated": "https://publicreporting.cftc.gov/resource/72hh-3qpy.json"
+      },
+      "fields": [
+        "open interest",
+        "asset manager / managed money long short spread",
+        "leveraged money long short spread",
+        "dealer / producer / swap where present"
+      ],
+      "watch": [
+        "UST 10Y NOTE",
+        "UST 5Y NOTE",
+        "ULTRA UST BOND",
+        "E-MINI S&P 500",
+        "NASDAQ MINI",
+        "BITCOIN CME",
+        "USD INDEX",
+        "GOLD COMEX",
+        "COPPER COMEX",
+        "WTI-PHYSICAL NYMEX"
+      ],
+      "license": "U.S. government public data"
+    },
+    {
+      "id": "fear-greed",
+      "name": "CNN Fear & Greed Index",
+      "access": "free-unofficial",
+      "whoGets": "agent",
+      "period": "daily",
+      "type": "0-100 composite + seven subcomponents",
+      "endpoint": "https://production.dataviz.cnn.io/index/fearandgreed/graphdata/{start}",
+      "fields": [
+        "score",
+        "rating",
+        "momentum",
+        "strength",
+        "breadth",
+        "put_call",
+        "vix",
+        "junk_bond_demand",
+        "safe_haven_demand"
+      ],
+      "license": "Unofficial; CNN page feed. Fragile."
+    },
+    {
+      "id": "convex",
+      "name": "Convex public regime",
+      "access": "free",
+      "whoGets": "agent",
+      "period": "irregular",
+      "type": "regime label + trajectory + per-asset direction",
+      "endpoint": "https://convextrade.com/api/public/regime",
+      "fields": [
+        "regime",
+        "trajectory",
+        "assetViews",
+        "narrative",
+        "generatedAt"
+      ],
+      "license": "Attribution required (Data by Convex)"
+    },
+    {
+      "id": "house-card",
+      "name": "House allocation card",
+      "access": "manual",
+      "whoGets": "mark",
+      "period": "monthly",
+      "type": "OW / N / UW grid from public outlooks",
+      "file": "house-card.csv",
+      "sourcesSuggested": [
+        "BofA Fund Manager Survey recaps",
+        "BlackRock BII",
+        "PIMCO cyclical outlook",
+        "Invesco / de Longis TAA"
+      ],
+      "coding": "OW | N | UW | blank. Ignore adjectives."
+    },
+    {
+      "id": "aaii",
+      "name": "AAII Investor Sentiment",
+      "access": "manual-or-account",
+      "whoGets": "mark",
+      "period": "weekly",
+      "type": "retail bull / bear / neutral %",
+      "status": "not auto-fetched — site blocks bots",
+      "url": "https://www.aaii.com/sentimentsurvey"
+    },
+    {
+      "id": "fedwatch",
+      "name": "CME FedWatch",
+      "access": "paid-api",
+      "whoGets": "mark",
+      "period": "daily",
+      "type": "implied FOMC probabilities",
+      "status": "skipped until needed"
+    }
+  ]
+}
