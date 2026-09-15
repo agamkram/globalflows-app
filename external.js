@@ -1,5 +1,7 @@
 /** Shelf — outside reads next to today’s regime. Not a voter. */
 
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261241";
+
 const $ = (id) => document.getElementById(id);
 
 const LIGHTS = ["liquidity", "rates", "growth", "inflation", "risk"];
@@ -26,19 +28,6 @@ const COT_ORDER = [
   "dxy",
 ];
 
-const COT_SHORT = {
-  ust_5y: "5y",
-  ust_10y: "10y",
-  ust_ultra: "ultra",
-  es: "ES",
-  nq: "NQ",
-  btc: "BTC",
-  gold: "gold",
-  copper: "Cu",
-  wti: "WTI",
-  dxy: "DXY",
-};
-
 const COT_GROUPS = [
   { gf: "treasuries", name: "Treasuries" },
   { gf: "equities", name: "Equities" },
@@ -60,6 +49,17 @@ function head(title, asOf) {
   return `<div class="shelf-head"><h2>${esc(title)}</h2>${
     asOf ? `<span class="shelf-asof">${esc(asOf)}</span>` : ""
   }</div>`;
+}
+
+function shortDay(iso) {
+  if (!iso) return "—";
+  const d = new Date(`${String(iso).slice(0, 10)}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return String(iso).slice(0, 10);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function stamp(iso, cadence) {
+  return iso ? `${shortDay(iso)} · ${cadence}` : cadence;
 }
 
 function empty(msg) {
@@ -129,6 +129,16 @@ function moodState(s) {
   return "neutral";
 }
 
+/** Composite on Equities. Junk demand on Credit. Rest blank — they do not name those classes. */
+function cnnClass(fear, classId) {
+  if (!fear) return { word: "—", state: "" };
+  let rating = null;
+  if (classId === "stocks") rating = fear.rating;
+  else if (classId === "credit") rating = fear.subs?.junk_bond_demand?.rating;
+  if (!rating) return { word: "—", state: "" };
+  return { word: String(rating).toLowerCase(), state: moodState(rating) };
+}
+
 function sortCot(list) {
   return [...(list || [])].sort((a, b) => {
     const ia = COT_ORDER.indexOf(a.id);
@@ -182,6 +192,29 @@ async function getText(url) {
   return res.text();
 }
 
+const CNN_LABEL = {
+  market_momentum_sp500: "S&P momentum",
+  stock_price_strength: "Strength",
+  stock_price_breadth: "Breadth",
+  put_call_options: "Put/call",
+  market_volatility_vix: "VIX",
+  junk_bond_demand: "Junk demand",
+  safe_haven_demand: "Safe haven",
+};
+
+const COT_SHORT = {
+  ust_5y: "5y",
+  ust_10y: "10y",
+  ust_ultra: "Ultra",
+  es: "ES",
+  nq: "NQ",
+  btc: "Bitcoin",
+  gold: "Gold",
+  copper: "Copper",
+  wti: "WTI",
+  dxy: "Dollar",
+};
+
 function renderMix(el, arsenal, regime) {
   const lights = regime?.lights || {};
   const chain = LIGHTS.map((id) => {
@@ -197,8 +230,8 @@ function renderMix(el, arsenal, regime) {
 
   if (!arsenal) {
     el.innerHTML = `
-      ${head("Simple regime")}
-      <p>Someone else’s two questions — growth up or down, inflation up or down — next to our five.</p>
+      ${head("Arsenal", "CPI / GDP")}
+      <p>They only use GDP and CPI, then pick one of four names. Our five sit under that name so you can see cash, rates, and fear — which it ignores.</p>
       ${empty("Arsenal file missing.")}
       <ol class="about-chain" aria-label="Today’s five">${chain}</ol>`;
     return;
@@ -206,38 +239,78 @@ function renderMix(el, arsenal, regime) {
 
   const attr = arsenal.attribution || {};
   el.innerHTML = `
-    ${head("Simple regime", `as of ${arsenal.asOf || "—"}`)}
-    <p>Someone else’s two questions — growth up or down, inflation up or down — next to our five.</p>
+    ${head("Arsenal", stamp(arsenal.asOf, "CPI / GDP"))}
+    <p>They only use GDP and CPI, then pick one of four names. Our five sit under that name so you can see cash, rates, and fear — which it ignores.</p>
     <div class="shelf-hero-row">
       <div class="shelf-score">${esc(arsenal.regime || "—")}</div>
       <div class="shelf-hero-meta">
         GDP ${Number.isFinite(Number(arsenal.gdpYoy)) ? Number(arsenal.gdpYoy).toFixed(2) : "—"}%
-        · CPI ${Number.isFinite(Number(arsenal.cpiYoy)) ? Number(arsenal.cpiYoy).toFixed(2) : "—"}%
+        · CPI ${Number.isFinite(Number(arsenal.cpiYoy)) ? Number(arsenal.cpiYoy).toFixed(2) : "—"}%${
+          attr.url
+            ? ` · <a href="${esc(attr.url)}" target="_blank" rel="noopener">source</a>`
+            : ""
+        }
       </div>
     </div>
     <ol class="about-chain" aria-label="Today’s five">${chain}</ol>
-    <div class="shelf-split">
-      <div class="about-door">
-        <h3>Winners</h3>
-        <p>${esc(arsenal.winners || "—")}</p>
-      </div>
-      <div class="about-door">
-        <h3>Losers</h3>
-        <p>${esc(arsenal.losers || "—")}</p>
-      </div>
-    </div>
-    <p class="shelf-note">Their published rule, run on our GDP and CPI.${
-      attr.url
-        ? ` · <a href="${esc(attr.url)}" target="_blank" rel="noopener">Arsenal</a>`
-        : ""
-    }</p>`;
+    <div class="shelf-likes">
+      <div><span class="lbl">Usually likes</span><span class="val">${esc(arsenal.winners || "—")}</span></div>
+      <div><span class="lbl">Usually doesn’t</span><span class="val">${esc(arsenal.losers || "—")}</span></div>
+    </div>`;
 }
 
-function cotLine(c) {
-  if (!c || c.missing) return "";
-  const net = netOf(c);
-  const pct = pctOi(net, c.openInterest);
-  return `<span data-state="${toneNet(pct)}">${esc(COT_SHORT[c.id] || c.label)} ${esc(signedPct(pct))}</span>`;
+/** Arsenal’s published likes/doesn’t, mapped onto our six. Null = they didn’t name it. */
+const BOX_TILT = {
+  Goldilocks: {
+    treasuries: null,
+    credit: "in",
+    stocks: "in",
+    crypto: null,
+    gold: "out",
+    cmdty: "out",
+  },
+  Reflation: {
+    treasuries: "out",
+    credit: null,
+    stocks: "mixed",
+    crypto: null,
+    gold: null,
+    cmdty: "in",
+  },
+  Deflation: {
+    treasuries: "in",
+    credit: "out",
+    stocks: "out",
+    crypto: null,
+    gold: null,
+    cmdty: "out",
+  },
+  Stagflation: {
+    treasuries: "out",
+    credit: "out",
+    stocks: "out",
+    crypto: null,
+    gold: "in",
+    cmdty: "in",
+  },
+};
+
+function boxWord(arsenal, classId) {
+  const tilt = BOX_TILT[arsenal?.regime]?.[classId];
+  if (!tilt) return { word: "—", state: "" };
+  return { word: stanceWord(tilt), state: stanceState(tilt) };
+}
+
+function crowding(contracts) {
+  const pcts = (contracts || [])
+    .map((c) => pctOi(netOf(c), c.openInterest))
+    .filter((n) => n != null && Number.isFinite(n));
+  if (!pcts.length) return { word: "—", state: "" };
+  const longN = pcts.filter((p) => p > 10).length;
+  const shortN = pcts.filter((p) => p < -10).length;
+  if (longN && !shortN) return { word: "long", state: "easing" };
+  if (shortN && !longN) return { word: "short", state: "tight" };
+  return { word: "mixed", state: "neutral" };
 }
 
 function houseCell(rows, key) {
@@ -254,156 +327,167 @@ function houseCell(rows, key) {
   return bits.length ? bits.join("<br>") : `<span class="shelf-empty">—</span>`;
 }
 
-function renderSix(el, regime, cot, houseRows) {
+function renderSix(el, regime, cot, houseRows, arsenal, fear) {
   const byId = Object.fromEntries(
     (regime?.meaning?.favor?.items || []).map((it) => [it.id, it])
   );
   const contracts = sortCot(cot?.contracts || []);
+  const showHouses = houseRows.length > 0;
   const rows = SIX.map((cls) => {
     const it = byId[cls.id];
     const word = stanceWord(it?.stance);
     const st = stanceState(it?.stance);
+    const box = boxWord(arsenal, cls.id);
     const cots = cls.gf
       ? contracts.filter((c) => c.gf === cls.gf && !c.missing)
       : [];
-    const fut =
-      !cls.gf
-        ? `<span class="shelf-empty">—</span>`
-        : cots.length
-          ? cots.map(cotLine).join(" · ")
-          : `<span class="shelf-empty">—</span>`;
-    return `<div class="shelf-class">
-      <h3>${esc(cls.name)}</h3>
-      <div class="shelf-class-grid">
-        <div>
-          <span class="lbl">This app</span>
-          <span class="val" data-state="${esc(st)}">${esc(word)}</span>
-        </div>
-        <div>
-          <span class="lbl">Futures</span>
-          <span class="val">${fut}</span>
-        </div>
-        <div>
-          <span class="lbl">Houses</span>
-          <span class="val">${houseCell(houseRows, cls.house)}</span>
-        </div>
-      </div>
-    </div>`;
+    const fut = crowding(cots);
+    const cnn = cnnClass(fear, cls.id);
+    const house = showHouses
+      ? `<td>${houseCell(houseRows, cls.house)}</td>`
+      : "";
+    return `<tr>
+      <th scope="row">${esc(cls.name)}</th>
+      <td data-state="${esc(st)}">${esc(word)}</td>
+      <td data-state="${esc(box.state)}">${esc(box.word)}</td>
+      <td data-state="${esc(fut.state)}">${esc(fut.word)}</td>
+      <td data-state="${esc(cnn.state)}">${esc(cnn.word)}</td>
+      ${house}
+    </tr>`;
   }).join("");
 
-  const houseNote = houseRows.length
-    ? `${houseRows.length} house${houseRows.length === 1 ? "" : "s"} · ${houseRows[0].month}`
-    : "No house row this month";
   el.innerHTML = `
-    ${head("The six", houseNote)}
-    <p>Our call, futures money, and what a house published — when there is a row.</p>
-    ${rows}
-    <p class="shelf-note">Futures are net as a share of open interest. Credit has no futures line here.</p>`;
+    ${head("GlobalFlows · Arsenal · CFTC · CNN", stamp(cot?.tffAsOf, "weekly (Fri)"))}
+    <table class="shelf-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>GlobalFlows</th>
+          <th>Arsenal</th>
+          <th>CFTC</th>
+          <th>CNN</th>
+          ${showHouses ? "<th>Houses</th>" : ""}
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p class="shelf-note">A dash is blank. Long / short is futures. Fear / greed is CNN, not in / mixed / out.</p>`;
 }
 
 function renderMood(el, fear, regime) {
   const risk = regime?.lights?.risk;
   if (!fear) {
     el.innerHTML = `
-      ${head("Mood")}
+      ${head("CNN", "daily")}
       <p>Stock-market fear and greed next to Risk.</p>
-      ${empty("Fear &amp; Greed file missing.")}
+      ${empty("CNN file missing.")}
       ${
         risk
-          ? `<div class="about-door"><h3>Risk</h3><p data-state="${esc(risk.state)}">${esc(risk.word)}</p></div>`
+          ? `<p class="shelf-risk">Risk <span data-state="${esc(risk.state)}">${esc(risk.word)}</span></p>`
           : ""
       }`;
     return;
   }
   const cells = Object.entries(fear.subs || {})
     .map(([k, v]) => {
-      const label = k.replaceAll("_", " ").replace("sp500", "S&P");
-      return `<div class="about-door">
-        <h3>${esc(label)}</h3>
-        <p data-state="${moodState(v.rating)}">${esc(Math.round(v.score))} · ${esc(v.rating || "—")}</p>
+      const label = CNN_LABEL[k] || k.replaceAll("_", " ");
+      return `<div class="shelf-sub">
+        <span class="lbl">${esc(label)}</span>
+        <span class="val" data-state="${moodState(v.rating)}">${esc(Math.round(v.score))} · ${esc(v.rating || "—")}</span>
       </div>`;
     })
     .join("");
   el.innerHTML = `
-    ${head("Mood", `as of ${fear.asOf || "—"}`)}
-    <p>Stock-market fear and greed next to Risk. Not a desk note.</p>
+    ${head("CNN", stamp(fear.asOf, "daily"))}
+    <p>Stock-market mood next to Risk. Not a desk note.</p>
     <div class="shelf-mood">
-      <div>
+      <div class="shelf-hero-row">
         <div class="shelf-score" data-state="${moodState(fear.rating)}">${esc(Math.round(fear.score))}</div>
-        <div class="shelf-hero-meta" data-state="${moodState(fear.rating)}">${esc(fear.rating)}</div>
-        <div class="shelf-hero-meta">week ${esc(Math.round(fear.previous1Week))} · month ${esc(Math.round(fear.previous1Month))}</div>
+        <div>
+          <div class="shelf-hero-meta" data-state="${moodState(fear.rating)}">${esc(fear.rating)}</div>
+          <div class="shelf-hero-meta">week ${esc(Math.round(fear.previous1Week))} · month ${esc(Math.round(fear.previous1Month))}</div>
+        </div>
       </div>
-      <div class="about-door">
-        <h3>Risk</h3>
-        <p data-state="${esc(risk?.state || "")}">${esc(risk?.word || "—")}</p>
-      </div>
+      <p class="shelf-risk">Risk · <span data-state="${esc(risk?.state || "")}">${esc(risk?.word || "—")}</span></p>
     </div>
-    <div class="shelf-subs">${cells}</div>
-    <p class="shelf-note">CNN Fear &amp; Greed. Stock-market mood.</p>`;
+    <div class="shelf-subs">${cells}</div>`;
 }
 
-function cotCard(c) {
+function cotRow(c) {
   if (c.missing) {
-    return `<div class="about-door"><h3>${esc(c.label)}</h3><p class="shelf-empty">missing</p></div>`;
+    return `<tr><th scope="row">${esc(COT_SHORT[c.id] || c.label)}</th><td colspan="3" class="shelf-empty">missing</td></tr>`;
   }
   const net = netOf(c);
   const pct = pctOi(net, c.openInterest);
-  const lev = c.report === "tff" ? c.levMoneyNet : null;
-  const levPct = pctOi(lev, c.openInterest);
-  const extra =
+  const levPct =
     c.report === "tff"
-      ? `<span class="lbl">Lev</span><span class="val" data-state="${toneNet(levPct)}">${esc(signedPct(levPct))} · ${esc(compact(lev))}</span>`
-      : `<span class="lbl">Producer</span><span class="val" data-state="${toneNet(c.producerNet)}">${esc(compact(c.producerNet))}</span>
-         <span class="lbl">Swap</span><span class="val" data-state="${toneNet(c.swapNet)}">${esc(compact(c.swapNet))}</span>`;
-  return `<div class="about-door shelf-cot-card">
-    <h3>${esc(c.label)}</h3>
-    <p class="shelf-asof">${esc(lensOf(c))}</p>
-    <div class="shelf-cot-grid">
-      <span class="lbl">Net</span>
-      <span class="val" data-state="${toneNet(pct)}">${esc(signedPct(pct))} of OI · ${esc(compact(net))}</span>
-      ${extra}
-      <span class="lbl">OI</span>
-      <span class="val">${esc(compact(c.openInterest, false))}</span>
-    </div>
-  </div>`;
+      ? pctOi(c.levMoneyNet, c.openInterest)
+      : pctOi(c.producerNet, c.openInterest);
+  return `<tr>
+    <th scope="row">${esc(COT_SHORT[c.id] || c.label)}<span class="shelf-lens">${esc(lensOf(c))}</span></th>
+    <td class="num" data-state="${toneNet(pct)}">${esc(signedPct(pct))}</td>
+    <td class="num" data-state="${toneNet(levPct)}">${esc(signedPct(levPct))}</td>
+    <td class="num">${esc(compact(c.openInterest, false))}</td>
+  </tr>`;
 }
 
 function renderCot(el, cot) {
   if (!cot) {
-    el.innerHTML = `${head("Futures")}${empty("CFTC file missing.")}`;
+    el.innerHTML = `${head("CFTC", "weekly (Fri)")}${empty("CFTC file missing.")}`;
     return;
   }
   const contracts = sortCot(cot.contracts || []);
-  const groups = COT_GROUPS.map((g) => {
+  const bodies = COT_GROUPS.map((g) => {
     const rows = contracts.filter((c) => (c.gf || null) === g.gf);
     if (!rows.length) return "";
-    return `<h3 class="shelf-group">${esc(g.name)}</h3>
-      <div class="shelf-cot-list">${rows.map(cotCard).join("")}</div>`;
+    return `<tbody>
+      <tr class="shelf-group-row"><th scope="colgroup" colspan="4">${esc(g.name)}</th></tr>
+      ${rows.map(cotRow).join("")}
+    </tbody>`;
   }).join("");
   el.innerHTML = `
-    ${head("Futures", `as of ${cot.tffAsOf || "—"}`)}
-    <p>Who is long and short. Net is a share of open interest so a 10-year note and Bitcoin can sit on the same page.</p>
-    ${groups}
-    <p class="shelf-note">As-of is usually Tuesday. The report usually publishes Friday.</p>`;
+    ${head("CFTC", stamp(cot.tffAsOf, "weekly (Fri)"))}
+    <p>Who is long and short. Net is a share of open interest.</p>
+    <table class="shelf-table shelf-cot">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="num">Net</th>
+          <th class="num">Lev</th>
+          <th class="num">OI</th>
+        </tr>
+      </thead>
+      ${bodies}
+    </table>`;
 }
 
 async function loadAll() {
   const q = `?t=${Date.now()}`;
-  const settled = await Promise.allSettled([
-    getJson(`./regime-today.json${q}`),
-    getJson(`data/external/arsenal/latest.json${q}`),
-    getJson(`data/external/cot/latest.json${q}`),
-    getJson(`data/external/fear-greed/latest.json${q}`),
-    getText(`data/external/house-card.csv${q}`),
-  ]);
-  const pick = (i) => (settled[i].status === "fulfilled" ? settled[i].value : null);
-  const regime = pick(0);
-  const arsenal = pick(1);
-  const cot = pick(2);
-  const fear = pick(3);
-  const houseRows = houseLatest(pick(4) || "");
+  const liveJson = async (url) => {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`${res.status} ${url}`);
+    return res.json();
+  };
+  const [regimeS, snapS, cotLiveS, fearLiveS, cotFileS, fearFileS, arsenalFileS, houseS] =
+    await Promise.allSettled([
+      getJson(`./regime-today.json${q}`),
+      getJson(`./snapshot.json${q}`),
+      pullCot(liveJson),
+      getJson(`./api/fear-greed${q}`),
+      getJson(`data/external/cot/latest.json${q}`),
+      getJson(`data/external/fear-greed/latest.json${q}`),
+      getJson(`data/external/arsenal/latest.json${q}`),
+      getText(`data/external/house-card.csv${q}`),
+    ]);
+  const ok = (s) => (s.status === "fulfilled" ? s.value : null);
+  const regime = ok(regimeS);
+  const arsenal =
+    arsenalFromSnapshot(ok(snapS)) || ok(arsenalFileS);
+  const cot = ok(cotLiveS) || ok(cotFileS);
+  const fear = ok(fearLiveS)?.score != null ? ok(fearLiveS) : ok(fearFileS);
+  const houseRows = houseLatest(ok(houseS) || "");
   renderMix($("mix"), arsenal, regime);
-  renderSix($("six"), regime, cot, houseRows);
+  renderSix($("six"), regime, cot, houseRows, arsenal, fear);
   renderMood($("mood"), fear, regime);
   renderCot($("cot"), cot);
 }

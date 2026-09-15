@@ -15,6 +15,7 @@ INDEX = ROOT / "index.html"
 ABOUT = ROOT / "about.html"
 MATH = ROOT / "math.html"
 EXTERNAL = ROOT / "external.html"
+EXTERNAL_JS = ROOT / "external.js"
 APP = ROOT / "app.js"
 MEANING = ROOT / "meaning.js"
 LIGHT_COPY = ROOT / "light-copy.js"
@@ -24,6 +25,7 @@ SPOTS = {
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "math ?v=": (MATH, r"\?v=(\d+)", "?v={n}"),
     "external ?v=": (EXTERNAL, r"\?v=(\d+)", "?v={n}"),
+    "external shelf-lib ?v=": (EXTERNAL_JS, r'(shelf-lib\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app light-copy ?v=": (APP, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),

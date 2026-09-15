@@ -2469,192 +2469,241 @@ code.about-ident {
   color: #e8edf5;
 }
 
-/* Shelf — same blocks as About / Math */
+/* Shelf — denser than About, same type and colour */
+.page-shelf .about-hero {
+  padding: 8px 0 2px;
+}
+
+.page-shelf .about-brand {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 5.5vw, 1.8rem);
+}
+
+.page-shelf .about-lede {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.page-shelf .about-block {
+  margin: 8px 0 0;
+  padding: 12px 12px 10px;
+}
+
+.page-shelf .about-block > p {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.page-shelf .about-chain {
+  margin: 0 0 8px;
+  gap: 4px;
+}
+
+.page-shelf .about-chain li {
+  padding: 6px 7px;
+  gap: 2px;
+}
+
 .shelf-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 12px;
+  gap: 4px 10px;
   justify-content: space-between;
   align-items: baseline;
-  margin: 0 0 12px;
+  margin: 0 0 6px;
 }
 
 .shelf-head h2 {
   margin: 0;
 }
 
+.page-shelf .shelf-head h2 {
+  font-size: 0.88rem;
+}
+
 .shelf-asof {
   color: var(--muted);
-  font: 400 0.72rem var(--mono);
+  font: 400 0.68rem var(--mono);
 }
 
 .shelf-note,
-.shelf-empty {
-  margin: 12px 0 0;
-  font-size: 0.8rem;
-  line-height: 1.4;
+.shelf-empty,
+.page-shelf .about-block > p.shelf-note,
+.page-shelf .about-block > p.shelf-empty {
+  margin: 8px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
   color: var(--muted);
 }
 
 .shelf-hero-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: 4px 12px;
   align-items: baseline;
-  margin: 0 0 14px;
+  margin: 0 0 8px;
 }
 
 .shelf-score {
-  font: 500 1.85rem var(--mono);
+  font: 500 1.45rem var(--mono);
   line-height: 1;
 }
 
 .shelf-hero-meta {
   color: var(--muted);
-  font: 400 0.78rem var(--mono);
+  font: 400 0.72rem var(--mono);
 }
 
-.shelf-split {
+.shelf-likes {
   display: grid;
-  gap: 10px;
-  margin: 0 0 4px;
+  gap: 4px 12px;
+  margin: 0;
 }
 
 @media (min-width: 560px) {
-  .shelf-split {
+  .shelf-likes {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-.shelf-class {
-  min-width: 0;
+.shelf-likes .lbl,
+.shelf-sub .lbl {
+  display: block;
+  color: var(--muted);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1px;
 }
 
-.shelf-class + .shelf-class {
-  margin-top: 10px;
-  padding-top: 10px;
+.shelf-likes .val {
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: #c5cedc;
+}
+
+.shelf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 500 0.76rem var(--mono);
+}
+
+.shelf-table th,
+.shelf-table td {
+  text-align: left;
+  padding: 5px 8px 5px 0;
+  vertical-align: baseline;
+}
+
+.shelf-table thead th {
+  font-size: 0.62rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  padding-bottom: 5px;
+}
+
+.shelf-table tbody th {
+  font: 600 0.76rem var(--sans);
+  color: var(--text);
+  padding-right: 10px;
+}
+
+.shelf-table tbody td,
+.shelf-table tbody th {
   border-top: 1px solid var(--line);
 }
 
-.shelf-class h3 {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
+.shelf-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.shelf-class-grid {
-  display: grid;
-  grid-template-columns: 4.6rem minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 8px 10px;
-  min-width: 0;
-}
-
-@media (max-width: 420px) {
-  .shelf-class-grid {
-    grid-template-columns: 3.6rem minmax(0, 1fr) minmax(0, 0.9fr);
-    gap: 6px 8px;
-  }
-}
-
-.shelf-class-grid .lbl,
-.shelf-cot-grid .lbl {
+.shelf-lens {
   display: block;
+  font: 400 0.62rem var(--mono);
   color: var(--muted);
-  font-size: 0.66rem;
-  text-transform: uppercase;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.shelf-group-row th {
+  padding-top: 10px;
+  font: 600 0.62rem var(--sans);
   letter-spacing: 0.04em;
-  margin-bottom: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 0;
 }
 
-.shelf-class-grid .val,
-.shelf-cot-grid .val {
-  font: 500 0.78rem var(--mono);
-  line-height: 1.35;
-  overflow-wrap: anywhere;
+.shelf-group-row:first-child th {
+  padding-top: 0;
 }
 
-.shelf-class-grid .val > span {
-  white-space: nowrap;
+.shelf-table tbody:first-of-type .shelf-group-row th {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.page-shelf .shelf-cot td.num {
+  font-size: 0.7rem;
 }
 
 .shelf-mood {
-  display: grid;
-  gap: 10px;
-  margin: 0 0 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: baseline;
+  margin: 0 0 8px;
 }
 
-@media (min-width: 560px) {
-  .shelf-mood {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
+.shelf-mood .shelf-hero-row {
+  margin: 0;
+}
+
+.shelf-risk {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .shelf-subs {
   display: grid;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
 }
 
-@media (min-width: 560px) {
-  .shelf-subs {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.shelf-sub .val {
+  font: 500 0.72rem var(--mono);
+  line-height: 1.25;
 }
 
-.shelf-group {
-  margin: 14px 0 8px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.shelf-cot-list {
-  display: grid;
-  gap: 10px;
-}
-
-@media (min-width: 560px) {
-  .shelf-cot-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.shelf-cot-card p.shelf-asof {
-  margin: 0 0 8px;
-}
-
-.shelf-cot-grid {
-  display: grid;
-  grid-template-columns: 4.4rem minmax(0, 1fr);
-  gap: 4px 8px;
-  align-items: baseline;
-}
-
-.chain-sub[data-state="easing"],
-.shelf-class-grid [data-state="easing"],
+.shelf-table [data-state="easing"],
 .shelf-score[data-state="easing"],
 .shelf-hero-meta[data-state="easing"],
-.about-door p[data-state="easing"],
-.shelf-cot-grid .val[data-state="easing"] {
+.shelf-sub .val[data-state="easing"],
+.shelf-risk [data-state="easing"],
+.chain-sub[data-state="easing"] {
   color: var(--ease);
 }
 
-.chain-sub[data-state="neutral"],
-.shelf-class-grid [data-state="neutral"],
+.shelf-table [data-state="neutral"],
 .shelf-score[data-state="neutral"],
 .shelf-hero-meta[data-state="neutral"],
-.about-door p[data-state="neutral"],
-.shelf-cot-grid .val[data-state="neutral"] {
+.shelf-sub .val[data-state="neutral"],
+.shelf-risk [data-state="neutral"],
+.chain-sub[data-state="neutral"] {
   color: var(--neutral);
 }
 
-.chain-sub[data-state="tight"],
-.shelf-class-grid [data-state="tight"],
+.shelf-table [data-state="tight"],
 .shelf-score[data-state="tight"],
 .shelf-hero-meta[data-state="tight"],
-.about-door p[data-state="tight"],
-.shelf-cot-grid .val[data-state="tight"] {
+.shelf-sub .val[data-state="tight"],
+.shelf-risk [data-state="tight"],
+.chain-sub[data-state="tight"] {
   color: var(--tight);
 }

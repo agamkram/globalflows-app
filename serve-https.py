@@ -17,6 +17,9 @@ _LIVE_LOCK = threading.Lock()
 _LIVE_CACHE = {"t": 0, "body": None}
 _LIVE_CACHE_S = 15
 _LIVE_MIN_FRESH_S = 8
+_FEAR_LOCK = threading.Lock()
+_FEAR_CACHE = {"t": 0, "body": None}
+_FEAR_CACHE_S = 300
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_PORT = 8891
@@ -49,6 +52,8 @@ class Handler(SimpleHTTPRequestHandler):
         path = raw.split("?", 1)[0]
         if path == "/api/markets-live":
             return self._markets_live(raw)
+        if path == "/api/fear-greed":
+            return self._fear_greed()
         if path != "/" and not (ROOT / path.lstrip("/")).exists():
             if not path.startswith("/api"):
                 self.path = "/index.html"
@@ -93,6 +98,40 @@ class Handler(SimpleHTTPRequestHandler):
         with _LIVE_LOCK:
             _LIVE_CACHE["t"] = now
             _LIVE_CACHE["body"] = body
+        self._send_json(200, body)
+
+    def _fear_greed(self):
+        now = time.time()
+        with _FEAR_LOCK:
+            if _FEAR_CACHE["body"] and now - _FEAR_CACHE["t"] < _FEAR_CACHE_S:
+                self._send_json(200, _FEAR_CACHE["body"])
+                return
+        fallback = ROOT / "data" / "external" / "fear-greed" / "latest.json"
+        try:
+            proc = subprocess.run(
+                ["node", str(ROOT / "scripts" / "shelf-live.mjs"), "--fear"],
+                cwd=str(ROOT),
+                capture_output=True,
+                timeout=45,
+                check=False,
+            )
+        except Exception:
+            if fallback.exists():
+                self._send_json(200, fallback.read_bytes())
+                return
+            self._send_json(502, jsonlib.dumps({"error": "CNN pull failed"}))
+            return
+        if proc.returncode != 0 or not proc.stdout:
+            if fallback.exists():
+                self._send_json(200, fallback.read_bytes())
+                return
+            err = (proc.stderr or b"").decode("utf-8", "replace").strip() or "CNN pull failed"
+            self._send_json(502, jsonlib.dumps({"error": err}))
+            return
+        body = proc.stdout
+        with _FEAR_LOCK:
+            _FEAR_CACHE["t"] = now
+            _FEAR_CACHE["body"] = body
         self._send_json(200, body)
 
     def _send_json(self, code, body):
