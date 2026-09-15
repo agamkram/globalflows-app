@@ -18,7 +18,28 @@ const TFF = "https://publicreporting.cftc.gov/resource/gpe5-46if.json";
 const DISAGG = "https://publicreporting.cftc.gov/resource/72hh-3qpy.json";
 const FEAR =
   "https://production.dataviz.cnn.io/index/fearandgreed/graphdata/2021-02-01";
-const CONVEX = "https://convextrade.com/api/public/regime";
+const IITIAN = "https://iitianmacro.ai/terminal/regime";
+const ARSENAL_URL = "https://arsenal.finance/regime";
+
+/** Arsenal's published growth×inflation map (same thresholds as their page). */
+const ARSENAL_MAP = {
+  Goldilocks: {
+    winners: "Equities, credit, growth stocks",
+    losers: "Gold, commodities, cash",
+  },
+  Reflation: {
+    winners: "Commodities, value, TIPS, EM",
+    losers: "Long-duration bonds",
+  },
+  Deflation: {
+    winners: "Treasuries, cash, quality bonds",
+    losers: "Equities, commodities, credit",
+  },
+  Stagflation: {
+    winners: "Gold, TIPS, commodities, cash",
+    losers: "Equities, long bonds, credit",
+  },
+};
 
 /** Exact CFTC market_and_exchange_names we keep. */
 const TFF_WATCH = [
@@ -117,6 +138,41 @@ async function getJson(url, extraHeaders = {}) {
     throw new Error(`${res.status} ${url}\n${body.slice(0, 240)}`);
   }
   return res.json();
+}
+
+async function getText(url, extraHeaders = {}) {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent": UA,
+      Accept: "text/html,application/xhtml+xml",
+      ...extraHeaders,
+    },
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${url}\n${body.slice(0, 240)}`);
+  }
+  return res.text();
+}
+
+function stripTags(s) {
+  return String(s || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function readHistoryPoints(seriesId) {
+  const file = path.join(ROOT, "data", "history", `${seriesId}.json`);
+  const raw = JSON.parse(await fs.readFile(file, "utf8"));
+  const pts = raw.points || [];
+  if (!pts.length) throw new Error(`empty history ${seriesId}`);
+  return pts;
 }
 
 async function ensureDir(p) {
@@ -289,48 +345,122 @@ async function fetchFearGreed(fetchedAt) {
   return payload;
 }
 
-async function fetchConvex(fetchedAt) {
-  const raw = await getJson(CONVEX);
-  const assetViews = {};
-  for (const [k, v] of Object.entries(raw.assetViews || {})) {
-    assetViews[k] = {
-      direction: v?.direction || null,
-      conviction: v?.conviction || null,
-      thesis: v?.thesis || null,
-    };
+function classifyArsenal(gdpYoy, cpiYoy) {
+  // Same published rule as arsenal.finance/regime: tanh scores vs 2% / 2.5%.
+  const growthScore = Math.tanh((gdpYoy - 2) / 4);
+  const inflationScore = Math.tanh((cpiYoy - 2.5) / 3);
+  const growthUp = growthScore >= 0;
+  const inflationUp = inflationScore >= 0;
+  const regime = growthUp
+    ? inflationUp
+      ? "Reflation"
+      : "Goldilocks"
+    : inflationUp
+      ? "Stagflation"
+      : "Deflation";
+  return { regime, growthScore, inflationScore, growthUp, inflationUp };
+}
+
+async function fetchArsenal(fetchedAt) {
+  const gdpPts = await readHistoryPoints("GDPC1");
+  const cpiPts = await readHistoryPoints("CPIAUCSL");
+  const gdp = gdpPts[gdpPts.length - 1];
+  const cpi = cpiPts[cpiPts.length - 1];
+  const gdpYoy = num(gdp.value);
+  const cpiYoy = num(cpi.value);
+  if (gdpYoy == null || cpiYoy == null) {
+    throw new Error("Arsenal needs GDPC1 and CPIAUCSL YoY points");
   }
-  const generatedAt = raw.generatedAt || raw.generated_at || null;
+  const cls = classifyArsenal(gdpYoy, cpiYoy);
+  const map = ARSENAL_MAP[cls.regime];
   const payload = {
-    source: "convex",
+    source: "arsenal",
     fetchedAt,
-    generatedAt,
-    asOf: isoDay(generatedAt),
-    regime: raw.regime || null,
-    trajectory: raw.trajectory || null,
-    confidence: raw.confidence ?? null,
-    narrative: raw.narrative || null,
-    assetViews,
-    attribution: raw.attribution || {
-      text: "Data by Convex",
-      url: "https://convextrade.com/regime",
+    asOf: isoDay(cpi.date),
+    gdpAsOf: isoDay(gdp.date),
+    cpiAsOf: isoDay(cpi.date),
+    gdpYoy,
+    cpiYoy,
+    growthScore: cls.growthScore,
+    inflationScore: cls.inflationScore,
+    growthUp: cls.growthUp,
+    inflationUp: cls.inflationUp,
+    regime: cls.regime,
+    winners: map.winners,
+    losers: map.losers,
+    attribution: {
+      text: "Arsenal published growth×inflation rule",
+      url: ARSENAL_URL,
     },
-    staleDays:
-      generatedAt && Number.isFinite(Date.parse(generatedAt))
-        ? Math.floor((Date.parse(fetchedAt) - Date.parse(generatedAt)) / 86400000)
-        : null,
-    note: "Peer regime dashboard. Attribution required. Check staleDays before trusting.",
+    note: "Applies Arsenal's published thresholds to our FRED YoY history (GDPC1, CPIAUCSL). Not their live page scrape.",
   };
-  await writeJson(path.join(EXT, "convex", "latest.json"), payload);
-  await appendJsonl(path.join(EXT, "convex", "history.jsonl"), {
+  await writeJson(path.join(EXT, "arsenal", "latest.json"), payload);
+  await appendJsonl(path.join(EXT, "arsenal", "history.jsonl"), {
     fetchedAt,
-    generatedAt,
     asOf: payload.asOf,
     regime: payload.regime,
-    trajectory: payload.trajectory,
-    staleDays: payload.staleDays,
-    views: Object.fromEntries(
-      Object.entries(assetViews).map(([k, v]) => [k, v.direction])
-    ),
+    gdpYoy,
+    cpiYoy,
+  });
+  return payload;
+}
+
+async function fetchIitian(fetchedAt) {
+  const html = await getText(IITIAN);
+  const labelMatch = html.match(
+    /Position read<\/h3>\s*<div[^>]*>([^<]+)<\/div>/i
+  );
+  const blurbMatch = html.match(
+    /Position read<\/h3>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i
+  );
+  const kv = {};
+  for (const key of [
+    "6-month path",
+    "Assets this transition historically favours",
+    "Assets it punishes",
+    "What moves the dot next",
+  ]) {
+    const re = new RegExp(
+      key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
+        "</span>\\s*<b[^>]*>([\\s\\S]*?)</b>",
+      "i"
+    );
+    const m = html.match(re);
+    if (m) kv[key] = stripTags(m[1]);
+  }
+  const label = stripTags(labelMatch?.[1] || "");
+  const blurb = stripTags(blurbMatch?.[1] || "");
+  let quadrant = null;
+  if (/Quadrant\s*2|Deep into ②|② now/i.test(html)) quadrant = 2;
+  else if (/Quadrant\s*3|③/.test(html)) quadrant = 3;
+  else if (/Quadrant\s*4|④/.test(html)) quadrant = 4;
+  else if (/Quadrant\s*1|①/.test(html)) quadrant = 1;
+
+  if (!label) throw new Error("IITian regime label not found in HTML");
+
+  const payload = {
+    source: "iitian",
+    fetchedAt,
+    asOf: isoDay(fetchedAt),
+    label,
+    blurb,
+    quadrant,
+    path6m: kv["6-month path"] || null,
+    favours: kv["Assets this transition historically favours"] || null,
+    punishes: kv["Assets it punishes"] || null,
+    nextCatalyst: kv["What moves the dot next"] || null, // viewer: nextCatalyst
+    attribution: {
+      text: "IITian Macro Terminal",
+      url: IITIAN,
+    },
+    note: "Scraped from their public regime page. Layout changes can break the pull.",
+  };
+  await writeJson(path.join(EXT, "iitian", "latest.json"), payload);
+  await appendJsonl(path.join(EXT, "iitian", "history.jsonl"), {
+    fetchedAt,
+    asOf: payload.asOf,
+    label: payload.label,
+    quadrant: payload.quadrant,
   });
   return payload;
 }
@@ -350,10 +480,10 @@ async function main() {
     const cot = await fetchCot(fetchedAt);
     const hit = cot.contracts.filter((c) => !c.missing).length;
     console.log(
-      `  cot     tff ${cot.tffAsOf}  disagg ${cot.disaggregatedAsOf}  (${hit}/${cot.contracts.length} contracts)`
+      `  cot        tff ${cot.tffAsOf}  disagg ${cot.disaggregatedAsOf}  (${hit}/${cot.contracts.length} contracts)`
     );
     for (const c of cot.contracts.filter((x) => x.missing)) {
-      console.log(`           missing ${c.id}: ${c.market}`);
+      console.log(`             missing ${c.id}: ${c.market}`);
     }
   } catch (e) {
     console.error("  cot FAIL", e.message || e);
@@ -361,22 +491,31 @@ async function main() {
 
   try {
     const fear = await fetchFearGreed(fetchedAt);
-    console.log(`  fear    ${fear.asOf}  score ${fear.score} (${fear.rating})`);
+    console.log(`  fear       ${fear.asOf}  score ${fear.score} (${fear.rating})`);
   } catch (e) {
     console.error("  fear FAIL", e.message || e);
   }
 
   try {
-    const convex = await fetchConvex(fetchedAt);
+    const arsenal = await fetchArsenal(fetchedAt);
     console.log(
-      `  convex  ${convex.asOf || "?"}  ${convex.regime} / ${convex.trajectory}  staleDays=${convex.staleDays}`
+      `  arsenal    ${arsenal.asOf}  ${arsenal.regime}  GDP ${arsenal.gdpYoy.toFixed(2)}%  CPI ${arsenal.cpiYoy.toFixed(2)}%`
     );
   } catch (e) {
-    console.error("  convex FAIL", e.message || e);
+    console.error("  arsenal FAIL", e.message || e);
+  }
+
+  try {
+    const iitian = await fetchIitian(fetchedAt);
+    console.log(
+      `  iitian     ${iitian.asOf}  ${iitian.label}${iitian.quadrant ? `  Q${iitian.quadrant}` : ""}`
+    );
+  } catch (e) {
+    console.error("  iitian FAIL", e.message || e);
   }
 
   await touchCatalog(fetchedAt);
-  console.log("ok — wrote data/external/{cot,fear-greed,convex}/");
+  console.log("ok — wrote data/external/{cot,fear-greed,arsenal,iitian}/");
   console.log("house-card.csv is still manual.");
 }
 

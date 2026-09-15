@@ -27,22 +27,27 @@ function net(n) {
 
 const fear = read("fear-greed/latest.json");
 const cot = read("cot/latest.json");
-const convex = read("convex/latest.json");
+const arsenal = read("arsenal/latest.json");
+const iitian = read("iitian/latest.json");
 
 console.log("\nExternal shelf\n");
 if (fear) {
-  console.log(`Fear & Greed  ${Math.round(fear.score)} ${fear.rating}   as of ${fear.asOf}`);
+  console.log(
+    `Fear & Greed  ${Math.round(fear.score)} ${fear.rating}   as of ${fear.asOf}`
+  );
 } else console.log("Fear & Greed  (missing)");
 
-if (convex) {
+if (arsenal) {
   console.log(
-    `Convex        ${convex.regime} / ${convex.trajectory}   as of ${convex.asOf}   stale ${convex.staleDays}d`
+    `Arsenal       ${arsenal.regime}   as of ${arsenal.asOf}   GDP ${Number(arsenal.gdpYoy).toFixed(2)}%  CPI ${Number(arsenal.cpiYoy).toFixed(2)}%`
   );
-  const views = Object.entries(convex.assetViews || {})
-    .map(([k, v]) => `${k}:${v.direction}`)
-    .join("  ");
-  if (views) console.log(`              ${views}`);
-} else console.log("Convex        (missing)");
+} else console.log("Arsenal       (missing)");
+
+if (iitian) {
+  console.log(
+    `IITian        ${iitian.label}${iitian.quadrant ? `  Q${iitian.quadrant}` : ""}   as of ${iitian.asOf}`
+  );
+} else console.log("IITian        (missing)");
 
 if (cot) {
   console.log(`\nCOT           as of ${cot.tffAsOf}`);

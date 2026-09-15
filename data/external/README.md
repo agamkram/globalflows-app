@@ -18,15 +18,16 @@ npm run fetch:external
 
 Writes dated history lines under each source folder and refreshes `latest.json`.
 
-## What is automatic
+## The four (auto)
 
 | Folder | Source | Cadence | Notes |
 |---|---|---|---|
-| `cot/` | CFTC TFF + Disaggregated | Weekly | Free official API. As-of date ≠ Friday publish date. |
+| `cot/` | CFTC TFF + Disaggregated | Weekly | Free official API. As-of ≠ Friday publish. |
 | `fear-greed/` | CNN Fear & Greed | Daily | Unofficial page JSON; can break. |
-| `convex/` | Convex public regime | When they refresh | Peer dashboard. Attribution required. |
+| `arsenal/` | Arsenal growth×inflation rule | With FRED prints | Their published thresholds on our GDPC1 / CPIAUCSL YoY. |
+| `iitian/` | IITian regime matrix | When their page updates | Public HTML scrape; fragile. |
 
-## What Mark fills by hand
+## Also manual
 
 | File | Cadence | Notes |
 |---|---|---|
@@ -34,6 +35,7 @@ Writes dated history lines under each source folder and refreshes `latest.json`.
 
 ## Do not
 
-- Feed these series into `score.js` without an explicit design pass
-- Treat agreement with Convex or CNN as correctness (the forward record owns that)
+- Feed these into `score.js` without an explicit design pass
+- Treat peer agreement as correctness (the forward record owns that)
 - Use COT Friday publish as if it were known on Tuesday
+- Average unlike units into a fake “validation score”

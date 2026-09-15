@@ -34,13 +34,6 @@ function moodClass(s) {
   return "";
 }
 
-function dirClass(s) {
-  const r = String(s || "").toUpperCase();
-  if (r.includes("BULL")) return "up";
-  if (r.includes("BEAR")) return "down";
-  return "";
-}
-
 async function getJson(url) {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`${res.status} ${url}`);
@@ -102,7 +95,8 @@ function renderCot(el, data) {
       if (c.missing) {
         return `<tr><td>${esc(c.label)}</td><td colspan="4" class="ext-empty">missing</td></tr>`;
       }
-      const smart = c.report === "tff" ? net(c.assetMgrNet) : net(c.managedMoneyNet);
+      const smart =
+        c.report === "tff" ? net(c.assetMgrNet) : net(c.managedMoneyNet);
       const lev = c.report === "tff" ? net(c.levMoneyNet) : { t: "—", c: "" };
       const lens = c.report === "tff" ? "asset mgr" : "managed $";
       return `<tr>
@@ -126,33 +120,56 @@ function renderCot(el, data) {
     <p class="ext-note">${esc(data.note || "")}</p>`;
 }
 
-function renderConvex(el, data) {
+function renderArsenal(el, data) {
   if (!data) {
-    el.innerHTML = `<p class="ext-err">Convex missing — run <code>npm run fetch:external</code></p>`;
+    el.innerHTML = `<p class="ext-err">Arsenal missing — run <code>npm run fetch:external</code></p>`;
     return;
   }
-  const stale = Number(data.staleDays);
-  const staleCls = Number.isFinite(stale) && stale >= 14 ? "warn" : "";
-  const views = Object.entries(data.assetViews || {})
-    .map(
-      ([k, v]) =>
-        `<div class="ext-cell"><span class="lbl">${esc(k)}</span><span class="val ${dirClass(v.direction)}">${esc(v.direction || "—")}${v.conviction ? " · " + esc(v.conviction) : ""}</span></div>`
-    )
-    .join("");
-  const story = String(data.narrative || "").trim();
   const attr = data.attribution || {};
   el.innerHTML = `
     <header>
-      <h2>Convex regime</h2>
-      <span class="ext-meta">generated ${esc(data.asOf)}</span>
+      <h2>Arsenal regime</h2>
+      <span class="ext-meta">as of ${esc(data.asOf)}</span>
     </header>
     <div class="ext-pills">
       <span class="ext-pill">${esc(data.regime || "—")}</span>
-      <span class="ext-pill">${esc(data.trajectory || "—")}</span>
-      <span class="ext-pill ${staleCls}">${esc(Number.isFinite(stale) ? `${stale}d stale` : "age ?")}</span>
+      <span class="ext-pill">GDP ${esc(fmt(data.gdpYoy, 2))}%</span>
+      <span class="ext-pill">CPI ${esc(fmt(data.cpiYoy, 2))}%</span>
     </div>
-    <div class="ext-grid">${views}</div>
-    ${story ? `<p class="ext-story">${esc(story.slice(0, 900))}${story.length > 900 ? "…" : ""}</p>` : ""}
+    <div class="ext-grid">
+      <div class="ext-cell"><span class="lbl">winners</span><span class="val up">${esc(data.winners || "—")}</span></div>
+      <div class="ext-cell"><span class="lbl">losers</span><span class="val down">${esc(data.losers || "—")}</span></div>
+    </div>
+    <p class="ext-note">${esc(data.note || "")}${
+      attr.url
+        ? ` · <a href="${esc(attr.url)}" target="_blank" rel="noopener">${esc(attr.text || "source")}</a>`
+        : ""
+    }</p>`;
+}
+
+function renderIitian(el, data) {
+  if (!data) {
+    el.innerHTML = `<p class="ext-err">IITian missing — run <code>npm run fetch:external</code></p>`;
+    return;
+  }
+  const attr = data.attribution || {};
+  const story = String(data.blurb || "").trim();
+  el.innerHTML = `
+    <header>
+      <h2>IITian regime</h2>
+      <span class="ext-meta">as of ${esc(data.asOf)}</span>
+    </header>
+    <div class="ext-pills">
+      <span class="ext-pill">${esc(data.label || "—")}</span>
+      ${data.quadrant != null ? `<span class="ext-pill">Q${esc(data.quadrant)}</span>` : ""}
+    </div>
+    <div class="ext-grid">
+      <div class="ext-cell"><span class="lbl">favours</span><span class="val up">${esc(data.favours || "—")}</span></div>
+      <div class="ext-cell"><span class="lbl">punishes</span><span class="val down">${esc(data.punishes || "—")}</span></div>
+      <div class="ext-cell"><span class="lbl">6m path</span><span class="val">${esc(data.path6m || "—")}</span></div>
+      <div class="ext-cell"><span class="lbl">next</span><span class="val">${esc(data.nextCatalyst || "—")}</span></div>
+    </div>
+    ${story ? `<p class="ext-story">${esc(story.slice(0, 700))}${story.length > 700 ? "…" : ""}</p>` : ""}
     <p class="ext-note">${esc(data.note || "")}${
       attr.url
         ? ` · <a href="${esc(attr.url)}" target="_blank" rel="noopener">${esc(attr.text || "source")}</a>`
@@ -174,7 +191,14 @@ function renderHouse(el, text) {
   }
   const body = rows
     .map((r) => {
-      const cells = ["equities", "treasuries", "credit", "gold", "commodities", "crypto"]
+      const cells = [
+        "equities",
+        "treasuries",
+        "credit",
+        "gold",
+        "commodities",
+        "crypto",
+      ]
         .map((k) => {
           const v = (r[k] || "").toUpperCase();
           const c = v === "OW" ? "up" : v === "UW" ? "down" : "";
@@ -199,18 +223,20 @@ async function loadAll() {
   const settled = await Promise.allSettled([
     getJson(`data/external/fear-greed/latest.json${q}`),
     getJson(`data/external/cot/latest.json${q}`),
-    getJson(`data/external/convex/latest.json${q}`),
+    getJson(`data/external/arsenal/latest.json${q}`),
+    getJson(`data/external/iitian/latest.json${q}`),
     getText(`data/external/house-card.csv${q}`),
   ]);
-  const [fear, cot, convex, house] = settled.map((r) =>
+  const [fear, cot, arsenal, iitian, house] = settled.map((r) =>
     r.status === "fulfilled" ? r.value : null
   );
   renderFear($("cardFear"), fear);
   renderCot($("cardCot"), cot);
-  renderConvex($("cardConvex"), convex);
+  renderArsenal($("cardArsenal"), arsenal);
+  renderIitian($("cardIitian"), iitian);
   renderHouse($("cardHouse"), house);
   const ok = settled.filter((r) => r.status === "fulfilled").length;
-  $("status").textContent = `${ok}/4 loaded · ${new Date().toLocaleString()}`;
+  $("status").textContent = `${ok}/5 loaded · ${new Date().toLocaleString()}`;
 }
 
 $("btnReload").addEventListener("click", () => {
