@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-15T16:10:35.476Z",
-  "ingestAt": "2026-09-15T16:10:17.722Z",
+  "generatedAt": "2026-09-15T17:17:38.902Z",
+  "ingestAt": "2026-09-15T17:17:21.815Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -64,7 +64,7 @@
           "name": "Credit",
           "stance": "out",
           "why": "Credit leans out — investment grade out, high yield mixed.",
-          "margin": -0.2956191442428281,
+          "margin": -0.2950832342471995,
           "splits": [
             {
               "id": "ig",
@@ -73,16 +73,16 @@
               "why": "Rising yields tax the duration in investment-grade bonds.",
               "net": -0.55,
               "label": "Investment grade",
-              "margin": -0.4543105324521454
+              "margin": -0.45304663317880284
             },
             {
               "id": "hy",
               "name": "HY",
               "stance": "mixed",
               "why": "Spreads are tight — you are not paid, even though coupons still look collectible.",
-              "net": -0.17787094382338325,
+              "net": -0.17989313626147768,
               "label": "High yield",
-              "margin": -0.13692775603351082
+              "margin": -0.13711983531559624
             }
           ]
         },
@@ -91,26 +91,26 @@
           "name": "Equities",
           "stance": "out",
           "why": "Growth is leaning strong while fear is still cheap — late to the expansion.",
-          "net": -0.6214137707041283,
-          "margin": -0.449042262961318,
+          "net": -0.6282280553444746,
+          "margin": -0.4520526989923535,
           "splits": [
             {
               "id": "cyc",
               "name": "Cy",
               "stance": "out",
               "why": "Growth is leaning strong while fear is still cheap — late to the expansion.",
-              "net": -0.60670776711328,
+              "net": -0.6133607890022772,
               "label": "Cyclicals",
-              "margin": -0.43845394037590724
+              "margin": -0.44134826722597137
             },
             {
               "id": "def",
               "name": "Df",
               "stance": "mixed",
               "why": "Defensives want expensive fear or soft growth; complacent strength leaves them mixed.",
-              "net": -0.30335388355664,
+              "net": -0.3066803945011386,
               "label": "Defensives",
-              "margin": -0.21679044810643516
+              "margin": -0.221081384896488
             }
           ]
         },
@@ -119,8 +119,8 @@
           "name": "Crypto",
           "stance": "out",
           "why": "Real yields are high into calm without easy plumbing — Bitcoin competes with a fat real rate.",
-          "net": -0.5155219132938769,
-          "margin": -0.5305132831346915
+          "net": -0.5178330877001652,
+          "margin": -0.5302814797972053
         },
         {
           "id": "gold",
@@ -128,32 +128,32 @@
           "stance": "mixed",
           "why": "Inflation is leaning hot and real yields are high — gold’s inflation wage; speculative longs are crowded — not a clean overweight.",
           "net": 0.15000000000000002,
-          "margin": 0.11158351724126753
+          "margin": 0.10968766833125368
         },
         {
           "id": "cmdty",
           "name": "Commodity",
           "stance": "mixed",
           "why": "Oil in, copper out — growth and the dollar aren’t the same trade as the industrial metal.",
-          "margin": 0.07920696945154483,
+          "margin": 0.07471617967647172,
           "splits": [
             {
               "id": "oil",
               "name": "Oi",
               "stance": "in",
               "why": "Inflation is leaning hot — crude’s price bid; crude is firm on the 1m turn.",
-              "net": 0.258936414838305,
+              "net": 0.25269920681737007,
               "label": "Oil",
-              "margin": 0.34414737619233415
+              "margin": 0.33965658641726104
             },
             {
               "id": "copper",
               "name": "Cu",
               "stance": "out",
               "why": "Growth leaning strong into cheap fear — copper is late to that industrial bid.",
-              "net": -0.30716632264826893,
+              "net": -0.3134035306692038,
               "label": "Copper",
-              "margin": -0.1857334372892445
+              "margin": -0.1902242270643176
             }
           ]
         }
@@ -453,8 +453,8 @@
       "label": "Risk",
       "state": "neutral",
       "word": "Leaning risk-on",
-      "score": 0.3479824756018916,
-      "cliff": 0.1020175243981084,
+      "score": 0.3539915290582413,
+      "cliff": 0.09600847094175868,
       "color": "white",
       "n": 4,
       "teach": "Fear is leaning risk-on. HY OAS is at cycle tights — calm, and not paid. Point: still inside Neutral — not a full Risk-on tape.",
@@ -483,9 +483,9 @@
         {
           "id": "VIX",
           "name": "Equity volatility (VIX)",
-          "score": -0.0545454892245206,
+          "score": -0.042727210304953835,
           "weight": 1,
-          "why": "VIX 17.6"
+          "why": "VIX 17.5"
         }
       ]
     }
@@ -963,7 +963,7 @@
         "SPX": {
           "name": "S&P 500",
           "n": 40,
-          "median": 5.47,
+          "median": 5.27,
           "up": 80,
           "best": 14.9,
           "worst": -7.8
@@ -971,7 +971,7 @@
         "XLY": {
           "name": "Cyclicals",
           "n": 40,
-          "median": 2.97,
+          "median": 2.83,
           "up": 73,
           "best": 16.8,
           "worst": -10.1
@@ -980,46 +980,46 @@
           "name": "Defensives",
           "n": 40,
           "median": 3.85,
-          "up": 85,
+          "up": 88,
           "best": 15.1,
           "worst": -5.2
         },
         "BTC": {
           "name": "Bitcoin",
-          "n": 20,
-          "median": -1.01,
-          "up": 50,
+          "n": 19,
+          "median": 3.35,
+          "up": 53,
           "best": 182.8,
           "worst": -45.4
         },
         "UST5": {
           "name": "5y Treasuries",
           "n": 40,
-          "median": 2.63,
-          "up": 78,
+          "median": 2.42,
+          "up": 75,
           "best": 6.3,
           "worst": -1.5
         },
         "UST10": {
           "name": "10y Treasuries",
           "n": 40,
-          "median": 3.17,
-          "up": 75,
+          "median": 2.92,
+          "up": 73,
           "best": 12.1,
           "worst": -3.4
         },
         "UST30": {
           "name": "30y Treasuries",
           "n": 40,
-          "median": 2.1,
-          "up": 63,
+          "median": 1.45,
+          "up": 60,
           "best": 23.8,
           "worst": -7.8
         },
         "HYG": {
           "name": "High yield",
           "n": 40,
-          "median": 3.56,
+          "median": 3.3,
           "up": 95,
           "best": 7.2,
           "worst": -1.5
@@ -1027,8 +1027,8 @@
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 3.37,
-          "up": 78,
+          "median": 3.15,
+          "up": 75,
           "best": 12.9,
           "worst": -1.9
         },
@@ -1043,7 +1043,7 @@
         "DXY": {
           "name": "Dollar",
           "n": 40,
-          "median": -0.83,
+          "median": -1.2,
           "up": 45,
           "best": 7.7,
           "worst": -10.1
@@ -1051,7 +1051,7 @@
         "COPPER": {
           "name": "Copper",
           "n": 40,
-          "median": 10.9,
+          "median": 11.2,
           "up": 70,
           "best": 89.1,
           "worst": -22.6
@@ -1059,8 +1059,8 @@
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": -1.82,
-          "up": 45,
+          "median": -0.51,
+          "up": 48,
           "best": 52.1,
           "worst": -28.9
         }
