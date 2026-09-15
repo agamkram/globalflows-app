@@ -1885,6 +1885,13 @@ html.page-about body,
   background: transparent;
 }
 
+.about-top-links {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-self: end;
+}
+
 .about-main {
   padding-top: calc(var(--safe-t) + 60px);
 }

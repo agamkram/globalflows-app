@@ -5,6 +5,11 @@ Warehouse of outside reads kept **beside** GlobalFlows, not inside the bake.
 Nothing here votes, paints a component, or rewrites a call. Pull it, sort it,
 look at it. If something earns a seat later, that is a separate decision.
 
+## View
+
+- Browser: open `/external.html` on the local preview (About → Shelf).
+- Terminal: `npm run peek:external`
+
 ## Refresh
 
 ```bash

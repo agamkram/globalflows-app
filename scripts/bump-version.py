@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "index.html"
 ABOUT = ROOT / "about.html"
 MATH = ROOT / "math.html"
+EXTERNAL = ROOT / "external.html"
 APP = ROOT / "app.js"
 MEANING = ROOT / "meaning.js"
 LIGHT_COPY = ROOT / "light-copy.js"
@@ -22,6 +23,7 @@ SPOTS = {
     "index ?v=": (INDEX, r"\?v=(\d+)", "?v={n}"),
     "about ?v=": (ABOUT, r"\?v=(\d+)", "?v={n}"),
     "math ?v=": (MATH, r"\?v=(\d+)", "?v={n}"),
+    "external ?v=": (EXTERNAL, r"\?v=(\d+)", "?v={n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app light-copy ?v=": (APP, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),
