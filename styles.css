@@ -1882,7 +1882,7 @@ html.page-about body,
   padding: calc(10px + var(--safe-t)) calc(14px + var(--safe-r)) 12px
     calc(14px + var(--safe-l));
   box-sizing: border-box;
-  background: transparent;
+  background: var(--bg);
 }
 
 .about-top-links {
@@ -2026,6 +2026,14 @@ html.page-about body,
   font-size: 0.95rem;
   line-height: 1.55;
   color: #b7c0cf;
+}
+
+.about-block > p.shelf-note,
+.about-block > p.shelf-empty {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
 }
 
 .about-block a {
@@ -2459,4 +2467,194 @@ code.about-ident {
 }
 .rubric-base[data-verdict="disagrees"] > strong {
   color: #e8edf5;
+}
+
+/* Shelf — same blocks as About / Math */
+.shelf-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 12px;
+}
+
+.shelf-head h2 {
+  margin: 0;
+}
+
+.shelf-asof {
+  color: var(--muted);
+  font: 400 0.72rem var(--mono);
+}
+
+.shelf-note,
+.shelf-empty {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.shelf-hero-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: baseline;
+  margin: 0 0 14px;
+}
+
+.shelf-score {
+  font: 500 1.85rem var(--mono);
+  line-height: 1;
+}
+
+.shelf-hero-meta {
+  color: var(--muted);
+  font: 400 0.78rem var(--mono);
+}
+
+.shelf-split {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 4px;
+}
+
+@media (min-width: 560px) {
+  .shelf-split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.shelf-class {
+  min-width: 0;
+}
+
+.shelf-class + .shelf-class {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.shelf-class h3 {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.shelf-class-grid {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 8px 10px;
+  min-width: 0;
+}
+
+@media (max-width: 420px) {
+  .shelf-class-grid {
+    grid-template-columns: 3.6rem minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 6px 8px;
+  }
+}
+
+.shelf-class-grid .lbl,
+.shelf-cot-grid .lbl {
+  display: block;
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+
+.shelf-class-grid .val,
+.shelf-cot-grid .val {
+  font: 500 0.78rem var(--mono);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.shelf-class-grid .val > span {
+  white-space: nowrap;
+}
+
+.shelf-mood {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+@media (min-width: 560px) {
+  .shelf-mood {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.shelf-subs {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 560px) {
+  .shelf-subs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.shelf-group {
+  margin: 14px 0 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shelf-cot-list {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 560px) {
+  .shelf-cot-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.shelf-cot-card p.shelf-asof {
+  margin: 0 0 8px;
+}
+
+.shelf-cot-grid {
+  display: grid;
+  grid-template-columns: 4.4rem minmax(0, 1fr);
+  gap: 4px 8px;
+  align-items: baseline;
+}
+
+.chain-sub[data-state="easing"],
+.shelf-class-grid [data-state="easing"],
+.shelf-score[data-state="easing"],
+.shelf-hero-meta[data-state="easing"],
+.about-door p[data-state="easing"],
+.shelf-cot-grid .val[data-state="easing"] {
+  color: var(--ease);
+}
+
+.chain-sub[data-state="neutral"],
+.shelf-class-grid [data-state="neutral"],
+.shelf-score[data-state="neutral"],
+.shelf-hero-meta[data-state="neutral"],
+.about-door p[data-state="neutral"],
+.shelf-cot-grid .val[data-state="neutral"] {
+  color: var(--neutral);
+}
+
+.chain-sub[data-state="tight"],
+.shelf-class-grid [data-state="tight"],
+.shelf-score[data-state="tight"],
+.shelf-hero-meta[data-state="tight"],
+.about-door p[data-state="tight"],
+.shelf-cot-grid .val[data-state="tight"] {
+  color: var(--tight);
 }

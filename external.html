@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="page-about">
 <head>
   <meta charset="UTF-8" />
   <meta
@@ -7,255 +7,83 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
   <meta name="theme-color" content="#000000" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta name="robots" content="noindex" />
-  <title>External shelf — GlobalFlows</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261227" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GlobalFlows" />
+  <script>
+    (function () {
+      try {
+        var r = document.documentElement;
+        var n = window.navigator;
+        var standalone =
+          n.standalone === true ||
+          (window.matchMedia &&
+            (window.matchMedia("(display-mode: standalone)").matches ||
+              window.matchMedia("(display-mode: fullscreen)").matches));
+        var iw = window.innerWidth || 0;
+        var ih = window.innerHeight || 0;
+        var sw = (window.screen && window.screen.width) || 0;
+        var sh = (window.screen && window.screen.height) || 0;
+        var screenMax = Math.max(sw, sh);
+        var screenMin = Math.min(sw, sh);
+        if (standalone) {
+          r.classList.add("pwa-standalone");
+          var fillH = ih >= iw ? Math.max(ih, screenMax) : Math.max(ih, screenMin);
+          var extra = 0;
+          if (Math.min(iw, ih) >= 600 && screenMax < ih - 10) extra = 20;
+          var total = fillH + extra;
+          r.style.setProperty("--pwa-fill-h", fillH + "px");
+          r.style.setProperty("--pwa-extra-b", extra + "px");
+          r.style.height = total + "px";
+          r.style.minHeight = total + "px";
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta
+    name="description"
+    content="Shelf — outside reads next to today’s GlobalFlows regime. They do not change the scores."
+  />
+  <title>Shelf — GlobalFlows</title>
+  <link rel="canonical" href="https://globalflows.markmaga.com/external.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://globalflows.markmaga.com/external.html" />
+  <meta property="og:title" content="Shelf — GlobalFlows" />
+  <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261230" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261230" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261227" />
-  <style>
-    .page-ext {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .ext-wrap {
-      max-width: 52rem;
-      margin: 0 auto;
-      padding: calc(12px + env(safe-area-inset-top, 0px)) 14px
-        calc(28px + env(safe-area-inset-bottom, 0px));
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .ext-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .ext-dots {
-      display: inline-flex;
-      gap: 5px;
-    }
-    .ext-dots i {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      box-shadow: 0 0 7px currentColor;
-    }
-    .ext-dots .e {
-      background: var(--ease);
-      color: var(--ease);
-    }
-    .ext-dots .m {
-      background: var(--pick);
-      color: var(--pick);
-    }
-    .ext-dots .t {
-      background: var(--tight);
-      color: var(--tight);
-    }
-    .ext-hero h1 {
-      margin: 0 0 6px;
-      font-family: Michroma, var(--sans);
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-    }
-    .ext-hero p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.45;
-      max-width: 38rem;
-    }
-    .ext-hero code {
-      font: 500 0.82em var(--mono);
-      color: var(--text);
-    }
-    .ext-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .ext-status {
-      color: var(--muted);
-      font: 400 0.75rem var(--mono);
-    }
-    .ext-card {
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .ext-card header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 12px;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-    .ext-card h2 {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-    .ext-meta {
-      color: var(--muted);
-      font: 400 0.72rem var(--mono);
-    }
-    .ext-score {
-      font: 500 1.85rem var(--mono);
-      line-height: 1;
-    }
-    .ext-score span {
-      margin-left: 8px;
-      font-size: 0.55em;
-    }
-    .ext-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .ext-pill {
-      display: inline-flex;
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: var(--bg3);
-      font: 500 0.75rem var(--mono);
-    }
-    .up {
-      color: var(--ease);
-    }
-    .down {
-      color: var(--tight);
-    }
-    .warn {
-      color: var(--pick);
-    }
-    .ext-pill.up {
-      border-color: color-mix(in srgb, var(--ease) 40%, var(--line));
-    }
-    .ext-pill.down {
-      border-color: color-mix(in srgb, var(--tight) 40%, var(--line));
-    }
-    .ext-pill.warn {
-      border-color: color-mix(in srgb, var(--pick) 45%, var(--line));
-    }
-    .ext-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(9.2rem, 1fr));
-      gap: 8px;
-    }
-    .ext-cell {
-      background: var(--bg3);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      min-width: 0;
-    }
-    .ext-cell .lbl {
-      color: var(--muted);
-      font-size: 0.66rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .ext-cell .val {
-      font: 500 0.82rem var(--mono);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ext-table {
-      width: 100%;
-      border-collapse: collapse;
-      font: 400 0.76rem var(--mono);
-    }
-    .ext-table th,
-    .ext-table td {
-      text-align: left;
-      padding: 6px 4px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
-    }
-    .ext-table th {
-      color: var(--muted);
-      font-size: 0.66rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .ext-table .num {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-    .ext-note,
-    .ext-story,
-    .ext-empty,
-    .ext-err {
-      margin: 0;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-    .ext-note,
-    .ext-empty {
-      color: var(--muted);
-    }
-    .ext-err {
-      color: var(--tight);
-    }
-    .ext-story {
-      max-height: 9rem;
-      overflow: auto;
-      white-space: pre-wrap;
-      color: color-mix(in srgb, var(--text) 85%, var(--muted));
-    }
-    .ext-card a {
-      color: var(--accent, #6aa7ff);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css?v=20261230" />
 </head>
-<body class="page-ext">
-  <div class="ext-wrap">
-    <header class="ext-top">
-      <a class="nav-link nav-link-sm" href="./">App</a>
-      <span class="ext-dots" aria-hidden="true"><i class="e"></i><i class="m"></i><i class="t"></i></span>
-      <a class="nav-link nav-link-sm" href="./about.html">About</a>
+<body class="page-about">
+  <div class="about-shell">
+    <header class="about-top">
+      <a class="about-back nav-link nav-link-sm" href="./about.html">About</a>
+      <span class="about-top-mark" aria-hidden="true">
+        <i class="dot ease"></i><i class="dot mid"></i><i class="dot tight"></i>
+      </span>
+      <span class="about-math nav-link nav-link-sm" aria-current="page">Shelf</span>
     </header>
 
-    <div class="ext-hero">
-      <h1>External shelf</h1>
-      <p>
-        Outside reads parked beside GlobalFlows — not baked into the model.
-        Refresh files with <code>npm run fetch:external</code>, then reload.
-      </p>
-    </div>
+    <main class="about-main">
+      <header class="about-hero">
+        <h1 class="about-brand">Shelf</h1>
+        <p class="about-lede">
+          Outside reads next to today’s regime. They do not change the scores.
+        </p>
+      </header>
 
-    <div class="ext-bar">
-      <button type="button" class="nav-link nav-link-sm" id="btnReload">Reload</button>
-      <span class="ext-status" id="status">Loading…</span>
-    </div>
-
-    <section class="ext-card" id="cardFear"></section>
-    <section class="ext-card" id="cardCot"></section>
-    <section class="ext-card" id="cardArsenal"></section>
-    <section class="ext-card" id="cardIitian"></section>
-    <section class="ext-card" id="cardHouse"></section>
+      <section class="about-block" id="mix"></section>
+      <section class="about-block" id="six"></section>
+      <section class="about-block" id="mood"></section>
+      <section class="about-block" id="cot"></section>
+    </main>
   </div>
-  <script type="module" src="external.js?v=20261227"></script>
+  <script type="module" src="external.js?v=20261230"></script>
 </body>
 </html>
