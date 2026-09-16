@@ -36,7 +36,10 @@ async function smokeMeaning() {
     if (got !== want) throw new Error(`chipBandFromScore(${sc}) = ${got}, want ${want}`);
   }
   if (lightStateFromScore(0.42).state !== "neutral") {
-    throw new Error("lean must not change colour: +0.42 should stay white");
+    throw new Error("lean must not cross the rail: +0.42 should stay inside ±0.45");
+  }
+  if (chipBandFromScore(-0.32) !== "leaningTight") {
+    throw new Error(`chipBandFromScore(-0.32) = ${chipBandFromScore(-0.32)}, want leaningTight`);
   }
   if (chipWord("inflation", 0.42) !== "Leaning hot") {
     throw new Error(`chipWord inflation 0.42 = ${chipWord("inflation", 0.42)}`);

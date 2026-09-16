@@ -45,9 +45,11 @@
   --muted: #8b97a8;
   --mono: "PlainZero", "IBM Plex Mono", ui-monospace, monospace;
   --sans: "PlainZero", "IBM Plex Sans", system-ui, sans-serif;
-  --ease: #1db87a;
+  --ease: #0f6b46;
+  --ease-lean: #62b890;
   --neutral: #ffffff;
-  --tight: #f23645;
+  --tight: #b52632;
+  --tight-lean: #c97d84;
   --accent: #6aa7ff;
   --pick: #e6b84d;
   --safe-t: env(safe-area-inset-top, 0px);
@@ -722,9 +724,17 @@ body.page-about::before {
   background: var(--ease);
   color: var(--ease);
 }
+.light[data-state="leaningEasing"] .dot {
+  background: var(--ease-lean);
+  color: var(--ease-lean);
+}
 .light[data-state="neutral"] .dot {
   background: var(--neutral);
   color: var(--neutral);
+}
+.light[data-state="leaningTight"] .dot {
+  background: var(--tight-lean);
+  color: var(--tight-lean);
 }
 .light[data-state="tight"] .dot {
   background: var(--tight);
@@ -895,6 +905,12 @@ html.gf-open-run .track-mark {
 }
 .track[data-state="easing"] .track-mark {
   background: var(--ease);
+}
+.track[data-state="leaningEasing"] .track-mark {
+  background: var(--ease-lean);
+}
+.track[data-state="leaningTight"] .track-mark {
+  background: var(--tight-lean);
 }
 .track[data-state="tight"] .track-mark {
   background: var(--tight);
@@ -1280,12 +1296,15 @@ html.gf-open-run .track-mark {
 }
 
 .spark-chg {
-  flex: 0 0 3.6em;
-  width: 3.6em;
+  flex: 0 0 8.5ch;
+  width: 8.5ch;
+  min-width: 8.5ch;
+  overflow: hidden;
   text-align: right;
+  font-family: var(--mono);
   font-size: 0.68rem;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1;
   pointer-events: none;
 }
@@ -1492,7 +1511,7 @@ html {
 }
 
 .heat .name {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .heat a {
@@ -1946,9 +1965,15 @@ html.page-about body,
 .swatch.ease {
   background: var(--ease);
 }
+.swatch.ease-lean {
+  background: var(--ease-lean);
+}
 .dot.mid,
 .swatch.mid {
   background: var(--neutral);
+}
+.swatch.tight-lean {
+  background: var(--tight-lean);
 }
 .dot.tight,
 .swatch.tight {

@@ -799,7 +799,8 @@ function lightIsSplit(snap, id) {
 
 /**
  * Gauge rail. The five tick 0 and ±0.45 on a ±1 rail (the number can still
- * run to ±1.5). The six only mark center — in/out is the colour, not a colour line.
+ * run to ±1.5). Needle paint follows the five-state word: dim at a lean,
+ * full green/red past the cut. The six only mark center — in/out is the colour.
  */
 function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   const pct = trackPct(score).toFixed(1);
@@ -2011,11 +2012,12 @@ function renderLights(snap) {
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
       const word = scoreNum != null ? chipWord(id, scoreNum) : "—";
+      const paint = scoreNum != null ? chipBandFromScore(scoreNum) : "empty";
       const inflTurn =
         id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
       const spoken = inflTurn ? `${word}, ${inflTurn}` : word;
       const tip = [inflTurn ? spoken : null, nearFlip].filter(Boolean).join(" · ");
-      return `<button type="button" class="light" data-state="${L.state || "empty"}" data-id="${id}" data-focus="${
+      return `<button type="button" class="light" data-state="${escapeHtml(paint)}" data-id="${id}" data-focus="${
         on ? "true" : "false"
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
         tip ? ` title="${escapeHtml(tip)}"` : ""
@@ -2028,7 +2030,7 @@ function renderLights(snap) {
         <span class="score"${
           scoreNum != null ? ` data-target="${scoreNum}"` : ""
         }>${escapeHtml(score)}</span>
-        ${trackHtml(L.score, L.state || "empty")}
+        ${trackHtml(L.score, paint)}
       </button>`;
     })
     .join("");
@@ -2510,23 +2512,37 @@ function syncViewControls() {
   }
 }
 
-function valuesCells(s) {
-  if (s.status !== "ok" || s.latest == null) {
-    return `<td colspan="${COLSPAN_DATA}" class="empty">empty — ${escapeHtml(s.error || "no data")}</td>`;
-  }
+function latestHeat(s) {
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
+  if (s.status !== "ok" || latest == null) return null;
   const dir = impulseOf(s).dir;
   const heat =
     dir === "up" ? "z-pos" : dir === "down" ? "z-neg" : dir === "flat" ? "z-mid" : "";
-  return `<td><span class="cell-heat${heat ? ` ${heat}` : ""}"${live ? ' data-live="1"' : ""}>${fmtValue(latest, s.units)}</span></td>`;
+  return {
+    text: fmtValue(latest, s.units),
+    heat,
+    live: !!live,
+  };
+}
+
+function valuesCells(s) {
+  const L = latestHeat(s);
+  if (!L) {
+    return `<td colspan="${COLSPAN_DATA}" class="empty">empty — ${escapeHtml(s.error || "no data")}</td>`;
+  }
+  return `<td><span class="cell-heat${L.heat ? ` ${L.heat}` : ""}"${L.live ? ' data-live="1"' : ""}>${L.text}</span></td>`;
 }
 
 function chartCell(s) {
+  const L = latestHeat(s);
+  const chg = L
+    ? `<span class="spark-chg${L.heat ? ` ${L.heat}` : ""}"${L.live ? ' data-live="1"' : ""}>${escapeHtml(L.text)}</span>`
+    : `<span class="spark-chg" aria-hidden="true"></span>`;
   return `<td class="chart-cell" colspan="${COLSPAN_DATA}">
     <div class="spark-wrap" data-spark="${s.id}">
       <canvas class="spark" width="600" height="20" aria-hidden="true"></canvas>
-      <span class="spark-chg muted" aria-hidden="true"></span>
+      ${chg}
       <span class="spark-msg muted"></span>
     </div>
   </td>`;
@@ -2802,15 +2818,10 @@ async function paintSparks() {
       const id = wrap.dataset.spark;
       const canvas = wrap.querySelector("canvas");
       const msg = wrap.querySelector(".spark-msg");
-      const chgEl = wrap.querySelector(".spark-chg");
       const hist = await loadHistory(id);
       if (!canvas) return;
       if (!hist?.points?.length) {
         if (msg) msg.textContent = "no history";
-        if (chgEl) {
-          chgEl.textContent = "";
-          chgEl.removeAttribute("data-dir");
-        }
         return;
       }
       const dur = chartDuration();
@@ -2818,20 +2829,9 @@ async function paintSparks() {
       const sliced = sliceLookback(hist.points, dur, series?.freq);
       if (!sliced.length) {
         if (msg) msg.textContent = `no ${dur} data`;
-        if (chgEl) {
-          chgEl.textContent = "";
-          chgEl.removeAttribute("data-dir");
-        }
         return;
       }
       drawSpark(canvas, sliced);
-      const chg = fmtWindowChange(sliced, series?.units);
-      if (chgEl) {
-        chgEl.textContent = chg.text;
-        chgEl.title = `${dur} change`;
-        if (!chg.dir) chgEl.removeAttribute("data-dir");
-        else chgEl.dataset.dir = chg.dir;
-      }
     })
   );
 }
