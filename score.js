@@ -362,6 +362,27 @@ export function applyStressFloor(lid, score, ballots) {
   return worst == null ? score : Math.min(score, worst);
 }
 
+/**
+ * When funding or commercial-paper stress is past the trigger, quantity ballots
+ * (Fed balance sheet, global CB / dollar) cannot lift Liquidity — by design.
+ * The plumbing audit must not call that a dead seat.
+ */
+export function mutedByLiquidityStressFloor(voters, voterId) {
+  const families = VOTE_FAMILIES.liquidity || {};
+  const stressIds = new Set();
+  for (const fname of ["funding", "stress"]) {
+    for (const id of familyIds(families[fname])) stressIds.add(id);
+  }
+  if (stressIds.has(voterId)) return false;
+  const ballots = buildBallots("liquidity", voters);
+  return ballots.some(
+    (b) =>
+      STRESS_BALLOTS.liquidity.includes(b.id) &&
+      Number.isFinite(b.score) &&
+      b.score <= STRESS_TRIGGER
+  );
+}
+
 function clamp(n, lo, hi) {
   return Math.max(lo, Math.min(hi, n));
 }

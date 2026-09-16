@@ -180,6 +180,41 @@ async function main() {
         "  while it accumulates, not so they can be quoted.\n"
     );
   }
+
+  // Tiny payload for the Shelf log box — matured 1w moves only, labeled anecdotes.
+  const SHELF = path.join(ROOT, "data", "forward-shelf.json");
+  const anecdotes = [];
+  for (const d of withCalls) {
+    const row = byDate.get(d.date);
+    if (!row?.fwd?.["1w"]) continue;
+    for (const cls of CLASS_ORDER) {
+      const stance = d.calls[cls]?.stance;
+      if (!STANCES.includes(stance)) continue;
+      const ret = classReturn(row.fwd["1w"], CLASS_ASSETS[cls]);
+      if (ret == null || !Number.isFinite(ret)) continue;
+      anecdotes.push({
+        date: d.date,
+        class: cls,
+        label: CLASS_LABEL[cls],
+        stance,
+        horizon: "1w",
+        ret: Number(ret.toFixed(2)),
+      });
+    }
+  }
+  anecdotes.sort((a, b) => b.date.localeCompare(a.date) || a.class.localeCompare(b.class));
+  const shelf = {
+    note: "Aged one-week moves after a logged call. Anecdotes, not a track record.",
+    generatedAt: new Date().toISOString(),
+    daysLogged: days.length,
+    daysWithCalls: withCalls.length,
+    anecdotes: anecdotes.slice(0, 24),
+  };
+  await fs.writeFile(SHELF, JSON.stringify(shelf, null, 2) + "\n");
+  console.log(
+    `  Shelf notes → data/forward-shelf.json (${shelf.anecdotes.length} aged 1w row(s)).\n`
+  );
+
   console.log("ok — forward record read; it grades only what was published in advance.\n");
 }
 

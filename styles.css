@@ -64,7 +64,6 @@
   --favor-h: calc(5rem * var(--ui-scale));
   --lights-favor-gap: calc(0.1875rem * var(--ui-scale));
   --favor-tenor-gap: calc(0.4375rem * var(--ui-scale));
-  --lights-col: calc(4.5rem * var(--ui-scale));
   --track-w: calc(3.25rem * var(--ui-scale));
   --track-h: calc(0.875rem * var(--ui-scale));
   --track-xs-w: calc(2.25rem * var(--ui-scale));
@@ -409,7 +408,7 @@ body.page-about::before {
 .favor-strip {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 3px;
+  gap: calc(5px * var(--ui-scale));
   width: 100%;
   margin: 0;
   padding: 0;
@@ -622,14 +621,14 @@ body.page-about::before {
   color: var(--muted);
 }
 
-/* Five components: compact cards, packed left (all widths). */
+/* Five components: same full width as the six. */
 .lights {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, var(--lights-col)));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: calc(5px * var(--ui-scale));
-  width: max-content;
+  width: 100%;
   max-width: 100%;
-  align-self: start;
+  align-self: stretch;
   padding: 0;
   background: transparent;
   border: none;
@@ -957,7 +956,7 @@ html.gf-open-run .track-mark {
 
 @media (min-width: 721px) {
   :root {
-    --ui-scale: 1.5;
+    --ui-scale: 1.4;
   }
 }
 
@@ -2778,5 +2777,89 @@ code.about-ident {
 .shelf-sub .val[data-state="tight"],
 .shelf-risk [data-state="tight"],
 .chain-sub[data-state="tight"] {
+  color: var(--tight);
+}
+
+/* Forward log — tight diary on Shelf */
+.shelf-log-h {
+  margin: 8px 0 3px;
+  font: 600 0.62rem var(--sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shelf-log-h:first-of-type {
+  margin-top: 4px;
+}
+
+.shelf-log-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 7px;
+  align-items: baseline;
+}
+
+.shelf-log-chip {
+  font: 400 0.68rem var(--mono);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.shelf-log-name {
+  color: var(--muted);
+}
+
+.shelf-log-day {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  gap: 2px 6px;
+  align-items: baseline;
+  margin: 0 0 3px;
+}
+
+.shelf-log-date {
+  font: 400 0.62rem var(--mono);
+  color: var(--muted);
+}
+
+.shelf-log-diary {
+  margin: 0 0 2px;
+}
+
+.shelf-log-anecdotes {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.shelf-log-anecdote {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr) auto auto;
+  gap: 4px 8px;
+  align-items: baseline;
+  font: 400 0.72rem var(--mono);
+}
+
+.shelf-log-anecdote .num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.shelf-log-chip [data-state="easing"],
+.shelf-log-anecdote [data-state="easing"],
+.shelf-log-anecdote .num[data-state="easing"] {
+  color: var(--ease);
+}
+
+.shelf-log-chip [data-state="neutral"],
+.shelf-log-anecdote [data-state="neutral"],
+.shelf-log-anecdote .num[data-state="neutral"] {
+  color: var(--neutral);
+}
+
+.shelf-log-chip [data-state="tight"],
+.shelf-log-anecdote [data-state="tight"],
+.shelf-log-anecdote .num[data-state="tight"] {
   color: var(--tight);
 }

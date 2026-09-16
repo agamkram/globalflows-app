@@ -31,6 +31,7 @@ import {
   lightStateFromScore,
   setLightDist,
   makeAnchor,
+  mutedByLiquidityStressFloor,
 } from "../score.js";
 import { MIN_GAP_DAYS, MAX_ANALOGS, CLOSE_CUT, LOOSE_CUT } from "./analogs.mjs";
 
@@ -249,6 +250,7 @@ lines.push("6. Voter influence — does every seated voter reach its component?"
   const SILENT_BY_DESIGN = new Map();
   let seated = 0;
   let mute = 0;
+  let heldByStress = 0;
   for (const lid of LIGHT_IDS) {
     const voters = clubLight(snap, lid)?.voters || [];
     if (voters.length < 2) continue;
@@ -267,6 +269,12 @@ lines.push("6. Voter influence — does every seated voter reach its component?"
       const influence = Math.max(Math.abs(move(NUDGE) - base), Math.abs(move(-NUDGE) - base));
       if (influence > 1e-9) continue;
       if (SILENT_BY_DESIGN.has(`${lid}/${v.id}`)) continue;
+      // Funding stress floors Liquidity: quantity ballots stay seated but cannot
+      // talk the light up. Same gate as applyStressFloor in score.js.
+      if (lid === "liquidity" && mutedByLiquidityStressFloor(voters, v.id)) {
+        heldByStress += 1;
+        continue;
+      }
       mute++;
       fail(
         `${lid}/${v.id}: seated and scoring ${(v.score >= 0 ? "+" : "") + v.score.toFixed(2)}, but ` +
@@ -274,7 +282,13 @@ lines.push("6. Voter influence — does every seated voter reach its component?"
       );
     }
   }
-  if (!mute) ok(`all ${seated} seated voters move their component`);
+  if (!mute) {
+    ok(
+      heldByStress
+        ? `all ${seated} seated voters move their component (${heldByStress} held by Liquidity stress floor)`
+        : `all ${seated} seated voters move their component`
+    );
+  }
 }
 
 lines.push("");

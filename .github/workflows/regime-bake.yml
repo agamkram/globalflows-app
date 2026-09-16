@@ -153,6 +153,7 @@ jobs:
             data/regime-today.json
             data/sparks.json
             data/regime-log.json
+            data/forward-shelf.json
             data/light-dist.json
             data/val-center.json
             data/history-lengths.json
@@ -173,6 +174,7 @@ jobs:
             -e '^data/regime-today.json$' \
             -e '^data/sparks.json$' \
             -e '^data/regime-log.json$' \
+            -e '^data/forward-shelf.json$' \
             -e '^data/light-dist.json$' \
             -e '^data/val-center.json$' \
             -e '^data/history-lengths.json$' \

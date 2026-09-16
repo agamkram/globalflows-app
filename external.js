@@ -1,6 +1,7 @@
-/** Shelf — outside reads next to today’s regime. Not a voter. */
+/** Shelf — outside reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261283";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261292";
+import { chipWord } from "./light-copy.js?v=20261292";
 
 const $ = (id) => document.getElementById(id);
 
@@ -461,6 +462,145 @@ function renderCot(el, cot) {
     </table>`;
 }
 
+const LOG_CLASS = [
+  { id: "treasuries", short: "Tsy" },
+  { id: "credit", short: "Crd" },
+  { id: "stocks", short: "Eq" },
+  { id: "crypto", short: "Cry" },
+  { id: "gold", short: "Au" },
+  { id: "cmdty", short: "Cmd" },
+];
+
+const LOG_LIGHT = [
+  { id: "liquidity", short: "Liq" },
+  { id: "rates", short: "Rts" },
+  { id: "growth", short: "Gr" },
+  { id: "inflation", short: "Inf" },
+  { id: "risk", short: "Rsk" },
+];
+
+function daysWithCalls(log) {
+  return (log?.days || []).filter((d) => d?.date && d.calls && Object.keys(d.calls).length);
+}
+
+function streakLine(callDays) {
+  if (!callDays.length) return "";
+  const newestFirst = [...callDays].reverse();
+  const bits = [];
+  for (const { id, short } of LOG_CLASS) {
+    const stance = newestFirst[0].calls?.[id]?.stance;
+    if (!stance) continue;
+    let n = 0;
+    for (const d of newestFirst) {
+      if (d.calls?.[id]?.stance !== stance) break;
+      n += 1;
+    }
+    bits.push(
+      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
+        stanceState(stance)
+      )}">${esc(stanceWord(stance))}</span> · ${n}d</span>`
+    );
+  }
+  return bits.length ? `<div class="shelf-log-row">${bits.join("")}</div>` : "";
+}
+
+function flipLine(callDays) {
+  if (callDays.length < 2) return `<p class="shelf-note">Need two call days before a flip shows.</p>`;
+  const cur = callDays[callDays.length - 1];
+  const prev = callDays[callDays.length - 2];
+  const flips = [];
+  for (const { id, short } of LOG_CLASS) {
+    const a = prev.calls?.[id]?.stance;
+    const b = cur.calls?.[id]?.stance;
+    if (!a || !b || a === b) continue;
+    flips.push(
+      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
+        stanceState(a)
+      )}">${esc(stanceWord(a))}</span>→<span data-state="${esc(stanceState(b))}">${esc(
+        stanceWord(b)
+      )}</span></span>`
+    );
+  }
+  for (const { id, short } of LOG_LIGHT) {
+    const a = chipWord(id, prev.lights?.[id]?.score);
+    const b = chipWord(id, cur.lights?.[id]?.score);
+    if (!a || !b || a === b) continue;
+    flips.push(
+      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> ${esc(a)}→${esc(b)}</span>`
+    );
+  }
+  if (!flips.length) {
+    return `<p class="shelf-note">${esc(shortDay(prev.date))} → ${esc(
+      shortDay(cur.date)
+    )} · no flip.</p>`;
+  }
+  return `<p class="shelf-note">${esc(shortDay(prev.date))} → ${esc(shortDay(cur.date))}</p>
+    <div class="shelf-log-row">${flips.join("")}</div>`;
+}
+
+function diaryLines(callDays) {
+  const recent = callDays.slice(-5).reverse();
+  if (!recent.length) return empty("No calls stamped yet.");
+  const rows = recent
+    .map((d) => {
+      const cells = LOG_CLASS.map(({ id, short }) => {
+        const st = d.calls?.[id]?.stance;
+        return `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
+          stanceState(st)
+        )}">${esc(stanceWord(st))}</span></span>`;
+      }).join("");
+      return `<div class="shelf-log-day"><span class="shelf-log-date">${esc(
+        shortDay(d.date)
+      )}</span><div class="shelf-log-row">${cells}</div></div>`;
+    })
+    .join("");
+  return rows;
+}
+
+function anecdoteLines(shelf) {
+  const rows = shelf?.anecdotes || [];
+  if (!rows.length) {
+    return `<p class="shelf-note">No aged one-week moves yet. A week after a call, the move shows here — not a record.</p>`;
+  }
+  const shown = rows.slice(0, 8);
+  return `<div class="shelf-log-anecdotes">${shown
+    .map((a) => {
+      const tone = a.ret > 0 ? "easing" : a.ret < 0 ? "tight" : "neutral";
+      return `<div class="shelf-log-anecdote">
+        <span class="shelf-log-date">${esc(shortDay(a.date))}</span>
+        <span class="shelf-log-name">${esc(a.label || a.class)}</span>
+        <span data-state="${esc(stanceState(a.stance))}">${esc(stanceWord(a.stance))}</span>
+        <span class="num" data-state="${tone}">${esc(signedPct(a.ret))} 1w</span>
+      </div>`;
+    })
+    .join("")}</div>
+    <p class="shelf-note">Anecdotes only. Not a track record.</p>`;
+}
+
+function renderLog(el, log, shelf) {
+  if (!el) return;
+  if (!log?.days?.length) {
+    el.innerHTML = `${head("Log", "our stamps")}
+      <p>What this app called each morning, written down and not recomputed.</p>
+      ${empty("Log file missing.")}`;
+    return;
+  }
+  const callDays = daysWithCalls(log);
+  const last = log.days[log.days.length - 1];
+  const asOf = stamp(last?.date, `${log.days.length}d · ${callDays.length} with calls`);
+  el.innerHTML = `
+    ${head("Log", asOf)}
+    <p>Our morning stamps — not an outside read. Flips, streaks, and a few aged moves.</p>
+    <h3 class="shelf-log-h">Streaks</h3>
+    ${streakLine(callDays) || empty("No call streaks yet.")}
+    <h3 class="shelf-log-h">Flipped</h3>
+    ${flipLine(callDays)}
+    <h3 class="shelf-log-h">Recent</h3>
+    <div class="shelf-log-diary">${diaryLines(callDays)}</div>
+    <h3 class="shelf-log-h">Aged 1w</h3>
+    ${anecdoteLines(shelf)}`;
+}
+
 async function loadAll() {
   const q = `?t=${Date.now()}`;
   const liveJson = async (url) => {
@@ -468,7 +608,7 @@ async function loadAll() {
     if (!res.ok) throw new Error(`${res.status} ${url}`);
     return res.json();
   };
-  const [regimeS, snapS, cotLiveS, fearLiveS, cotFileS, fearFileS, arsenalFileS, houseS] =
+  const [regimeS, snapS, cotLiveS, fearLiveS, cotFileS, fearFileS, arsenalFileS, houseS, logS, shelfS] =
     await Promise.allSettled([
       getJson(`./regime-today.json${q}`),
       getJson(`./snapshot.json${q}`),
@@ -478,6 +618,8 @@ async function loadAll() {
       getJson(`data/external/fear-greed/latest.json${q}`),
       getJson(`data/external/arsenal/latest.json${q}`),
       getText(`data/external/house-card.csv${q}`),
+      getJson(`data/regime-log.json${q}`),
+      getJson(`data/forward-shelf.json${q}`),
     ]);
   const ok = (s) => (s.status === "fulfilled" ? s.value : null);
   const regime = ok(regimeS);
@@ -486,6 +628,7 @@ async function loadAll() {
   const cot = ok(cotLiveS) || ok(cotFileS);
   const fear = ok(fearLiveS)?.score != null ? ok(fearLiveS) : ok(fearFileS);
   const houseRows = houseLatest(ok(houseS) || "");
+  renderLog($("log"), ok(logS), ok(shelfS));
   renderMix($("mix"), arsenal, regime);
   renderSix($("six"), regime, cot, houseRows, arsenal, fear);
   renderMood($("mood"), fear, regime);
@@ -493,5 +636,6 @@ async function loadAll() {
 }
 
 loadAll().catch((e) => {
-  $("mix").innerHTML = empty(String(e.message || e));
+  const mix = $("mix");
+  if (mix) mix.innerHTML = empty(String(e.message || e));
 });
