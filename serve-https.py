@@ -50,6 +50,15 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         raw = self.path or "/"
         path = raw.split("?", 1)[0]
+        low = path.lower()
+        if (
+            low.startswith("/.env")
+            or low.endswith(".pem")
+            or "/.git" in low
+            or low.startswith("/node_modules")
+        ):
+            self.send_error(404, "Not found")
+            return
         if path == "/api/markets-live":
             return self._markets_live(raw)
         if path == "/api/fear-greed":

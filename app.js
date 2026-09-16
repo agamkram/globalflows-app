@@ -11,6 +11,9 @@ import {
   clubLight,
   tallyVotes,
   lightStateFromScore,
+  chipBandFromScore,
+  makeAnchor,
+  isTrailingKind,
   VOTE_FAMILIES,
   familyIds,
   DEFAULT_IMPULSE,
@@ -294,23 +297,36 @@ async function applyLiveQuotes(quotes) {
     patchSparkLast(id, q.price, asOf);
     const pts = sparkLive[id];
     if (pts?.length >= 2) {
-      const facts = seriesFacts(pts, specFromRow(s));
-      s.anchor = facts.anchor;
+      const spec = specFromRow(s);
+      const facts = seriesFacts(pts, spec);
       s.impulse = facts.impulse;
       s.n = facts.n;
+      const kind = s.anchor?.kind || facts.anchor?.kind;
+      // Sparks are ~400 calendar days. Trailing voters need ~2y or they
+      // abstain — keep the morning 5y window and only move the print.
+      if (isTrailingKind(kind)) {
+        if (s.norm) s.anchor = makeAnchor(spec, s.latest, s.norm);
+      } else {
+        s.anchor = facts.anchor;
+      }
     }
   }
   applyRealRateAnchors(SNAP.series);
 }
 
+let liveWantFresh = false;
+
 function pullMarketsLive(force = false) {
+  if (force) liveWantFresh = true;
   if (liveInflight) return liveInflight;
+  const useFresh = liveWantFresh;
+  liveWantFresh = false;
   liveState = "loading";
   syncMarketsLiveUi();
   liveInflight = (async () => {
     try {
       const res = await fetch(
-        `./api/markets-live${force ? "?fresh=1" : ""}`,
+        `./api/markets-live${useFresh ? "?fresh=1" : ""}`,
         { cache: "no-store" }
       );
       if (!res.ok) throw new Error(`live ${res.status}`);
@@ -319,9 +335,9 @@ function pullMarketsLive(force = false) {
       const t = Date.parse(data.pulledAt);
       livePulledAt = Number.isFinite(t) ? t : Date.now();
       liveState = "ok";
-      if (force) await applyLiveQuotes(liveQuotes);
+      if (useFresh) await applyLiveQuotes(liveQuotes);
       if (SNAP) {
-        if (force) {
+        if (useFresh) {
           refreshViews();
           if (globalView === "charts" || [...rowFlip].length) paintSparks();
         } else {
@@ -334,6 +350,7 @@ function pullMarketsLive(force = false) {
       syncMarketsLiveUi();
     } finally {
       liveInflight = null;
+      if (liveWantFresh) pullMarketsLive(true);
     }
   })();
   return liveInflight;
@@ -563,7 +580,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
-    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they slide the needle and the tap flags early — not confirmed; alone they cannot flip Strong or Soft. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they slide the needle and the tap flags early — not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — realized core (CPI and PCE) at double weight, persistence (sticky CPI, wages, final-demand PPI), and 5y5y expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
@@ -682,10 +699,22 @@ function afterOpenSettle() {
     if (SNAP) renderTable(viewOf(SNAP));
   });
   pullMarketsLive();
+  if (settleDirty && SNAP) {
+    settleDirty = false;
+    refreshViews();
+  }
 }
 
 function startOpenSettle() {
   if (settlePhase !== "pending") return;
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if (reduce) {
+    settlePhase = "done";
+    document.documentElement.classList.remove("gf-open-settle", "gf-open-run", "gf-open-arrive");
+    if (SNAP) refreshViews();
+    afterOpenSettle();
+    return;
+  }
   const { marks, scores } = settleMarksAndScores();
   if (!marks.length) {
     settlePhase = "done";
@@ -1343,7 +1372,7 @@ function clubSplit(snap, lid) {
 }
 
 function ratesClause(snap) {
-  const st = lightState(snap, "rates");
+  const st = chipBandFromScore(snap.lights?.rates?.score);
   const split = clubSplit(snap, "rates");
   if (split) {
     const tightN = split.tight.slice(0, 2);
@@ -1358,7 +1387,9 @@ function ratesClause(snap) {
   }
   return {
     easing: `Borrowing costs look <strong data-state="easing">easy</strong>`,
+    leaningEasing: `Borrowing costs look <strong data-state="neutral">leaning easy</strong>`,
     tight: `Borrowing costs look <strong data-state="tight">expensive</strong>`,
+    leaningTight: `Borrowing costs look <strong data-state="neutral">leaning expensive</strong>`,
     neutral: `Borrowing costs look <strong data-state="neutral">mixed</strong>`,
     empty: "",
   }[st];
@@ -1382,15 +1413,36 @@ function hotInflationTurn(snap) {
 }
 
 function regimeStoryHtml(snap) {
-  const liq = lightState(snap, "liquidity");
-  const gr = lightState(snap, "growth");
-  const inf = lightState(snap, "inflation");
-  const risk = lightState(snap, "risk");
-  const hotTurn = inf === "easing" ? hotInflationTurn(snap) : "";
+  const liq = chipBandFromScore(snap.lights?.liquidity?.score);
+  const gr = chipBandFromScore(snap.lights?.growth?.score);
+  const inf = chipBandFromScore(snap.lights?.inflation?.score);
+  const risk = chipBandFromScore(snap.lights?.risk?.score);
+  const hotTurn =
+    inf === "easing" || inf === "leaningEasing" ? hotInflationTurn(snap) : "";
+  const isEase = (b) => b === "easing" || b === "leaningEasing";
+  const isTight = (b) => b === "tight" || b === "leaningTight";
+  const growthVoice = (b) =>
+    ({
+      easing: { ds: "easing", word: "strong" },
+      leaningEasing: { ds: "neutral", word: "leaning strong" },
+      tight: { ds: "tight", word: "soft" },
+      leaningTight: { ds: "neutral", word: "leaning soft" },
+      empty: { ds: "neutral", word: "unclear" },
+    }[b] || { ds: "neutral", word: "mixed" });
+  const inflVoice = (b) =>
+    ({
+      easing: { ds: "easing", word: "hot" },
+      leaningEasing: { ds: "neutral", word: "leaning hot" },
+      tight: { ds: "tight", word: "cooled" },
+      leaningTight: { ds: "neutral", word: "leaning cool" },
+      empty: { ds: "neutral", word: "unclear" },
+    }[b] || { ds: "neutral", word: "mixed" });
 
   const cash = {
     easing: `<strong data-state="easing">cash has been flowing back</strong> into the system`,
+    leaningEasing: `cash has been <strong data-state="neutral">leaning easier</strong>`,
     tight: `<strong data-state="tight">cash has been leaving</strong> the system`,
+    leaningTight: `cash has been <strong data-state="neutral">leaning tighter</strong>`,
     neutral: `cash conditions have looked <strong data-state="neutral">steady</strong>`,
     empty: `cash conditions are unclear`,
   }[liq];
@@ -1423,12 +1475,17 @@ function regimeStoryHtml(snap) {
       ? `growth has looked <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong> — even if the overall CPI print can look hotter`
       : `growth has looked <strong data-state="neutral">mixed</strong> and underlying inflation has <strong data-state="tight">cooled</strong>`;
   } else {
-    growthBit = `growth and inflation have both looked <strong data-state="neutral">mixed</strong>`;
+    const gv = growthVoice(gr);
+    const iv = inflVoice(inf);
+    const turn = isEase(inf) ? hotTurn : "";
+    growthBit = `the real growth has looked <strong data-state="${gv.ds}">${gv.word}</strong> while inflation has looked <strong data-state="${iv.ds}">${iv.word}</strong>${turn}`;
   }
 
   const fear = {
     easing: `market <strong data-state="easing">fear has stayed low</strong>`,
+    leaningEasing: `market <strong data-state="neutral">fear has been leaning cheap</strong>`,
     tight: `markets have been <strong data-state="tight">paying up for fear</strong>`,
+    leaningTight: `market <strong data-state="neutral">fear has been leaning expensive</strong>`,
     neutral: `market fear has looked <strong data-state="neutral">mixed</strong>`,
     empty: `market fear is unclear`,
   }[risk];
@@ -1436,9 +1493,9 @@ function regimeStoryHtml(snap) {
   const money = ratesClause(snap);
 
   const cashVsGrowth =
-    (liq === "tight" && gr === "easing") || (liq === "easing" && gr === "tight");
+    (isTight(liq) && isEase(gr)) || (isEase(liq) && isTight(gr));
   const cashVsFear =
-    (liq === "tight" && risk === "easing") || (liq === "easing" && risk === "tight");
+    (isTight(liq) && isEase(risk)) || (isEase(liq) && isTight(risk));
 
   let s1;
   if (cashVsGrowth && cashVsFear) {
@@ -1529,7 +1586,12 @@ function regimeEvidence(snap) {
   } else if (risk === "tight") {
     beats.push(`Fear: vol and/or credit spreads are elevated — markets are paying for protection.`);
   } else {
-    beats.push(`Fear: gauges look mixed — not a clear risk-on or risk-off call.`);
+    const fearWord = wordFor(snap.lights?.risk).toLowerCase();
+    beats.push(
+      fearWord && fearWord !== "—" && fearWord !== "neutral"
+        ? `Fear is ${fearWord}.`
+        : `Fear: gauges look mixed — not a clear risk-on or risk-off call.`
+    );
   }
 
   if (liq === "tight" && risk === "easing") {
@@ -2622,7 +2684,7 @@ function renderTable(snap) {
 let sparkBundle = null;
 function loadSparkBundle() {
   if (!sparkBundle) {
-    sparkBundle = fetch("./data/sparks.json", { cache: "force-cache" })
+    sparkBundle = fetch("./data/sparks.json", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => j?.series || null)
       .catch(() => null);
@@ -2787,7 +2849,14 @@ function escapeHtml(t) {
   return String(t)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function safeHref(url) {
+  const s = String(url || "").trim();
+  return /^https?:\/\//i.test(s) ? s : "";
 }
 
 function openSeries(s) {
@@ -2845,8 +2914,8 @@ function openSeries(s) {
             : fmtAsOf(s.asOf)
         }</dd></div>
         <div><dt>Source</dt><dd>${escapeHtml(s.source || "—")}${
-          s.sourceUrl
-            ? ` · <a href="${s.sourceUrl}" target="_blank" rel="noopener">open</a>`
+          safeHref(s.sourceUrl)
+            ? ` · <a href="${escapeHtml(safeHref(s.sourceUrl))}" target="_blank" rel="noopener">open</a>`
             : ""
         }</dd></div>
       </dl>

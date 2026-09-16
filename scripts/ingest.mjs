@@ -51,7 +51,7 @@ async function fetchText(url, opts = {}) {
     ...opts,
     headers: { "User-Agent": UA, Accept: "*/*", ...(opts.headers || {}) },
   });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${redactUrl(url)}`);
   return res.text();
 }
 
@@ -64,8 +64,18 @@ async function fetchJson(url, opts = {}) {
       ...(opts.headers || {}),
     },
   });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${redactUrl(url)}`);
   return res.json();
+}
+
+function redactUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.searchParams.has("api_key")) u.searchParams.set("api_key", "REDACTED");
+    return u.toString();
+  } catch {
+    return String(url).replace(/api_key=[^&]+/gi, "api_key=REDACTED");
+  }
 }
 
 function parseFredCsv(text) {

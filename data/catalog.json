@@ -207,7 +207,8 @@
       "light": null,
       "weight": 1,
       "voteMaxAgeDays": 400,
-      "note": "BIS total credit to China's private non-financial sector as a share of GDP (break-adjusted). The free 2003+ China credit stock — monthly TSF is not on FRED and the public MOFCOM feed only starts in 2015. Shown, not voted: it is a stock that ratchets, it has reached the top of its 2003-2026 band (111 / 169 / 194) and printed +1.00 every day, and BIS lags two to three quarters so the reading can be 13 months old. China reaches Liquidity through FX reserves in the G4 ballot. The four-quarter impulse still moves the lookback."
+      "freshness": "lagged",
+      "note": "BIS total credit to China's private non-financial sector as a share of GDP (break-adjusted). The free 2003+ China credit stock — monthly TSF is not on FRED and the public MOFCOM feed only starts in 2015. Shown, not voted: it is a stock that ratchets, it has reached the top of its 2003-2026 band (111 / 169 / 194) and printed +1.00 every day, and BIS lags two to three quarters so the reading can be 13 months old. China reaches Liquidity through FX reserves in the G4 ballot. The four-quarter impulse is lagged with the stock — it does not vote a 1m turn."
     },
     {
       "id": "CHINA_CREDIT_IMPULSE",
@@ -225,8 +226,9 @@
       "search": "CHINA_CREDIT_IMPULSE",
       "causal": "liquidity",
       "street": "liquidity",
-      "note": "Four-quarter change in China credit/GDP (pp of GDP). BIS-style impulse — free history to the mid-1980s. Monthly TSF impulse deferred until a free 2003+ flow series appears.",
-      "impulseLight": "liquidity"
+      "freshness": "lagged",
+      "note": "Four-quarter change in China credit/GDP (pp of GDP). BIS-style impulse — free history to the mid-1980s. Monthly TSF impulse deferred until a free 2003+ flow series appears. Shown on the street; too lagged to vote a 1m turn.",
+      "impulseLight": null
     },
     {
       "id": "BUSLOANS",

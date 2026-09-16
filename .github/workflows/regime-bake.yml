@@ -1,5 +1,5 @@
 # Daily regime bake. Same path as a pasted `do #1`:
-#   npm run refresh = ingest → vintages → history → regime → sanity
+#   npm run refresh = ingest → vintages → history → calibrate → regime → sanity
 # then commit allowlisted JSON → Vercel.
 #
 # Vintages (ALFRED) and data/history are gitignored. The runner restores both
@@ -153,6 +153,9 @@ jobs:
             data/regime-today.json
             data/sparks.json
             data/regime-log.json
+            data/light-dist.json
+            data/val-center.json
+            data/history-lengths.json
           )
 
           git add -- "${files[@]}"
@@ -170,6 +173,9 @@ jobs:
             -e '^data/regime-today.json$' \
             -e '^data/sparks.json$' \
             -e '^data/regime-log.json$' \
+            -e '^data/light-dist.json$' \
+            -e '^data/val-center.json$' \
+            -e '^data/history-lengths.json$' \
             || true)"
           if [ -n "${extra}" ]; then
             echo "::error::Refusing to commit unexpected staged files:"

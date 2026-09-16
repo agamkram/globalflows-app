@@ -3,7 +3,7 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore } from "./score.js?v=20261241";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261241";
 import { chipWord } from "./light-copy.js?v=20261241";
 
 function stateOf(lights, id) {
@@ -183,6 +183,7 @@ function netCall(net, hi = 0.35, lo = -0.35) {
 }
 
 function hzImp(s, horizon) {
+  if (!s || !isFreshEnoughToVote(s)) return { dir: null, delta: null, score: null };
   const imp = s?.impulse?.[horizon];
   return { dir: imp?.dir || null, delta: imp?.delta ?? null, score: imp?.score ?? null };
 }

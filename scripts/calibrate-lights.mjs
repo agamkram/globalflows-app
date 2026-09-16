@@ -13,6 +13,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LIGHT_IDS, fitLightDist, setLightDist, buildLights, attachImpulse, DEFAULT_IMPULSE, makeAnchor, applyRealRateAnchors } from "../score.js";
+import { chipWord } from "../light-copy.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const HIST = path.join(ROOT, "data", "regime-history.json");
@@ -109,7 +110,9 @@ async function main() {
         snap.lights[id].state = lights[id].state;
         snap.lights[id].members = lights[id].members;
         const w = lights[id].words;
-        if (w && lights[id].state && w[lights[id].state]) {
+        const chip = chipWord(id, lights[id].score);
+        if (chip) snap.lights[id].word = chip;
+        else if (w && lights[id].state && w[lights[id].state]) {
           snap.lights[id].word = w[lights[id].state];
         }
       }

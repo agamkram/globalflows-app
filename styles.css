@@ -504,6 +504,13 @@ body.page-about::before {
   color: var(--tight);
 }
 
+.favor-cell[data-clash="true"] .favor-title::after,
+.light[data-clash="true"] .lbl::after {
+  content: " *";
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .favor-curve {
   display: flex;
   flex-direction: column;
@@ -1210,6 +1217,10 @@ html.gf-open-run .track-mark {
 @media (prefers-reduced-motion: reduce) {
   .btn-refresh.is-loading svg {
     animation: none;
+  }
+  html.gf-open-run .track-mark,
+  html.gf-open-arrive .light .word {
+    transition: none;
   }
 }
 

@@ -990,11 +990,12 @@ export function clubLight(snap, lid, now = Date.now()) {
   const state = lightStateFromScore(score).state;
   const easy = voters.filter((v) => v.score > 0.45);
   const tight = voters.filter((v) => v.score < -0.45);
-  return { score, state, voters, easy, tight, n: members.length };
+  return { score, state, voters, easy, tight, n: voters.length };
 }
 
 export function memberImpulseScore(m, horizon = DEFAULT_IMPULSE) {
   if (!m || m.status !== "ok") return null;
+  if (!isFreshEnoughToVote(m)) return null;
   // MOVE: calm does not vote easy on the light or the turn — same gate.
   if (m.anchor?.kind === "move" && !m.anchor?.votes) return null;
   const sc = m.impulse?.[horizon]?.score;
