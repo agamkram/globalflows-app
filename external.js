@@ -1,6 +1,6 @@
 /** Shelf — outside reads next to today’s regime. Not a voter. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261241";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261250";
 
 const $ = (id) => document.getElementById(id);
 

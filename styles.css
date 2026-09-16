@@ -45,11 +45,11 @@
   --muted: #8b97a8;
   --mono: "PlainZero", "IBM Plex Mono", ui-monospace, monospace;
   --sans: "PlainZero", "IBM Plex Sans", system-ui, sans-serif;
-  --ease: #0f6b46;
-  --ease-lean: #62b890;
+  --ease: #0a4b30;
+  --ease-lean: #478568;
   --neutral: #ffffff;
-  --tight: #b52632;
-  --tight-lean: #c97d84;
+  --tight: #831b25;
+  --tight-lean: #9c6166;
   --accent: #6aa7ff;
   --pick: #e6b84d;
   --safe-t: env(safe-area-inset-top, 0px);
@@ -60,13 +60,13 @@
   --pwa-extra-b: 0px;
   /* Phone is 1.0 (100 / 3 / 80 at 16px). From 721px the strip scales together. */
   --ui-scale: 1;
-  --lights-h: calc(6.25rem * var(--ui-scale));
+  --lights-h: calc(6.25rem * var(--ui-scale) + 5px);
   --favor-h: calc(5rem * var(--ui-scale));
   --lights-favor-gap: calc(0.1875rem * var(--ui-scale));
   --favor-tenor-gap: calc(0.4375rem * var(--ui-scale));
   --lights-col: calc(4.5rem * var(--ui-scale));
   --track-w: calc(3.25rem * var(--ui-scale));
-  --track-h: calc(0.875rem * var(--ui-scale));
+  --track-h: calc(0.875rem * var(--ui-scale) + 5px);
   --track-xs-w: calc(2.25rem * var(--ui-scale));
   --needle-h: calc(3.125rem * var(--ui-scale));
   --needle-top: calc(-1.5625rem * var(--ui-scale));
@@ -1330,7 +1330,7 @@ html.gf-open-run .track-mark {
   font-family: var(--mono);
   font-size: 0.68rem;
   font-variant-numeric: tabular-nums;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1;
   pointer-events: none;
 }
@@ -1564,6 +1564,7 @@ html {
   padding: 1px 3px;
   font-family: var(--mono);
   font-size: 0.68rem;
+  font-weight: 500;
 }
 
 .dlg {
