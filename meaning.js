@@ -3,8 +3,8 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261250";
-import { chipWord } from "./light-copy.js?v=20261250";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261283";
+import { chipWord } from "./light-copy.js?v=20261283";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";

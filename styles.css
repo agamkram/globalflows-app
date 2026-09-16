@@ -60,18 +60,18 @@
   --pwa-extra-b: 0px;
   /* Phone is 1.0 (100 / 3 / 80 at 16px). From 721px the strip scales together. */
   --ui-scale: 1;
-  --lights-h: calc(6.25rem * var(--ui-scale) + 5px);
+  --lights-h: calc(6.25rem * var(--ui-scale));
   --favor-h: calc(5rem * var(--ui-scale));
   --lights-favor-gap: calc(0.1875rem * var(--ui-scale));
   --favor-tenor-gap: calc(0.4375rem * var(--ui-scale));
   --lights-col: calc(4.5rem * var(--ui-scale));
   --track-w: calc(3.25rem * var(--ui-scale));
-  --track-h: calc(0.875rem * var(--ui-scale) + 5px);
+  --track-h: calc(0.875rem * var(--ui-scale));
   --track-xs-w: calc(2.25rem * var(--ui-scale));
-  --needle-h: calc(3.125rem * var(--ui-scale));
-  --needle-top: calc(-1.5625rem * var(--ui-scale));
-  --needle-xs-h: calc(2.375rem * var(--ui-scale));
-  --needle-xs-top: calc(-1.1875rem * var(--ui-scale));
+  --needle-h: 65px;
+  --needle-top: -32.5px;
+  --needle-xs-h: 50px;
+  --needle-xs-top: -25px;
   --sheet-top: calc(var(--safe-t) + 8px);
 }
 
@@ -823,6 +823,9 @@ html.gf-open-run .track-mark {
   width: 100%;
   margin: auto 0 0;
 }
+.light .track-rail {
+  top: calc(-10px * var(--ui-scale));
+}
 .track-sm {
   max-width: 44px;
   height: 12px;
@@ -840,28 +843,28 @@ html.gf-open-run .track-mark {
   display: block;
   position: relative;
   height: 1px;
-  margin-top: 6px;
+  margin-top: calc(6px * var(--ui-scale));
   background: #fff;
   border-radius: 0;
 }
 .track-xs .track-rail {
-  margin-top: 4px;
+  margin-top: calc(4px * var(--ui-scale));
   height: 1px;
 }
 .track-mid,
 .track-cut {
   position: absolute;
-  top: -12px;
+  top: calc(-12px * var(--ui-scale));
   width: 1px;
-  height: 24px;
+  height: calc(24px * var(--ui-scale));
   background: #fff;
   transform: translateX(-50%);
   pointer-events: none;
 }
 .track-mid {
   left: 50%;
-  height: 28px;
-  top: -14px;
+  height: calc(28px * var(--ui-scale));
+  top: calc(-14px * var(--ui-scale));
   background: #fff;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
@@ -900,9 +903,12 @@ html.gf-open-run .track-mark {
   background: var(--neutral);
   pointer-events: none;
 }
+.light .track-mark {
+  width: calc(4px * var(--ui-scale));
+}
 .track-xs .track-mark {
   top: var(--needle-xs-top);
-  width: calc(2.5px * var(--ui-scale));
+  width: calc(4px * var(--ui-scale));
   height: var(--needle-xs-h);
 }
 .track[data-state="easing"] .track-mark {
@@ -928,8 +934,12 @@ html.gf-open-run .track-mark {
 .light .track-legend {
   display: block;
   width: 100%;
-  height: calc(2.5px * var(--ui-scale));
-  margin: calc(4px * var(--ui-scale)) 0 0;
+  height: calc(4.5px * var(--ui-scale));
+  margin: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(
     to right,
     var(--tight) 0,
@@ -947,7 +957,7 @@ html.gf-open-run .track-mark {
 
 @media (min-width: 721px) {
   :root {
-    --ui-scale: 1.3;
+    --ui-scale: 1.5;
   }
 }
 
