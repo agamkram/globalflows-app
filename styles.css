@@ -1654,6 +1654,15 @@ body.dlg-open {
   overscroll-behavior: none;
 }
 
+/* Home-screen app: fillH is the webview. A shifted fixed body is black. */
+html.pwa-standalone body.dlg-open {
+  position: static;
+  top: auto;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 html:has(body.dlg-open) {
   overflow: hidden;
   overscroll-behavior: none;

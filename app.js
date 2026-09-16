@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261292";
+import { buildMeaning } from "./meaning.js?v=20261295";
 import {
   buildLights,
   attachImpulse,
@@ -23,8 +23,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261292";
-import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261292";
+} from "./score.js?v=20261295";
+import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261295";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -81,13 +81,21 @@ function unpinChrome() {
   if (pin) pin.style.transform = "";
 }
 
+function isPwaStandalone() {
+  return document.documentElement.classList.contains("pwa-standalone");
+}
+
 function lockPageScroll() {
   if (document.body.classList.contains("dlg-open")) return;
   scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
   document.body.classList.add("dlg-open");
-  document.body.style.top = `-${scrollLockY}px`;
   sheetFrozen = true;
-  pinChromeWhileOpen();
+  // PWA fillH + body { position:fixed; top:−scrollY } is a black webview.
+  // Safari tab still needs the lock so iOS does not scroll under the sheet.
+  if (!isPwaStandalone()) {
+    document.body.style.top = `-${scrollLockY}px`;
+    pinChromeWhileOpen();
+  }
 }
 
 function unlockPageScroll() {
@@ -96,7 +104,7 @@ function unlockPageScroll() {
   unpinChrome();
   document.body.classList.remove("dlg-open");
   document.body.style.top = "";
-  window.scrollTo(0, scrollLockY);
+  if (!isPwaStandalone()) window.scrollTo(0, scrollLockY);
 }
 
 /** Measure under the stuck pin, then open — never remasure after lock. */
@@ -106,7 +114,7 @@ function openTapDialog(dlg, anchor) {
   lockPageScroll();
   applySheetTop(sheetTopPx);
   requestAnimationFrame(() => {
-    pinChromeWhileOpen();
+    if (!isPwaStandalone()) pinChromeWhileOpen();
     applySheetTop(sheetTopPx);
   });
 }
@@ -583,7 +591,7 @@ const LIGHT_BLURB = {
   rates:
     "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
   growth:
-    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When the surveys are at the rail while jobs and GDP are still Mid, they slide the needle and the tap flags early — not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
+    "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When a survey is at the rail while jobs and GDP are still Mid, it slides the needle and the tap flags early — not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
     "Underlying prices — realized core (CPI and PCE) at double weight, persistence (sticky CPI, wages, final-demand PPI), and 5y5y expectations. Hot = pressure up; cold = fading. Headlines can disagree; that shows as a flag.",
   risk:
@@ -1678,55 +1686,6 @@ function tensionTitle(d) {
   }
 }
 
-/**
- * What the market actually did after the days that most resembled today. Baked in
- * `scripts/analogs.mjs`; absent until the archive has been built, so the dialog
- * simply omits the section rather than showing an empty shell.
- */
-function baseRateHtml() {
-  const a = REGIME?.analogs;
-  if (!a?.stats) return "";
-  const hz = DEFAULT_IMPULSE;
-  const table = a.stats[hz] || {};
-  if (!Object.keys(table).length) {
-    return `<p class="sent-kicker">What happened last time</p>
-      <p class="muted tiny">No ${escapeHtml(hz)} analog yet — too few days like today have a full ${escapeHtml(hz)} of market returns after them.</p>`;
-  }
-
-  const window = {
-    "1w": "the next week",
-    "2w": "the next two weeks",
-    "1m": "the next month",
-    "3m": "the next three months",
-    "6m": "the next six months",
-  }[hz] || `the next ${hz}`;
-  const match =
-    a.closeness === "close"
-      ? "a close match."
-      : a.closeness === "loose"
-        ? "a loose match."
-        : "only a distant match, so read this as context rather than evidence.";
-
-  const body = Object.entries(table)
-    .map(([id, r]) => {
-      const cls = r.median > 0 ? "z-pos" : r.median < 0 ? "z-neg" : "z-mid";
-      const sign = r.median > 0 ? "+" : "";
-      const baseUp = a.baseline?.[hz]?.[id]?.up;
-      const vs = Number.isFinite(baseUp) ? ` vs ${baseUp}% normally` : "";
-      return `<div class="base-row">
-        <span class="base-name">${escapeHtml(r.name)}</span>
-        <span class="base-med ${cls}">${sign}${r.median}%</span>
-        <span class="base-up muted">${r.up}% up${vs}</span>
-      </div>`;
-    })
-    .join("");
-
-  return `<p class="sent-kicker">What happened last time</p>
-    <p class="muted tiny">${a.n} days since ${a.windowStart.slice(0, 4)} sat closest to today's five components — ${match} Median move over ${window}, and how often it rose:</p>
-    <div class="base-grid">${body}</div>
-    <p class="muted tiny">Returns are total return — coupons and dividends included, which is most of the return on a bond. Today's model replayed over revised data, so the economic voters use numbers later than the day they describe. A base rate, not a forecast.</p>`;
-}
-
 function childFavorLine(child, parentWhy) {
   const word =
     child.stance === "in" ? "In" : child.stance === "out" ? "Out" : "Mixed";
@@ -1990,7 +1949,6 @@ function openSentence(snap) {
     <p class="sent-story">${regimeStoryHtml(snap)}</p>
     ${tapeNote}
     ${soWhat}
-    ${baseRateHtml()}
     <p class="sent-kicker">Why we say that</p>
     ${evidence}
     ${watch}

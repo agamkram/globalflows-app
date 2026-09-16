@@ -1,7 +1,7 @@
-/** Shelf — outside reads next to today’s regime, plus our morning stamps. */
+/** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261292";
-import { chipWord } from "./light-copy.js?v=20261292";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261295";
+import { chipWord } from "./light-copy.js?v=20261295";
 
 const $ = (id) => document.getElementById(id);
 

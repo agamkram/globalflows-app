@@ -3,8 +3,8 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261292";
-import { chipWord } from "./light-copy.js?v=20261292";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261295";
+import { chipWord } from "./light-copy.js?v=20261295";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -439,6 +439,7 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   const gSc = lightUnit(lights, "growth");
   const iSc = lightUnit(lights, "inflation");
   const rSc = lightUnit(lights, "risk");
+  const lTight = liquidityTightTalk(lSc);
   const gLean = growthLean(gSc, G);
   const d = durScore(durationDir);
   const flight = tightW(rSc) * (1 - easeW(iSc));
@@ -524,27 +525,27 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // light's job — it is reported here, not voted twice.
   const ustAvgNet = 0.5 * t10Net + 0.5 * t30Net;
   const ustStance = netCall(ustAvgNet, 0.35, -0.35);
-  let ustWhy = `Curve is split — 5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}.`;
+  let ustWhy = `The long end is split — 10s ${t10.stance}, 30s ${t30.stance}.`;
   // The parent is the long end, so its reason may not credit the 5s. Policy is
   // the Rates call; it is reported on the strip, not voted here.
   if (tenorSet.size === 1 && ustStance === t10.stance) {
     if (ustStance === "out") {
       ustWhy =
         tpZ < -0.35
-          ? "The long end is taxed — term premium is compressed and duration is not paid. 5s are out on the Rates call."
-          : "The long end is taxed — duration and inflation aren’t paying, and the 5s are out on the Rates call.";
+          ? "The long end is taxed — term premium is compressed and duration is not paid."
+          : "The long end is taxed — duration and inflation aren’t paying.";
     } else if (ustStance === "in") {
       ustWhy =
         tpZ > 0.35 || realZ > 0.35
-          ? "The long end can work — duration is paid on term premium or real yield, and the 5s agree."
-          : "The long end can work — duration and inflation aren’t the tax, and the 5s agree.";
+          ? "The long end can work — duration is paid on term premium or real yield."
+          : "The long end can work — duration and inflation aren’t the tax.";
     } else {
       ustWhy = "The whole curve is mixed — no clean duration bid.";
     }
   } else if (ustStance === "out") {
-    ustWhy = `The curve leans out (5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}).`;
+    ustWhy = `The long end leans out (10s ${t10.stance}, 30s ${t30.stance}).`;
   } else if (ustStance === "in") {
-    ustWhy = `The curve leans in (5s ${t5.stance}, 10s ${t10.stance}, 30s ${t30.stance}).`;
+    ustWhy = `The long end leans in (10s ${t10.stance}, 30s ${t30.stance}).`;
   }
   if (tpZ < -0.35 && ustStance !== "in" && !ustWhy.includes("term premium")) {
     ustWhy += " Term premium is compressed — long bonds are not paid.";
@@ -593,7 +594,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // Soft growth / drain / tights only take HY out while fear is still calm —
   // once fear is expensive the bounce is often already the trade.
   if (tightW(gSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("growth is soft while fear is still cheap");
-  if (tightW(lSc) > 0.55 && easeW(rSc) > 0.4) hyOutParts.push("cash is draining while fear is still cheap");
+  if (lTight && easeW(rSc) > 0.4) {
+    hyOutParts.push(
+      lTight === "Tightening"
+        ? "cash is draining while fear is still cheap"
+        : "cash is leaning tight while fear is still cheap"
+    );
+  }
   if (spreadZ < -0.35 && easeW(rSc) > 0.4) hyOutParts.push("spreads are tight — you are not paid");
   if (tightW(rSc) > 0.55) hyOutParts.push("fear is already expensive — the easy out call is late");
   const calm = easeW(rSc);
@@ -677,8 +684,12 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       `${growthIsFirmTalk(gLean)} while fear is still cheap — late to the expansion`
     );
   }
-  if (tightW(lSc) > 0.55 && calmRisk > 0.55 && easeW(gSc) > 0.4) {
-    stocksOutParts.push("cash is draining into a still-calm tape");
+  if (lTight && calmRisk > 0.55 && easeW(gSc) > 0.4) {
+    stocksOutParts.push(
+      lTight === "Tightening"
+        ? "cash is draining into a still-calm tape"
+        : "cash is leaning tight into a still-calm tape"
+    );
   }
   const stocksNet =
     0.55 * fearW +
@@ -744,7 +755,6 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // days and lost ~6% median over the next month (2022 bear). Easy plumbing
   // is the bid — including into calm (trend), not "late." Tight plumbing is out.
   const cryptoOutParts = [];
-  const lTight = liquidityTightTalk(lSc);
   if (lTight === "Tightening") {
     cryptoOutParts.push("cash is draining — Bitcoin usually pays the liquidity tax");
   } else if (lTight) {
@@ -817,8 +827,20 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // (easy-money risk-on where gold lags). Rising dollar alone is not the out.
   // Crowded speculative longs tax the box (rich positioning); light longs help.
   const goldInParts = [];
-  if (goldCrisis) goldInParts.push("cash is draining and fear is expensive — gold’s crisis bid");
-  if (goldDrain && !dolStrong) goldInParts.push("cash is draining without a dollar squeeze");
+  if (goldCrisis && lTight) {
+    goldInParts.push(
+      lTight === "Tightening"
+        ? "cash is draining and fear is expensive — gold’s crisis bid"
+        : "cash is leaning tight and fear is expensive — gold’s crisis bid"
+    );
+  }
+  if (goldDrain && !dolStrong && lTight) {
+    goldInParts.push(
+      lTight === "Tightening"
+        ? "cash is draining without a dollar squeeze"
+        : "cash is leaning tight without a dollar squeeze"
+    );
+  }
   if (dolSoft && tightW(iSc) > 0.55) {
     goldInParts.push("the dollar is soft and inflation is cold — deflation-fear bid");
   }
@@ -934,13 +956,15 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   copper.margin = blendMargin(copper.stance, copper.net, gImp);
 
   let cmdtyStance = netCall((oil.net + copper.net) / 2, 0.17, -0.17);
-  let cmdtyWhy = `Oil ${oil.stance}, copper ${copper.stance} — growth and the dollar aren’t the same trade as the industrial metal.`;
+  let cmdtyWhy = `Oil ${oil.stance}, copper ${copper.stance} — they are not the same trade.`;
   if (oil.stance === copper.stance) {
+    const dolBitIn = dolZ < -0.35 ? " or a cooperative dollar" : "";
+    const dolBitOut = dolZ > 0.35 ? " or a rising dollar" : "";
     cmdtyWhy =
       cmdtyStance === "in"
-        ? "Oil and copper are both in — soft growth into fear or a cooperative dollar."
+        ? `Oil and copper are both in — soft growth into fear${dolBitIn}.`
         : cmdtyStance === "out"
-          ? `Oil and copper are both out — ${growthIntoFearTalk(gLean).toLowerCase()} or a rising dollar.`
+          ? `Oil and copper are both out — ${growthIntoFearTalk(gLean).toLowerCase()}${dolBitOut}.`
           : "Oil and copper are both mixed.";
   } else if (cmdtyStance === "in") {
     cmdtyWhy = `Commodities lean in — oil ${oil.stance}, copper ${copper.stance}.`;
@@ -1220,8 +1244,8 @@ export function buildMeaning(snap, horizon = DEFAULT_IMPULSE) {
     );
   }
 
-  if (dollar && T === "tight" && hzImp(dollar, horizon).dir === "up") {
-    confirm.push("A strong dollar is part of the tight rates story — global USD liquidity is scarce.");
+  if (dollar && L === "tight" && hzImp(dollar, horizon).dir === "up") {
+    confirm.push("A rising dollar is part of the tight cash story — global USD liquidity is scarce.");
   }
 
   if (dgs10 && durationDir === "rising" && hzImp(dgs10, horizon).dir === "up") {

@@ -5,7 +5,7 @@
  * Math stays in score.js (one module in the browser). This file is only words.
  */
 
-import { chipBandFromScore } from "./score.js?v=20261292";
+import { chipBandFromScore } from "./score.js?v=20261295";
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 
@@ -124,7 +124,7 @@ export function teachLight(lid, c) {
             ? "leaning soft, not Soft yet"
             : "no clean boom or bust";
   if (lid === "growth") {
-    const surveyLoud = (c.voters || []).some(
+    const loudSurveys = (c.voters || []).filter(
       (v) => (v.id === "EMPIRE_MFG" || v.id === "PHILLY_MFG") && Math.abs(v.score) > 0.45
     );
     // The ballot average is what votes, not any single print — claims alone can
@@ -135,7 +135,7 @@ export function teachLight(lid, c) {
     const coincidentMid =
       coin.length > 0 &&
       Math.abs(coin.reduce((a, v) => a + v.score, 0) / coin.length) <= 0.45;
-    if (surveyLoud && coincidentMid) {
+    if (loudSurveys.length && coincidentMid) {
       const tick = c.score > 0 ? "Strong" : "Soft";
       const pay = coin.find((v) => v.id === "PAYEMS");
       const gdp = coin.find((v) => v.id === "GDPC1");
@@ -150,12 +150,19 @@ export function teachLight(lid, c) {
         : "the coincident ballot is still inside the band";
       const claimsBit =
         claims && Math.abs(claims.score) > 0.45 ? " Claims have already moved." : "";
+      const one = loudSurveys.length === 1;
+      const surveyBit = one
+        ? `${loudSurveys[0].name} is at the rail`
+        : "Regional surveys are at the rail";
+      const earlyBit = one ? "that survey is early, not wrong" : "the surveys are early, not wrong";
       growthNote =
-        ` Regional surveys are at the rail while ${midBit} — the surveys are early, not wrong.` +
+        ` ${surveyBit} while ${midBit} — ${earlyBit}.` +
         claimsBit +
         ` Since 2003 the hard data has followed them within a quarter about two thirds of the time.`;
       if (band === "neutral") {
-        growthPoint = `the surveys are calling ${tick.toLowerCase()} before the hard data has moved`;
+        growthPoint = one
+          ? `${loudSurveys[0].name} is calling ${tick.toLowerCase()} before the hard data has moved`
+          : `the surveys are calling ${tick.toLowerCase()} before the hard data has moved`;
       } else {
         growthPoint = "early, not confirmed";
       }
