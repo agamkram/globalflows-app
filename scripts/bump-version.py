@@ -27,6 +27,7 @@ SPOTS = {
     "external ?v=": (EXTERNAL, r"\?v=(\d+)", "?v={n}"),
     "external shelf-lib ?v=": (EXTERNAL_JS, r'(shelf-lib\.js\?v=)(\d+)', r"\g<1>{n}"),
     "external light-copy ?v=": (EXTERNAL_JS, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),
+    "external score ?v=": (EXTERNAL_JS, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app meaning ?v=": (APP, r'(meaning\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app score ?v=": (APP, r'(score\.js\?v=)(\d+)', r"\g<1>{n}"),
     "app light-copy ?v=": (APP, r'(light-copy\.js\?v=)(\d+)', r"\g<1>{n}"),

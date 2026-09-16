@@ -1,7 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261295";
-import { chipWord } from "./light-copy.js?v=20261295";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261296";
+import { chipWord } from "./light-copy.js?v=20261296";
+import { chipBandFromScore } from "./score.js?v=20261296";
 
 const $ = (id) => document.getElementById(id);
 
@@ -47,8 +48,8 @@ function esc(s) {
 }
 
 function head(title, asOf) {
-  return `<div class="shelf-head"><h2>${esc(title)}</h2>${
-    asOf ? `<span class="shelf-asof">${esc(asOf)}</span>` : ""
+  return `<div class="annex-head"><h2>${esc(title)}</h2>${
+    asOf ? `<span class="annex-asof">${esc(asOf)}</span>` : ""
   }</div>`;
 }
 
@@ -64,7 +65,31 @@ function stamp(iso, cadence) {
 }
 
 function empty(msg) {
-  return `<p class="shelf-empty">${msg}</p>`;
+  return `<p class="annex-note">${msg}</p>`;
+}
+
+function note(msg) {
+  return `<p class="annex-note">${msg}</p>`;
+}
+
+function bandState(score) {
+  const b = chipBandFromScore(score);
+  if (b === "easing" || b === "leaningEasing") return "easing";
+  if (b === "tight" || b === "leaningTight") return "tight";
+  return "neutral";
+}
+
+function classHead(name, short) {
+  return `<span class="annex-full">${esc(name)}</span><span class="annex-abbr">${esc(short)}</span>`;
+}
+
+function meter(score, state, label) {
+  const n = Math.max(0, Math.min(100, Number(score)));
+  const w = Number.isFinite(n) ? n : 0;
+  return `<div class="annex-meter" data-state="${esc(state)}" role="img" aria-label="${esc(label)}">
+    <span class="annex-meter-track"><i style="width:${w}%"></i></span>
+    <span class="annex-meter-n">${Number.isFinite(n) ? Math.round(n) : "—"}</span>
+  </div>`;
 }
 
 function signedPct(n) {
@@ -232,31 +257,31 @@ function renderMix(el, arsenal, regime) {
   if (!arsenal) {
     el.innerHTML = `
       ${head("Arsenal", "CPI / GDP")}
-      <p>They only use GDP and CPI, then pick one of four names. Our five sit under that name so you can see cash, rates, and fear — which it ignores.</p>
+      <p>GDP and CPI only, then one of four names. Our five sit under it so cash, rates, and fear — which it ignores — stay in view.</p>
       ${empty("Arsenal file missing.")}
-      <ol class="about-chain" aria-label="Today’s five">${chain}</ol>`;
+      <ol class="about-chain annex-chain" aria-label="Today’s five">${chain}</ol>`;
     return;
   }
 
   const attr = arsenal.attribution || {};
   el.innerHTML = `
     ${head("Arsenal", stamp(arsenal.asOf, "CPI / GDP"))}
-    <p>They only use GDP and CPI, then pick one of four names. Our five sit under that name so you can see cash, rates, and fear — which it ignores.</p>
-    <div class="shelf-hero-row">
-      <div class="shelf-score">${esc(arsenal.regime || "—")}</div>
-      <div class="shelf-hero-meta">
-        GDP ${Number.isFinite(Number(arsenal.gdpYoy)) ? Number(arsenal.gdpYoy).toFixed(2) : "—"}%
-        · CPI ${Number.isFinite(Number(arsenal.cpiYoy)) ? Number(arsenal.cpiYoy).toFixed(2) : "—"}%${
+    <p>GDP and CPI only, then one of four names. Our five sit under it so cash, rates, and fear — which it ignores — stay in view.</p>
+    <div class="annex-call">
+      <div class="annex-call-name">${esc(arsenal.regime || "—")}</div>
+      <div class="annex-call-meta">
+        GDP ${Number.isFinite(Number(arsenal.gdpYoy)) ? Number(arsenal.gdpYoy).toFixed(1) : "—"}%
+        · CPI ${Number.isFinite(Number(arsenal.cpiYoy)) ? Number(arsenal.cpiYoy).toFixed(1) : "—"}%${
           attr.url
             ? ` · <a href="${esc(attr.url)}" target="_blank" rel="noopener">source</a>`
             : ""
         }
       </div>
     </div>
-    <ol class="about-chain" aria-label="Today’s five">${chain}</ol>
-    <div class="shelf-likes">
-      <div><span class="lbl">Usually likes</span><span class="val">${esc(arsenal.winners || "—")}</span></div>
-      <div><span class="lbl">Usually doesn’t</span><span class="val">${esc(arsenal.losers || "—")}</span></div>
+    <ol class="about-chain annex-chain" aria-label="Today’s five">${chain}</ol>
+    <div class="annex-likes">
+      <div><span class="annex-lbl">Usually likes</span><span class="annex-val">${esc(arsenal.winners || "—")}</span></div>
+      <div><span class="annex-lbl">Usually doesn’t</span><span class="annex-val">${esc(arsenal.losers || "—")}</span></div>
     </div>`;
 }
 
@@ -315,7 +340,7 @@ function crowding(contracts) {
 }
 
 function houseCell(rows, key) {
-  if (!rows.length) return `<span class="shelf-empty">—</span>`;
+  if (!rows.length) return `<span class="annex-blank">—</span>`;
   const bits = rows
     .map((r) => {
       const v = String(r[key] || "").toUpperCase();
@@ -325,7 +350,9 @@ function houseCell(rows, key) {
       return `<span data-state="${stanceState(v)}">${esc(short ? `${short} ${v}` : v)}</span>`;
     })
     .filter(Boolean);
-  return bits.length ? bits.join("<br>") : `<span class="shelf-empty">—</span>`;
+  return bits.length
+    ? `<span class="annex-house">${bits.join("")}</span>`
+    : `<span class="annex-blank">—</span>`;
 }
 
 function renderSix(el, regime, cot, houseRows, arsenal, fear) {
@@ -358,65 +385,82 @@ function renderSix(el, regime, cot, houseRows, arsenal, fear) {
   }).join("");
 
   el.innerHTML = `
-    ${head("GlobalFlows · Arsenal · CFTC · CNN", stamp(cot?.tffAsOf, "weekly (Fri)"))}
-    <table class="shelf-table">
+    ${head("Compare", stamp(cot?.tffAsOf, "weekly futures"))}
+    <p>Us, then three other desks. A dash means they did not name that class. Fear and greed are CNN’s words, not in / mixed / out.</p>
+    <div class="annex-scroll">
+    <table class="annex-table">
       <thead>
         <tr>
           <th></th>
-          <th>GlobalFlows</th>
+          <th>Us</th>
           <th>Arsenal</th>
-          <th>CFTC</th>
+          <th>Futures</th>
           <th>CNN</th>
           ${showHouses ? "<th>Houses</th>" : ""}
         </tr>
       </thead>
       <tbody>${rows}</tbody>
     </table>
-    <p class="shelf-note">A dash is blank. Long / short is futures. Fear / greed is CNN, not in / mixed / out.</p>`;
+    </div>`;
 }
 
 function renderMood(el, fear, regime) {
   const risk = regime?.lights?.risk;
+  const riskWord = risk?.word || "—";
+  const riskSt = risk?.state || "";
   if (!fear) {
     el.innerHTML = `
-      ${head("CNN", "daily")}
-      <p>Stock-market fear and greed next to Risk.</p>
+      ${head("Mood", "daily")}
+      <p>CNN’s stock-market fear and greed, set next to our Risk light. Equity-centric, unofficial, not a vote.</p>
       ${empty("CNN file missing.")}
       ${
         risk
-          ? `<p class="shelf-risk">Risk <span data-state="${esc(risk.state)}">${esc(risk.word)}</span></p>`
+          ? `<p class="annex-pair">Our Risk is <span data-state="${esc(riskSt)}">${esc(riskWord)}</span>.</p>`
           : ""
       }`;
     return;
   }
+  const st = moodState(fear.rating);
+  const week = Number.isFinite(Number(fear.previous1Week))
+    ? Math.round(fear.previous1Week)
+    : "—";
+  const month = Number.isFinite(Number(fear.previous1Month))
+    ? Math.round(fear.previous1Month)
+    : "—";
   const cells = Object.entries(fear.subs || {})
     .map(([k, v]) => {
       const label = CNN_LABEL[k] || k.replaceAll("_", " ");
-      return `<div class="shelf-sub">
-        <span class="lbl">${esc(label)}</span>
-        <span class="val" data-state="${moodState(v.rating)}">${esc(Math.round(v.score))} · ${esc(v.rating || "—")}</span>
+      const subSt = moodState(v.rating);
+      const word = String(v.rating || "").toLowerCase();
+      return `<div class="annex-sub">
+        <span class="annex-sub-label">${esc(label)}</span>
+        ${meter(v.score, subSt, `${label} ${Math.round(v.score)}, ${word}`)}
+        <span class="annex-sub-word" data-state="${esc(subSt)}">${esc(word)}</span>
       </div>`;
     })
     .join("");
   el.innerHTML = `
-    ${head("CNN", stamp(fear.asOf, "daily"))}
-    <p>Stock-market mood next to Risk. Not a desk note.</p>
-    <div class="shelf-mood">
-      <div class="shelf-hero-row">
-        <div class="shelf-score" data-state="${moodState(fear.rating)}">${esc(Math.round(fear.score))}</div>
-        <div>
-          <div class="shelf-hero-meta" data-state="${moodState(fear.rating)}">${esc(fear.rating)}</div>
-          <div class="shelf-hero-meta">week ${esc(Math.round(fear.previous1Week))} · month ${esc(Math.round(fear.previous1Month))}</div>
-        </div>
+    ${head("Mood", stamp(fear.asOf, "daily"))}
+    <p>CNN’s stock-market fear and greed, set next to our Risk light. Equity-centric, unofficial, not a vote.</p>
+    <div class="annex-mood">
+      <div class="annex-mood-us">
+        <span class="annex-lbl">CNN</span>
+        <div class="annex-mood-word" data-state="${esc(st)}">${esc(fear.rating)}</div>
+        ${meter(fear.score, st, `Fear and greed ${Math.round(fear.score)}, ${fear.rating}`)}
+        <span class="annex-call-meta">Week ${esc(week)} · month ${esc(month)}</span>
       </div>
-      <p class="shelf-risk">Risk · <span data-state="${esc(risk?.state || "")}">${esc(risk?.word || "—")}</span></p>
+      <div class="annex-mood-them">
+        <span class="annex-lbl">Our Risk</span>
+        <div class="annex-mood-word" data-state="${esc(riskSt)}">${esc(riskWord)}</div>
+        <span class="annex-call-meta">The light, not their gauge.</span>
+      </div>
     </div>
-    <div class="shelf-subs">${cells}</div>`;
+    <div class="annex-subs">${cells}</div>`;
 }
 
 function cotRow(c) {
   if (c.missing) {
-    return `<tr><th scope="row">${esc(COT_SHORT[c.id] || c.label)}</th><td colspan="3" class="shelf-empty">missing</td></tr>`;
+    return `<tr><th scope="row">${esc(COT_SHORT[c.id] || c.label)}</th><td colspan="3" class="annex-blank">missing</td></tr>`;
   }
   const net = netOf(c);
   const pct = pctOi(net, c.openInterest);
@@ -425,7 +469,7 @@ function cotRow(c) {
       ? pctOi(c.levMoneyNet, c.openInterest)
       : pctOi(c.producerNet, c.openInterest);
   return `<tr>
-    <th scope="row">${esc(COT_SHORT[c.id] || c.label)}<span class="shelf-lens">${esc(lensOf(c))}</span></th>
+    <th scope="row">${esc(COT_SHORT[c.id] || c.label)}<span class="annex-lens">${esc(lensOf(c))}</span></th>
     <td class="num" data-state="${toneNet(pct)}">${esc(signedPct(pct))}</td>
     <td class="num" data-state="${toneNet(levPct)}">${esc(signedPct(levPct))}</td>
     <td class="num">${esc(compact(c.openInterest, false))}</td>
@@ -434,7 +478,7 @@ function cotRow(c) {
 
 function renderCot(el, cot) {
   if (!cot) {
-    el.innerHTML = `${head("CFTC", "weekly (Fri)")}${empty("CFTC file missing.")}`;
+    el.innerHTML = `${head("Positioning", "weekly (Fri)")}${empty("CFTC file missing.")}`;
     return;
   }
   const contracts = sortCot(cot.contracts || []);
@@ -442,14 +486,15 @@ function renderCot(el, cot) {
     const rows = contracts.filter((c) => (c.gf || null) === g.gf);
     if (!rows.length) return "";
     return `<tbody>
-      <tr class="shelf-group-row"><th scope="colgroup" colspan="4">${esc(g.name)}</th></tr>
+      <tr class="annex-group"><th scope="colgroup" colspan="4">${esc(g.name)}</th></tr>
       ${rows.map(cotRow).join("")}
     </tbody>`;
   }).join("");
   el.innerHTML = `
-    ${head("CFTC", stamp(cot.tffAsOf, "weekly (Fri)"))}
-    <p>Who is long and short. Net is a share of open interest.</p>
-    <table class="shelf-table shelf-cot">
+    ${head("Positioning", stamp(cot.tffAsOf, "weekly (Fri)"))}
+    <p>CFTC: who is long and short. Net is a share of open interest. Lev is levered money, or producers on the commodity contracts.</p>
+    <div class="annex-scroll">
+    <table class="annex-table annex-cot">
       <thead>
         <tr>
           <th></th>
@@ -459,146 +504,164 @@ function renderCot(el, cot) {
         </tr>
       </thead>
       ${bodies}
-    </table>`;
+    </table>
+    </div>`;
 }
 
 const LOG_CLASS = [
-  { id: "treasuries", short: "Tsy" },
-  { id: "credit", short: "Crd" },
-  { id: "stocks", short: "Eq" },
-  { id: "crypto", short: "Cry" },
-  { id: "gold", short: "Au" },
-  { id: "cmdty", short: "Cmd" },
+  { id: "treasuries", name: "Treasuries", short: "Tsy" },
+  { id: "credit", name: "Credit", short: "Crd" },
+  { id: "stocks", name: "Equities", short: "Eq" },
+  { id: "crypto", name: "Crypto", short: "Cry" },
+  { id: "gold", name: "Gold", short: "Au" },
+  { id: "cmdty", name: "Commodity", short: "Cmd" },
 ];
 
 const LOG_LIGHT = [
-  { id: "liquidity", short: "Liq" },
-  { id: "rates", short: "Rts" },
-  { id: "growth", short: "Gr" },
-  { id: "inflation", short: "Inf" },
-  { id: "risk", short: "Rsk" },
+  { id: "liquidity", name: "Liquidity" },
+  { id: "rates", name: "Rates" },
+  { id: "growth", name: "Growth" },
+  { id: "inflation", name: "Inflation" },
+  { id: "risk", name: "Risk" },
 ];
 
 function daysWithCalls(log) {
   return (log?.days || []).filter((d) => d?.date && d.calls && Object.keys(d.calls).length);
 }
 
-function streakLine(callDays) {
-  if (!callDays.length) return "";
+function streakOf(id, callDays) {
   const newestFirst = [...callDays].reverse();
-  const bits = [];
-  for (const { id, short } of LOG_CLASS) {
-    const stance = newestFirst[0].calls?.[id]?.stance;
-    if (!stance) continue;
-    let n = 0;
-    for (const d of newestFirst) {
-      if (d.calls?.[id]?.stance !== stance) break;
-      n += 1;
-    }
-    bits.push(
-      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
-        stanceState(stance)
-      )}">${esc(stanceWord(stance))}</span> · ${n}d</span>`
-    );
+  const stance = newestFirst[0]?.calls?.[id]?.stance;
+  if (!stance) return { stance: null, n: 0 };
+  let n = 0;
+  for (const d of newestFirst) {
+    if (d.calls?.[id]?.stance !== stance) break;
+    n += 1;
   }
-  return bits.length ? `<div class="shelf-log-row">${bits.join("")}</div>` : "";
+  return { stance, n };
 }
 
-function flipLine(callDays) {
-  if (callDays.length < 2) return `<p class="shelf-note">Need two call days before a flip shows.</p>`;
-  const cur = callDays[callDays.length - 1];
-  const prev = callDays[callDays.length - 2];
-  const flips = [];
-  for (const { id, short } of LOG_CLASS) {
-    const a = prev.calls?.[id]?.stance;
-    const b = cur.calls?.[id]?.stance;
-    if (!a || !b || a === b) continue;
-    flips.push(
-      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
-        stanceState(a)
-      )}">${esc(stanceWord(a))}</span>→<span data-state="${esc(stanceState(b))}">${esc(
-        stanceWord(b)
-      )}</span></span>`
-    );
-  }
-  for (const { id, short } of LOG_LIGHT) {
-    const a = chipWord(id, prev.lights?.[id]?.score);
-    const b = chipWord(id, cur.lights?.[id]?.score);
-    if (!a || !b || a === b) continue;
-    flips.push(
-      `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> ${esc(a)}→${esc(b)}</span>`
-    );
-  }
-  if (!flips.length) {
-    return `<p class="shelf-note">${esc(shortDay(prev.date))} → ${esc(
-      shortDay(cur.date)
-    )} · no flip.</p>`;
-  }
-  return `<p class="shelf-note">${esc(shortDay(prev.date))} → ${esc(shortDay(cur.date))}</p>
-    <div class="shelf-log-row">${flips.join("")}</div>`;
-}
-
-function diaryLines(callDays) {
-  const recent = callDays.slice(-5).reverse();
-  if (!recent.length) return empty("No calls stamped yet.");
-  const rows = recent
+function stampMatrix(callDays) {
+  if (!callDays.length) return empty("No calls stamped yet.");
+  const heads = LOG_CLASS.map(
+    (c) => `<th scope="col">${classHead(c.name, c.short)}</th>`
+  ).join("");
+  const nowCells = LOG_CLASS.map((c) => {
+    const { stance, n } = streakOf(c.id, callDays);
+    if (!stance) return `<td class="annex-blank">—</td>`;
+    const days = n === 1 ? "1 day" : `${n}d`;
+    return `<td data-state="${esc(stanceState(stance))}"><b>${esc(stanceWord(stance))}</b><span class="annex-days">${esc(days)}</span></td>`;
+  }).join("");
+  const past = callDays
+    .slice(0, -1)
+    .slice(-6)
+    .reverse()
     .map((d) => {
-      const cells = LOG_CLASS.map(({ id, short }) => {
-        const st = d.calls?.[id]?.stance;
-        return `<span class="shelf-log-chip"><span class="shelf-log-name">${esc(short)}</span> <span data-state="${esc(
-          stanceState(st)
-        )}">${esc(stanceWord(st))}</span></span>`;
+      const cells = LOG_CLASS.map((c) => {
+        const st = d.calls?.[c.id]?.stance;
+        return `<td data-state="${esc(stanceState(st))}">${esc(stanceWord(st))}</td>`;
       }).join("");
-      return `<div class="shelf-log-day"><span class="shelf-log-date">${esc(
-        shortDay(d.date)
-      )}</span><div class="shelf-log-row">${cells}</div></div>`;
+      return `<tr><th scope="row">${esc(shortDay(d.date))}</th>${cells}</tr>`;
     })
     .join("");
-  return rows;
+  return `<div class="annex-scroll">
+    <table class="annex-table annex-stamps">
+      <thead>
+        <tr><th></th>${heads}</tr>
+      </thead>
+      <tbody>
+        <tr class="annex-now"><th scope="row">Now</th>${nowCells}</tr>
+        ${past}
+      </tbody>
+    </table>
+  </div>`;
 }
 
-function anecdoteLines(shelf) {
+function flipList(callDays) {
+  if (callDays.length < 2) {
+    return note("Need two mornings with calls before a flip can show.");
+  }
+  const cur = callDays[callDays.length - 1];
+  const prev = callDays[callDays.length - 2];
+  const rows = [];
+  for (const c of LOG_CLASS) {
+    const a = prev.calls?.[c.id]?.stance;
+    const b = cur.calls?.[c.id]?.stance;
+    if (!a || !b || a === b) continue;
+    rows.push(`<li>
+      <span class="annex-flip-name">${esc(c.name)}</span>
+      <span data-state="${esc(stanceState(a))}">${esc(stanceWord(a))}</span>
+      <span class="annex-arrow" aria-hidden="true">→</span>
+      <span data-state="${esc(stanceState(b))}">${esc(stanceWord(b))}</span>
+    </li>`);
+  }
+  for (const L of LOG_LIGHT) {
+    const a = chipWord(L.id, prev.lights?.[L.id]?.score);
+    const b = chipWord(L.id, cur.lights?.[L.id]?.score);
+    if (!a || !b || a === b) continue;
+    rows.push(`<li>
+      <span class="annex-flip-name">${esc(L.name)}</span>
+      <span data-state="${esc(bandState(prev.lights?.[L.id]?.score))}">${esc(a)}</span>
+      <span class="annex-arrow" aria-hidden="true">→</span>
+      <span data-state="${esc(bandState(cur.lights?.[L.id]?.score))}">${esc(b)}</span>
+    </li>`);
+  }
+  const when = `${shortDay(prev.date)} → ${shortDay(cur.date)}`;
+  if (!rows.length) return `<p class="annex-kicker">${esc(when)}</p>${note("Nothing flipped.")}`;
+  return `<p class="annex-kicker">${esc(when)}</p>
+    <ul class="annex-flips">${rows.join("")}</ul>`;
+}
+
+function anecdoteTable(shelf) {
   const rows = shelf?.anecdotes || [];
   if (!rows.length) {
-    return `<p class="shelf-note">No aged one-week moves yet. A week after a call, the move shows here — not a record.</p>`;
+    return note("A week after a call, the one-week move will show here. Anecdotes, not a record.");
   }
-  const shown = rows.slice(0, 8);
-  return `<div class="shelf-log-anecdotes">${shown
+  const body = rows
+    .slice(0, 8)
     .map((a) => {
       const tone = a.ret > 0 ? "easing" : a.ret < 0 ? "tight" : "neutral";
-      return `<div class="shelf-log-anecdote">
-        <span class="shelf-log-date">${esc(shortDay(a.date))}</span>
-        <span class="shelf-log-name">${esc(a.label || a.class)}</span>
-        <span data-state="${esc(stanceState(a.stance))}">${esc(stanceWord(a.stance))}</span>
-        <span class="num" data-state="${tone}">${esc(signedPct(a.ret))} 1w</span>
-      </div>`;
+      return `<tr>
+        <th scope="row">${esc(shortDay(a.date))}</th>
+        <td>${esc(a.label || a.class)}</td>
+        <td data-state="${esc(stanceState(a.stance))}">${esc(stanceWord(a.stance))}</td>
+        <td class="num" data-state="${tone}">${esc(signedPct(a.ret))}</td>
+      </tr>`;
     })
-    .join("")}</div>
-    <p class="shelf-note">Anecdotes only. Not a track record.</p>`;
+    .join("");
+  return `<div class="annex-scroll">
+    <table class="annex-table">
+      <thead>
+        <tr><th></th><th>Class</th><th>Call</th><th class="num">1w</th></tr>
+      </thead>
+      <tbody>${body}</tbody>
+    </table>
+  </div>
+  ${note("Anecdotes only. Not a track record.")}`;
 }
 
 function renderLog(el, log, shelf) {
   if (!el) return;
   if (!log?.days?.length) {
-    el.innerHTML = `${head("Log", "our stamps")}
-      <p>What this app called each morning, written down and not recomputed.</p>
+    el.innerHTML = `${head("Stamps", "our mornings")}
+      <p>What this app called each morning, written down and never recomputed.</p>
       ${empty("Log file missing.")}`;
     return;
   }
   const callDays = daysWithCalls(log);
   const last = log.days[log.days.length - 1];
-  const asOf = stamp(last?.date, `${log.days.length}d · ${callDays.length} with calls`);
+  const asOf = stamp(
+    last?.date,
+    `${callDays.length} morning${callDays.length === 1 ? "" : "s"} with calls`
+  );
   el.innerHTML = `
-    ${head("Log", asOf)}
-    <p>Our morning stamps — not an outside read. Flips, streaks, and a few aged moves.</p>
-    <h3 class="shelf-log-h">Streaks</h3>
-    ${streakLine(callDays) || empty("No call streaks yet.")}
-    <h3 class="shelf-log-h">Flipped</h3>
-    ${flipLine(callDays)}
-    <h3 class="shelf-log-h">Recent</h3>
-    <div class="shelf-log-diary">${diaryLines(callDays)}</div>
-    <h3 class="shelf-log-h">Aged 1w</h3>
-    ${anecdoteLines(shelf)}`;
+    ${head("Stamps", asOf)}
+    <p>Our mornings — written down and never recomputed. The replay archive is a different file.</p>
+    ${stampMatrix(callDays)}
+    <h3 class="annex-h">Since last time</h3>
+    ${flipList(callDays)}
+    <h3 class="annex-h">A week later</h3>
+    ${anecdoteTable(shelf)}`;
 }
 
 async function loadAll() {
