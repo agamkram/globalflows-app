@@ -14,6 +14,9 @@ import {
   chipBandFromScore,
   makeAnchor,
   isTrailingKind,
+  RAIL_CUT,
+  LEAN_EASE_SCORE,
+  LEAN_TIGHT_SCORE,
   VOTE_FAMILIES,
   familyIds,
   DEFAULT_IMPULSE,
@@ -802,6 +805,10 @@ function lightIsSplit(snap, id) {
  * run to ±1.5). Needle paint follows the five-state word: dim at a lean,
  * full green/red past the cut. The six only mark center — in/out is the colour.
  */
+function railPct(score) {
+  return ((Number(score) + 1) / 2) * 100;
+}
+
 function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
   const pct = trackPct(score).toFixed(1);
   const cls = size ? `track track-${size}` : "track";
@@ -809,9 +816,15 @@ function trackHtml(score, state, { size = "", cuts = "light" } = {}) {
     cuts === "favor"
       ? `<i class="track-mid"></i>`
       : `<i class="track-cut track-cut-lo"></i><i class="track-mid"></i><i class="track-cut track-cut-hi"></i>`;
+  const legend =
+    cuts === "light"
+      ? `<span class="track-legend" style="--leg-full-lo:${railPct(-RAIL_CUT)}%;--leg-lean-lo:${railPct(
+          LEAN_TIGHT_SCORE
+        )}%;--leg-lean-hi:${railPct(LEAN_EASE_SCORE)}%;--leg-full-hi:${railPct(RAIL_CUT)}%"></span>`
+      : "";
   return `<span class="${cls}" data-state="${escapeHtml(
     state || "neutral"
-  )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%" data-to="${pct}"></i></span></span>`;
+  )}" aria-hidden="true"><span class="track-rail">${ticks}<i class="track-mark" style="left:${pct}%" data-to="${pct}"></i></span>${legend}</span>`;
 }
 
 /** Parent-class proxies. Credit / commodities judged on their splits. */

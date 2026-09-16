@@ -11,45 +11,45 @@ export const TABLE_IMPULSE = "3m";
 
 const DAYS = { "1w": 7, "2w": 14, "1m": 30, "3m": 91, "6m": 182 };
 
+/** Full word / full colour. Mirrors on the rail. The six use the same cut. */
+export const RAIL_CUT = 0.45;
+/** Lean starts halfway from 0 to the cut, both sides. */
+export const LEAN_START = RAIL_CUT / 2;
+export const LEAN_EASE_SCORE = LEAN_START;
+export const LEAN_TIGHT_SCORE = -LEAN_START;
+
 export function lightStateFromScore(score) {
   if (score == null || !Number.isFinite(score)) return { state: "empty", score: null };
-  if (score > 0.45) return { state: "easing", score };
-  if (score < -0.45) return { state: "tight", score };
+  if (score > RAIL_CUT) return { state: "easing", score };
+  if (score < -RAIL_CUT) return { state: "tight", score };
   return { state: "neutral", score };
 }
 
 /**
- * Soft easing weight 0..1 from a continuous score.
- * 0 at ≤ −0.2, 1 at ≥ +0.45. Not the mirror of tightW: easing ramps over 0.65
- * from −0.2, tight over 0.25 from −0.2, so a component at 0.00 carries about a
- * third of an easing vote and no tight vote. Drain and fear have to be clearly
- * present; ample is the resting state.
+ * Soft easing weight 0..1. 0 at ≤ 0, 1 at ≥ +0.45. Mirror of tightW.
+ * The six read the five on this ramp — Neutral is quiet on both sides.
  */
 export function easeW(score) {
   if (score == null || !Number.isFinite(score)) return 0;
-  return Math.max(0, Math.min(1, (score - -0.2) / (0.45 - -0.2)));
+  return Math.max(0, Math.min(1, score / RAIL_CUT));
 }
 
-/** Soft tight weight 0..1. 0 at ≥ −0.2, 1 at ≤ −0.45. */
+/** Soft tight weight 0..1. 0 at ≥ 0, 1 at ≤ −0.45. */
 export function tightW(score) {
   if (score == null || !Number.isFinite(score)) return 0;
-  return Math.max(0, Math.min(1, (-0.2 - score) / (0.45 - 0.2)));
+  return Math.max(0, Math.min(1, -score / RAIL_CUT));
 }
 
-/** Lean starts where the six already talk. Colour / full word stay at ±0.45. */
-export const CHIP_LEAN_EASE = 0.55;
-export const CHIP_LEAN_TIGHT = 0.45;
-
 /**
- * Five-state chip band. Colour is still three-way from lightStateFromScore.
- * leaningEasing when easeW > 0.55; leaningTight when tightW > 0.45.
+ * Five-state chip band for the lights. Mirrors: white around 0, lean toward
+ * ±0.45, full past the cut. easeW / tightW are not used here — those feed the six.
  */
 export function chipBandFromScore(score) {
   if (score == null || !Number.isFinite(score)) return "empty";
   const { state } = lightStateFromScore(score);
   if (state === "easing" || state === "tight" || state === "empty") return state;
-  if (easeW(score) > CHIP_LEAN_EASE) return "leaningEasing";
-  if (tightW(score) > CHIP_LEAN_TIGHT) return "leaningTight";
+  if (score > LEAN_START) return "leaningEasing";
+  if (score < -LEAN_START) return "leaningTight";
   return "neutral";
 }
 

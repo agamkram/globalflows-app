@@ -623,13 +623,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       : "Growth and risk appetite still say coupons get paid.",
     sentence(hyOutParts, "High yield is the first credit to get hurt."),
     hyMix,
-    0.22,
-    -0.26
+    0.24,
+    -0.24
   );
   hy.label = "High yield";
   hy.margin = blendMargin(hy.stance, hy.net, meanImpulse([gImp, kImp, hyImp]));
 
-  let creditStance = netCall((ig.net + hy.net) / 2, 0.2, -0.26);
+  let creditStance = netCall((ig.net + hy.net) / 2, 0.23, -0.23);
   let creditWhy = `Investment grade ${ig.stance}, high yield ${hy.stance} — duration and cash-flow aren’t the same trade.`;
   if (ig.stance === hy.stance) {
     if (creditStance === "out") {
@@ -733,8 +733,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     erpZ > 0.35 && calmRisk > 0.55
       ? "Earnings yield is wide, but fear is still cheap — not a clean overweight."
       : "Neither paid fear nor late-expansion complacency is loud enough for a clean call.",
-    0.1,
-    -0.18
+    0.14,
+    -0.14
   );
   stocks.margin = blendMargin(stocks.stance, stocks.net, meanImpulse([gImp, kImp]));
   stocks.splits = [cyc, def];
@@ -799,8 +799,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
         : "Bitcoin usually pays when plumbing is tight or leaning that way."
     ),
     "Crypto wants easy plumbing; a drain is out, not a bounce.",
-    0.14,
-    -0.24
+    0.19,
+    -0.19
   );
   crypto.margin = blendMargin(crypto.stance, crypto.net, meanImpulse([lImp, kImp]));
 
@@ -910,8 +910,8 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
       `${growthIntoFearTalk(gLean)} or a rising dollar — oil rarely leads.`
     ),
     "Oil wants paid fear or a soft dollar; complacent strength is late.",
-    0.12,
-    -0.22
+    0.17,
+    -0.17
   );
   oil.label = "Oil";
   oil.margin = blendMargin(oil.stance, oil.net, meanImpulse([gImp, wtiMom]));
@@ -927,13 +927,13 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
     "Soft growth into fear — copper’s bounce sample.",
     `${growthIntoFearTalk(gLean)} — copper is late to that industrial bid.`,
     "Copper wants paid fear or soft growth; complacent strength leaves it mixed.",
-    0.12,
-    -0.22
+    0.17,
+    -0.17
   );
   copper.label = "Copper";
   copper.margin = blendMargin(copper.stance, copper.net, gImp);
 
-  let cmdtyStance = netCall((oil.net + copper.net) / 2, 0.12, -0.22);
+  let cmdtyStance = netCall((oil.net + copper.net) / 2, 0.17, -0.17);
   let cmdtyWhy = `Oil ${oil.stance}, copper ${copper.stance} — growth and the dollar aren’t the same trade as the industrial metal.`;
   if (oil.stance === copper.stance) {
     cmdtyWhy =

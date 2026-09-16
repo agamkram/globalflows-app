@@ -253,7 +253,7 @@
         </p>
         <p>
           Full green and red at ±0.45. That is the colour cut, and the full word.
-          Inside the cut the word can lean — same ramps the six already read —
+          Inside the cut the word can lean — halfway from 0 to ±0.45, both sides —
           and the needle goes dim green or dim red. White is only Mid / Neutral.
           Never full green with Mid, never white with Hot.
           Today’s fit:
@@ -288,16 +288,13 @@
           falling. Call at ±0.35.
         </p>
         <p>
-          The two weights are not mirrors: <code>easeW</code> ramps over 0.65 from
-          −0.2, <code>tightW</code> over 0.25 from −0.2. A score of exactly 0.00
-          therefore returns <code>easeW 0.31</code> and <code>tightW 0.00</code>.
-          Deliberate — fear and drain must be clearly present before they price,
-          while ample conditions are the resting state — and it tilts every net
-          slightly toward reflation.
+          The two weights are mirrors of the five’s rail: 0 at the center, 1 at
+          ±0.45. A score of exactly 0.00 returns <code>easeW 0</code> and
+          <code>tightW 0</code> — Neutral is quiet on both sides.
         </p>
         <p>
-          <code class="about-ident">easeW = clip((score + 0.2) / 0.65, 0, 1)
-tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
+          <code class="about-ident">easeW = clip(score / 0.45, 0, 1)
+tightW = clip((−score) / 0.45, 0, 1)</code>
         </p>
         <p>Duration (positive = duration risk falling):</p>
         <p>
@@ -332,10 +329,10 @@ tightW = clip((−0.2 − score) / 0.25, 0, 1)</code>
       <section class="about-block" id="calls">
         <h2>How a class gets in / mixed / out</h2>
         <p>
-          Each class has its own net of conditions. Most map in at +0.35 and out
-          at −0.35. Equities 0.10 / −0.18; Crypto 0.14 / −0.24; Gold ±0.18.
-          Credit parent 0.20 / −0.26; HY 0.22 / −0.26; oil, copper, and the commodity
-          parent 0.12 / −0.22. 5 (cash) is on the Treasuries strip and out of the
+          Each class has its own net of conditions. In and out are mirrors.
+          Most map at ±0.35. Equities ±0.14; Crypto ±0.19; Gold ±0.18.
+          Credit parent ±0.23; HY ±0.24; oil, copper, and the commodity
+          parent ±0.17. 5 (cash) is on the Treasuries strip and out of the
           parent net and the parent needle — the long end is the Treasuries call.
         </p>
         <p>

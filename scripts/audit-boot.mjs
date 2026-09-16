@@ -27,7 +27,9 @@ async function smokeMeaning() {
   const bands = [
     [0.46, "easing"],
     [0.42, "leaningEasing"],
+    [0.20, "neutral"],
     [0.0, "neutral"],
+    [-0.20, "neutral"],
     [-0.32, "leaningTight"],
     [-0.46, "tight"],
   ];
