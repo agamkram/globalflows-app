@@ -29,6 +29,7 @@ const fear = read("fear-greed/latest.json");
 const cot = read("cot/latest.json");
 const arsenal = read("arsenal/latest.json");
 const iitian = read("iitian/latest.json");
+const peers = read("peers/latest.json");
 
 console.log("\nExternal shelf\n");
 if (fear) {
@@ -48,6 +49,14 @@ if (iitian) {
     `IITian        ${iitian.label}${iitian.quadrant ? `  Q${iitian.quadrant}` : ""}   as of ${iitian.asOf}`
   );
 } else console.log("IITian        (missing)");
+
+if (peers?.houses?.length) {
+  const n = peers.houses.length;
+  const closest = peers.scorecard?.closest?.name || "—";
+  console.log(
+    `Peers         ${n} house${n === 1 ? "" : "s"}   closest ${closest}   (hand-placed)`
+  );
+} else console.log("Peers         (missing)");
 
 if (cot) {
   console.log(`\nCOT           as of ${cot.tffAsOf}`);

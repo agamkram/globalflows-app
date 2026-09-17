@@ -2939,3 +2939,110 @@ html.page-shelf .about-top {
 .page-shelf [data-state="tight"] {
   color: var(--tight-lean);
 }
+
+.annex-peer-us {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0 0 14px;
+  font: 500 0.72rem var(--sans);
+}
+
+.annex-peer-us span b,
+.annex-peer-axes span b {
+  font-weight: 500;
+  color: var(--muted);
+  margin-right: 5px;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.annex-peer-us span i,
+.annex-peer-axes span i {
+  font-style: normal;
+}
+
+.annex-score {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 8px;
+}
+
+.annex-score-list {
+  margin: 4px 0 0;
+  padding: 0 0 0 1.1em;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #c5cedc;
+}
+
+.annex-score-list li + li {
+  margin-top: 4px;
+}
+
+.annex-peers {
+  margin-top: 8px;
+}
+
+.annex-peer {
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--line);
+}
+
+.annex-peer:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.annex-peer-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.annex-peer-name {
+  font: 600 0.88rem var(--sans);
+}
+
+.annex-peer-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.annex-peer-name a:hover {
+  text-decoration: underline;
+}
+
+.annex-peer-date {
+  color: var(--muted);
+  font: 400 0.68rem var(--mono);
+}
+
+.annex-peer-axes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 8px 0 6px;
+  font: 500 0.78rem var(--sans);
+}
+
+.annex-peer-assets,
+.annex-peer-vs,
+.annex-peer-quote {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #c5cedc;
+}
+
+.annex-peer-vs b {
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.annex-peer-quote {
+  color: var(--muted);
+}

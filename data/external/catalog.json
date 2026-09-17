@@ -58,6 +58,16 @@
       "type": "OW / N / UW grid from public outlooks",
       "file": "house-card.csv",
       "coding": "OW | N | UW | blank. Ignore adjectives."
+    },
+    {
+      "id": "peers",
+      "name": "Peer desk check",
+      "access": "manual",
+      "whoGets": "mark",
+      "period": "when a house page is new",
+      "type": "Public CIO notes mapped onto the five components; vs us judged, not averaged",
+      "file": "peers/latest.json",
+      "coding": "Page date on each card. Silent is blank, not Neutral. Does not vote."
     }
   ]
 }

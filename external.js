@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261296";
-import { chipWord } from "./light-copy.js?v=20261296";
-import { chipBandFromScore } from "./score.js?v=20261296";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261297";
+import { chipWord } from "./light-copy.js?v=20261297";
+import { chipBandFromScore } from "./score.js?v=20261297";
 
 const $ = (id) => document.getElementById(id);
 
@@ -664,6 +664,118 @@ function renderLog(el, log, shelf) {
     ${anecdoteTable(shelf)}`;
 }
 
+const PEER_AXES = [
+  { id: "liquidity", short: "L" },
+  { id: "rates", short: "R" },
+  { id: "growth", short: "G" },
+  { id: "inflation", short: "I" },
+  { id: "risk", short: "Risk" },
+];
+
+/** Component colour only — vs us is wording, not a third paint job. */
+function wordState(word) {
+  const w = String(word || "").toLowerCase();
+  if (!w || w === "—" || w === "null") return "";
+  if (/\b(easy|easing|strong|hot|risk-on)\b/.test(w)) return "easing";
+  if (/\b(tight|tightening|soft|cold|risk-off)\b/.test(w)) return "tight";
+  return "neutral";
+}
+
+function peerAxis(h, id) {
+  const v = h?.[id];
+  if (v == null || v === "") return { word: "—", state: "" };
+  return { word: String(v), state: wordState(v) };
+}
+
+function renderPeers(el, peers, regime) {
+  if (!el) return;
+  const houses = peers?.houses || [];
+  if (!houses.length) {
+    el.innerHTML = `
+      ${head("Peers", "hand-placed")}
+      <p>Public notes next to today’s five. The date on a card is the page’s date. Nothing here changes the scores.</p>
+      ${empty("Peer file missing.")}`;
+    return;
+  }
+  const dates = houses.map((h) => h.date).filter(Boolean).sort();
+  const newest = dates[dates.length - 1];
+  const oldest = dates[0];
+  const range =
+    newest && oldest && newest !== oldest
+      ? `${shortDay(oldest)}–${shortDay(newest)}`
+      : newest
+        ? shortDay(newest)
+        : "hand-placed";
+  const sc = peers.scorecard || {};
+  const lights = regime?.lights || {};
+  const AXIS_SHORT = {
+    liquidity: "L",
+    rates: "R",
+    growth: "G",
+    inflation: "I",
+    risk: "Risk",
+  };
+  const us = LIGHTS.map((id) => {
+    const L = lights[id];
+    const word = L?.word || "—";
+    const st = L?.state || "";
+    return `<span><b>${esc(AXIS_SHORT[id])}</b> <i data-state="${esc(st)}">${esc(word)}</i></span>`;
+  }).join("");
+  const agree = (sc.agrees || [])
+    .map((t) => `<li>${esc(t)}</li>`)
+    .join("");
+  const challenged = (sc.challenged || [])
+    .map((t) => `<li>${esc(t)}</li>`)
+    .join("");
+  const cards = houses
+    .map((h) => {
+      const axes = PEER_AXES.map((a) => {
+        const { word, state } = peerAxis(h, a.id);
+        return `<span><b>${esc(a.short)}</b> <i data-state="${esc(state)}">${esc(word)}</i></span>`;
+      }).join("");
+      const name = h.url
+        ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.name)}</a>`
+        : esc(h.name);
+      const assets = h.assets
+        ? `<p class="annex-peer-assets">${esc(h.assets)}</p>`
+        : "";
+      const vs = h.vs
+        ? `<p class="annex-peer-vs"><b>${esc(h.vs)}</b>${h.vsClause ? ` — ${esc(h.vsClause)}` : ""}</p>`
+        : "";
+      const quote = h.quote
+        ? `<p class="annex-peer-quote">“${esc(h.quote)}”</p>`
+        : "";
+      return `<article class="annex-peer">
+        <div class="annex-peer-top">
+          <div class="annex-peer-name">${name}</div>
+          <div class="annex-peer-date">${esc(shortDay(h.date))}</div>
+        </div>
+        <div class="annex-peer-axes">${axes}</div>
+        ${assets}
+        ${vs}
+        ${quote}
+      </article>`;
+    })
+    .join("");
+  const closest = sc.closest
+    ? `<div><span class="annex-lbl">Closest</span><span class="annex-val">${esc(sc.closest.name)}${sc.closest.clause ? ` — ${esc(sc.closest.clause)}` : ""}</span></div>`
+    : "";
+  const falsifier = sc.falsifier
+    ? `<div><span class="annex-lbl">Falsifier</span><span class="annex-val">${esc(sc.falsifier)}</span></div>`
+    : "";
+  el.innerHTML = `
+    ${head("Peers", range)}
+    <p>Public notes next to today’s five. The date on a card is the page’s date. A dash means they were silent. Nothing here changes the scores.</p>
+    <div class="annex-peer-us" aria-label="Today’s five">${us}</div>
+    <div class="annex-score">
+      ${agree ? `<div><span class="annex-lbl">They agree</span><ul class="annex-score-list">${agree}</ul></div>` : ""}
+      ${challenged ? `<div><span class="annex-lbl">We are challenged</span><ul class="annex-score-list">${challenged}</ul></div>` : ""}
+      ${closest}
+      ${falsifier}
+    </div>
+    <div class="annex-peers">${cards}</div>`;
+}
+
 async function loadAll() {
   const q = `?t=${Date.now()}`;
   const liveJson = async (url) => {
@@ -671,7 +783,7 @@ async function loadAll() {
     if (!res.ok) throw new Error(`${res.status} ${url}`);
     return res.json();
   };
-  const [regimeS, snapS, cotLiveS, fearLiveS, cotFileS, fearFileS, arsenalFileS, houseS, logS, shelfS] =
+  const [regimeS, snapS, cotLiveS, fearLiveS, cotFileS, fearFileS, arsenalFileS, houseS, logS, shelfS, peersS] =
     await Promise.allSettled([
       getJson(`./regime-today.json${q}`),
       getJson(`./snapshot.json${q}`),
@@ -683,6 +795,7 @@ async function loadAll() {
       getText(`data/external/house-card.csv${q}`),
       getJson(`data/regime-log.json${q}`),
       getJson(`data/forward-shelf.json${q}`),
+      getJson(`data/external/peers/latest.json${q}`),
     ]);
   const ok = (s) => (s.status === "fulfilled" ? s.value : null);
   const regime = ok(regimeS);
@@ -694,6 +807,7 @@ async function loadAll() {
   renderLog($("log"), ok(logS), ok(shelfS));
   renderMix($("mix"), arsenal, regime);
   renderSix($("six"), regime, cot, houseRows, arsenal, fear);
+  renderPeers($("peers"), ok(peersS), regime);
   renderMood($("mood"), fear, regime);
   renderCot($("cot"), cot);
 }

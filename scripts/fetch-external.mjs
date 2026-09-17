@@ -252,7 +252,7 @@ async function main() {
 
   await touchCatalog(fetchedAt);
   console.log("ok — wrote data/external/{cot,fear-greed,arsenal,iitian}/");
-  console.log("house-card.csv is still manual.");
+  console.log("house-card.csv and peers/latest.json are still manual.");
 }
 
 main().catch((e) => {
