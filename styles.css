@@ -2549,11 +2549,12 @@ html.page-shelf .about-top {
 }
 
 .page-shelf .about-hero {
-  padding: 10px 0 4px;
+  padding: 4px 0 8px;
 }
 
 .page-shelf .about-brand {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
+  font-size: 1.35rem;
 }
 
 .page-shelf .about-lede {
@@ -2561,19 +2562,37 @@ html.page-shelf .about-top {
 }
 
 .page-shelf .about-toc {
-  margin-top: 14px;
+  margin-top: 0;
 }
 
 .page-shelf .about-block {
-  margin: 12px 0 0;
-  padding: 16px 16px 14px;
+  margin: 18px 0 0;
+  padding: 12px 0 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  border-top: 1px solid var(--line);
+}
+
+.page-shelf .about-block:first-of-type {
+  margin-top: 6px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .page-shelf .about-block > p {
-  margin: 0 0 12px;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: #b7c0cf;
+}
+
+.page-shelf .annex-head {
+  margin: 0 0 6px;
+}
+
+.page-shelf .annex-head h2 {
+  margin: 0;
 }
 
 .annex-head {
@@ -2715,6 +2734,12 @@ html.page-shelf .about-top {
   z-index: 1;
 }
 
+.page-shelf .annex-table thead th:first-child,
+.page-shelf .annex-table tbody th:first-child {
+  position: static;
+  background: transparent;
+}
+
 .annex-table tbody td,
 .annex-table tbody th {
   border-top: 1px solid var(--line);
@@ -2825,12 +2850,8 @@ html.page-shelf .about-top {
 
 .annex-mood {
   display: grid;
-  gap: 14px;
-  margin: 0 0 16px;
-  padding: 12px;
-  border-radius: 8px;
-  background: var(--bg3);
-  border: 1px solid var(--line);
+  gap: 12px;
+  margin: 0 0 12px;
 }
 
 @media (min-width: 560px) {
@@ -2965,20 +2986,23 @@ html.page-shelf .about-top {
 .annex-peer-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
-  margin: 0 0 12px;
-  font: 400 0.72rem var(--sans);
+  gap: 4px 12px;
+  margin: 0 0 8px;
+  font: 400 0.68rem var(--sans);
   color: var(--muted);
 }
 
 .annex-peer-leg b {
-  font: 600 0.82rem var(--mono);
+  font: 600 0.85rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: -0.06em;
+  line-height: 1;
   margin-right: 4px;
 }
 
 .annex-peer-mark {
-  font: 600 0.82rem var(--mono);
-  letter-spacing: 0.02em;
+  font: 600 1.1rem "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: -0.06em;
+  line-height: 1;
 }
 
 .annex-peer-us {
@@ -3023,69 +3047,49 @@ html.page-shelf .about-top {
 }
 
 .annex-peers {
-  margin-top: 8px;
+  margin-top: 12px;
+  padding-top: 2px;
+  border-top: 1px solid var(--line);
 }
 
 .annex-peer {
-  padding: 12px 0 4px;
+  padding: 10px 0 8px;
   border-top: 1px solid var(--line);
 }
 
 .annex-peer:first-child {
   border-top: 0;
-  padding-top: 2px;
-}
-
-.annex-peer-top {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  justify-content: space-between;
-  align-items: baseline;
+  padding-top: 10px;
 }
 
 .annex-peer-name {
   font: 600 0.88rem var(--sans);
 }
 
-.annex-peer-name a {
+.annex-peer-title {
+  margin: 2px 0 8px;
+  font: 500 0.85rem var(--sans);
+  color: #c5cedc;
+}
+
+.annex-peer-title a {
   color: inherit;
   text-decoration: none;
 }
 
-.annex-peer-name a:hover {
+.annex-peer-title a:hover {
   text-decoration: underline;
 }
 
-.annex-peer-date {
-  color: var(--muted);
-  font: 400 0.68rem var(--mono);
-}
-
-.annex-peer-axes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  margin: 8px 0 6px;
-  font: 500 0.78rem var(--sans);
-}
-
-.annex-peer-assets,
-.annex-peer-vs,
 .annex-peer-quote {
-  margin: 0 0 6px;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  margin: 0 0 8px;
+  font: 400 0.88rem var(--sans);
+  line-height: 1.45;
   color: #c5cedc;
 }
 
-.annex-peer-vs b {
-  font-weight: 600;
-  text-transform: lowercase;
-}
-
-.annex-peer-quote {
-  color: var(--muted);
+.annex-peer-quote:last-child {
+  margin-bottom: 0;
 }
 
 .annex-peer-grid {
@@ -3099,13 +3103,14 @@ html.page-shelf .about-top {
 .annex-peer-grid td {
   overflow: visible;
   text-overflow: clip;
-  padding: 5px 2px 5px 0;
+  padding: 2px 2px 2px 0;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .annex-peer-grid thead th:first-child,
 .annex-peer-grid tbody th:first-child {
-  position: static;
-  width: 24%;
+  width: 28%;
 }
 
 .annex-peer-grid thead th {
@@ -3118,12 +3123,17 @@ html.page-shelf .about-top {
 
 .annex-peer-grid thead th:not(:first-child) {
   text-align: center;
-  width: 15.2%;
+  width: 14.4%;
 }
 
 .annex-peer-grid tbody th {
   white-space: nowrap;
   font-size: 0.7rem;
+}
+
+.annex-peer-grid tbody th .annex-peer-when {
+  display: inline;
+  white-space: nowrap;
 }
 
 .annex-peer-grid td {

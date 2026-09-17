@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261307";
-import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261307";
-import { chipBandFromScore } from "./score.js?v=20261307";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261325";
+import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261325";
+import { chipBandFromScore } from "./score.js?v=20261325";
 
 const $ = (id) => document.getElementById(id);
 
@@ -386,13 +386,13 @@ function renderSix(el, regime, cot, houseRows, arsenal, fear) {
 
   el.innerHTML = `
     ${head("Compare", stamp(cot?.tffAsOf, "weekly futures"))}
-    <p>Us, then three other desks. A dash means they did not name that class. Fear and greed are CNN’s words, not in / mixed / out.</p>
+    <p>G Flow, then three other desks. A blank cell means they did not name that class. Fear and greed are CNN’s words, not in / mixed / out.</p>
     <div class="annex-scroll">
     <table class="annex-table">
       <thead>
         <tr>
           <th></th>
-          <th>Us</th>
+          <th>G Flow</th>
           <th>Arsenal</th>
           <th>Futures</th>
           <th>CNN</th>
@@ -410,7 +410,7 @@ function renderMood(el, fear, regime) {
   const riskSt = risk?.state || "";
   if (!fear) {
     el.innerHTML = `
-      ${head("Mood", "daily")}
+      ${head("CNN", "daily")}
       <p>CNN’s stock-market fear and greed, set next to our Risk light. Equity-centric, unofficial, not a vote.</p>
       ${empty("CNN file missing.")}
       ${
@@ -440,7 +440,7 @@ function renderMood(el, fear, regime) {
     })
     .join("");
   el.innerHTML = `
-    ${head("Mood", stamp(fear.asOf, "daily"))}
+    ${head("CNN", stamp(fear.asOf, "daily"))}
     <p>CNN’s stock-market fear and greed, set next to our Risk light. Equity-centric, unofficial, not a vote.</p>
     <div class="annex-mood">
       <div class="annex-mood-us">
@@ -452,7 +452,7 @@ function renderMood(el, fear, regime) {
       <div class="annex-mood-them">
         <span class="annex-lbl">Our Risk</span>
         <div class="annex-mood-word" data-state="${esc(riskSt)}">${esc(riskWord)}</div>
-        <span class="annex-call-meta">The light, not their gauge.</span>
+        <span class="annex-call-meta">The five, not their gauge.</span>
       </div>
     </div>
     <div class="annex-subs">${cells}</div>`;
@@ -478,7 +478,7 @@ function cotRow(c) {
 
 function renderCot(el, cot) {
   if (!cot) {
-    el.innerHTML = `${head("Positioning", "weekly (Fri)")}${empty("CFTC file missing.")}`;
+    el.innerHTML = `${head("CFTC", "weekly (Fri)")}${empty("CFTC file missing.")}`;
     return;
   }
   const contracts = sortCot(cot.contracts || []);
@@ -491,7 +491,7 @@ function renderCot(el, cot) {
     </tbody>`;
   }).join("");
   el.innerHTML = `
-    ${head("Positioning", stamp(cot.tffAsOf, "weekly (Fri)"))}
+    ${head("CFTC", stamp(cot.tffAsOf, "weekly (Fri)"))}
     <p>CFTC: who is long and short. Net is a share of open interest. Lev is levered money, or producers on the commodity contracts.</p>
     <div class="annex-scroll">
     <table class="annex-table annex-cot">
@@ -674,7 +674,7 @@ const PEER_AXES = [
 
 const PEER_SHORT = {
   ubs: "UBS",
-  blackrock: "BII",
+  blackrock: "BLK",
   gsam: "GS",
   citi: "Citi",
   twentytwov: "22V",
@@ -725,7 +725,7 @@ const PEER_MARK = {
 
 function peerMark(state, word) {
   if (!state || !word || word === "—") {
-    return `<span class="annex-blank">—</span>`;
+    return "";
   }
   const mark = PEER_MARK[state] || "·";
   return `<span class="annex-peer-mark" data-state="${esc(state)}" title="${esc(word)}" aria-label="${esc(word)}">${mark}</span>`;
@@ -734,9 +734,9 @@ function peerMark(state, word) {
 function peerLegend() {
   const bands = [
     ["easing", "++", "Easing · Easy · Strong · Hot · Risk-on"],
-    ["leaningEasing", "+", "Leaning that way"],
+    ["leaningEasing", "+", "Leaning easy · strong · hot · risk-on"],
     ["neutral", "·", "Mid · Neutral"],
-    ["leaningTight", "−", "Leaning that way"],
+    ["leaningTight", "−", "Leaning tight · soft · cold · risk-off"],
     ["tight", "−−", "Tightening · Tight · Soft · Cold · Risk-off"],
   ];
   const items = bands
@@ -763,7 +763,7 @@ function peerGrid(houses, regime) {
     return `<td>${peerMark(st, word)}</td>`;
   }).join("");
   const usRow = `<tr class="annex-now">
-    <th scope="row">GFlo</th>
+    <th scope="row">G Flow</th>
     ${usCells}
   </tr>`;
   const houseRows = houses
@@ -791,13 +791,46 @@ function peerGrid(houses, regime) {
     </table>`;
 }
 
+function peerSnippets(h) {
+  const bits = Array.isArray(h?.quotes)
+    ? h.quotes
+    : h?.quote
+      ? [h.quote]
+      : [];
+  return bits
+    .filter(Boolean)
+    .map((q) => `<p class="annex-peer-quote">“${esc(q)}”</p>`)
+    .join("");
+}
+
+function peerNotes(houses) {
+  return houses
+    .map((h) => {
+      const when = slashDay(h.date);
+      const who = `${esc(peerShort(h))}${
+        when ? ` <span class="annex-peer-when">${esc(when)}</span>` : ""
+      }`;
+      const title = h.title
+        ? h.url
+          ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.title)}</a>`
+          : esc(h.title)
+        : "";
+      return `<article class="annex-peer">
+        <div class="annex-peer-name">${who}</div>
+        ${title ? `<div class="annex-peer-title">${title}</div>` : ""}
+        ${peerSnippets(h)}
+      </article>`;
+    })
+    .join("");
+}
+
 function renderPeers(el, peers, regime) {
   if (!el) return;
   const houses = peers?.houses || [];
   if (!houses.length) {
     el.innerHTML = `
       ${head("Peers", "hand-placed")}
-      <p>GFlo, then the houses. A dash means that page was silent. Nothing here changes the scores.</p>
+      <p>G Flow, then the houses. No mark means that page was silent. Nothing here changes the scores.</p>
       ${empty("Peer file missing.")}`;
     return;
   }
@@ -810,64 +843,12 @@ function renderPeers(el, peers, regime) {
       : newest
         ? slashDay(newest)
         : "hand-placed";
-  const sc = peers.scorecard || {};
-  const agree = (sc.agrees || [])
-    .map((t) => `<li>${esc(t)}</li>`)
-    .join("");
-  const challenged = (sc.challenged || [])
-    .map((t) => `<li>${esc(t)}</li>`)
-    .join("");
-  const cards = houses
-    .map((h) => {
-      const axes = PEER_AXES.map((a) => {
-        const { word, state } = peerAxis(h, a.id);
-        return `<span><b>${esc(a.short)}</b> <i data-state="${esc(state)}">${esc(word)}</i></span>`;
-      }).join("");
-      const name = h.url
-        ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.name)}</a>`
-        : esc(h.name);
-      const assets = h.assets
-        ? `<p class="annex-peer-assets">${esc(h.assets)}</p>`
-        : "";
-      const vs = h.vs
-        ? `<p class="annex-peer-vs"><b>${esc(h.vs)}</b>${h.vsClause ? ` — ${esc(h.vsClause)}` : ""}</p>`
-        : "";
-      const quote = h.quote
-        ? `<p class="annex-peer-quote">“${esc(h.quote)}”</p>`
-        : "";
-      const when = slashDay(h.date);
-      return `<article class="annex-peer">
-        <div class="annex-peer-top">
-          <div class="annex-peer-name">${name}${
-            when ? ` <span class="annex-peer-when">${esc(when)}</span>` : ""
-          }</div>
-        </div>
-        <div class="annex-peer-axes">${axes}</div>
-        ${assets}
-        ${vs}
-        ${quote}
-      </article>`;
-    })
-    .join("");
-  const closest = sc.closest
-    ? `<div><span class="annex-lbl">Closest</span><span class="annex-val">${esc(sc.closest.name)}${sc.closest.clause ? ` — ${esc(sc.closest.clause)}` : ""}</span></div>`
-    : "";
-  const falsifier = sc.falsifier
-    ? `<div><span class="annex-lbl">Falsifier</span><span class="annex-val">${esc(sc.falsifier)}</span></div>`
-    : "";
   el.innerHTML = `
     ${head("Peers", range)}
-    <p>GFlo, then the houses. A dash means that page was silent. The date on a card is the page’s date. Nothing here changes the scores.</p>
+    <p>G Flow, then the nine houses. A blank cell means they did not speak to that. Dates are theirs. Nothing here changes the scores.</p>
     ${peerLegend()}
     ${peerGrid(houses, regime)}
-    <h3 class="annex-h">The notes</h3>
-    <div class="annex-score">
-      ${agree ? `<div><span class="annex-lbl">They agree</span><ul class="annex-score-list">${agree}</ul></div>` : ""}
-      ${challenged ? `<div><span class="annex-lbl">We are challenged</span><ul class="annex-score-list">${challenged}</ul></div>` : ""}
-      ${closest}
-      ${falsifier}
-    </div>
-    <div class="annex-peers">${cards}</div>`;
+    <div class="annex-peers">${peerNotes(houses)}</div>`;
 }
 
 async function loadAll() {
