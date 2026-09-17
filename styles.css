@@ -2940,6 +2940,47 @@ html.page-shelf .about-top {
   color: var(--tight-lean);
 }
 
+/* Peers uses the five words, so it uses the five strip colours. */
+.page-shelf .annex-peer-mark[data-state="easing"],
+.page-shelf .annex-peer-axes [data-state="easing"] {
+  color: var(--ease);
+}
+.page-shelf .annex-peer-mark[data-state="leaningEasing"],
+.page-shelf .annex-peer-axes [data-state="leaningEasing"] {
+  color: var(--ease-lean);
+}
+.page-shelf .annex-peer-mark[data-state="neutral"],
+.page-shelf .annex-peer-axes [data-state="neutral"] {
+  color: var(--neutral);
+}
+.page-shelf .annex-peer-mark[data-state="leaningTight"],
+.page-shelf .annex-peer-axes [data-state="leaningTight"] {
+  color: var(--tight-lean);
+}
+.page-shelf .annex-peer-mark[data-state="tight"],
+.page-shelf .annex-peer-axes [data-state="tight"] {
+  color: var(--tight);
+}
+
+.annex-peer-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 0 0 12px;
+  font: 400 0.72rem var(--sans);
+  color: var(--muted);
+}
+
+.annex-peer-leg b {
+  font: 600 0.82rem var(--mono);
+  margin-right: 4px;
+}
+
+.annex-peer-mark {
+  font: 600 0.82rem var(--mono);
+  letter-spacing: 0.02em;
+}
+
 .annex-peer-us {
   display: flex;
   flex-wrap: wrap;
@@ -3044,5 +3085,53 @@ html.page-shelf .about-top {
 }
 
 .annex-peer-quote {
+  color: var(--muted);
+}
+
+.annex-peer-grid {
+  table-layout: fixed;
+  width: 100%;
+  font-size: 0.7rem;
+}
+
+.annex-peer-grid thead th,
+.annex-peer-grid tbody th,
+.annex-peer-grid td {
+  overflow: visible;
+  text-overflow: clip;
+  padding: 5px 2px 5px 0;
+}
+
+.annex-peer-grid thead th:first-child,
+.annex-peer-grid tbody th:first-child {
+  position: static;
+  width: 24%;
+}
+
+.annex-peer-grid thead th {
+  text-transform: none;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+.annex-peer-grid thead th:not(:first-child) {
+  text-align: center;
+  width: 15.2%;
+}
+
+.annex-peer-grid tbody th {
+  white-space: nowrap;
+  font-size: 0.7rem;
+}
+
+.annex-peer-grid td {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.annex-peer-when {
+  font-weight: 400;
   color: var(--muted);
 }

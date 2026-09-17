@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261297";
-import { chipWord } from "./light-copy.js?v=20261297";
-import { chipBandFromScore } from "./score.js?v=20261297";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261307";
+import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261307";
+import { chipBandFromScore } from "./score.js?v=20261307";
 
 const $ = (id) => document.getElementById(id);
 
@@ -665,26 +665,130 @@ function renderLog(el, log, shelf) {
 }
 
 const PEER_AXES = [
-  { id: "liquidity", short: "L" },
-  { id: "rates", short: "R" },
-  { id: "growth", short: "G" },
-  { id: "inflation", short: "I" },
-  { id: "risk", short: "Risk" },
+  { id: "liquidity", name: "Liquidity", short: "L" },
+  { id: "rates", name: "Rates", short: "R" },
+  { id: "growth", name: "Growth", short: "G" },
+  { id: "inflation", name: "Inflation", short: "I" },
+  { id: "risk", name: "Risk", short: "Risk" },
 ];
 
-/** Component colour only — vs us is wording, not a third paint job. */
-function wordState(word) {
-  const w = String(word || "").toLowerCase();
-  if (!w || w === "—" || w === "null") return "";
-  if (/\b(easy|easing|strong|hot|risk-on)\b/.test(w)) return "easing";
-  if (/\b(tight|tightening|soft|cold|risk-off)\b/.test(w)) return "tight";
+const PEER_SHORT = {
+  ubs: "UBS",
+  blackrock: "BII",
+  gsam: "GS",
+  citi: "Citi",
+  twentytwov: "22V",
+  apollo: "Sløk",
+  barclays: "Barclays",
+  pimco: "PIMCO",
+  jpm: "JPM",
+};
+
+/** Same five bands as the strip. Vs us is wording, not a third paint job. */
+function wordState(word, lid) {
+  const raw = String(word || "").trim();
+  if (!raw || raw === "—" || raw === "null") return "";
+  const want = raw.toLowerCase();
+  const tables = lid && CHIP_WORD[lid] ? [CHIP_WORD[lid]] : Object.values(CHIP_WORD);
+  for (const table of tables) {
+    for (const [band, label] of Object.entries(table)) {
+      if (String(label).toLowerCase() === want) return band;
+    }
+  }
   return "neutral";
 }
 
 function peerAxis(h, id) {
   const v = h?.[id];
   if (v == null || v === "") return { word: "—", state: "" };
-  return { word: String(v), state: wordState(v) };
+  return { word: String(v), state: wordState(v, id) };
+}
+
+function peerShort(h) {
+  return PEER_SHORT[h?.id] || String(h?.name || "—").split(/\s+/)[0];
+}
+
+function slashDay(iso) {
+  if (!iso) return "";
+  const d = new Date(`${String(iso).slice(0, 10)}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+const PEER_MARK = {
+  easing: "++",
+  leaningEasing: "+",
+  neutral: "·",
+  leaningTight: "−",
+  tight: "−−",
+};
+
+function peerMark(state, word) {
+  if (!state || !word || word === "—") {
+    return `<span class="annex-blank">—</span>`;
+  }
+  const mark = PEER_MARK[state] || "·";
+  return `<span class="annex-peer-mark" data-state="${esc(state)}" title="${esc(word)}" aria-label="${esc(word)}">${mark}</span>`;
+}
+
+function peerLegend() {
+  const bands = [
+    ["easing", "++", "Easing · Easy · Strong · Hot · Risk-on"],
+    ["leaningEasing", "+", "Leaning that way"],
+    ["neutral", "·", "Mid · Neutral"],
+    ["leaningTight", "−", "Leaning that way"],
+    ["tight", "−−", "Tightening · Tight · Soft · Cold · Risk-off"],
+  ];
+  const items = bands
+    .map(
+      ([st, mark, gloss]) =>
+        `<span class="annex-peer-leg"><b class="annex-peer-mark" data-state="${st}">${mark}</b> ${esc(gloss)}</span>`
+    )
+    .join("");
+  return `<div class="annex-peer-legend">${items}</div>`;
+}
+
+function peerGrid(houses, regime) {
+  const lights = regime?.lights || {};
+  const heads = [
+    "<th></th>",
+    ...PEER_AXES.map((a) => `<th>${esc(a.name)}</th>`),
+  ].join("");
+  const usCells = PEER_AXES.map((a) => {
+    const ours = lights[a.id];
+    const word = ours?.word || "—";
+    const st = Number.isFinite(ours?.score)
+      ? chipBandFromScore(ours.score)
+      : wordState(word, a.id);
+    return `<td>${peerMark(st, word)}</td>`;
+  }).join("");
+  const usRow = `<tr class="annex-now">
+    <th scope="row">GFlo</th>
+    ${usCells}
+  </tr>`;
+  const houseRows = houses
+    .map((h) => {
+      const cells = PEER_AXES.map((a) => {
+        const { word, state } = peerAxis(h, a.id);
+        return `<td>${peerMark(state, word)}</td>`;
+      }).join("");
+      const date = slashDay(h.date);
+      const when = date
+        ? ` <span class="annex-peer-when">${esc(date)}</span>`
+        : "";
+      return `<tr>
+        <th scope="row">${esc(peerShort(h))}${when}</th>
+        ${cells}
+      </tr>`;
+    })
+    .join("");
+  return `<table class="annex-table annex-peer-grid">
+      <thead><tr>${heads}</tr></thead>
+      <tbody>
+        ${usRow}
+        ${houseRows}
+      </tbody>
+    </table>`;
 }
 
 function renderPeers(el, peers, regime) {
@@ -693,7 +797,7 @@ function renderPeers(el, peers, regime) {
   if (!houses.length) {
     el.innerHTML = `
       ${head("Peers", "hand-placed")}
-      <p>Public notes next to today’s five. The date on a card is the page’s date. Nothing here changes the scores.</p>
+      <p>GFlo, then the houses. A dash means that page was silent. Nothing here changes the scores.</p>
       ${empty("Peer file missing.")}`;
     return;
   }
@@ -702,25 +806,11 @@ function renderPeers(el, peers, regime) {
   const oldest = dates[0];
   const range =
     newest && oldest && newest !== oldest
-      ? `${shortDay(oldest)}–${shortDay(newest)}`
+      ? `${slashDay(oldest)}–${slashDay(newest)}`
       : newest
-        ? shortDay(newest)
+        ? slashDay(newest)
         : "hand-placed";
   const sc = peers.scorecard || {};
-  const lights = regime?.lights || {};
-  const AXIS_SHORT = {
-    liquidity: "L",
-    rates: "R",
-    growth: "G",
-    inflation: "I",
-    risk: "Risk",
-  };
-  const us = LIGHTS.map((id) => {
-    const L = lights[id];
-    const word = L?.word || "—";
-    const st = L?.state || "";
-    return `<span><b>${esc(AXIS_SHORT[id])}</b> <i data-state="${esc(st)}">${esc(word)}</i></span>`;
-  }).join("");
   const agree = (sc.agrees || [])
     .map((t) => `<li>${esc(t)}</li>`)
     .join("");
@@ -745,10 +835,12 @@ function renderPeers(el, peers, regime) {
       const quote = h.quote
         ? `<p class="annex-peer-quote">“${esc(h.quote)}”</p>`
         : "";
+      const when = slashDay(h.date);
       return `<article class="annex-peer">
         <div class="annex-peer-top">
-          <div class="annex-peer-name">${name}</div>
-          <div class="annex-peer-date">${esc(shortDay(h.date))}</div>
+          <div class="annex-peer-name">${name}${
+            when ? ` <span class="annex-peer-when">${esc(when)}</span>` : ""
+          }</div>
         </div>
         <div class="annex-peer-axes">${axes}</div>
         ${assets}
@@ -765,8 +857,10 @@ function renderPeers(el, peers, regime) {
     : "";
   el.innerHTML = `
     ${head("Peers", range)}
-    <p>Public notes next to today’s five. The date on a card is the page’s date. A dash means they were silent. Nothing here changes the scores.</p>
-    <div class="annex-peer-us" aria-label="Today’s five">${us}</div>
+    <p>GFlo, then the houses. A dash means that page was silent. The date on a card is the page’s date. Nothing here changes the scores.</p>
+    ${peerLegend()}
+    ${peerGrid(houses, regime)}
+    <h3 class="annex-h">The notes</h3>
     <div class="annex-score">
       ${agree ? `<div><span class="annex-lbl">They agree</span><ul class="annex-score-list">${agree}</ul></div>` : ""}
       ${challenged ? `<div><span class="annex-lbl">We are challenged</span><ul class="annex-score-list">${challenged}</ul></div>` : ""}
