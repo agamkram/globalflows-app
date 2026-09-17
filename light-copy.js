@@ -1,11 +1,12 @@
 /**
- * Component story — same paragraphs the morning job writes, rebuilt from
- * whoever is voting now. Boxes and taps must use this, not a frozen file.
+ * Regime copy — the paragraphs the boxes show. English only.
+ * Public names: docs/lexicon.md. Never say lights, strip, chip, or “five words.”
+ * A reading (Tight, Hot, Leaning strong) belongs to a component. It is not the box.
  *
- * Math stays in score.js (one module in the browser). This file is only words.
+ * Math stays in score.js. This file is only what a reader sees.
  */
 
-import { chipBandFromScore } from "./score.js?v=20261325";
+import { chipBandFromScore } from "./score.js?v=20261327";
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 
@@ -18,7 +19,7 @@ export const LIGHT_WORD = {
   risk: { easing: "Risk-on", neutral: "Neutral", tight: "Risk-off" },
 };
 
-/** Chip / headline / the six. Lean is not a modifier on Mid — it is the word. */
+/** Readings on the five and the six. Lean is not a modifier on Mid — it is the reading. */
 export const CHIP_WORD = {
   liquidity: {
     easing: "Easing",
@@ -109,8 +110,8 @@ export function teachLight(lid, c) {
   }
   const band = chipBandFromScore(c.score);
   const word = chipWord(lid, c.score);
-  const fullEase = LIGHT_WORD[lid]?.easing || "the green word";
-  const fullTight = LIGHT_WORD[lid]?.tight || "the red word";
+  const fullEase = LIGHT_WORD[lid]?.easing || "the green reading";
+  const fullTight = LIGHT_WORD[lid]?.tight || "the red reading";
   const midName = LIGHT_WORD[lid]?.neutral || "the middle";
   let growthNote = split;
   let growthPoint =
@@ -223,7 +224,7 @@ export function teachLight(lid, c) {
   return by[lid]?.[band] || `${word}.`;
 }
 
-/** Club + story + distance to a word flip. `c` is clubLight() plus cliff. */
+/** Club + story + distance to a reading flip. `c` is clubLight() plus cliff. */
 export function lightSheet(lid, c) {
   const painted = {
     ...c,

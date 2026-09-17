@@ -1,6 +1,6 @@
 /** GlobalFlows UI — reads snapshot.json + regime-today.json bake */
 
-import { buildMeaning } from "./meaning.js?v=20261325";
+import { buildMeaning } from "./meaning.js?v=20261327";
 import {
   buildLights,
   attachImpulse,
@@ -23,8 +23,8 @@ import {
   TABLE_IMPULSE,
   IMPULSE_KEYS,
   sliceLookback,
-} from "./score.js?v=20261325";
-import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261325";
+} from "./score.js?v=20261327";
+import { LIGHT_IDS, chipWord, lightSheet, inflationTurn } from "./light-copy.js?v=20261327";
 
 const $ = (sel, el = document) => el.querySelector(sel);
 
@@ -587,9 +587,9 @@ function wordFor(light) {
  *  the rosters here matching the catalog, or this quietly names the wrong voters. */
 const LIGHT_BLURB = {
   liquidity:
-    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Voters are reserves and net liquidity versus GDP, the funding spread, commercial paper, and G4 balance-sheet growth with the dollar’s 12-month change.",
+    "Cause — is cash entering or leaving the system? Tightening = draining; easing = cash returning. Who counts: reserves and net liquidity versus GDP, the funding spread, commercial paper, and G4 balance-sheet growth with the dollar’s 12-month change.",
   rates:
-    "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only votes when it spikes; calm does not ease Rates or the turn.",
+    "Borrowing costs — real yields (5y and 10y TIPS, the 2-year against core PCE), mortgages, global 10ys, and the curve. Easy = cheap to fund; tight = expensive. MOVE (bond vol) only counts when it spikes; calm does not ease Rates or the turn.",
   growth:
     "Real activity — labor (jobs, claims), output (GDP and the weekly/monthly composites), a leading sleeve (permits, starts, durable orders, openings), and regional Fed factory surveys. When a survey is at the rail while jobs and GDP are still Mid, it slides the needle and the tap flags early — not confirmed. Strong = holding up; soft = cooling. Separate from inflation.",
   inflation:
@@ -1231,8 +1231,8 @@ function tapMathHtml(id, snap) {
   const name = snap.lights?.[id]?.label || id;
   const scaleNote =
     wTogether === wBox
-      ? `The rows already read ${wTogether}. We asked how unusual that is for ${name}’s own mix and matched it to the other four. The word stayed ${wTogether}.`
-      : `The rows together read ${wTogether}. We asked how unusual that is for ${name}’s own mix, then matched the five so a word here means the same kind of unusual as the same word on the others. That stretch printed ${wBox}.`;
+      ? `The rows already read ${wTogether}. We asked how unusual that is for ${name}’s own mix and matched it to the other four. The reading stayed ${wTogether}.`
+      : `The rows together read ${wTogether}. We asked how unusual that is for ${name}’s own mix, then matched the five so a reading here means the same kind of unusual as the same reading on the others. That stretch printed ${wBox}.`;
   const stress = ballots.filter(
     (b) => b.id === "family:funding" || b.id === "family:stress"
   );
@@ -1242,7 +1242,7 @@ function tapMathHtml(id, snap) {
   );
   const stressNote =
     id === "liquidity" && worst != null && worst <= -0.5
-      ? `<p class="muted tiny">Funding stress is holding Liquidity at least this tight — the other ballots cannot talk it back up.</p>`
+      ? `<p class="muted tiny">Funding stress is holding Liquidity at least this tight — the other groups cannot talk it back up.</p>`
       : "";
   return `<div class="tap-math">
     <p class="tap-math-kicker">How the number is made</p>
@@ -1933,12 +1933,12 @@ function openSentence(snap) {
       )
       .join("")}`;
 
-  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own. Between the cuts, the word and the needle.</p>`;
+  const axis = `<p class="muted tiny sent-foot">Green is the reflationary end of each component, red the contractionary end — neither is good or bad on its own. Between the cuts, the reading and the needle.</p>`;
 
   const liveFoot = movedBits.length
     ? `Live tape${REGIME?.verdict === "SPOT ON" ? " · morning check passed" : ""} · ${DEFAULT_IMPULSE} turn`
     : REGIME?.verdict === "SPOT ON"
-      ? `Verified bake · ${DEFAULT_IMPULSE} turn`
+      ? `Morning check passed · ${DEFAULT_IMPULSE} turn`
       : `${DEFAULT_IMPULSE} turn`;
   const verified = `${axis}<p class="muted tiny sent-foot">${escapeHtml(liveFoot)}</p>`;
 
@@ -1972,17 +1972,17 @@ function renderLights(snap) {
       const scoreNum =
         L.score != null && Number.isFinite(L.score) ? L.score : null;
       const score = scoreNum != null ? fmtLightScore(scoreNum) : "—";
+      const word = scoreNum != null ? chipWord(id, scoreNum) : "—";
       const cliff = distanceToCliff(L.score);
       const nearFlip =
         cliff != null && Number.isFinite(cliff) && cliff < 0.05
           ? Math.abs(L.score) > 0.45
-            ? `${cliff.toFixed(2)} inside the word`
-            : `${cliff.toFixed(2)} from flip`
+            ? `${cliff.toFixed(2)} inside ${word}`
+            : `${cliff.toFixed(2)} from ${word}`
           : null;
       const on = focusLight === id || streetSpyLight() === id;
       const chev = L.impulse?.dir || "flat";
       const split = lightIsSplit(snap, id);
-      const word = scoreNum != null ? chipWord(id, scoreNum) : "—";
       const paint = scoreNum != null ? chipBandFromScore(scoreNum) : "empty";
       const inflTurn =
         id === "inflation" && L.state === "easing" ? inflationTurn(L.impulse?.dir) : "";
@@ -1993,7 +1993,7 @@ function renderLights(snap) {
       }" data-clash="${split ? "true" : "false"}" data-near-flip="${nearFlip ? "true" : "false"}" aria-pressed="${on ? "true" : "false"}"${
         tip ? ` title="${escapeHtml(tip)}"` : ""
       } aria-label="${escapeHtml(
-        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", voters disagree" : ""}`
+        `${L.label || id}, ${spoken}, ${chev === "up" ? "▲1m" : chev === "down" ? "▼1m" : "–1m"}, ${score}${nearFlip ? `, ${nearFlip}` : ""}${split ? ", the series behind it disagree" : ""}`
       )}">
         <span class="impulse-chev" data-dir="${chev}" title="1m turn" aria-hidden="true"></span>
         <span class="lbl">${escapeHtml(L.label || id)}</span>
@@ -2841,20 +2841,20 @@ function openSeries(s) {
   const lightLabel = SNAP?.lights?.[voter]?.label || voter;
   const clubLabel = SNAP?.lights?.[s.light]?.label || s.light;
   const voteLine = voter
-    ? `<p class="series-vote">Votes <strong>${escapeHtml(
+    ? `<p class="series-vote">Counts toward <strong>${escapeHtml(
         lightLabel
       )}</strong>${
         cross
-          ? ` · lives on ${escapeHtml(street)}, club is usually under ${escapeHtml(
+          ? ` · lives in ${escapeHtml(street)}, usually grouped under ${escapeHtml(
               home
             )}`
           : ""
       }</p>`
     : s.light && s.anchor?.kind === "move"
-      ? `<p class="series-vote">On the <strong>${escapeHtml(
+      ? `<p class="series-vote">On <strong>${escapeHtml(
           clubLabel
-        )}</strong> shelf — votes only when bond vol spikes; calm does not ease Rates.</p>`
-      : `<p class="series-vote muted">Does not vote a regime component — book / output line.</p>`;
+        )}</strong> — counts only when bond vol spikes; calm does not ease Rates.</p>`
+      : `<p class="series-vote muted">Does not count toward a regime component — book / output line.</p>`;
   const live = liveQuote(s);
   const latest = live ? live.price : s.latest;
   const blurb = s.note || s.sub || "";

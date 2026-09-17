@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261325";
-import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261325";
-import { chipBandFromScore } from "./score.js?v=20261325";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261327";
+import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261327";
+import { chipBandFromScore } from "./score.js?v=20261327";
 
 const $ = (id) => document.getElementById(id);
 
@@ -684,7 +684,7 @@ const PEER_SHORT = {
   jpm: "JPM",
 };
 
-/** Same five bands as the strip. Vs us is wording, not a third paint job. */
+/** Same five readings as the regime boxes. Vs us is wording, not a third paint job. */
 function wordState(word, lid) {
   const raw = String(word || "").trim();
   if (!raw || raw === "—" || raw === "null") return "";

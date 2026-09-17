@@ -3,8 +3,8 @@
  * One book: duration, credit, and the six classes read the 1m turn.
  * The table lookback only colors rows and sets spark length.
  */
-import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261325";
-import { chipWord } from "./light-copy.js?v=20261325";
+import { DEFAULT_IMPULSE, easeW, tightW, chipBandFromScore, isFreshEnoughToVote } from "./score.js?v=20261327";
+import { chipWord } from "./light-copy.js?v=20261327";
 
 function stateOf(lights, id) {
   return lights?.[id]?.state || "empty";
@@ -108,7 +108,7 @@ function dollarSoft(snap) {
   return d.latest != null && d.latest < -3;
 }
 
-/** Continuous light score on −1..+1. Prefer the number; fall back to the word. */
+/** Continuous component score on −1..+1. Prefer the number; fall back to the reading. */
 function lightUnit(lights, id) {
   const s = lights?.[id]?.score;
   if (Number.isFinite(s)) return clampMargin(s);
@@ -119,9 +119,9 @@ function lightUnit(lights, id) {
 }
 
 /**
- * The six read the Inflation score, not only the word. They still must not
+ * The six read the Inflation score, not only the reading. They still must not
  * say Hot while the box is Mid. “leaning hot” is the score past the soft ramp
- * and short of the colour line — same word as the chip.
+ * and short of the colour line — same reading as the box.
  */
 function inflationHeatTalk(iSc) {
   const band = chipBandFromScore(iSc);
@@ -142,7 +142,7 @@ function liquidityTightTalk(lSc) {
 }
 
 /**
- * The six read the score; the five keep the word. If Growth is still Mid and
+ * The six read the score; the five keep the reading. If Growth is still Mid and
  * the needle is on the Strong (or Soft) tick, name the tick — do not steal
  * Firm / Soft from the box.
  */
@@ -347,13 +347,13 @@ function pairFromStrip({ durationDir, creditDir, billsPay, stocks, treasuries, f
   if (eq === "out" && ust === "in") {
     return {
       line: "Long Treasuries over stocks",
-      why: `The strip has chosen: Equities out, long bonds in.${fiveNote}`,
+      why: `The classes have chosen: Equities out, long bonds in.${fiveNote}`,
     };
   }
   if (eq === "in" && ust === "out") {
     return {
       line: "Stocks over long Treasuries",
-      why: "The strip has chosen: Equities in, long bonds out.",
+      why: "The classes have chosen: Equities in, long bonds out.",
     };
   }
   if (eq === "in" && ust === "in") {
@@ -395,7 +395,7 @@ function pairFromStrip({ durationDir, creditDir, billsPay, stocks, treasuries, f
   return fallback;
 }
 
-/** One line for the face of the strip. Empty if there is nothing worth saying. */
+/** One line for the face of the six. Empty if there is nothing worth saying. */
 function stripSoWhat({ gSc, rSc, G, stocks, treasuries }) {
   const t5 = treasuries?.tenors?.find((t) => t.id === "5");
   const t10 = treasuries?.tenors?.find((t) => t.id === "10");
@@ -519,15 +519,15 @@ function buildFavor(lights, durationDir, creditDir, snap, horizon, creditUpParts
   // Parent is the long end. Carrying the 5-year at even a fifth of the weight
   // did not soften a taxed front end, it vetoed a paid long end: whenever Rates
   // is tight the 5-year net pins at −1, which lifts the bar on the 10s and 30s
-  // from the 0.35 a tenor needs on its own to 0.69 each. The strip could show
-  // Treasuries mixed with both long tenors in favor, and the parent went the
+  // from the 0.35 a tenor needs on its own to 0.69 each. Treasuries could show
+  // mixed with both long tenors in favor, and the parent went the
   // whole of 2021-2026 without one in-favor day. The front end is the Rates
-  // light's job — it is reported here, not voted twice.
+  // component’s job — it is reported here, not counted twice.
   const ustAvgNet = 0.5 * t10Net + 0.5 * t30Net;
   const ustStance = netCall(ustAvgNet, 0.35, -0.35);
   let ustWhy = `The long end is split — 10s ${t10.stance}, 30s ${t30.stance}.`;
   // The parent is the long end, so its reason may not credit the 5s. Policy is
-  // the Rates call; it is reported on the strip, not voted here.
+  // the Rates call; it is reported on Treasuries, not counted here.
   if (tenorSet.size === 1 && ustStance === t10.stance) {
     if (ustStance === "out") {
       ustWhy =

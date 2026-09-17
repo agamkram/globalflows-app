@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Prove all 11 boxes lock: 5 lights (number / word / color) and 6 asset
+ * Prove all 11 boxes lock: 5 regime components (number / reading / color) and 6 asset
  * classes (in / mixed / out). Also fail if any series' on-disk history shrank
  * below the high-water mark in data/history-lengths.json — the only class of
  * data loss that is silent and unrecoverable. Writes sanity.txt.
@@ -109,7 +109,7 @@ async function main() {
   lines.push(`ingest ${snap.generatedAt || "—"}`);
   if (regime?.generatedAt) lines.push(`regime ${regime.generatedAt}`);
   lines.push("");
-  lines.push("Lights = weighted mean of voter anchors (families first). Lookback does not recolor lights.");
+  lines.push("Regime components = weighted mean of who counted (families first). Lookback does not recolor the five.");
   lines.push("Score > +0.45 → green · < −0.45 → red · else the middle, painted white.");
   lines.push("");
 
@@ -383,7 +383,7 @@ async function main() {
     for (const f of fails) lines.push(`  ${f}`);
   } else {
     lines.push(
-      "ok — all 11 boxes lock (5 lights + 6 asset classes); history lengths hold; external gates clear."
+      "ok — all 11 boxes lock (5 components + 6 asset classes); history lengths hold; external gates clear."
     );
   }
   await fs.writeFile(OUT, lines.join("\n") + "\n");
