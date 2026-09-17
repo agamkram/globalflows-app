@@ -50,15 +50,15 @@
   <meta property="og:url" content="https://globalflows.markmaga.com/math.html" />
   <meta property="og:title" content="Math — GlobalFlows" />
   <meta property="og:image" content="https://globalflows.markmaga.com/icon-512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261327" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261327" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20261329" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261329" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Michroma&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="styles.css?v=20261327" />
+  <link rel="stylesheet" href="styles.css?v=20261329" />
 </head>
 <body class="page-about">
   <div class="about-shell">
@@ -90,19 +90,20 @@
       </header>
 
       <section class="about-block" id="derived">
-        <h2>Derived series</h2>
+        <h2>Ratios, spreads, and changes</h2>
         <p>
-          Dollar stocks never vote a colour. They sit on the lookback, or they
-          become a ratio, a spread, or a rate of change. FRED units first: Fed
-          assets and the Treasury account in millions, reverse repo in billions,
-          Bank of Japan assets in hundreds of millions of yen.
+          A pile of dollars does not paint a box. Fed assets, the Treasury
+          account, reverse repo — those sit on the lookback, or they become a
+          ratio, a spread, or a rate of change. FRED units first: Fed assets and
+          the Treasury account in millions, reverse repo in billions, Bank of
+          Japan assets in hundreds of millions of yen.
         </p>
         <dl class="formula-dl">
           <div>
             <dt>Net liquidity</dt>
             <dd>
               <code>WALCL(bn) − TGA(bn) − ON RRP(bn)</code>
-              <span class="ident-note">WALCL and TGA ÷ 1,000 from millions. GDP share votes; the stock does not.</span>
+              <span class="ident-note">WALCL and TGA ÷ 1,000 from millions. The GDP share votes; the pile does not.</span>
             </dd>
           </div>
           <div>
@@ -130,14 +131,14 @@
             <dt>G4 central bank assets</dt>
             <dd>
               <code>Fed + ECB×USD/EUR + BoJ×(100 / yen per dollar) + China FX reserves</code>
-              <span class="ident-note">Each leg at that day’s rate, summed in $tn. Level does not count.</span>
+              <span class="ident-note">Each leg at that day’s rate, summed in $tn. Level does not vote.</span>
             </dd>
           </div>
           <div>
             <dt>Global CB assets, 12m</dt>
             <dd>
               <code>(G4 today − G4 ~1y ago) / |G4 ~1y ago| × 100</code>
-              <span class="ident-note">The G4 series that counts. Neutral at +5%, not zero.</span>
+              <span class="ident-note">The G4 voter. Neutral at +5%, not zero.</span>
             </dd>
           </div>
           <div>
@@ -158,14 +159,14 @@
             <dt>Credit impulse (US)</dt>
             <dd>
               <code>Δ over ~1y of (TOTLL YoY %)</code>
-              <span class="ident-note">Lookback only. Does not count toward a colour.</span>
+              <span class="ident-note">Lookback only. Does not vote.</span>
             </dd>
           </div>
           <div>
             <dt>China credit impulse</dt>
             <dd>
               <code>China credit/GDP today − China credit/GDP four quarters ago</code>
-              <span class="ident-note">Lookback only. The stock does not count toward Liquidity; China reaches Liquidity through FX reserves. The impulse can still nudge credit risk.</span>
+              <span class="ident-note">Lookback only. The stock does not vote Liquidity; China reaches Liquidity through FX reserves. The impulse can still nudge credit risk.</span>
             </dd>
           </div>
           <div>
@@ -179,7 +180,7 @@
             <dt>Nominal − real GDP</dt>
             <dd>
               <code>nominal GDP YoY − real GDP YoY</code>
-              <span class="ident-note">Story, not a group that counts.</span>
+              <span class="ident-note">Story, not a voter.</span>
             </dd>
           </div>
           <div>
@@ -197,10 +198,10 @@
             </dd>
           </div>
           <div>
-            <dt>2-year real (counts toward Rates)</dt>
+            <dt>2-year real (Rates voter)</dt>
             <dd>
               <code>2-year yield − core PCE YoY</code>
-              <span class="ident-note">Built at score time. TIPS 5y and 10y count as published.</span>
+              <span class="ident-note">Built at score time. TIPS 5y and 10y vote as published.</span>
             </dd>
           </div>
         </dl>
@@ -210,7 +211,7 @@
       <section class="about-block" id="score">
         <h2>How a print becomes a score</h2>
         <p>
-          Each series that counts maps to −1…+1. Positive is the reflationary side of that
+          Each voter maps to −1…+1. Positive is the reflationary side of that
           component. If high is the contractionary end, the sign flips once, in
           the band.
         </p>
@@ -219,7 +220,7 @@
         </p>
         <p>
           Trailing five-year (reserves ÷ GDP, net liquidity ÷ GDP, funding spread).
-          Needs about two years or it abstains:
+          Needs about two years or it does not vote:
         </p>
         <p>
           <code class="about-ident">clip( (print − 5y mean) / sd / 2 , −1, +1 )</code>
@@ -264,14 +265,14 @@
       </section>
 
       <section class="about-block" id="lookback">
-        <h2>Lookback, and when a series stops counting</h2>
+        <h2>Lookback, and when a series stops voting</h2>
         <p>
           1w = 7 calendar days, 2w = 14, 1m = 30, 3m = 91, 6m = 182. A series too
           slow to fill the window steps back whole prints instead. Monthly: one step
           back on 1w / 2w / 1m, three on 3m, six on 6m. Quarterly: one step back on
           1w / 2w / 1m / 3m, two on 6m — so a weekly lookback on a quarterly series
           is still the last quarter-on-quarter change, not a flat line.
-          Stale (does not count): 14d daily, 21d weekly, 85d monthly, 190d quarterly.
+          Stale (does not vote): 14d daily, 21d weekly, 85d monthly, 190d quarterly.
         </p>
         <p>
           The table lookback only colors rows and sets spark length. Chevrons,
@@ -396,7 +397,7 @@ tightW = clip((−score) / 0.45, 0, 1)</code>
       </section>
     </main>
   </div>
-  <script type="module" src="about.js?v=20261327"></script>
+  <script type="module" src="about.js?v=20261329"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

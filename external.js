@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261327";
-import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261327";
-import { chipBandFromScore } from "./score.js?v=20261327";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261329";
+import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261329";
+import { chipBandFromScore } from "./score.js?v=20261329";
 
 const $ = (id) => document.getElementById(id);
 

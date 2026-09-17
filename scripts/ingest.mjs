@@ -1607,7 +1607,7 @@ async function main() {
     errors,
     formula: {
       lights:
-        "Regime components = weighted mean of who counted (related series share a group first). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the reading. Inflation upside = hot vs ~2%.",
+        "Regime components = weighted mean of voter anchors (related series share a group first). Flow series can move the chevron only. 1w/2w/1m = impulse only. Score >+0.45 / <−0.45 paints the reading. Inflation upside = hot vs ~2%.",
       netLiquidity: "WALCL(bn) − TGA − ON RRP",
       stockBondCorr: "60d Pearson of SPX returns vs −ΔDGS10",
     },

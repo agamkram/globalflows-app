@@ -13,8 +13,8 @@ If a sentence would only make sense to the person who wrote the function, rewrit
 | **Asset classes** / **the six** | strip | Treasuries, Credit, Equities, Crypto, Gold, Commodity |
 | **Box** | chip | One component or one class on screen |
 | **This morning’s file** / **morning job** | bake (to a reader) | The daily published snapshot |
-| **Series that counts** / **who counted** | voter | A series that enters a component |
-| **Group** | ballot | Related series that share one vote |
+| **Voter** | — | A series that enters a component. It votes Liquidity, or Rates, or it does not vote. |
+| **Group** | ballot (in prose) | Related voters that share one vote |
 | **Section** of the book | shelf, chip bar | Liquidity / Rates / … / FX / Markets in the table |
 | **What happened last time** | analog (except the glossary entry, after it is defined) | Comparable past days |
 
@@ -26,5 +26,6 @@ Needle, tap, lean, in / mixed / out, chevron — those stay. They are gauge lang
 - Do not call the six a strip. They are asset classes.
 - Do not teach `easeW`, `chip`, `lights`, or `strip` on About or Math. Math may show a formula identifier inside a `<code>` block.
 - Peers use the same five **components** and the same **readings**. Blank is not Neutral.
+- **Voter stays.** A series votes a component, or it does not vote. Do not say it “votes a colour” — colour is the paint that follows the vote. Do not say “dollar stocks”; that sounds like equities.
 
-Agents: after changing copy, grep the user-facing files for `light`, `strip`, `chip`, `bake`, `voter`, `ballot`, `five word`. Fix hits that a reader would see.
+Agents: after changing copy, grep the user-facing files for `light`, `strip`, `chip`, `bake`, `five word`. Fix hits that a reader would see. Do not strip *voter*.
