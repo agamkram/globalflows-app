@@ -1927,6 +1927,15 @@ body.dlg-open dialog {
 
 /* —— About page —— */
 /* Full-bleed document scroll; Back + mark float — no edge fades. */
+html.page-about {
+  --doc-gutter: 10px;
+  --doc-box-y: 10px;
+  --doc-box-x: 12px;
+  --doc-inset-y: 8px;
+  --doc-inset-x: 10px;
+  --doc-gap: 8px;
+}
+
 html.page-about,
 html.page-about body,
 .page-about {
@@ -1937,13 +1946,13 @@ html.page-about body,
 .about-shell {
   max-width: 42rem;
   margin: 0 auto;
-  padding: 0 calc(14px + var(--safe-r)) calc(28px + var(--safe-b))
-    calc(14px + var(--safe-l));
+  padding: 0 calc(var(--doc-gutter) + var(--safe-r)) calc(20px + var(--safe-b))
+    calc(var(--doc-gutter) + var(--safe-l));
 }
 
 .about-top {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   column-gap: 12px;
   position: fixed;
@@ -1954,21 +1963,23 @@ html.page-about body,
   width: 100%;
   max-width: 42rem;
   margin: 0 auto;
-  padding: calc(10px + var(--safe-t)) calc(14px + var(--safe-r)) 12px
-    calc(14px + var(--safe-l));
+  padding: calc(8px + var(--safe-t)) calc(var(--doc-gutter) + var(--safe-r)) 8px
+    calc(var(--doc-gutter) + var(--safe-l));
   box-sizing: border-box;
   background: var(--bg);
 }
 
 .about-top-links {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   justify-self: end;
+  justify-content: flex-end;
 }
 
 .about-main {
-  padding-top: calc(var(--safe-t) + 60px);
+  padding-top: calc(var(--safe-t) + 48px);
 }
 
 .about-back,
@@ -2026,7 +2037,7 @@ html.page-about body,
 }
 
 .about-hero {
-  padding: 18px 0 8px;
+  padding: 8px 0 4px;
 }
 
 .about-kicker {
@@ -2038,7 +2049,7 @@ html.page-about body,
 }
 
 .about-brand {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   font-family: Michroma, "IBM Plex Sans", system-ui, sans-serif;
   font-size: clamp(1.55rem, 6vw, 2.05rem);
   font-weight: 400;
@@ -2056,7 +2067,7 @@ html.page-about body,
 
 .about-toc {
   list-style: none;
-  margin: 16px 0 0;
+  margin: 10px 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
@@ -2085,16 +2096,16 @@ html.page-about body,
 }
 
 .about-block {
-  margin: 10px 0 0;
-  padding: 16px 14px 14px;
-  scroll-margin-top: 56px;
+  margin: var(--doc-gap) 0 0;
+  padding: var(--doc-box-y) var(--doc-box-x);
+  scroll-margin-top: 48px;
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 8px;
 }
 
 .about-block h2 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--doc-gap);
   font-family: Michroma, "IBM Plex Sans", system-ui, sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
@@ -2103,7 +2114,7 @@ html.page-about body,
 }
 
 .about-block > p {
-  margin: 0 0 14px;
+  margin: 0 0 var(--doc-gap);
   font-size: 0.95rem;
   line-height: 1.55;
   color: #b7c0cf;
@@ -2120,7 +2131,7 @@ html.page-about body,
 
 .about-chain {
   list-style: none;
-  margin: 0 0 18px;
+  margin: 0 0 var(--doc-gap);
   padding: 0;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2131,7 +2142,7 @@ html.page-about body,
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 10px 8px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   background: var(--bg3);
   border: 1px solid var(--line);
@@ -2165,7 +2176,7 @@ html.page-about body,
 }
 
 .about-door {
-  padding: 12px 14px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--bg3);
@@ -2185,7 +2196,7 @@ html.page-about body,
 }
 
 .about-steps {
-  margin: 0 0 14px;
+  margin: 0 0 var(--doc-gap);
   padding: 0;
   list-style: none;
   display: grid;
@@ -2193,7 +2204,7 @@ html.page-about body,
 }
 
 .about-steps li {
-  padding: 10px 12px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-left: 1px solid var(--accent);
   background: var(--bg3);
   border-radius: 0 6px 6px 0;
@@ -2231,7 +2242,7 @@ html.page-about body,
 }
 
 .about-panel {
-  padding: 14px 14px 12px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--bg3);
@@ -2295,7 +2306,7 @@ html.page-about body,
 }
 
 .about-status > div {
-  padding: 12px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--bg3);
@@ -2340,7 +2351,7 @@ html.page-about body,
 }
 
 .formula-dl > div {
-  padding: 8px 10px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--bg3);
@@ -2374,8 +2385,8 @@ html.page-about body,
 
 code.about-ident {
   display: block;
-  margin: 0 0 14px;
-  padding: 10px 12px;
+  margin: 0 0 var(--doc-gap);
+  padding: var(--doc-inset-y) var(--doc-inset-x);
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--bg3);
@@ -2542,66 +2553,14 @@ code.about-ident {
   color: #e8edf5;
 }
 
-/* Annex — same instrument as About, given a real page */
-html.page-shelf .about-shell,
-html.page-shelf .about-top {
-  max-width: 46rem;
-}
-
-.page-shelf .about-hero {
-  padding: 4px 0 8px;
-}
-
-.page-shelf .about-brand {
-  margin: 0 0 8px;
-  font-size: 1.35rem;
-}
-
-.page-shelf .about-lede {
-  max-width: 36rem;
-}
-
-.page-shelf .about-toc {
-  margin-top: 0;
-}
-
-.page-shelf .about-block {
-  margin: 18px 0 0;
-  padding: 12px 0 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  border-top: 1px solid var(--line);
-}
-
-.page-shelf .about-block:first-of-type {
-  margin-top: 6px;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.page-shelf .about-block > p {
-  margin: 0 0 8px;
-  font-size: 0.8rem;
-  line-height: 1.4;
-  color: #b7c0cf;
-}
-
-.page-shelf .annex-head {
-  margin: 0 0 6px;
-}
-
-.page-shelf .annex-head h2 {
-  margin: 0;
-}
-
+/* Annex sits in the same boxes as About and Math. */
 .annex-head {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 12px;
   justify-content: space-between;
   align-items: baseline;
-  margin: 0 0 8px;
+  margin: 0 0 var(--doc-gap);
 }
 
 .annex-head h2 {
@@ -2618,7 +2577,7 @@ html.page-shelf .about-top {
 }
 
 .annex-h {
-  margin: 16px 0 8px;
+  margin: 12px 0 var(--doc-gap);
   font: 600 0.68rem var(--sans);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2631,8 +2590,7 @@ html.page-shelf .about-top {
   color: var(--muted);
 }
 
-.annex-note,
-.page-shelf .about-block > p.annex-note {
+.annex-note {
   margin: 8px 0 0;
   font-size: 0.78rem;
   line-height: 1.45;
@@ -2659,7 +2617,7 @@ html.page-shelf .about-top {
 }
 
 .annex-call {
-  margin: 0 0 12px;
+  margin: 0 0 var(--doc-gap);
 }
 
 .annex-call-name {
@@ -2676,8 +2634,15 @@ html.page-shelf .about-top {
 
 .annex-likes {
   display: grid;
-  gap: 10px 16px;
+  gap: 10px;
   margin: 4px 0 0;
+}
+
+.annex-likes > div {
+  padding: var(--doc-inset-y) var(--doc-inset-x);
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg3);
 }
 
 @media (min-width: 560px) {
@@ -2687,13 +2652,11 @@ html.page-shelf .about-top {
 }
 
 .annex-chain {
-  margin: 0 0 12px;
+  margin: 0 0 var(--doc-gap);
 }
 
 .annex-scroll {
   overflow-x: auto;
-  margin: 0 -4px;
-  padding: 0 4px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2734,10 +2697,9 @@ html.page-shelf .about-top {
   z-index: 1;
 }
 
-.page-shelf .annex-table thead th:first-child,
-.page-shelf .annex-table tbody th:first-child {
-  position: static;
-  background: transparent;
+.annex-peer .annex-table thead th:first-child,
+.annex-peer .annex-table tbody th:first-child {
+  background: var(--bg3);
 }
 
 .annex-table tbody td,
@@ -2850,15 +2812,22 @@ html.page-shelf .about-top {
 
 .annex-mood {
   display: grid;
-  gap: 12px;
-  margin: 0 0 12px;
+  gap: var(--doc-gap);
+  margin: 0 0 var(--doc-gap);
+}
+
+.annex-mood-us,
+.annex-mood-them {
+  padding: var(--doc-inset-y) var(--doc-inset-x);
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg3);
 }
 
 @media (min-width: 560px) {
   .annex-mood {
     grid-template-columns: 1.4fr 1fr;
-    gap: 20px;
-    align-items: end;
+    align-items: stretch;
   }
 }
 
@@ -3047,19 +3016,16 @@ html.page-shelf .about-top {
 }
 
 .annex-peers {
-  margin-top: 12px;
-  padding-top: 2px;
-  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--doc-gap);
+  margin-top: var(--doc-gap);
 }
 
 .annex-peer {
-  padding: 10px 0 8px;
-  border-top: 1px solid var(--line);
-}
-
-.annex-peer:first-child {
-  border-top: 0;
-  padding-top: 10px;
+  padding: var(--doc-inset-y) var(--doc-inset-x);
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg3);
 }
 
 .annex-peer-name {
