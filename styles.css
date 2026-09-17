@@ -2953,19 +2953,28 @@ code.about-ident {
 }
 
 .annex-peer-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  margin: 0 0 8px;
-  font: 400 0.68rem var(--sans);
+  margin: 0 0 var(--doc-gap);
+}
+
+.annex-peer-key {
+  margin: 0;
+}
+
+.annex-peer-grid .annex-peer-key td,
+.annex-peer-key td {
+  white-space: nowrap;
+  font: 400 0.58rem var(--sans);
   color: var(--muted);
 }
 
-.annex-peer-leg b {
-  font: 600 0.85rem "IBM Plex Mono", ui-monospace, monospace;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  margin-right: 4px;
+.annex-peer-key th,
+.annex-peer-key td {
+  font-weight: 400;
+  border-top: 0;
+}
+
+.annex-peer-key .annex-peer-mid td {
+  text-align: center;
 }
 
 .annex-peer-mark {
@@ -3105,6 +3114,12 @@ code.about-ident {
 .annex-peer-grid td {
   text-align: center;
   white-space: nowrap;
+}
+
+.annex-peer-grid.annex-peer-key th,
+.annex-peer-grid.annex-peer-key td {
+  padding: 0 2px 0 0;
+  line-height: 1;
 }
 
 .annex-peer-when {

@@ -6,7 +6,7 @@
  * Math stays in score.js. This file is only what a reader sees.
  */
 
-import { chipBandFromScore } from "./score.js?v=20261332";
+import { chipBandFromScore } from "./score.js?v=20261341";
 
 export const LIGHT_IDS = ["liquidity", "rates", "growth", "inflation", "risk"];
 

@@ -1,8 +1,8 @@
 /** Annex — reads next to today’s regime, plus our morning stamps. */
 
-import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261332";
-import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261332";
-import { chipBandFromScore } from "./score.js?v=20261332";
+import { arsenalFromSnapshot, pullCot } from "./shelf-lib.js?v=20261341";
+import { chipWord, CHIP_WORD } from "./light-copy.js?v=20261341";
+import { chipBandFromScore } from "./score.js?v=20261341";
 
 const $ = (id) => document.getElementById(id);
 
@@ -731,21 +731,30 @@ function peerMark(state, word) {
   return `<span class="annex-peer-mark" data-state="${esc(state)}" title="${esc(word)}" aria-label="${esc(word)}">${mark}</span>`;
 }
 
-function peerLegend() {
-  const bands = [
-    ["easing", "++", "Easing · Easy · Strong · Hot · Risk-on"],
-    ["leaningEasing", "+", "Leaning easy · strong · hot · risk-on"],
-    ["neutral", "·", "Mid · Neutral"],
-    ["leaningTight", "−", "Leaning tight · soft · cold · risk-off"],
-    ["tight", "−−", "Tightening · Tight · Soft · Cold · Risk-off"],
-  ];
-  const items = bands
-    .map(
-      ([st, mark, gloss]) =>
-        `<span class="annex-peer-leg"><b class="annex-peer-mark" data-state="${st}">${mark}</b> ${esc(gloss)}</span>`
-    )
-    .join("");
-  return `<div class="annex-peer-legend">${items}</div>`;
+function peerKey() {
+  const bands = ["easing", "leaningEasing", "neutral", "leaningTight", "tight"];
+  const rows = bands.map((st) => {
+    if (st === "neutral") {
+      return `<tr class="annex-peer-mid">
+      <th scope="row"><span class="annex-peer-mark" data-state="neutral">${PEER_MARK.neutral}</span></th>
+      <td colspan="5">Mid · Neutral</td>
+    </tr>`;
+    }
+    const cells = PEER_AXES.map((a) => {
+      const raw = CHIP_WORD[a.id]?.[st] || "";
+      const word = st === "leaningEasing" || st === "leaningTight" ? "Leaning" : raw;
+      return `<td>${esc(word)}</td>`;
+    }).join("");
+    return `<tr>
+      <th scope="row"><span class="annex-peer-mark" data-state="${esc(st)}">${PEER_MARK[st]}</span></th>
+      ${cells}
+    </tr>`;
+  });
+  return `<div class="annex-peer annex-peer-legend">
+    <table class="annex-table annex-peer-grid annex-peer-key">
+    <tbody>${rows.join("")}</tbody>
+  </table>
+  </div>`;
 }
 
 function peerGrid(houses, regime) {
@@ -782,7 +791,8 @@ function peerGrid(houses, regime) {
       </tr>`;
     })
     .join("");
-  return `<table class="annex-table annex-peer-grid">
+  return `${peerKey()}
+    <table class="annex-table annex-peer-grid">
       <thead><tr>${heads}</tr></thead>
       <tbody>
         ${usRow}
@@ -846,7 +856,6 @@ function renderPeers(el, peers, regime) {
   el.innerHTML = `
     ${head("Peers", range)}
     <p>G Flow, then the nine houses. A blank cell means they did not speak to that. Dates are theirs. Nothing here changes the scores.</p>
-    ${peerLegend()}
     ${peerGrid(houses, regime)}
     <div class="annex-peers">${peerNotes(houses)}</div>`;
 }
