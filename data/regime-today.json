@@ -1,7 +1,7 @@
 {
   "title": "GlobalFlows regime — today",
-  "generatedAt": "2026-09-19T16:05:04.520Z",
-  "ingestAt": "2026-09-19T16:04:49.075Z",
+  "generatedAt": "2026-09-20T16:30:35.897Z",
+  "ingestAt": "2026-09-20T16:30:06.761Z",
   "verdict": "SPOT ON",
   "fails": [],
   "defaultImpulse": "1m",
@@ -64,7 +64,7 @@
           "name": "Credit",
           "stance": "in",
           "why": "Credit leans in — investment grade in, high yield mixed.",
-          "margin": 0.3013755201292846,
+          "margin": 0.303672728771639,
           "splits": [
             {
               "id": "ig",
@@ -82,7 +82,7 @@
               "why": "Spreads are tight — you are not paid, even though coupons still look collectible.",
               "net": 0.2348983372508634,
               "label": "High yield",
-              "margin": 0.23562509702840895
+              "margin": 0.24021951431311778
             }
           ]
         },
@@ -92,7 +92,7 @@
           "stance": "out",
           "why": "Growth is leaning strong while fear is still cheap — late to the expansion; cash is leaning tight into a still-calm tape.",
           "net": -0.7637245521377825,
-          "margin": -0.4647175695608557,
+          "margin": -0.4578259436337925,
           "splits": [
             {
               "id": "cyc",
@@ -101,7 +101,7 @@
               "why": "Growth is leaning strong while fear is still cheap — late to the expansion; cash is leaning tight into a still-calm tape.",
               "net": -0.6807126075416466,
               "label": "Cyclicals",
-              "margin": -0.4049489694516379
+              "margin": -0.39805734352457467
             },
             {
               "id": "def",
@@ -110,7 +110,7 @@
               "why": "Defensives want expensive fear or soft growth; complacent strength leaves them mixed.",
               "net": -0.3403563037708233,
               "label": "Defensives",
-              "margin": -0.33022064669334045
+              "margin": -0.33711227262040366
             }
           ]
         },
@@ -135,7 +135,7 @@
           "name": "Commodity",
           "stance": "mixed",
           "why": "Oil in, copper out — they are not the same trade.",
-          "margin": 0.0715498368194333,
+          "margin": 0.08188727571002818,
           "splits": [
             {
               "id": "oil",
@@ -144,7 +144,7 @@
               "why": "Inflation is leaning hot — crude’s price bid; crude is firm on the 1m turn.",
               "net": 0.17816744671299428,
               "label": "Oil",
-              "margin": 0.3192613373909903
+              "margin": 0.32615296331805355
             },
             {
               "id": "copper",
@@ -153,7 +153,7 @@
               "why": "Growth leaning strong into cheap fear — copper is late to that industrial bid.",
               "net": -0.38628224342693396,
               "label": "Copper",
-              "margin": -0.17616166375212367
+              "margin": -0.16237841189799718
             }
           ]
         }
@@ -633,8 +633,8 @@
         "WTI": {
           "name": "Oil",
           "n": 40,
-          "median": -0.37,
-          "up": 48,
+          "median": -0.45,
+          "up": 45,
           "best": 15.5,
           "worst": -11
         }
@@ -707,7 +707,7 @@
         "LQD": {
           "name": "Investment grade",
           "n": 40,
-          "median": 0.14,
+          "median": 0.13,
           "up": 55,
           "best": 2.2,
           "worst": -2.5
