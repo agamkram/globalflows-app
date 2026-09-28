@@ -32,7 +32,7 @@ Writes dated history lines under each source folder and refreshes `latest.json`.
 | File | Cadence | Notes |
 |---|---|---|
 | `house-card.csv` | Monthly | Copy from `house-card.template.csv`. OW / N / UW only. |
-| `peers/latest.json` | When a house page is new | Hand-placed desk check. Page dates on cards. Not a bake file. |
+| `peers/latest.json` | Weekday morning, after the bake | `npm run fetch:peers`. A card changes only when that house’s page date is newer. Blank is not Neutral. Not a bake file. |
 
 ## Do not
 

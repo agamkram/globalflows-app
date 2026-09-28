@@ -1,0 +1,58 @@
+# Peers desk. After the morning bake, so the comparison sits next to today's regime.
+# A house card is rewritten only when that page's date is newer. A quiet day
+# does not commit. The job never touches scores.
+#
+# 10:15 America/New_York, weekdays. The bake kicks at 8:47. Odd minute.
+name: Peers desk
+
+on:
+  schedule:
+    - cron: "15 10 * * 1-5"
+      timezone: "America/New_York"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: globalflows-peers
+  cancel-in-progress: false
+
+jobs:
+  peers:
+    name: Refresh Peers
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      - name: Refresh Peers
+        run: node scripts/fetch-peers.mjs
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/external/peers/latest.json
+          if git diff --cached --quiet; then
+            echo "No Peers change — nothing to commit."
+            exit 0
+          fi
+          extra="$(git diff --cached --name-only | grep -v '^data/external/peers/latest.json$' || true)"
+          if [ -n "${extra}" ]; then
+            echo "::error::Refusing to commit unexpected staged files:"
+            echo "${extra}"
+            exit 1
+          fi
+          date_label="$(LC_TIME=C date '+%-d %b %Y')"
+          git commit -m "Refresh the Peers desk for ${date_label}."
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
