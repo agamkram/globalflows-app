@@ -1,11 +1,11 @@
 {
   "generatedAt": "2026-09-09T01:30:29.647Z",
-  "note": "External sanity gates: a voter fails if its asOf is older than maxAgeDays for its release cadence, or if latest sits outside [min,max]. Ranges are history p0.5\u2013p99.5 with pad; overrides win.",
+  "note": "External sanity gates: a voter fails if its asOf is older than maxAgeDays for its release cadence, or if latest sits outside [min,max]. Ranges are history p0.5\u2013p99.5 with pad; overrides win. Quarterly asOf is the first day of the quarter on FRED, not the release date. The next print lands about 210 days later; 230 days covers that plus a short slip, and still fails if a whole quarter is skipped.",
   "defaults": {
     "daily": 12,
     "weekly": 21,
     "monthly": 95,
-    "quarterly": 180,
+    "quarterly": 230,
     "unknown": 90
   },
   "series": {
@@ -102,7 +102,8 @@
     "GDPC1": {
       "min": -9.4325,
       "max": 12.1567,
-      "maxAgeDays": 180
+      "maxAgeDays": 230,
+      "note": "FRED stamps Real GDP on the first day of the quarter. Q2 2026 is 2026-04-01. Q3 is not published until late October, about 210 days after that stamp. 180 days failed the bake a month before the number exists."
     },
     "VIX": {
       "min": 5,
