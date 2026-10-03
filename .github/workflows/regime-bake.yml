@@ -135,7 +135,17 @@ jobs:
         if: success()
         run: |
           set -euo pipefail
-          npm run verify
+          set +e
+          npm run verify > /tmp/verify-out.txt 2>&1
+          code=$?
+          set -e
+          cat /tmp/verify-out.txt
+          if [ "$code" -ne 0 ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Checks" >> "$GITHUB_STEP_SUMMARY"
+            awk 'BEGIN{p=0} /^FAIL$/{p=1} p' /tmp/verify-out.txt >> "$GITHUB_STEP_SUMMARY"
+            exit "$code"
+          fi
 
       - name: Commit and push bake files
         id: commit
@@ -196,6 +206,80 @@ jobs:
         if: ${{ success() && github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
         run: echo "Dry run — refresh finished; no commit or push."
 
+      - name: Stamp the mail with what actually happened
+        id: mailstat
+        if: always() && steps.report.outcome == 'success'
+        env:
+          GATE_OUTCOME: ${{ steps.gate.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+        run: |
+          set -euo pipefail
+          ok=false
+          if [ "$GATE_OUTCOME" = "success" ] && [ "$VERIFY_OUTCOME" = "success" ] && [ "$COMMIT_OUTCOME" != "failure" ]; then
+            ok=true
+          fi
+          export BAKE_MAIL_OK="$ok"
+          python3 - << 'PY'
+          import os
+          from pathlib import Path
+          ok = os.environ["BAKE_MAIL_OK"] == "true"
+          gate = os.environ.get("GATE_OUTCOME", "")
+          verify = os.environ.get("VERIFY_OUTCOME", "")
+          commit = os.environ.get("COMMIT_OUTCOME", "")
+          if ok:
+              status = "**SUCCESS · SPOT ON**"
+              reason = ""
+          elif verify == "failure":
+              status = "**FAIL · not published**"
+              reason = "The regime read is SPOT ON. The extra checks failed, so today's regime was not published."
+          elif gate != "success":
+              status = "**FAIL · not published**"
+              reason = "The bake did not clear SPOT ON, so today's regime was not published."
+          elif commit == "failure":
+              status = "**FAIL · not published**"
+              reason = "The bake cleared the checks but it was not published."
+          else:
+              status = "**FAIL · not published**"
+              reason = "The bake did not publish."
+          extra = ""
+          vpath = Path("/tmp/verify-out.txt")
+          if verify == "failure" and vpath.exists():
+              picked = []
+              grab = False
+              for line in vpath.read_text(errors="replace").splitlines():
+                  if line.strip() == "FAIL":
+                      grab = True
+                      picked = [line]
+                      continue
+                  if grab:
+                      picked.append(line)
+              extra = "\n".join(picked).strip()
+          block = [status]
+          if reason:
+              block += ["", reason]
+          if extra:
+              block += ["", "## Checks", extra]
+          repl = "\n".join(block)
+          for name in ("/tmp/bake-report.md", "/tmp/bake-report.txt"):
+              p = Path(name)
+              if not p.exists():
+                  continue
+              lines = p.read_text().splitlines()
+              out = []
+              swapped = False
+              for line in lines:
+                  if not swapped and line.startswith("**") and line.endswith("**"):
+                      out.append(repl)
+                      swapped = True
+                  else:
+                      out.append(line)
+              if not swapped:
+                  out.insert(0, repl)
+              p.write_text("\n".join(out) + "\n")
+          PY
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
       - name: Mail before/after report
         if: ${{ always() && steps.report.outcome == 'success' && env.BAKE_NOTIFY_TO != '' && env.BAKE_SMTP_HOST != '' && env.BAKE_SMTP_USER != '' && env.BAKE_SMTP_PASS != '' }}
         uses: dawidd6/action-send-mail@v4
@@ -205,7 +289,7 @@ jobs:
           secure: false
           username: ${{ env.BAKE_SMTP_USER }}
           password: ${{ env.BAKE_SMTP_PASS }}
-          subject: ${{ steps.gate.outcome == 'success' && 'GlobalFlows bake · SUCCESS' || 'GlobalFlows bake · FAIL' }}
+          subject: ${{ steps.mailstat.outputs.ok == 'true' && 'GlobalFlows bake · SUCCESS' || 'GlobalFlows bake · FAIL' }}
           to: ${{ env.BAKE_NOTIFY_TO }}
           from: GlobalFlows bake <${{ env.BAKE_SMTP_USER }}>
           body: file:///tmp/bake-report.txt
