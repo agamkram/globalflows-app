@@ -363,24 +363,42 @@ export function applyStressFloor(lid, score, ballots) {
 }
 
 /**
- * When funding or commercial-paper stress is past the trigger, quantity ballots
- * (Fed balance sheet, global CB / dollar) cannot lift Liquidity — by design.
- * The plumbing audit must not call that a dead seat.
+ * Liquidity is held by the tighter of funding and commercial paper once either
+ * is past the trigger. Quantity readings stay in the table and cannot lift it.
+ * The milder stress reading cannot move it either, until a nudge would make
+ * that reading the tighter one. The plumbing audit must not call either case
+ * a dead seat.
  */
-export function mutedByLiquidityStressFloor(voters, voterId) {
+export function mutedByLiquidityStressFloor(voters, voterId, nudge = 0.5) {
   const families = VOTE_FAMILIES.liquidity || {};
   const stressIds = new Set();
+  let familyName = null;
   for (const fname of ["funding", "stress"]) {
-    for (const id of familyIds(families[fname])) stressIds.add(id);
+    for (const id of familyIds(families[fname])) {
+      stressIds.add(id);
+      if (id === voterId) familyName = fname;
+    }
   }
-  if (stressIds.has(voterId)) return false;
   const ballots = buildBallots("liquidity", voters);
-  return ballots.some(
-    (b) =>
-      STRESS_BALLOTS.liquidity.includes(b.id) &&
-      Number.isFinite(b.score) &&
-      b.score <= STRESS_TRIGGER
+  const holding = (b) =>
+    STRESS_BALLOTS.liquidity.includes(b.id) &&
+    Number.isFinite(b.score) &&
+    b.score <= STRESS_TRIGGER;
+  if (!stressIds.has(voterId)) return ballots.some(holding);
+
+  const mine = `family:${familyName}`;
+  const others = ballots.filter((b) => holding(b) && b.id !== mine);
+  if (!others.length) return false;
+  const worstOther = Math.min(...others.map((b) => b.score));
+  const tightened = (voters || []).map((x) =>
+    x.id === voterId
+      ? { ...x, score: Math.max(-1, Math.min(1, x.score - Math.abs(nudge))) }
+      : x
   );
+  const next = buildBallots("liquidity", tightened).find((b) => b.id === mine);
+  if (!next || !Number.isFinite(next.score)) return false;
+  const takesFloor = next.score <= STRESS_TRIGGER && next.score < worstOther - 1e-9;
+  return !takesFloor;
 }
 
 function clamp(n, lo, hi) {

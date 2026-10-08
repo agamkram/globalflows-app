@@ -162,9 +162,10 @@
       "note": "ICE BBB OAS. FRED only ships ~3y; the whole window sits at cycle tights near 1%. Not a stuck feed \u2014 do not put this on the Risk light until the sample covers a stress episode."
     },
     "HY_CCC_OAS": {
-      "min": 5.6211,
-      "max": 12.2701,
-      "maxAgeDays": 10
+      "min": 3,
+      "max": 60,
+      "maxAgeDays": 10,
+      "note": "ICE CCC credit spread. FRED only ships about three years, and that window tops out near 11, so the old ceiling (12.27) was the calm sample. The long record ran from 4.14 in June 2007 to 44.29 in December 2008. 12.29 on 7 Oct 2026 is inside that range. The ceiling sits above the 2008 high so a new extreme still publishes; a broken print still fails."
     },
     "GLOBAL_CB_YOY": {
       "min": -32.6825,

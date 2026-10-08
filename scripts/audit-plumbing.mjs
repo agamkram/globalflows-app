@@ -269,9 +269,9 @@ lines.push("6. Voter influence — does every seated voter reach its component?"
       const influence = Math.max(Math.abs(move(NUDGE) - base), Math.abs(move(-NUDGE) - base));
       if (influence > 1e-9) continue;
       if (SILENT_BY_DESIGN.has(`${lid}/${v.id}`)) continue;
-      // Funding stress floors Liquidity: quantity ballots stay seated but cannot
-      // talk the light up. Same gate as applyStressFloor in score.js.
-      if (lid === "liquidity" && mutedByLiquidityStressFloor(voters, v.id)) {
+      // Funding or commercial paper holds Liquidity once either is tight enough.
+      // The other readings stay in the table. Same gate as applyStressFloor.
+      if (lid === "liquidity" && mutedByLiquidityStressFloor(voters, v.id, NUDGE)) {
         heldByStress += 1;
         continue;
       }
