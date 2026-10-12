@@ -1,34 +1,14 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-10-09",
+  "placed": "2026-10-12",
   "houses": [
     {
       "id": "apollo",
       "name": "Apollo / Torsten Sløk",
-      "date": "2026-10-09",
-      "title": "AI’s Insensitivity to Interest Rates Is a Problem for the Fed",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/ais-insensitivity-to-interest-rates-is-a-problem-for-the-fed",
-      "liquidity": null,
-      "rates": "Leaning tight",
-      "growth": null,
-      "inflation": null,
-      "risk": null,
-      "assets": null,
-      "vs": "lean",
-      "vsClause": "Rates matches (Leaning tight).",
-      "quote": "AI's rate-insensitive boom is triggering &#34;Dutch disease&#34; in the US economy by drai",
-      "quotes": [
-        "AI's rate-insensitive boom is triggering &#34;Dutch disease&#34; in the US economy by draining capital, power and labor from vulnerable sectors like housing and autos.",
-        "Trapped between inflation driven by the AI boom and weakness in rate-sensitive industries, the Fed will have to keep interest rates higher for longer, see chart below."
-      ]
-    },
-    {
-      "id": "ubs",
-      "name": "UBS CIO",
-      "date": "2026-10-09",
-      "title": "AI demand remains robust despite market jitters",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-09102026.html",
+      "date": "2026-10-12",
+      "title": "AI Building vs. AI Buying: The Transatlantic Split",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/ai-building-vs-ai-buying-the-transatlantic-split",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -37,30 +17,50 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "Video: Why higher rates and greater dispersion can benefit hedge funds (5 mins) Video: Mar",
+      "quote": "Sources: IEA, Apollo European and Policy Strategist, Apollo Chief Economist",
       "quotes": [
-        "Video: Why higher rates and greater dispersion can benefit hedge funds (5 mins) Video: Market Playbook | Beyond the Dollar (7 mins) Podcast: Signal over Noise | The 1999 analogue through a fixed income lens, on Apple , Spotify",
-        "Tech stocks led the declines in US equities on Thursday, as reports of a lower-than-expected revenue run rate at OpenAI raised concerns about the pace of AI demand growth."
+        "Sources: IEA, Apollo European and Policy Strategist, Apollo Chief Economist",
+        "Sources: AI Model & API Providers Analysis | Artificial Analysis , Apollo European and Policy Strategist, Apollo Chief Economist"
       ]
     },
     {
-      "id": "blackrock",
-      "name": "BlackRock Investment Institute",
-      "date": "2026-10-05",
-      "title": "U.S. dollar: surprisingly resilient",
-      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261005-us-dollar-surprisingly-resilient.pdf",
-      "liquidity": "Leaning tight",
+      "id": "ubs",
+      "name": "UBS CIO",
+      "date": "2026-10-12",
+      "title": "Commodity fundamentals speak for further upside",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-12102026.html",
+      "liquidity": null,
       "rates": null,
       "growth": null,
       "inflation": null,
       "risk": null,
       "assets": null,
-      "vs": "lean",
-      "vsClause": "Liquidity matches (Leaning tight).",
-      "quote": "Fundamentals help explain the dollar’s resilience, supporting our view that it’s too soon ",
+      "vs": "quiet",
+      "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
+      "quote": "Podcast: Jump Start | US CPI and 3Q earnings season (5 mins) Video: The AI Show | Is the A",
       "quotes": [
-        "Fundamentals help explain the dollar’s resilience, supporting our view that it’s too soon to call for its demise.",
-        "Yet we don’t think this portends a sustained rally."
+        "Podcast: Jump Start | US CPI and 3Q earnings season (5 mins) Video: The AI Show | Is the AI trade under strain?",
+        "(4 mins) Video: Why higher rates and greater dispersion can benefit hedge funds (5 mins)"
+      ]
+    },
+    {
+      "id": "blackrock",
+      "name": "BlackRock Investment Institute",
+      "date": "2026-10-12",
+      "title": "Upgrading U.S. Treasuries to lock in income",
+      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261012-upgrading-us-treasuries-to-lock-in-income.pdf",
+      "liquidity": null,
+      "rates": null,
+      "growth": null,
+      "inflation": null,
+      "risk": "Risk-on",
+      "assets": null,
+      "vs": "lean",
+      "vsClause": "Risk matches (Risk-on). They stay with equities, which are out.",
+      "quote": "Treasuries, preferring short-term bonds, as higher yields improve potential returns, partl",
+      "quotes": [
+        "Treasuries, preferring short-term bonds, as higher yields improve potential returns, partly funded by downgrading U.S.",
+        "Global bonds swung sharply last week, with 10- and 30-year U.S."
       ]
     },
     {
@@ -186,16 +186,15 @@
   ],
   "scorecard": {
     "agrees": [
-      "Liquidity Leaning tight: BlackRock.",
-      "Rates Tight: Apollo, Goldman Sachs AM, Citi.",
+      "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Leaning strong: Citi, JPMorgan AM.",
       "Inflation Leaning hot: Goldman Sachs AM, Citi.",
-      "Risk Risk-on: Citi, JPMorgan AM."
+      "Risk Risk-on: BlackRock, Citi, JPMorgan AM."
     ],
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Equities are out. Citi, JPMorgan AM stay risk-on.",
+      "Equities are out. BlackRock, Citi, JPMorgan AM stay risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
