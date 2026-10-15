@@ -1259,6 +1259,66 @@
           "margin": -0.2363
         }
       }
+    },
+    {
+      "date": "2026-10-15",
+      "generatedAt": "2026-10-15T17:22:53.208Z",
+      "headline": "Cash leaning tight, borrowing tight, growth leaning strong, inflation leaning hot, risk leaning risk-on.",
+      "lights": {
+        "liquidity": {
+          "state": "neutral",
+          "score": -0.32419876507908496
+        },
+        "rates": {
+          "state": "tight",
+          "score": -0.48234724458639655
+        },
+        "growth": {
+          "state": "neutral",
+          "score": 0.4284828072384152
+        },
+        "inflation": {
+          "state": "neutral",
+          "score": 0.3948847022713969
+        },
+        "risk": {
+          "state": "neutral",
+          "score": 0.301228415898861
+        }
+      },
+      "duration": "mixed",
+      "credit": "mixed",
+      "calls": {
+        "treasuries": {
+          "stance": "in",
+          "margin": 0.2427,
+          "parts": {
+            "5": "out",
+            "10": "in",
+            "30": "in"
+          }
+        },
+        "credit": {
+          "stance": "mixed",
+          "margin": -0.0553
+        },
+        "stocks": {
+          "stance": "out",
+          "margin": -0.438
+        },
+        "crypto": {
+          "stance": "out",
+          "margin": -0.63
+        },
+        "gold": {
+          "stance": "in",
+          "margin": 0.1917
+        },
+        "cmdty": {
+          "stance": "out",
+          "margin": -0.2737
+        }
+      }
     }
   ]
 }
