@@ -1,7 +1,7 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-10-21",
+  "placed": "2026-10-22",
   "houses": [
     {
       "id": "apollo",
@@ -26,21 +26,21 @@
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-10-21",
-      "title": "Strengthen portfolio defenses as volatility rises",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-21102026.html",
+      "date": "2026-10-22",
+      "title": "Build resilience as oil prices climb",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-22102026.html",
       "liquidity": null,
       "rates": null,
       "growth": null,
-      "inflation": null,
-      "risk": "Risk-on",
+      "inflation": "Leaning hot",
+      "risk": null,
       "assets": null,
       "vs": "lean",
-      "vsClause": "Risk matches (Risk-on). They stay with equities, which are out.",
-      "quote": "Market volatility has increased over the past week as investors weigh questions about AI p",
+      "vsClause": "Inflation matches (Leaning hot).",
+      "quote": "Brent crude oil hit USD 112/bbl for the first time since May and is on track for a third c",
       "quotes": [
-        "Market volatility has increased over the past week as investors weigh questions about AI profitability in a higher-rate environment, while geopolitical conflicts remain unresolved.",
-        "Brent crude oil was up 0.9% to nearly USD 110/bbl at the time of writing."
+        "Brent crude oil hit USD 112/bbl for the first time since May and is on track for a third consecutive week of price gains as fresh attacks in the Middle East have heightened concerns about further disruptions to energy supplies.",
+        "Since the start of this month, Brent crude has risen 9.4%."
       ]
     },
     {
@@ -95,8 +95,8 @@
       "inflation": "Leaning hot",
       "risk": "Risk-on",
       "assets": "Equities IN; duration underweight, front end preferred; up in credit quality. NFCI still loose.",
-      "vs": "agree",
-      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Risk matches (Risk-on). They stay with equities, which are out.",
+      "vs": "challenge",
+      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral. They stay with equities, which are out.",
       "quote": "we maintain a risk-on bias and an underweight duration",
       "quotes": [
         "Against this backdrop, we maintain a risk-on bias and an underweight duration as policy rates move higher.",
@@ -175,8 +175,8 @@
       "inflation": null,
       "risk": "Risk-on",
       "assets": null,
-      "vs": "lean",
-      "vsClause": "Growth matches (Leaning strong). Risk matches (Risk-on). They stay with equities, which are out.",
+      "vs": "challenge",
+      "vsClause": "Growth matches (Leaning strong). Their Risk is Risk-on; ours is Neutral. They stay with equities, which are out.",
       "quote": "The global macro environment provides solid support for cyclical assets—our base case scen",
       "quotes": [
         "The global macro environment provides solid support for cyclical assets—our base case scenario envisions resilient growth and robust earnings—even as central banks have shown that they are less willing to be accommodative.",
@@ -189,18 +189,18 @@
       "Liquidity Leaning tight: BlackRock.",
       "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Leaning strong: Citi, JPMorgan AM.",
-      "Inflation Leaning hot: Goldman Sachs AM, Citi.",
-      "Risk Leaning risk-on: UBS, Citi, JPMorgan AM."
+      "Inflation Leaning hot: UBS, Goldman Sachs AM, Citi."
     ],
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Equities are out. UBS, Citi, JPMorgan AM stay risk-on.",
+      "Risk is Neutral. Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Equities are out. Citi, JPMorgan AM stay risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
       "name": "Citi",
-      "clause": "4 of the five match. The card is still their note, not our score."
+      "clause": "3 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
   },
