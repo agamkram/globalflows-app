@@ -1,14 +1,14 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-10-23",
+  "placed": "2026-10-26",
   "houses": [
     {
       "id": "apollo",
       "name": "Apollo / Torsten Sløk",
-      "date": "2026-10-23",
-      "title": "Monetary Policy Is Not Restrictive",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/monetary-policy-is-not-restrictive",
+      "date": "2026-10-26",
+      "title": "Rents Face Renewed Upward Pressure as the Housing Supply Wave Fades",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/rents-face-renewed-upward-pressure-as-the-housing-supply-wave-fades",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -17,18 +17,38 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "The Fed survey below for the third quarter of 2026 shows that only 19% of firms report tha",
+      "quote": "Every housing market has a long-term average for how much new rental housing gets built ea",
       "quotes": [
-        "The Fed survey below for the third quarter of 2026 shows that only 19% of firms report that financing costs or access to credit are constraining their investment and spending plans, while 81% report no such constraints.",
-        "The bottom line is that corporate America is saying that monetary policy is not restrictive."
+        "Every housing market has a long-term average for how much new rental housing gets built each year, measured as a percentage of its existing stock.",
+        "For example, a metro might typically add about 2% to its apartment inventory annually."
       ]
     },
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-10-23",
-      "title": "Higher oil and AI concerns drive risk-off move",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-23102026.html",
+      "date": "2026-10-26",
+      "title": "The case for bonds beyond peak yields",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-26102026.html",
+      "liquidity": null,
+      "rates": null,
+      "growth": null,
+      "inflation": null,
+      "risk": "Risk-off",
+      "assets": null,
+      "vs": "challenge",
+      "vsClause": "Their Risk is Risk-off; ours is Neutral.",
+      "quote": "Podcast: Jump Start | Can earnings extend the rally ahead of Fed, ECB decisions?",
+      "quotes": [
+        "Podcast: Jump Start | Can earnings extend the rally ahead of Fed, ECB decisions?",
+        "(6 mins) Video: CIO Monthly | Mark Haefele on AI earnings, energy prices, interest rates (4 mins) Video: Market Playbook | Why bank stocks are falling amid rising rates (6 mins) Video: The AI Show | The AI trade's two-sided test (4 mins)"
+      ]
+    },
+    {
+      "id": "blackrock",
+      "name": "BlackRock Investment Institute",
+      "date": "2026-10-26",
+      "title": "The Mideast energy shock’s next phase",
+      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261026-the-mideast-energy-shocks-next-phase.pdf",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -37,30 +57,10 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "Video: CIO Monthly | Mark Haefele on AI earnings, energy prices, and interest rates (4 min",
+      "quote": "The Middle East conflict is exposing longer-term energy constraints as buffers that absorb",
       "quotes": [
-        "Video: CIO Monthly | Mark Haefele on AI earnings, energy prices, and interest rates (4 mins) Video: Market Playbook | Why bank stocks are falling amid rising rates (6 mins) Video: The AI Show | The AI trade's two-sided test (4 mins) Podcast: Across the Pond: Europe’s bond stress test, on Apple , Spotify (22 mins)",
-        "But the latest moves do not alter our view that robust earnings should continue to support equities."
-      ]
-    },
-    {
-      "id": "blackrock",
-      "name": "BlackRock Investment Institute",
-      "date": "2026-10-19",
-      "title": "French bonds: a lesson in selectivity",
-      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261019-french-bonds-a-lesson-in-selectivity.pdf",
-      "liquidity": "Leaning tight",
-      "rates": null,
-      "growth": null,
-      "inflation": null,
-      "risk": null,
-      "assets": null,
-      "vs": "lean",
-      "vsClause": "Liquidity matches (Leaning tight).",
-      "quote": "France’s government bond sell-off shows why the drivers of higher yields matter.",
-      "quotes": [
-        "France’s government bond sell-off shows why the drivers of higher yields matter.",
-        "We favor select opportunities across sovereign bonds and credit."
+        "The Middle East conflict is exposing longer-term energy constraints as buffers that absorbed the initial shock weaken.",
+        "The Nasdaq fell nearly 1% last week and U.S."
       ]
     },
     {
@@ -186,7 +186,6 @@
   ],
   "scorecard": {
     "agrees": [
-      "Liquidity Tightening: BlackRock.",
       "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Leaning strong: Citi, JPMorgan AM.",
       "Inflation Leaning hot: Goldman Sachs AM, Citi."
@@ -194,7 +193,7 @@
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Risk is Neutral. Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Risk is Neutral. UBS says Risk-off; Citi says Risk-on; JPMorgan AM says Risk-on.",
       "Equities are out. Citi, JPMorgan AM stay risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
