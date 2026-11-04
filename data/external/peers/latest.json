@@ -1,34 +1,14 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-11-03",
+  "placed": "2026-11-04",
   "houses": [
     {
       "id": "apollo",
       "name": "Apollo / Torsten Sløk",
-      "date": "2026-11-03",
-      "title": "10% Nominal GDP Growth Coming?",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/10-percent-nominal-gdp-growth-coming",
-      "liquidity": null,
-      "rates": "Leaning tight",
-      "growth": null,
-      "inflation": null,
-      "risk": null,
-      "assets": null,
-      "vs": "lean",
-      "vsClause": "Rates matches (Leaning tight).",
-      "quote": "Nominal GDP growth is currently solid at around 6%, while S&P 500 earnings growth has surg",
-      "quotes": [
-        "Nominal GDP growth is currently solid at around 6%, while S&P 500 earnings growth has surged to nearly 40% YoY.",
-        "A simple regression based on the historical relationship between the two suggests that the current pace of earnings growth is consistent with nominal GDP growth of 10%, see chart below."
-      ]
-    },
-    {
-      "id": "ubs",
-      "name": "UBS CIO",
-      "date": "2026-11-03",
-      "title": "US midterms put Congress in play",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-03112026.html",
+      "date": "2026-11-04",
+      "title": "Iran: Severe Stress Now, More Risk If Conflict Returns",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/iran-severe-stress-now-more-risk-if-conflict-returns",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -37,10 +17,30 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "Podcast: Signal over Noise: Finding quality beyond AI.",
+      "quote": "Sources: International Monetary Fund (IMF), Macrobond, Apollo Chief Economist",
       "quotes": [
-        "Podcast: Signal over Noise: Finding quality beyond AI.",
-        "Listen on Apple or Spotify (5 min) Podcast: What next for tech after the tech sell-off?"
+        "Sources: International Monetary Fund (IMF), Macrobond, Apollo Chief Economist",
+        "Sources: Bonbast, Macrobond, Apollo Chief Economist"
+      ]
+    },
+    {
+      "id": "ubs",
+      "name": "UBS CIO",
+      "date": "2026-11-04",
+      "title": "US midterms: Blue wave ushers in gridlock",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-04112026.html",
+      "liquidity": null,
+      "rates": null,
+      "growth": null,
+      "inflation": null,
+      "risk": null,
+      "assets": null,
+      "vs": "quiet",
+      "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
+      "quote": "The UBS House View Daily is now available in audio across multiple platforms.",
+      "quotes": [
+        "The UBS House View Daily is now available in audio across multiple platforms.",
+        "Today’s edition will be available shortly."
       ]
     },
     {
@@ -95,8 +95,8 @@
       "inflation": "Leaning hot",
       "risk": "Risk-on",
       "assets": "Equities IN; duration underweight, front end preferred; up in credit quality. NFCI still loose.",
-      "vs": "challenge",
-      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral.",
+      "vs": "agree",
+      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Risk matches (Risk-on). They stay with equities, which are out.",
       "quote": "we maintain a risk-on bias and an underweight duration",
       "quotes": [
         "Against this backdrop, we maintain a risk-on bias and an underweight duration as policy rates move higher.",
@@ -175,8 +175,8 @@
       "inflation": null,
       "risk": "Risk-on",
       "assets": null,
-      "vs": "challenge",
-      "vsClause": "Growth matches (Leaning strong). Their Risk is Risk-on; ours is Neutral.",
+      "vs": "lean",
+      "vsClause": "Growth matches (Leaning strong). Risk matches (Risk-on). They stay with equities, which are out.",
       "quote": "The global macro environment provides solid support for cyclical assets—our base case scen",
       "quotes": [
         "The global macro environment provides solid support for cyclical assets—our base case scenario envisions resilient growth and robust earnings—even as central banks have shown that they are less willing to be accommodative.",
@@ -187,19 +187,20 @@
   "scorecard": {
     "agrees": [
       "Liquidity Tightening: BlackRock.",
-      "Rates Tight: Apollo, Goldman Sachs AM, Citi.",
+      "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Strong: Citi, JPMorgan AM.",
-      "Inflation Leaning hot: Goldman Sachs AM, Citi."
+      "Inflation Leaning hot: Goldman Sachs AM, Citi.",
+      "Risk Leaning risk-on: Citi, JPMorgan AM."
     ],
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Risk is Neutral. Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Equities are out. Citi, JPMorgan AM stay risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
       "name": "Citi",
-      "clause": "3 of the five match. The card is still their note, not our score."
+      "clause": "4 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
   },
