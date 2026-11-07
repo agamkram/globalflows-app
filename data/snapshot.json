@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T20:06:38.114Z",
+  "generatedAt": "2026-11-07T18:19:50.939Z",
   "catalogTitle": "GlobalFlows series book",
   "defaultGroup": "street",
   "layers": [
@@ -154,7 +154,7 @@
   ],
   "lightDist": {
     "version": 1,
-    "fittedAt": "2026-11-06T20:07:12.593Z",
+    "fittedAt": "2026-11-07T18:20:15.984Z",
     "n": 6001,
     "refSd": 0.5307,
     "lights": {
@@ -247,7 +247,7 @@
       "id": "rates",
       "label": "Rates",
       "state": "tight",
-      "score": -0.5234611069692757,
+      "score": -0.5279402727178092,
       "n": 6,
       "nAnchor": 6,
       "words": {
@@ -275,7 +275,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.26938631917811007,
+        "score": 0.20688631917811,
         "dir": "up"
       },
       "word": "Tight"
@@ -334,7 +334,7 @@
       "id": "inflation",
       "label": "Inflation",
       "state": "neutral",
-      "score": 0.36478859294715266,
+      "score": 0.3435398190838016,
       "n": 6,
       "nAnchor": 6,
       "words": {
@@ -361,7 +361,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": 0.44800401340343854,
+        "score": 0.4167540134034383,
         "dir": "up"
       },
       "word": "Leaning hot"
@@ -370,7 +370,7 @@
       "id": "risk",
       "label": "Risk",
       "state": "neutral",
-      "score": -0.13650571199116793,
+      "score": -0.20542294263129954,
       "n": 4,
       "nAnchor": 4,
       "words": {
@@ -393,7 +393,7 @@
       ],
       "impulse": {
         "horizon": "1m",
-        "score": -1.148125,
+        "score": -1.2731250000000003,
         "dir": "down"
       },
       "word": "Neutral"
@@ -473,7 +473,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "WRESBAL": {
       "id": "WRESBAL",
@@ -542,7 +542,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "RRPONTSYD": {
       "id": "RRPONTSYD",
@@ -611,7 +611,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "WTREGEN": {
       "id": "WTREGEN",
@@ -680,7 +680,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "WSHOSHO": {
       "id": "WSHOSHO",
@@ -749,7 +749,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "M2SL": {
       "id": "M2SL",
@@ -818,7 +818,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "TOTLL": {
       "id": "TOTLL",
@@ -840,9 +840,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
-      "latest": 14217.6404,
-      "asOf": "2026-10-21",
-      "n": 1921,
+      "latest": 14219.9544,
+      "asOf": "2026-10-28",
+      "n": 1922,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -851,43 +851,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 13.20050000000083,
+          "delta": 2.3822000000000116,
           "dir": "flat",
-          "score": 0.05802870425672405,
-          "prior": 14204.4399,
-          "priorDate": "2026-10-14"
+          "score": 0.01047032190201684,
+          "prior": 14217.5722,
+          "priorDate": "2026-10-21"
         },
         "2w": {
-          "delta": 42.90259999999944,
+          "delta": 15.553900000000795,
           "dir": "flat",
-          "score": 0.1885975748830984,
-          "prior": 14174.7378,
-          "priorDate": "2026-10-07"
+          "score": 0.06836300051707969,
+          "prior": 14204.4005,
+          "priorDate": "2026-10-14"
         },
         "1m": {
-          "delta": 122.04390000000058,
+          "delta": 114.26270000000113,
           "dir": "up",
-          "score": 0.5364985704660272,
-          "prior": 14095.5965,
-          "priorDate": "2026-09-16"
+          "score": 0.5022110865559506,
+          "prior": 14105.6917,
+          "priorDate": "2026-09-23"
         },
         "3m": {
-          "delta": 307.21830000000045,
+          "delta": 286.7435999999998,
           "dir": "up",
-          "score": 1.3505155011516559,
-          "prior": 13910.4221,
-          "priorDate": "2026-07-22"
+          "score": 1.2603046743947355,
+          "prior": 13933.2108,
+          "priorDate": "2026-07-29"
         },
         "6m": {
-          "delta": 484.4398000000001,
+          "delta": 474.7267000000011,
           "dir": "up",
           "score": 1.5,
-          "prior": 13733.2006,
-          "priorDate": "2026-04-22"
+          "prior": 13745.2277,
+          "priorDate": "2026-04-29"
         }
       },
       "status": "ok",
-      "staleDays": 16
+      "staleDays": 10
     },
     "CHINA_CREDIT_GDP": {
       "id": "CHINA_CREDIT_GDP",
@@ -957,7 +957,7 @@
         }
       },
       "status": "stale",
-      "staleDays": 401
+      "staleDays": 402
     },
     "BUSLOANS": {
       "id": "BUSLOANS",
@@ -979,9 +979,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTCI",
-      "latest": 2997.0424,
-      "asOf": "2026-10-21",
-      "n": 1921,
+      "latest": 2999.1604,
+      "asOf": "2026-10-28",
+      "n": 1922,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -990,43 +990,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 5.21329999999989,
+          "delta": 2.1281000000003587,
           "dir": "flat",
-          "score": 0.10871759772233891,
-          "prior": 2991.8291,
-          "priorDate": "2026-10-14"
+          "score": 0.04434782814551113,
+          "prior": 2997.0323,
+          "priorDate": "2026-10-21"
         },
         "2w": {
-          "delta": 10.011099999999715,
+          "delta": 7.337300000000141,
           "dir": "flat",
-          "score": 0.2087704031147448,
-          "prior": 2987.0313,
-          "priorDate": "2026-10-07"
+          "score": 0.15290320917814493,
+          "prior": 2991.8231,
+          "priorDate": "2026-10-14"
         },
         "1m": {
-          "delta": 41.77949999999964,
+          "delta": 45.976900000000114,
           "dir": "up",
-          "score": 0.8712652013198005,
-          "prior": 2955.2629,
-          "priorDate": "2026-09-16"
+          "score": 0.9581202292481613,
+          "prior": 2953.1835,
+          "priorDate": "2026-09-23"
         },
         "3m": {
-          "delta": 113.18499999999995,
+          "delta": 95.41070000000036,
           "dir": "up",
           "score": 1.5,
-          "prior": 2883.8574,
-          "priorDate": "2026-07-22"
+          "prior": 2903.7497,
+          "priorDate": "2026-07-29"
         },
         "6m": {
-          "delta": 140.6651999999999,
+          "delta": 131.2162000000003,
           "dir": "up",
           "score": 1.5,
-          "prior": 2856.3772,
-          "priorDate": "2026-04-22"
+          "prior": 2867.9442,
+          "priorDate": "2026-04-29"
         }
       },
       "status": "ok",
-      "staleDays": 16
+      "staleDays": 10
     },
     "GFDEBTN": {
       "id": "GFDEBTN",
@@ -1095,7 +1095,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 219
+      "staleDays": 220
     },
     "TRESEGCNM052N": {
       "id": "TRESEGCNM052N",
@@ -1164,7 +1164,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 158
+      "staleDays": 159
     },
     "ECBASSETS": {
       "id": "ECBASSETS",
@@ -1233,7 +1233,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "JPNASSETS": {
       "id": "JPNASSETS",
@@ -1302,7 +1302,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "SOFR": {
       "id": "SOFR",
@@ -1371,7 +1371,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "EFFR": {
       "id": "EFFR",
@@ -1394,8 +1394,8 @@
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFF",
       "latest": 3.88,
-      "asOf": "2026-11-04",
-      "n": 13457,
+      "asOf": "2026-11-05",
+      "n": 13458,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -1408,35 +1408,35 @@
           "dir": "flat",
           "score": 0,
           "prior": 3.88,
-          "priorDate": "2026-10-28"
+          "priorDate": "2026-10-29"
         },
         "2w": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.88,
-          "priorDate": "2026-10-21"
+          "priorDate": "2026-10-22"
         },
         "1m": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.88,
-          "priorDate": "2026-10-05"
+          "priorDate": "2026-10-06"
         },
         "3m": {
           "delta": 0.25,
           "dir": "up",
           "score": -1.5,
           "prior": 3.63,
-          "priorDate": "2026-08-05"
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.23999999999999977,
+          "delta": 0.25,
           "dir": "up",
           "score": -1.5,
-          "prior": 3.64,
-          "priorDate": "2026-05-06"
+          "prior": 3.63,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1462,50 +1462,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/CPFF",
-      "latest": 0.23,
-      "asOf": "2026-11-04",
-      "n": 6763,
+      "latest": 0.09,
+      "asOf": "2026-11-05",
+      "n": 6764,
       "anchor": {
         "kind": "cp_ff",
-        "score": -0.03703703703703707,
-        "why": "commercial paper 23bp over fed funds — 21bp is typical, 242bp was October 2008",
+        "score": 0.6666666666666667,
+        "why": "commercial paper 9bp over fed funds — 21bp is typical, 242bp was October 2008",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.03,
-          "dir": "up",
-          "score": -0.375,
-          "prior": 0.2,
-          "priorDate": "2026-10-28"
+          "delta": -0.08000000000000002,
+          "dir": "down",
+          "score": 1.0000000000000002,
+          "prior": 0.17,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": 0.03,
-          "dir": "up",
-          "score": -0.375,
+          "delta": -0.11000000000000001,
+          "dir": "down",
+          "score": 1.3750000000000002,
           "prior": 0.2,
           "priorDate": "2026-10-20"
         },
         "1m": {
-          "delta": 0.03,
-          "dir": "up",
-          "score": -0.375,
-          "prior": 0.2,
-          "priorDate": "2026-10-05"
+          "delta": -0.1,
+          "dir": "down",
+          "score": 1.25,
+          "prior": 0.19,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.010000000000000009,
-          "dir": "flat",
-          "score": -0.1250000000000001,
-          "prior": 0.22,
-          "priorDate": "2026-08-05"
+          "delta": -0.11000000000000001,
+          "dir": "down",
+          "score": 1.3750000000000002,
+          "prior": 0.2,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.18,
+          "delta": 0.049999999999999996,
           "dir": "up",
-          "score": -1.5,
-          "prior": 0.05,
-          "priorDate": "2026-05-06"
+          "score": -0.6249999999999999,
+          "prior": 0.04,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1578,7 +1578,7 @@
         }
       },
       "status": "stale",
-      "staleDays": 6535
+      "staleDays": 6536
     },
     "DGS3MO": {
       "id": "DGS3MO",
@@ -1600,9 +1600,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS3MO",
-      "latest": 4.21,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 4.17,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -1611,39 +1611,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.03000000000000025,
-          "dir": "up",
-          "score": -0.3750000000000031,
-          "prior": 4.18,
-          "priorDate": "2026-10-28"
-        },
-        "2w": {
-          "delta": -0.040000000000000036,
-          "dir": "down",
-          "score": 0.5000000000000004,
-          "prior": 4.25,
-          "priorDate": "2026-10-21"
-        },
-        "1m": {
           "delta": -0.009999999999999787,
           "dir": "flat",
           "score": 0.12499999999999734,
+          "prior": 4.18,
+          "priorDate": "2026-10-29"
+        },
+        "2w": {
+          "delta": -0.04999999999999982,
+          "dir": "down",
+          "score": 0.6249999999999978,
           "prior": 4.22,
-          "priorDate": "2026-10-05"
+          "priorDate": "2026-10-22"
+        },
+        "1m": {
+          "delta": -0.040000000000000036,
+          "dir": "down",
+          "score": 0.5000000000000004,
+          "prior": 4.21,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.31999999999999984,
+          "delta": 0.27,
           "dir": "up",
           "score": -1.5,
-          "prior": 3.89,
-          "priorDate": "2026-08-05"
+          "prior": 3.9,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.52,
+          "delta": 0.48,
           "dir": "up",
           "score": -1.5,
           "prior": 3.69,
-          "priorDate": "2026-05-06"
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1669,50 +1669,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS2",
-      "latest": 4.58,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 4.46,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "real_rate",
-        "score": -0.6392269313586532,
-        "why": "trailing real short rate 1.46% (nominal 4.58 − core PCE 3.1)",
+        "score": -0.5592269313586531,
+        "why": "trailing real short rate 1.34% (nominal 4.46 − core PCE 3.1)",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": -0.08999999999999986,
+          "delta": -0.15000000000000036,
           "dir": "down",
-          "score": 1.1249999999999982,
-          "prior": 4.67,
-          "priorDate": "2026-10-28"
+          "score": 1.5,
+          "prior": 4.61,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.22999999999999954,
+          "delta": -0.1900000000000004,
           "dir": "down",
           "score": 1.5,
-          "prior": 4.81,
-          "priorDate": "2026-10-21"
+          "prior": 4.65,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.2599999999999998,
+          "delta": -0.33000000000000007,
           "dir": "down",
           "score": 1.5,
-          "prior": 4.84,
-          "priorDate": "2026-10-05"
+          "prior": 4.79,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.40000000000000036,
+          "delta": 0.20999999999999996,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.18,
-          "priorDate": "2026-08-05"
+          "prior": 4.25,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.71,
+          "delta": 0.54,
           "dir": "up",
           "score": -1.5,
-          "prior": 3.87,
-          "priorDate": "2026-05-06"
+          "prior": 3.92,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1738,9 +1738,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS5",
-      "latest": 4.69,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 4.59,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -1749,39 +1749,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.15999999999999925,
+          "delta": -0.1900000000000004,
           "dir": "down",
           "score": 1.5,
-          "prior": 4.85,
-          "priorDate": "2026-10-28"
+          "prior": 4.78,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.2599999999999998,
+          "delta": -0.1900000000000004,
           "dir": "down",
           "score": 1.5,
-          "prior": 4.95,
-          "priorDate": "2026-10-21"
+          "prior": 4.78,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.3699999999999992,
+          "delta": -0.4400000000000004,
           "dir": "down",
           "score": 1.5,
-          "prior": 5.06,
-          "priorDate": "2026-10-05"
+          "prior": 5.03,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.3600000000000003,
+          "delta": 0.1899999999999995,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.33,
-          "priorDate": "2026-08-05"
+          "prior": 4.4,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.7000000000000002,
+          "delta": 0.5499999999999998,
           "dir": "up",
           "score": -1.5,
-          "prior": 3.99,
-          "priorDate": "2026-05-06"
+          "prior": 4.04,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1807,9 +1807,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-      "latest": 4.9,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 4.84,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -1818,39 +1818,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.14999999999999947,
+          "delta": -0.14000000000000057,
           "dir": "down",
           "score": 1.5,
-          "prior": 5.05,
-          "priorDate": "2026-10-28"
+          "prior": 4.98,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.22999999999999954,
+          "delta": -0.1200000000000001,
           "dir": "down",
           "score": 1.5,
-          "prior": 5.13,
-          "priorDate": "2026-10-21"
+          "prior": 4.96,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.40999999999999925,
+          "delta": -0.4299999999999997,
           "dir": "down",
           "score": 1.5,
-          "prior": 5.31,
-          "priorDate": "2026-10-05"
+          "prior": 5.27,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.27000000000000046,
+          "delta": 0.14999999999999947,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.63,
-          "priorDate": "2026-08-05"
+          "prior": 4.69,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.54,
+          "delta": 0.4299999999999997,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.36,
-          "priorDate": "2026-05-06"
+          "prior": 4.41,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1876,9 +1876,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS30",
-      "latest": 5.28,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 5.25,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -1887,39 +1887,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.08999999999999986,
+          "delta": -0.07000000000000028,
           "dir": "down",
-          "score": 1.0653409090909074,
-          "prior": 5.37,
-          "priorDate": "2026-10-28"
+          "score": 0.8333333333333367,
+          "prior": 5.32,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.13999999999999968,
+          "delta": -0.040000000000000036,
           "dir": "down",
-          "score": 1.5,
-          "prior": 5.42,
-          "priorDate": "2026-10-21"
+          "score": 0.4761904761904766,
+          "prior": 5.29,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.3799999999999999,
+          "delta": -0.3899999999999997,
           "dir": "down",
           "score": 1.5,
-          "prior": 5.66,
-          "priorDate": "2026-10-05"
+          "prior": 5.64,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.11000000000000032,
+          "delta": 0.03000000000000025,
           "dir": "up",
-          "score": -1.302083333333337,
-          "prior": 5.17,
-          "priorDate": "2026-08-05"
+          "score": -0.3571428571428601,
+          "prior": 5.22,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.33999999999999986,
+          "delta": 0.28000000000000025,
           "dir": "up",
           "score": -1.5,
-          "prior": 4.94,
-          "priorDate": "2026-05-06"
+          "prior": 4.97,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -1945,50 +1945,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T10Y2Y",
-      "latest": 0.38,
-      "asOf": "2026-11-05",
-      "n": 9218,
+      "latest": 0.35,
+      "asOf": "2026-11-06",
+      "n": 9219,
       "anchor": {
         "kind": "curve",
-        "score": 0.08888888888888892,
-        "why": "2s10s 0.38 pp",
+        "score": 0.055555555555555546,
+        "why": "2s10s 0.35 pp",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.010000000000000009,
-          "dir": "flat",
-          "score": 0.1250000000000001,
-          "prior": 0.37,
-          "priorDate": "2026-10-29"
+          "delta": -0.030000000000000027,
+          "dir": "down",
+          "score": -0.37500000000000033,
+          "prior": 0.38,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.07,
+          "delta": 0.03999999999999998,
           "dir": "up",
-          "score": 0.8750000000000001,
+          "score": 0.4999999999999997,
           "prior": 0.31,
-          "priorDate": "2026-10-22"
+          "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.09999999999999998,
+          "delta": -0.16000000000000003,
           "dir": "down",
-          "score": -1.2499999999999998,
-          "prior": 0.48,
-          "priorDate": "2026-10-06"
+          "score": -1.5,
+          "prior": 0.51,
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.06,
+          "delta": -0.11000000000000004,
           "dir": "down",
-          "score": -0.75,
-          "prior": 0.44,
-          "priorDate": "2026-08-06"
+          "score": -1.3750000000000004,
+          "prior": 0.46,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.10999999999999999,
+          "delta": -0.13,
           "dir": "down",
-          "score": -1.3749999999999998,
-          "prior": 0.49,
-          "priorDate": "2026-05-07"
+          "score": -1.5,
+          "prior": 0.48,
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -2015,8 +2015,8 @@
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T10Y3M",
       "latest": 0.67,
-      "asOf": "2026-11-05",
-      "n": 9218,
+      "asOf": "2026-11-06",
+      "n": 9219,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -2025,39 +2025,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.13,
+          "delta": -0.10999999999999999,
           "dir": "down",
-          "score": -1.5,
-          "prior": 0.8,
-          "priorDate": "2026-10-29"
+          "score": -1.3749999999999998,
+          "prior": 0.78,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.06999999999999995,
+          "delta": -0.10999999999999999,
           "dir": "down",
-          "score": -0.8749999999999993,
-          "prior": 0.74,
-          "priorDate": "2026-10-22"
+          "score": -1.3749999999999998,
+          "prior": 0.78,
+          "priorDate": "2026-10-23"
         },
         "1m": {
           "delta": -0.39,
           "dir": "down",
           "score": -1.5,
           "prior": 1.06,
-          "priorDate": "2026-10-06"
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.12,
+          "delta": -0.10999999999999999,
           "dir": "down",
-          "score": -1.5,
-          "prior": 0.79,
-          "priorDate": "2026-08-06"
+          "score": -1.3749999999999998,
+          "prior": 0.78,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.04999999999999993,
-          "dir": "down",
-          "score": -0.6249999999999991,
-          "prior": 0.72,
-          "priorDate": "2026-05-07"
+          "delta": -0.019999999999999907,
+          "dir": "flat",
+          "score": -0.24999999999999883,
+          "prior": 0.69,
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -2083,50 +2083,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII5",
-      "latest": 2.39,
-      "asOf": "2026-11-04",
-      "n": 5965,
+      "latest": 2.33,
+      "asOf": "2026-11-05",
+      "n": 5966,
       "anchor": {
         "kind": "tips_real",
         "score": -1,
-        "why": "TIPS real yield 2.39%",
+        "why": "TIPS real yield 2.33%",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.03000000000000025,
+          "delta": 0.020000000000000018,
           "dir": "up",
-          "score": -0.3750000000000031,
-          "prior": 2.36,
-          "priorDate": "2026-10-28"
+          "score": -0.2500000000000002,
+          "prior": 2.31,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.1599999999999997,
-          "dir": "down",
-          "score": 1.5,
-          "prior": 2.55,
-          "priorDate": "2026-10-21"
+          "delta": 0,
+          "dir": "flat",
+          "score": 0,
+          "prior": 2.33,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.31000000000000005,
+          "delta": -0.33000000000000007,
           "dir": "down",
           "score": 1.5,
-          "prior": 2.7,
-          "priorDate": "2026-10-05"
+          "prior": 2.66,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.2400000000000002,
+          "delta": 0.16000000000000014,
           "dir": "up",
           "score": -1.5,
-          "prior": 2.15,
-          "priorDate": "2026-08-05"
+          "prior": 2.17,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.9800000000000002,
+          "delta": 0.9000000000000001,
           "dir": "up",
           "score": -1.5,
-          "prior": 1.41,
-          "priorDate": "2026-05-06"
+          "prior": 1.43,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -2152,13 +2152,13 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
-      "latest": 2.64,
-      "asOf": "2026-11-04",
-      "n": 5965,
+      "latest": 2.6,
+      "asOf": "2026-11-05",
+      "n": 5966,
       "anchor": {
         "kind": "tips_real",
         "score": -1,
-        "why": "TIPS real yield 2.64%",
+        "why": "TIPS real yield 2.60%",
         "votes": true
       },
       "impulse": {
@@ -2166,36 +2166,36 @@
           "delta": -0.029999999999999805,
           "dir": "down",
           "score": 0.37499999999999756,
-          "prior": 2.67,
-          "priorDate": "2026-10-28"
+          "prior": 2.63,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.11999999999999966,
+          "delta": -0.040000000000000036,
           "dir": "down",
-          "score": 1.4999999999999958,
-          "prior": 2.76,
-          "priorDate": "2026-10-21"
+          "score": 0.5000000000000004,
+          "prior": 2.64,
+          "priorDate": "2026-10-22"
         },
         "1m": {
           "delta": -0.31000000000000005,
           "dir": "down",
           "score": 1.5,
-          "prior": 2.95,
-          "priorDate": "2026-10-05"
+          "prior": 2.91,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.22999999999999998,
+          "delta": 0.16999999999999993,
           "dir": "up",
           "score": -1.5,
-          "prior": 2.41,
-          "priorDate": "2026-08-05"
+          "prior": 2.43,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.7000000000000002,
+          "delta": 0.6400000000000001,
           "dir": "up",
           "score": -1.5,
-          "prior": 1.94,
-          "priorDate": "2026-05-06"
+          "prior": 1.96,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -2221,9 +2221,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T5YIE",
-      "latest": 2.26,
-      "asOf": "2026-11-05",
-      "n": 5966,
+      "latest": 2.29,
+      "asOf": "2026-11-06",
+      "n": 5967,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -2232,39 +2232,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.2100000000000004,
+          "delta": -0.16999999999999993,
           "dir": "down",
           "score": -1.5,
-          "prior": 2.47,
-          "priorDate": "2026-10-29"
+          "prior": 2.46,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.1900000000000004,
+          "delta": -0.18999999999999995,
           "dir": "down",
           "score": -1.5,
-          "prior": 2.45,
-          "priorDate": "2026-10-22"
+          "prior": 2.48,
+          "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.11000000000000032,
+          "delta": -0.08000000000000007,
           "dir": "down",
-          "score": -1.375000000000004,
+          "score": -1.0000000000000009,
           "prior": 2.37,
-          "priorDate": "2026-10-06"
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 0.029999999999999805,
+          "delta": 0.06999999999999984,
           "dir": "up",
-          "score": 0.37499999999999756,
-          "prior": 2.23,
-          "priorDate": "2026-08-06"
+          "score": 0.874999999999998,
+          "prior": 2.22,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.3500000000000001,
+          "delta": -0.33000000000000007,
           "dir": "down",
           "score": -1.5,
-          "prior": 2.61,
-          "priorDate": "2026-05-07"
+          "prior": 2.62,
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -2290,9 +2290,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T10YIE",
-      "latest": 2.24,
-      "asOf": "2026-11-05",
-      "n": 5966,
+      "latest": 2.23,
+      "asOf": "2026-11-06",
+      "n": 5967,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -2304,36 +2304,36 @@
           "delta": -0.10999999999999988,
           "dir": "down",
           "score": -1.3749999999999984,
-          "prior": 2.35,
-          "priorDate": "2026-10-29"
+          "prior": 2.34,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.07999999999999963,
+          "delta": -0.10999999999999988,
           "dir": "down",
-          "score": -0.9999999999999953,
-          "prior": 2.32,
-          "priorDate": "2026-10-22"
+          "score": -1.3749999999999984,
+          "prior": 2.34,
+          "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.11999999999999966,
+          "delta": -0.1299999999999999,
           "dir": "down",
-          "score": -1.4999999999999958,
+          "score": -1.5,
           "prior": 2.36,
-          "priorDate": "2026-10-06"
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.019999999999999574,
-          "dir": "flat",
-          "score": -0.24999999999999467,
-          "prior": 2.26,
-          "priorDate": "2026-08-06"
+          "delta": -0.020000000000000018,
+          "dir": "down",
+          "score": -0.2500000000000002,
+          "prior": 2.25,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.20999999999999996,
+          "delta": -0.2200000000000002,
           "dir": "down",
           "score": -1.5,
           "prior": 2.45,
-          "priorDate": "2026-05-07"
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -2359,50 +2359,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T5YIFR",
-      "latest": 2.22,
-      "asOf": "2026-11-05",
-      "n": 5966,
+      "latest": 2.17,
+      "asOf": "2026-11-06",
+      "n": 5967,
       "anchor": {
         "kind": "bei_5y5y",
-        "score": -0.13333333333333275,
+        "score": -0.21666666666666656,
         "why": "5y5y 2.2% — 2.3 is the CPI-equivalent of a 2% PCE target",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": -0.009999999999999787,
+          "delta": -0.050000000000000266,
           "dir": "flat",
-          "score": -0.031249999999999334,
-          "prior": 2.23,
-          "priorDate": "2026-10-29"
+          "score": -0.15625000000000083,
+          "prior": 2.22,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.03000000000000025,
+          "delta": -0.03000000000000025,
           "dir": "flat",
-          "score": 0.09375000000000078,
-          "prior": 2.19,
-          "priorDate": "2026-10-22"
+          "score": -0.09375000000000078,
+          "prior": 2.2,
+          "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.1299999999999999,
+          "delta": -0.18000000000000016,
           "dir": "down",
-          "score": -0.40624999999999967,
+          "score": -0.5625000000000004,
           "prior": 2.35,
-          "priorDate": "2026-10-06"
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.06999999999999984,
-          "dir": "flat",
-          "score": -0.2187499999999995,
-          "prior": 2.29,
-          "priorDate": "2026-08-06"
+          "delta": -0.10999999999999988,
+          "dir": "down",
+          "score": -0.3437499999999996,
+          "prior": 2.28,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.06999999999999984,
-          "dir": "flat",
-          "score": -0.2187499999999995,
-          "prior": 2.29,
-          "priorDate": "2026-05-07"
+          "delta": -0.10999999999999988,
+          "dir": "down",
+          "score": -0.3437499999999996,
+          "prior": 2.28,
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -2475,7 +2475,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "RBUSBIS": {
       "id": "RBUSBIS",
@@ -2544,7 +2544,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 128
+      "staleDays": 129
     },
     "IRLTLT01DEM156N": {
       "id": "IRLTLT01DEM156N",
@@ -2613,7 +2613,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "IRLTLT01GBM156N": {
       "id": "IRLTLT01GBM156N",
@@ -2682,7 +2682,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "IRLTLT01JPM156N": {
       "id": "IRLTLT01JPM156N",
@@ -2751,7 +2751,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "DE10Y": {
       "id": "DE10Y",
@@ -2820,7 +2820,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "GB10Y": {
       "id": "GB10Y",
@@ -2889,7 +2889,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "JP10Y": {
       "id": "JP10Y",
@@ -2958,7 +2958,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "MOVE": {
       "id": "MOVE",
@@ -2980,46 +2980,46 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EMOVE",
-      "latest": 93.11160278320312,
+      "latest": 92.7699966430664,
       "asOf": "2026-11-06",
       "n": 5932,
       "anchor": {
         "kind": "move",
-        "score": 0.15307549370659723,
+        "score": 0.16066674126519098,
         "why": "MOVE 93 — calm, so it doesn’t vote (only a spike taxes Rates)",
         "votes": false
       },
       "impulse": {
         "1w": {
-          "delta": -7.0883941650390625,
+          "delta": -7.430000305175781,
           "dir": "down",
           "score": 1.5,
           "prior": 100.19999694824219,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -10.198394775390625,
+          "delta": -10.540000915527344,
           "dir": "down",
           "score": 1.5,
           "prior": 103.30999755859375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -9.448394775390625,
+          "delta": -9.790000915527344,
           "dir": "down",
           "score": 1.5,
           "prior": 102.55999755859375,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 21.08160400390625,
+          "delta": 20.73999786376953,
           "dir": "up",
           "score": -1.5,
           "prior": 72.02999877929688,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 25.861602783203125,
+          "delta": 25.519996643066406,
           "dir": "up",
           "score": -1.5,
           "prior": 67.25,
@@ -3027,7 +3027,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "DXY": {
       "id": "DXY",
@@ -3049,7 +3049,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DX-Y.NYB",
-      "latest": 102.31600189208984,
+      "latest": 102.30000305175781,
       "asOf": "2026-11-06",
       "n": 11938,
       "anchor": {
@@ -3060,35 +3060,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.436004638671875,
+          "delta": 0.42000579833984375,
           "dir": "up",
-          "score": -0.2663345851388172,
+          "score": -0.25660177529964573,
           "prior": 101.87999725341797,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.5060043334960938,
+          "delta": 0.4900054931640625,
           "dir": "up",
-          "score": -0.3090940836103061,
+          "score": -0.29936796098881124,
           "prior": 101.80999755859375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.0760040283203125,
+          "delta": 0.06000518798828125,
           "dir": "flat",
-          "score": -0.0464272614466455,
+          "score": -0.03666005999403669,
           "prior": 102.23999786376953,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 2.71600341796875,
+          "delta": 2.7000045776367188,
           "dir": "up",
           "score": -1.5,
           "prior": 99.5999984741211,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 4.476005554199219,
+          "delta": 4.4600067138671875,
           "dir": "up",
           "score": -1.5,
           "prior": 97.83999633789062,
@@ -3096,7 +3096,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EURUSD": {
       "id": "EURUSD",
@@ -3118,7 +3118,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EURUSD=X",
-      "latest": 1.1142061948776245,
+      "latest": 1.1228259801864624,
       "asOf": "2026-11-06",
       "n": 5960,
       "anchor": {
@@ -3129,43 +3129,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.0040743350982666016,
+          "delta": 0.004545450210571289,
           "dir": "flat",
-          "score": -0.05092918872833252,
+          "score": 0.05681812763214111,
           "prior": 1.1182805299758911,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.006242036819458008,
+          "delta": 0.002377748489379883,
           "dir": "flat",
-          "score": -0.0780254602432251,
+          "score": 0.029721856117248535,
           "prior": 1.1204482316970825,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.005928158760070801,
+          "delta": 0.00269162654876709,
           "dir": "flat",
-          "score": -0.07410198450088501,
+          "score": 0.03364533185958862,
           "prior": 1.1201343536376953,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.03826582431793213,
+          "delta": -0.02964603900909424,
           "dir": "down",
-          "score": -0.4783228039741516,
+          "score": -0.370575487613678,
           "prior": 1.1524720191955566,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -0.0589519739151001,
+          "delta": -0.05033218860626221,
           "dir": "down",
-          "score": -0.7368996739387512,
+          "score": -0.6291523575782776,
           "prior": 1.1731581687927246,
           "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "USDJPY": {
       "id": "USDJPY",
@@ -3187,9 +3187,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/JPY=X",
-      "latest": 158.51199340820312,
-      "asOf": "2026-11-06",
-      "n": 7793,
+      "latest": 158.4250030517578,
+      "asOf": "2026-11-07",
+      "n": 7794,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -3198,37 +3198,37 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.7079925537109375,
-          "dir": "up",
-          "score": -0.27915575128111186,
+          "delta": 0.621002197265625,
+          "dir": "flat",
+          "score": -0.24499060490105454,
           "prior": 157.8040008544922,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 1.697998046875,
+          "delta": 1.6110076904296875,
           "dir": "up",
-          "score": -0.6695069290838623,
+          "score": -0.63555612253301,
           "prior": 156.81399536132812,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.451995849609375,
+          "delta": 0.36199951171875,
           "dir": "flat",
-          "score": -0.17821831643891237,
-          "prior": 158.05999755859375,
-          "priorDate": "2026-10-07"
+          "score": -0.14281186079592653,
+          "prior": 158.06300354003906,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 0.102996826171875,
+          "delta": 0.0160064697265625,
           "dir": "flat",
-          "score": -0.040610817499245784,
+          "score": -0.006314687319799651,
           "prior": 158.40899658203125,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 1.6829986572265625,
+          "delta": 1.59600830078125,
           "dir": "up",
-          "score": -0.6635927907724907,
+          "score": -0.6296387367986314,
           "prior": 156.82899475097656,
           "priorDate": "2026-05-07"
         }
@@ -3256,9 +3256,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/USDCNY=X",
-      "latest": 6.67549991607666,
-      "asOf": "2026-11-06",
-      "n": 6368,
+      "latest": 6.66480016708374,
+      "asOf": "2026-11-07",
+      "n": 6369,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -3267,37 +3267,37 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.014500141143798828,
+          "delta": 0.01990032196044922,
           "dir": "flat",
-          "score": -0.1357589443308772,
-          "prior": 6.660999774932861,
-          "priorDate": "2026-10-30"
+          "score": -0.18661776667676175,
+          "prior": 6.644899845123291,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 0.015900135040283203,
+          "delta": 0.004199981689453125,
           "dir": "flat",
-          "score": -0.1488665197380085,
-          "prior": 6.659599781036377,
-          "priorDate": "2026-10-23"
+          "score": -0.03938585539102213,
+          "prior": 6.660600185394287,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.029000282287597656,
+          "delta": -0.03729963302612305,
           "dir": "down",
-          "score": 0.2715178886617544,
-          "prior": 6.704500198364258,
-          "priorDate": "2026-10-07"
+          "score": 0.3497819898106181,
+          "prior": 6.702099800109863,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.07329988479614258,
+          "delta": -0.0839996337890625,
           "dir": "down",
-          "score": 0.6862771114303915,
+          "score": 0.7877171078204426,
           "prior": 6.748799800872803,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -0.1259002685546875,
+          "delta": -0.13660001754760742,
           "dir": "down",
-          "score": 1.1787531845693764,
+          "score": 1.2809838078702884,
           "prior": 6.801400184631348,
           "priorDate": "2026-05-07"
         }
@@ -3325,7 +3325,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/GBPUSD=X",
-      "latest": 1.3351670503616333,
+      "latest": 1.3456052541732788,
       "asOf": "2026-11-06",
       "n": 5977,
       "anchor": {
@@ -3336,43 +3336,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.0026971101760864258,
+          "delta": 0.007741093635559082,
           "dir": "flat",
-          "score": -0.03371387720108032,
+          "score": 0.09676367044448853,
           "prior": 1.3378641605377197,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.002321481704711914,
+          "delta": 0.008116722106933594,
           "dir": "flat",
-          "score": -0.029018521308898926,
+          "score": 0.10145902633666992,
           "prior": 1.3374885320663452,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.013674259185791016,
-          "dir": "flat",
-          "score": 0.1709282398223877,
+          "delta": 0.024112462997436523,
+          "dir": "up",
+          "score": 0.30140578746795654,
           "prior": 1.3214927911758423,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.010365724563598633,
+          "delta": 0.000072479248046875,
           "dir": "flat",
-          "score": -0.1295715570449829,
+          "score": 0.0009059906005859375,
           "prior": 1.345532774925232,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -0.020397543907165527,
-          "dir": "down",
-          "score": -0.2549692988395691,
+          "delta": -0.00995934009552002,
+          "dir": "flat",
+          "score": -0.12449175119400024,
           "prior": 1.3555645942687988,
           "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "AUDUSD": {
       "id": "AUDUSD",
@@ -3394,9 +3394,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/AUDUSD=X",
-      "latest": 0.6867660284042358,
-      "asOf": "2026-11-06",
-      "n": 5342,
+      "latest": 0.6868131756782532,
+      "asOf": "2026-11-07",
+      "n": 5343,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -3405,37 +3405,37 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.01593416929244995,
+          "delta": -0.016718566417694092,
           "dir": "flat",
-          "score": -0.1991771161556244,
-          "prior": 0.7027001976966858,
-          "priorDate": "2026-10-30"
+          "score": -0.20898208022117615,
+          "prior": 0.7035317420959473,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.016419410705566406,
+          "delta": -0.01696610450744629,
           "dir": "flat",
-          "score": -0.20524263381958008,
-          "prior": 0.7031854391098022,
-          "priorDate": "2026-10-23"
+          "score": -0.2120763063430786,
+          "prior": 0.7037792801856995,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.009634137153625488,
+          "delta": -0.009086847305297852,
           "dir": "flat",
-          "score": -0.1204267144203186,
-          "prior": 0.6964001655578613,
-          "priorDate": "2026-10-07"
+          "score": -0.11358559131622314,
+          "prior": 0.695900022983551,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.016574203968048096,
+          "delta": -0.01652705669403076,
           "dir": "flat",
-          "score": -0.2071775496006012,
+          "score": -0.20658820867538452,
           "prior": 0.7033402323722839,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -0.03409397602081299,
+          "delta": -0.034046828746795654,
           "dir": "down",
-          "score": -0.42617470026016235,
+          "score": -0.4255853593349457,
           "prior": 0.7208600044250488,
           "priorDate": "2026-05-07"
         }
@@ -3463,7 +3463,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/MXN=X",
-      "latest": 18.624500274658203,
+      "latest": 18.780879974365234,
       "asOf": "2026-11-06",
       "n": 5982,
       "anchor": {
@@ -3474,35 +3474,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.22760009765625,
-          "dir": "down",
-          "score": 0.7637792098438829,
+          "delta": -0.07122039794921875,
+          "dir": "flat",
+          "score": 0.23701098552900038,
           "prior": 18.852100372314453,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.023500442504882812,
-          "dir": "flat",
-          "score": 0.07886266127385427,
+          "delta": 0.13287925720214844,
+          "dir": "up",
+          "score": -0.44220257977634897,
           "prior": 18.648000717163086,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.6497993469238281,
+          "delta": 0.8061790466308594,
           "dir": "up",
           "score": -1.5,
           "prior": 17.974700927734375,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 1.420370101928711,
+          "delta": 1.5767498016357422,
           "dir": "up",
           "score": -1.5,
           "prior": 17.204130172729492,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 1.3470001220703125,
+          "delta": 1.5033798217773438,
           "dir": "up",
           "score": -1.5,
           "prior": 17.27750015258789,
@@ -3510,7 +3510,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "STICKY_CPI": {
       "id": "STICKY_CPI",
@@ -3579,7 +3579,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "INDPRO": {
       "id": "INDPRO",
@@ -3648,7 +3648,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PAYEMS": {
       "id": "PAYEMS",
@@ -3717,7 +3717,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "UNRATE": {
       "id": "UNRATE",
@@ -3786,7 +3786,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "EA_UNRATE": {
       "id": "EA_UNRATE",
@@ -3855,7 +3855,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97
+      "staleDays": 98
     },
     "JP_UNRATE": {
       "id": "JP_UNRATE",
@@ -3924,7 +3924,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97
+      "staleDays": 98
     },
     "ICSA": {
       "id": "ICSA",
@@ -3993,7 +3993,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 7
     },
     "CCSA": {
       "id": "CCSA",
@@ -4062,7 +4062,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 13
+      "staleDays": 14
     },
     "JTSJOL": {
       "id": "JTSJOL",
@@ -4131,7 +4131,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "JTSQUR": {
       "id": "JTSQUR",
@@ -4200,7 +4200,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "CES0500000003": {
       "id": "CES0500000003",
@@ -4269,7 +4269,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "RSAFS": {
       "id": "RSAFS",
@@ -4338,7 +4338,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "DGORDER": {
       "id": "DGORDER",
@@ -4407,7 +4407,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "HOUST": {
       "id": "HOUST",
@@ -4476,7 +4476,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PERMIT": {
       "id": "PERMIT",
@@ -4545,7 +4545,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "CPIAUCSL": {
       "id": "CPIAUCSL",
@@ -4614,7 +4614,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "CPILFESL": {
       "id": "CPILFESL",
@@ -4683,7 +4683,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PCEPI": {
       "id": "PCEPI",
@@ -4752,7 +4752,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PCEPILFE": {
       "id": "PCEPILFE",
@@ -4821,7 +4821,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "MICH": {
       "id": "MICH",
@@ -4890,7 +4890,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "GDPC1": {
       "id": "GDPC1",
@@ -4959,7 +4959,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 128
+      "staleDays": 129
     },
     "GDP": {
       "id": "GDP",
@@ -5028,7 +5028,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 128
+      "staleDays": 129
     },
     "COPPER": {
       "id": "COPPER",
@@ -5050,7 +5050,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HG=F",
-      "latest": 6.255499839782715,
+      "latest": 6.2179999351501465,
       "asOf": "2026-11-06",
       "n": 6577,
       "anchor": {
@@ -5061,43 +5061,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.20300006866455078,
+          "delta": -0.24049997329711914,
           "dir": "down",
           "score": -1.5,
           "prior": 6.458499908447266,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.22049999237060547,
+          "delta": -0.25799989700317383,
           "dir": "down",
           "score": -1.5,
           "prior": 6.47599983215332,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.3410000801086426,
+          "delta": -0.37849998474121094,
           "dir": "down",
           "score": -1.5,
           "prior": 6.596499919891357,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.315000057220459,
+          "delta": -0.35249996185302734,
           "dir": "down",
           "score": -1.5,
           "prior": 6.570499897003174,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 0.006499767303466797,
-          "dir": "flat",
-          "score": 0.06494052703561182,
+          "delta": -0.031000137329101562,
+          "dir": "down",
+          "score": -0.3115967518938326,
           "prior": 6.249000072479248,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "VIX": {
       "id": "VIX",
@@ -5119,46 +5119,46 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EVIX",
-      "latest": 24.559999465942383,
+      "latest": 25.639999389648438,
       "asOf": "2026-11-06",
       "n": 9283,
       "anchor": {
         "kind": "vix",
-        "score": -0.6872726787220348,
-        "why": "VIX 24.6",
+        "score": -0.7854544899680398,
+        "why": "VIX 25.6",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 5.1399993896484375,
+          "delta": 6.219999313354492,
           "dir": "up",
           "score": -1.5,
           "prior": 19.420000076293945,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 5.10999870300293,
+          "delta": 6.189998626708984,
           "dir": "up",
           "score": -1.5,
           "prior": 19.450000762939453,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 9.479999542236328,
+          "delta": 10.559999465942383,
           "dir": "up",
           "score": -1.5,
           "prior": 15.079999923706055,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 9.65999984741211,
+          "delta": 10.739999771118164,
           "dir": "up",
           "score": -1.5,
           "prior": 14.899999618530273,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 7.369998931884766,
+          "delta": 8.44999885559082,
           "dir": "up",
           "score": -1.5,
           "prior": 17.190000534057617,
@@ -5166,7 +5166,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "BAMLH0A0HYM2": {
       "id": "BAMLH0A0HYM2",
@@ -5235,7 +5235,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "BAMLC0A0CM": {
       "id": "BAMLC0A0CM",
@@ -5304,7 +5304,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "NFCI": {
       "id": "NFCI",
@@ -5373,7 +5373,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "ANFCI": {
       "id": "ANFCI",
@@ -5442,7 +5442,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "SPX": {
       "id": "SPX",
@@ -5464,7 +5464,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EGSPC",
-      "latest": 7401.06982421875,
+      "latest": 7376.85986328125,
       "asOf": "2026-11-06",
       "n": 11809,
       "anchor": {
@@ -5475,43 +5475,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -179,
+          "delta": -203.2099609375,
           "dir": "down",
           "score": -1.5,
           "prior": 7580.06982421875,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -222.6103515625,
+          "delta": -246.8203125,
           "dir": "down",
           "score": -1.5,
           "prior": 7623.68017578125,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -400.7001953125,
+          "delta": -424.91015625,
           "dir": "down",
           "score": -1.5,
           "prior": 7801.77001953125,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -356.5703125,
+          "delta": -380.7802734375,
           "dir": "down",
           "score": -1.5,
           "prior": 7757.64013671875,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 2.1396484375,
+          "delta": -22.0703125,
           "dir": "flat",
-          "score": 0.018068742833116862,
+          "score": -0.18698939071840265,
           "prior": 7398.93017578125,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "SPX_EY": {
       "id": "SPX_EY",
@@ -5533,9 +5533,9 @@
       "freshness": "live",
       "source": "Multpl",
       "sourceUrl": "https://www.multpl.com/s-p-500-earnings-yield/table/by-month",
-      "latest": 3.99,
-      "asOf": "2026-11-05",
-      "n": 1905,
+      "latest": 3.98,
+      "asOf": "2026-11-06",
+      "n": 1906,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -5544,39 +5544,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 3.81,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 3.99,
+          "priorDate": "2026-11-05"
         },
         "2w": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 3.81,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 3.99,
+          "priorDate": "2026-11-05"
         },
         "1m": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 3.81,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 3.99,
+          "priorDate": "2026-11-05"
         },
         "3m": {
-          "delta": 0.1200000000000001,
+          "delta": 0.08999999999999986,
           "dir": "up",
-          "score": 1.5,
-          "prior": 3.87,
-          "priorDate": "2026-10-30"
+          "score": 1.1249999999999982,
+          "prior": 3.89,
+          "priorDate": "2026-11-01"
         },
         "6m": {
-          "delta": 0.1900000000000004,
+          "delta": 0.20000000000000018,
           "dir": "up",
           "score": 1.5,
-          "prior": 3.8,
-          "priorDate": "2026-10-27"
+          "prior": 3.78,
+          "priorDate": "2026-10-28"
         }
       },
       "status": "ok",
@@ -5602,7 +5602,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLY",
-      "latest": 118.27999877929688,
+      "latest": 117.58000183105469,
       "asOf": "2026-11-06",
       "n": 7012,
       "anchor": {
@@ -5613,43 +5613,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 2.9000015258789062,
+          "delta": 2.2000045776367188,
           "dir": "up",
-          "score": 1.5,
+          "score": 1.1694189824887296,
           "prior": 115.37999725341797,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 5.180000305175781,
+          "delta": 4.480003356933594,
           "dir": "up",
           "score": 1.5,
           "prior": 113.0999984741211,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 6.9199981689453125,
+          "delta": 6.220001220703125,
           "dir": "up",
           "score": 1.5,
           "prior": 111.36000061035156,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -1.3165969848632812,
+          "delta": -2.0165939331054688,
           "dir": "down",
-          "score": -0.6956992932296024,
+          "score": -1.0719265083886353,
           "prior": 119.59659576416016,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.417327880859375,
+          "delta": -2.1173248291015625,
           "dir": "down",
-          "score": -0.7489262214062185,
+          "score": -1.1254703160235582,
           "prior": 119.69732666015625,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "XLP": {
       "id": "XLP",
@@ -5671,7 +5671,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLP",
-      "latest": 90.27999877929688,
+      "latest": 90.08000183105469,
       "asOf": "2026-11-06",
       "n": 7012,
       "anchor": {
@@ -5682,35 +5682,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.8600006103515625,
+          "delta": 0.660003662109375,
           "dir": "up",
-          "score": 0.5953703907149219,
+          "score": 0.4579288193088724,
           "prior": 89.41999816894531,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 2.0199966430664062,
+          "delta": 1.8199996948242188,
           "dir": "up",
-          "score": 1.3984248105750103,
+          "score": 1.2627661924325013,
           "prior": 88.26000213623047,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 8.580001831054688,
+          "delta": 8.3800048828125,
           "dir": "up",
           "score": 1.5,
           "prior": 81.69999694824219,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 5.716156005859375,
+          "delta": 5.5161590576171875,
           "dir": "up",
           "score": 1.5,
           "prior": 84.5638427734375,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 7.226287841796875,
+          "delta": 7.0262908935546875,
           "dir": "up",
           "score": 1.5,
           "prior": 83.0537109375,
@@ -5718,7 +5718,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "NDX": {
       "id": "NDX",
@@ -5740,7 +5740,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5ENDX",
-      "latest": 27079.439453125,
+      "latest": 26989.990234375,
       "asOf": "2026-11-06",
       "n": 10356,
       "anchor": {
@@ -5751,35 +5751,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1305.41015625,
+          "delta": -1394.859375,
           "dir": "down",
           "score": -1.5,
           "prior": 28384.849609375,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -1878.08984375,
+          "delta": -1967.5390625,
           "dir": "down",
           "score": -1.5,
           "prior": 28957.529296875,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -4080.640625,
+          "delta": -4170.08984375,
           "dir": "down",
           "score": -1.5,
           "prior": 31160.080078125,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -2642.861328125,
+          "delta": -2732.310546875,
           "dir": "down",
           "score": -1.5,
           "prior": 29722.30078125,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2155.55078125,
+          "delta": -2245,
           "dir": "down",
           "score": -1.5,
           "prior": 29234.990234375,
@@ -5787,7 +5787,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "RTY": {
       "id": "RTY",
@@ -5809,7 +5809,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5ERUT",
-      "latest": 2756.292236328125,
+      "latest": 2754.110107421875,
       "asOf": "2026-11-06",
       "n": 9865,
       "anchor": {
@@ -5820,35 +5820,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -55.5478515625,
+          "delta": -57.72998046875,
           "dir": "down",
-          "score": -1.259569169371253,
+          "score": -1.3100869749446737,
           "prior": 2811.840087890625,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -19.607666015625,
+          "delta": -21.789794921875,
           "dir": "down",
-          "score": -0.4446114638443129,
+          "score": -0.49448356438153734,
           "prior": 2775.89990234375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -36.90771484375,
+          "delta": -39.08984375,
           "dir": "down",
-          "score": -0.8368968091741082,
+          "score": -0.8870797241516253,
           "prior": 2793.199951171875,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -278.19775390625,
+          "delta": -280.3798828125,
           "dir": "down",
           "score": -1.5,
           "prior": 3034.489990234375,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -104.917724609375,
+          "delta": -107.099853515625,
           "dir": "down",
           "score": -1.5,
           "prior": 2861.2099609375,
@@ -5856,7 +5856,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "GOLD": {
       "id": "GOLD",
@@ -5878,7 +5878,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/GC=F",
-      "latest": 4071.60009765625,
+      "latest": 4074.89990234375,
       "asOf": "2026-11-06",
       "n": 6573,
       "anchor": {
@@ -5889,35 +5889,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 172.7001953125,
+          "delta": 176,
           "dir": "up",
           "score": 1.5,
           "prior": 3898.89990234375,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 63.7001953125,
+          "delta": 67,
           "dir": "up",
-          "score": 0.9778126808973696,
+          "score": 1.027632604568148,
           "prior": 4007.89990234375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -69.10009765625,
+          "delta": -65.80029296875,
           "dir": "down",
-          "score": -1.060702426547648,
+          "score": -1.0092317379824443,
           "prior": 4140.7001953125,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -328.10009765625,
+          "delta": -324.80029296875,
           "dir": "down",
           "score": -1.5,
           "prior": 4399.7001953125,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -659.10009765625,
+          "delta": -655.80029296875,
           "dir": "down",
           "score": -1.5,
           "prior": 4730.7001953125,
@@ -5925,7 +5925,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "BTC": {
       "id": "BTC",
@@ -5947,9 +5947,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BTC-USD",
-      "latest": 75790.8984375,
-      "asOf": "2026-11-06",
-      "n": 4434,
+      "latest": 75779.4921875,
+      "asOf": "2026-11-07",
+      "n": 4435,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -5958,39 +5958,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1407.3125,
+          "delta": -1655.2578125,
           "dir": "down",
-          "score": -1.1605223458662737,
-          "prior": 77198.2109375,
-          "priorDate": "2026-10-30"
+          "score": -1.3651927493163503,
+          "prior": 77434.75,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -5283.2890625,
+          "delta": -5011.34375,
           "dir": "down",
           "score": -1.5,
-          "prior": 81074.1875,
-          "priorDate": "2026-10-23"
+          "prior": 80790.8359375,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -7485.03125,
+          "delta": -5896.84375,
           "dir": "down",
           "score": -1.5,
-          "prior": 83275.9296875,
-          "priorDate": "2026-10-07"
+          "prior": 81676.3359375,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 10910.70703125,
+          "delta": 10874.8046875,
           "dir": "up",
           "score": 1.5,
-          "prior": 64880.19140625,
-          "priorDate": "2026-08-07"
+          "prior": 64904.6875,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -4395.8671875,
+          "delta": -4884.875,
           "dir": "down",
           "score": -1.5,
-          "prior": 80186.765625,
-          "priorDate": "2026-05-08"
+          "prior": 80664.3671875,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -6016,7 +6016,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CL=F",
-      "latest": 90.9800033569336,
+      "latest": 90.83000183105469,
       "asOf": "2026-11-06",
       "n": 6581,
       "anchor": {
@@ -6027,35 +6027,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -13.139999389648438,
+          "delta": -13.290000915527344,
           "dir": "down",
           "score": -1.5,
           "prior": 104.12000274658203,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -12.289993286132812,
+          "delta": -12.439994812011719,
           "dir": "down",
           "score": -1.5,
           "prior": 103.2699966430664,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 2.7000045776367188,
+          "delta": 2.5500030517578125,
           "dir": "up",
           "score": 1.5,
           "prior": 88.27999877929688,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 12.800003051757812,
+          "delta": 12.650001525878906,
           "dir": "up",
           "score": 1.5,
           "prior": 78.18000030517578,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -4.439994812011719,
+          "delta": -4.589996337890625,
           "dir": "down",
           "score": -1.5,
           "prior": 95.41999816894531,
@@ -6063,7 +6063,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "BRENT": {
       "id": "BRENT",
@@ -6085,7 +6085,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BZ=F",
-      "latest": 98.43000030517578,
+      "latest": 98.31999969482422,
       "asOf": "2026-11-06",
       "n": 4799,
       "anchor": {
@@ -6096,35 +6096,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -19.209999084472656,
+          "delta": -19.31999969482422,
           "dir": "down",
           "score": -1.5,
           "prior": 117.63999938964844,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -18.290000915527344,
+          "delta": -18.400001525878906,
           "dir": "down",
           "score": -1.5,
           "prior": 116.72000122070312,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -1.7699966430664062,
+          "delta": -1.8799972534179688,
           "dir": "down",
-          "score": -1.1238930188831195,
+          "score": -1.1950755563805042,
           "prior": 100.19999694824219,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 14.879997253417969,
+          "delta": 14.769996643066406,
           "dir": "up",
           "score": 1.5,
           "prior": 83.55000305175781,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2.8600006103515625,
+          "delta": -2.970001220703125,
           "dir": "down",
           "score": -1.5,
           "prior": 101.29000091552734,
@@ -6132,7 +6132,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "MTSDS133FMS": {
       "id": "MTSDS133FMS",
@@ -6201,7 +6201,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "ROW_UST": {
       "id": "ROW_UST",
@@ -6270,7 +6270,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 219
+      "staleDays": 220
     },
     "TREAST": {
       "id": "TREAST",
@@ -6339,7 +6339,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "FYGFDPUN": {
       "id": "FYGFDPUN",
@@ -6408,7 +6408,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 219
+      "staleDays": 220
     },
     "DFEDTARU": {
       "id": "DFEDTARU",
@@ -6431,8 +6431,8 @@
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARU",
       "latest": 4,
-      "asOf": "2026-11-06",
-      "n": 6535,
+      "asOf": "2026-11-07",
+      "n": 6536,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6445,35 +6445,35 @@
           "dir": "flat",
           "score": 0,
           "prior": 4,
-          "priorDate": "2026-10-30"
+          "priorDate": "2026-10-31"
         },
         "2w": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 4,
-          "priorDate": "2026-10-23"
+          "priorDate": "2026-10-24"
         },
         "1m": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 4,
-          "priorDate": "2026-10-07"
+          "priorDate": "2026-10-08"
         },
         "3m": {
           "delta": 0.25,
           "dir": "up",
           "score": -1.5,
           "prior": 3.75,
-          "priorDate": "2026-08-07"
+          "priorDate": "2026-08-08"
         },
         "6m": {
           "delta": 0.25,
           "dir": "up",
           "score": -1.5,
           "prior": 3.75,
-          "priorDate": "2026-05-08"
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -6500,8 +6500,8 @@
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/DFEDTARL",
       "latest": 3.75,
-      "asOf": "2026-11-06",
-      "n": 6535,
+      "asOf": "2026-11-07",
+      "n": 6536,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6514,35 +6514,35 @@
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-10-30"
+          "priorDate": "2026-10-31"
         },
         "2w": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-10-23"
+          "priorDate": "2026-10-24"
         },
         "1m": {
           "delta": 0,
           "dir": "flat",
           "score": 0,
           "prior": 3.75,
-          "priorDate": "2026-10-07"
+          "priorDate": "2026-10-08"
         },
         "3m": {
           "delta": 0.25,
           "dir": "up",
           "score": -1.5,
           "prior": 3.5,
-          "priorDate": "2026-08-07"
+          "priorDate": "2026-08-08"
         },
         "6m": {
           "delta": 0.25,
           "dir": "up",
           "score": -1.5,
           "prior": 3.5,
-          "priorDate": "2026-05-08"
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -6615,7 +6615,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "THREEFFTP10": {
       "id": "THREEFFTP10",
@@ -6684,7 +6684,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "THREEFFTP2": {
       "id": "THREEFFTP2",
@@ -6753,7 +6753,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "T10YFF": {
       "id": "T10YFF",
@@ -6775,9 +6775,9 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/T10YFF",
-      "latest": 1.02,
-      "asOf": "2026-11-04",
-      "n": 9217,
+      "latest": 0.96,
+      "asOf": "2026-11-05",
+      "n": 9218,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6786,39 +6786,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.1499999999999999,
+          "delta": -0.14000000000000012,
           "dir": "down",
           "score": -1.5,
-          "prior": 1.17,
-          "priorDate": "2026-10-28"
+          "prior": 1.1,
+          "priorDate": "2026-10-29"
         },
         "2w": {
-          "delta": -0.22999999999999998,
+          "delta": -0.1200000000000001,
           "dir": "down",
           "score": -1.5,
-          "prior": 1.25,
-          "priorDate": "2026-10-21"
+          "prior": 1.08,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": -0.4099999999999999,
+          "delta": -0.42999999999999994,
           "dir": "down",
           "score": -1.5,
-          "prior": 1.43,
-          "priorDate": "2026-10-05"
+          "prior": 1.39,
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": 0.020000000000000018,
-          "dir": "up",
-          "score": 0.2500000000000002,
-          "prior": 1,
-          "priorDate": "2026-08-05"
+          "delta": -0.10000000000000009,
+          "dir": "down",
+          "score": -1.250000000000001,
+          "prior": 1.06,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.30000000000000004,
+          "delta": 0.17999999999999994,
           "dir": "up",
           "score": 1.5,
-          "prior": 0.72,
-          "priorDate": "2026-05-06"
+          "prior": 0.78,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -6844,7 +6844,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CHF=X",
-      "latest": 0.8206800222396851,
+      "latest": 0.8153799772262573,
       "asOf": "2026-11-06",
       "n": 6029,
       "anchor": {
@@ -6855,43 +6855,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.002929985523223877,
+          "delta": -0.008230030536651611,
           "dir": "flat",
-          "score": 0.03662481904029846,
+          "score": 0.10287538170814514,
           "prior": 0.8236100077629089,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.004549980163574219,
+          "delta": -0.009850025177001953,
           "dir": "flat",
-          "score": 0.056874752044677734,
+          "score": 0.12312531471252441,
           "prior": 0.8252300024032593,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.012299954891204834,
+          "delta": -0.01759999990463257,
           "dir": "flat",
-          "score": 0.15374943614006042,
+          "score": 0.2199999988079071,
           "prior": 0.8329799771308899,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 0.008270025253295898,
+          "delta": 0.002969980239868164,
           "dir": "flat",
-          "score": -0.10337531566619873,
+          "score": -0.03712475299835205,
           "prior": 0.8124099969863892,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.04048001766204834,
+          "delta": 0.035179972648620605,
           "dir": "up",
-          "score": -0.5060002207756042,
+          "score": -0.43974965810775757,
           "prior": 0.7802000045776367,
           "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "USDCAD": {
       "id": "USDCAD",
@@ -6913,9 +6913,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/CAD=X",
-      "latest": 1.413290023803711,
-      "asOf": "2026-11-06",
-      "n": 6034,
+      "latest": 1.4127999544143677,
+      "asOf": "2026-11-07",
+      "n": 6035,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6924,37 +6924,37 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.01464998722076416,
+          "delta": 0.01549994945526123,
           "dir": "flat",
-          "score": -0.183124840259552,
-          "prior": 1.3986400365829468,
-          "priorDate": "2026-10-30"
+          "score": -0.19374936819076538,
+          "prior": 1.3973000049591064,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 0.012340068817138672,
+          "delta": 0.012399911880493164,
           "dir": "flat",
-          "score": -0.1542508602142334,
-          "prior": 1.4009499549865723,
-          "priorDate": "2026-10-23"
+          "score": -0.15499889850616455,
+          "prior": 1.4004000425338745,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.012490034103393555,
+          "delta": -0.009570002555847168,
           "dir": "flat",
-          "score": 0.15612542629241943,
-          "prior": 1.4257800579071045,
-          "priorDate": "2026-10-07"
+          "score": 0.1196250319480896,
+          "prior": 1.4223699569702148,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 0.011919975280761719,
+          "delta": 0.011429905891418457,
           "dir": "flat",
-          "score": -0.14899969100952148,
+          "score": -0.1428738236427307,
           "prior": 1.4013700485229492,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.04721999168395996,
+          "delta": 0.0467299222946167,
           "dir": "up",
-          "score": -0.5902498960494995,
+          "score": -0.5841240286827087,
           "prior": 1.366070032119751,
           "priorDate": "2026-05-07"
         }
@@ -6982,9 +6982,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BRL=X",
-      "latest": 5.507599830627441,
-      "asOf": "2026-11-06",
-      "n": 5545,
+      "latest": 5.4959001541137695,
+      "asOf": "2026-11-07",
+      "n": 5546,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -6993,35 +6993,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.12279987335205078,
+          "delta": 0.1111001968383789,
           "dir": "up",
-          "score": -1.3935275474850208,
+          "score": -1.2634440415008568,
           "prior": 5.384799957275391,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.479799747467041,
+          "delta": 0.4995002746582031,
           "dir": "up",
           "score": -1.5,
-          "prior": 5.0278000831604,
-          "priorDate": "2026-10-23"
+          "prior": 4.996399879455566,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": 0.4883999824523926,
+          "delta": 0.47819995880126953,
           "dir": "up",
           "score": -1.5,
-          "prior": 5.019199848175049,
-          "priorDate": "2026-10-07"
+          "prior": 5.0177001953125,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 0.3857998847961426,
+          "delta": 0.3741002082824707,
           "dir": "up",
           "score": -1.5,
           "prior": 5.121799945831299,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": 0.5626997947692871,
+          "delta": 0.5510001182556152,
           "dir": "up",
           "score": -1.5,
           "prior": 4.944900035858154,
@@ -7051,9 +7051,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EURJPY=X",
-      "latest": 176.57200622558594,
-      "asOf": "2026-11-06",
-      "n": 6189,
+      "latest": 176.33999633789062,
+      "asOf": "2026-11-07",
+      "n": 6190,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -7062,35 +7062,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.100006103515625,
+          "delta": -0.1320037841796875,
           "dir": "flat",
-          "score": 0.03539848475041486,
+          "score": -0.04678596281368822,
           "prior": 176.4720001220703,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.988006591796875,
+          "delta": 0.839996337890625,
           "dir": "up",
-          "score": 0.34971801763646054,
-          "prior": 175.58399963378906,
-          "priorDate": "2026-10-23"
+          "score": 0.29771902125691097,
+          "prior": 175.5,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.4759979248046875,
-          "dir": "flat",
-          "score": -0.16848576926902528,
-          "prior": 177.04800415039062,
-          "priorDate": "2026-10-07"
+          "delta": -0.8899993896484375,
+          "dir": "down",
+          "score": -0.31544155046052397,
+          "prior": 177.22999572753906,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -5.967987060546875,
+          "delta": -6.1999969482421875,
           "dir": "down",
           "score": -1.5,
           "prior": 182.5399932861328,
           "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -7.3969879150390625,
+          "delta": -7.628997802734375,
           "dir": "down",
           "score": -1.5,
           "prior": 183.968994140625,
@@ -7167,7 +7167,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "PHILLY_MFG": {
       "id": "PHILLY_MFG",
@@ -7236,7 +7236,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "CFNAI": {
       "id": "CFNAI",
@@ -7305,7 +7305,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "WEI": {
       "id": "WEI",
@@ -7374,7 +7374,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 6
+      "staleDays": 7
     },
     "CSUSHPISA": {
       "id": "CSUSHPISA",
@@ -7443,7 +7443,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 97
+      "staleDays": 98
     },
     "EXHOSLUSM495S": {
       "id": "EXHOSLUSM495S",
@@ -7512,7 +7512,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "UMCSENT": {
       "id": "UMCSENT",
@@ -7581,7 +7581,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PPIACO": {
       "id": "PPIACO",
@@ -7650,7 +7650,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "PPIFIS": {
       "id": "PPIFIS",
@@ -7719,7 +7719,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "MEDIAN_CPI": {
       "id": "MEDIAN_CPI",
@@ -7788,7 +7788,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "TRIMMED_CPI": {
       "id": "TRIMMED_CPI",
@@ -7857,7 +7857,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "SHELTER_CPI": {
       "id": "SHELTER_CPI",
@@ -7926,7 +7926,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "SUPERCORE": {
       "id": "SUPERCORE",
@@ -7995,7 +7995,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "CORESTICK": {
       "id": "CORESTICK",
@@ -8064,7 +8064,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "EA_HICP": {
       "id": "EA_HICP",
@@ -8133,7 +8133,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 66
+      "staleDays": 67
     },
     "BAA10Y": {
       "id": "BAA10Y",
@@ -8155,50 +8155,50 @@
       "freshness": "live",
       "source": "FRED API",
       "sourceUrl": "https://fred.stlouisfed.org/series/BAA10Y",
-      "latest": 1.52,
-      "asOf": "2026-11-04",
-      "n": 9211,
+      "latest": 1.57,
+      "asOf": "2026-11-05",
+      "n": 9212,
       "anchor": {
         "kind": "baa10y",
-        "score": 0.8923076923076922,
-        "why": "Baa over 10s 1.52pp — 2.1 is the 40-year median, 3.3 is crisis",
+        "score": 0.8153846153846153,
+        "why": "Baa over 10s 1.57pp — 2.1 is the 40-year median, 3.3 is crisis",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": 0.09000000000000008,
-          "dir": "up",
-          "score": -1.1250000000000009,
-          "prior": 1.43,
-          "priorDate": "2026-10-28"
-        },
-        "2w": {
           "delta": 0.08000000000000007,
           "dir": "up",
           "score": -1.0000000000000009,
-          "prior": 1.44,
-          "priorDate": "2026-10-21"
+          "prior": 1.49,
+          "priorDate": "2026-10-29"
+        },
+        "2w": {
+          "delta": 0.1100000000000001,
+          "dir": "up",
+          "score": -1.375000000000001,
+          "prior": 1.46,
+          "priorDate": "2026-10-22"
         },
         "1m": {
-          "delta": 0.06000000000000005,
+          "delta": 0.1100000000000001,
           "dir": "up",
-          "score": -0.7500000000000007,
+          "score": -1.375000000000001,
           "prior": 1.46,
-          "priorDate": "2026-10-05"
+          "priorDate": "2026-10-06"
         },
         "3m": {
-          "delta": -0.10000000000000009,
+          "delta": -0.040000000000000036,
           "dir": "down",
-          "score": 1.250000000000001,
-          "prior": 1.62,
-          "priorDate": "2026-08-05"
+          "score": 0.5000000000000004,
+          "prior": 1.61,
+          "priorDate": "2026-08-06"
         },
         "6m": {
-          "delta": -0.1399999999999999,
+          "delta": -0.07999999999999985,
           "dir": "down",
-          "score": 1.5,
-          "prior": 1.66,
-          "priorDate": "2026-05-06"
+          "score": 0.9999999999999981,
+          "prior": 1.65,
+          "priorDate": "2026-05-07"
         }
       },
       "status": "ok",
@@ -8271,7 +8271,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "HY_CCC_OAS": {
       "id": "HY_CCC_OAS",
@@ -8340,7 +8340,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "EPU": {
       "id": "EPU",
@@ -8409,7 +8409,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "SAHM": {
       "id": "SAHM",
@@ -8478,7 +8478,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 36
+      "staleDays": 37
     },
     "HYG": {
       "id": "HYG",
@@ -8500,7 +8500,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYG",
-      "latest": 77.25499725341797,
+      "latest": 77.2300033569336,
       "asOf": "2026-11-06",
       "n": 4927,
       "anchor": {
@@ -8511,43 +8511,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.1750030517578125,
+          "delta": -0.1999969482421875,
           "dir": "flat",
-          "score": -0.1415790709173751,
+          "score": -0.16185172500079276,
           "prior": 77.43000030517578,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.20499420166015625,
+          "delta": 0.18000030517578125,
           "dir": "flat",
-          "score": 0.16584218573890275,
+          "score": 0.1456690221997293,
           "prior": 77.05000305175781,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.0749969482421875,
+          "delta": 0.0500030517578125,
           "dir": "flat",
-          "score": 0.06067321767886464,
+          "score": 0.040466018373967946,
           "prior": 77.18000030517578,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -1.9210968017578125,
+          "delta": -1.5953826904296875,
           "dir": "down",
-          "score": -1.5,
-          "prior": 79.17609405517578,
+          "score": -1.2910969029875552,
+          "prior": 78.82538604736328,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.2950515747070312,
+          "delta": -0.97210693359375,
           "dir": "down",
-          "score": -1.047708579338645,
-          "prior": 78.550048828125,
+          "score": -0.7866979244945834,
+          "prior": 78.20211029052734,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "LQD": {
       "id": "LQD",
@@ -8569,7 +8569,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LQD",
-      "latest": 104.51000213623047,
+      "latest": 104.52999877929688,
       "asOf": "2026-11-06",
       "n": 6109,
       "anchor": {
@@ -8580,43 +8580,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.2400054931640625,
+          "delta": 0.26000213623046875,
           "dir": "flat",
-          "score": 0.14353021735853297,
+          "score": 0.15545904242010558,
           "prior": 104.2699966430664,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.660003662109375,
+          "delta": 0.6800003051757812,
           "dir": "up",
-          "score": 0.3947012538385139,
+          "score": 0.40658202975033275,
           "prior": 103.8499984741211,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 2.410003662109375,
+          "delta": 2.4300003051757812,
           "dir": "up",
-          "score": 1.441251801770069,
+          "score": 1.4529323720184197,
           "prior": 102.0999984741211,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -1.5945816040039062,
+          "delta": -1.1187210083007812,
           "dir": "down",
-          "score": -0.9536058579382092,
-          "prior": 106.10458374023438,
+          "score": -0.6688994913931553,
+          "prior": 105.64871978759766,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2.9780731201171875,
+          "delta": -2.4962692260742188,
           "dir": "down",
-          "score": -1.5,
-          "prior": 107.48807525634766,
+          "score": -1.4925555194834579,
+          "prior": 107.0262680053711,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "SKEW": {
       "id": "SKEW",
@@ -8638,9 +8638,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5ESKEW",
-      "latest": 149.3699951171875,
-      "asOf": "2026-11-05",
-      "n": 9206,
+      "latest": 153.5500030517578,
+      "asOf": "2026-11-06",
+      "n": 9207,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -8649,39 +8649,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.660003662109375,
-          "dir": "down",
-          "score": 0.6945854741471953,
-          "prior": 151.02999877929688,
-          "priorDate": "2026-10-29"
+          "delta": 3.790008544921875,
+          "dir": "up",
+          "score": -1.5,
+          "prior": 149.75999450683594,
+          "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -3.0200042724609375,
-          "dir": "down",
-          "score": 1.2636424529620254,
-          "prior": 152.38999938964844,
-          "priorDate": "2026-10-22"
+          "delta": 1.75,
+          "dir": "up",
+          "score": -0.7123086800794948,
+          "prior": 151.8000030517578,
+          "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 8.159988403320312,
+          "delta": 11.710006713867188,
           "dir": "up",
           "score": -1.5,
-          "prior": 141.2100067138672,
-          "priorDate": "2026-10-06"
+          "prior": 141.83999633789062,
+          "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 14.639999389648438,
+          "delta": 20.979995727539062,
           "dir": "up",
           "score": -1.5,
-          "prior": 134.72999572753906,
-          "priorDate": "2026-08-06"
+          "prior": 132.57000732421875,
+          "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 13.259994506835938,
+          "delta": 15.339996337890625,
           "dir": "up",
           "score": -1.5,
-          "prior": 136.11000061035156,
-          "priorDate": "2026-05-07"
+          "prior": 138.2100067138672,
+          "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
@@ -8707,7 +8707,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SI=F",
-      "latest": 51.900001525878906,
+      "latest": 51.803001403808594,
       "asOf": "2026-11-06",
       "n": 6574,
       "anchor": {
@@ -8718,35 +8718,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 2.8030014038085938,
+          "delta": 2.7060012817382812,
           "dir": "up",
           "score": 1.5,
           "prior": 49.09700012207031,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -1.8109970092773438,
+          "delta": -1.9079971313476562,
           "dir": "down",
           "score": -1.5,
           "prior": 53.71099853515625,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -7.998996734619141,
+          "delta": -8.095996856689453,
           "dir": "down",
           "score": -1.5,
           "prior": 59.89899826049805,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -11.431999206542969,
+          "delta": -11.528999328613281,
           "dir": "down",
           "score": -1.5,
           "prior": 63.332000732421875,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -28.4949951171875,
+          "delta": -28.591995239257812,
           "dir": "down",
           "score": -1.5,
           "prior": 80.3949966430664,
@@ -8754,7 +8754,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "TLT": {
       "id": "TLT",
@@ -8776,7 +8776,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TLT",
-      "latest": 81.98989868164062,
+      "latest": 81.91999816894531,
       "asOf": "2026-11-06",
       "n": 6109,
       "anchor": {
@@ -8787,43 +8787,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.14990234375,
+          "delta": 0.0800018310546875,
           "dir": "flat",
-          "score": 0.11426891159792231,
+          "score": 0.061036554598135236,
           "prior": 81.83999633789062,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.64990234375,
+          "delta": 0.5800018310546875,
           "dir": "up",
-          "score": 0.49541342454994985,
+          "score": 0.4425062896871483,
           "prior": 81.33999633789062,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 4.839897155761719,
+          "delta": 4.769996643066406,
           "dir": "up",
           "score": 1.5,
           "prior": 77.1500015258789,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.45418548583984375,
-          "dir": "down",
-          "score": -0.3462206115806145,
-          "prior": 82.44408416748047,
+          "delta": -0.1933746337890625,
+          "dir": "flat",
+          "score": -0.14753314064889717,
+          "prior": 82.11337280273438,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2.769805908203125,
+          "delta": -2.4997024536132812,
           "dir": "down",
           "score": -1.5,
-          "prior": 84.75970458984375,
+          "prior": 84.4197006225586,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EWZ": {
       "id": "EWZ",
@@ -8845,7 +8845,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWZ",
-      "latest": 32.01499938964844,
+      "latest": 31.979999542236328,
       "asOf": "2026-11-06",
       "n": 6619,
       "anchor": {
@@ -8856,35 +8856,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.44499969482421875,
+          "delta": -0.4799995422363281,
           "dir": "down",
-          "score": -0.8687328270106546,
+          "score": -0.9380854227389599,
           "prior": 32.459999084472656,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -10.575000762939453,
+          "delta": -10.610000610351562,
           "dir": "down",
           "score": -1.5,
           "prior": 42.59000015258789,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -10.354999542236328,
+          "delta": -10.389999389648438,
           "dir": "down",
           "score": -1.5,
           "prior": 42.369998931884766,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -3.325000762939453,
+          "delta": -3.3600006103515625,
           "dir": "down",
           "score": -1.5,
           "prior": 35.34000015258789,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -6.736091613769531,
+          "delta": -6.771091461181641,
           "dir": "down",
           "score": -1.5,
           "prior": 38.75109100341797,
@@ -8892,7 +8892,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EFA": {
       "id": "EFA",
@@ -8914,7 +8914,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EFA",
-      "latest": 101.88500213623047,
+      "latest": 101.88999938964844,
       "asOf": "2026-11-06",
       "n": 6337,
       "anchor": {
@@ -8925,43 +8925,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.4850006103515625,
+          "delta": -1.4800033569335938,
           "dir": "down",
-          "score": -0.9109538813462749,
+          "score": -0.9078438547693938,
           "prior": 103.37000274658203,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.7449951171875,
+          "delta": -0.7399978637695312,
           "dir": "down",
-          "score": -0.4570073499332161,
+          "score": -0.453919587424146,
           "prior": 102.62999725341797,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -1.214996337890625,
+          "delta": -1.2099990844726562,
           "dir": "down",
-          "score": -0.7453233501102381,
+          "score": -0.742221446977692,
           "prior": 103.0999984741211,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -6.665000915527344,
+          "delta": -6.660003662109375,
           "dir": "down",
           "score": -1.5,
           "prior": 108.55000305175781,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.45551300048828125,
+          "delta": -0.4505157470703125,
           "dir": "down",
-          "score": -0.27942839410702386,
+          "score": -0.276349341059621,
           "prior": 102.34051513671875,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "FEZ": {
       "id": "FEZ",
@@ -8983,7 +8983,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/FEZ",
-      "latest": 65.0250015258789,
+      "latest": 65.02999877929688,
       "asOf": "2026-11-06",
       "n": 6051,
       "anchor": {
@@ -8994,43 +8994,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.00499725341796875,
+          "delta": 0,
           "dir": "flat",
-          "score": -0.0048032038645742315,
+          "score": 0,
           "prior": 65.02999877929688,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.46500396728515625,
+          "delta": 0.470001220703125,
           "dir": "up",
-          "score": 0.44694728601822115,
+          "score": 0.4517157749555,
           "prior": 64.55999755859375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.7750015258789062,
+          "delta": -0.7700042724609375,
           "dir": "down",
-          "score": -0.7449072546065878,
+          "score": -0.7400471771826309,
           "prior": 65.80000305175781,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -6.718009948730469,
+          "delta": -6.7130126953125,
           "dir": "down",
           "score": -1.5,
           "prior": 71.74301147460938,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.8828201293945312,
+          "delta": -0.8778305053710938,
           "dir": "down",
-          "score": -0.8485391279106536,
-          "prior": 65.90782165527344,
+          "score": -0.8436784194306356,
+          "prior": 65.90782928466797,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EWJ": {
       "id": "EWJ",
@@ -9052,7 +9052,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWJ",
-      "latest": 88.3499984741211,
+      "latest": 88.26000213623047,
       "asOf": "2026-11-06",
       "n": 7711,
       "anchor": {
@@ -9063,35 +9063,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -4.560005187988281,
+          "delta": -4.650001525878906,
           "dir": "down",
           "score": -1.5,
           "prior": 92.91000366210938,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -5.75,
+          "delta": -5.839996337890625,
           "dir": "down",
           "score": -1.5,
           "prior": 94.0999984741211,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -9.970001220703125,
+          "delta": -10.05999755859375,
           "dir": "down",
           "score": -1.5,
           "prior": 98.31999969482422,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -8.550003051757812,
+          "delta": -8.639999389648438,
           "dir": "down",
           "score": -1.5,
           "prior": 96.9000015258789,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -3.3716506958007812,
+          "delta": -3.4616470336914062,
           "dir": "down",
           "score": -1.5,
           "prior": 91.72164916992188,
@@ -9099,7 +9099,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EEM": {
       "id": "EEM",
@@ -9121,7 +9121,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EEM",
-      "latest": 59.31999969482422,
+      "latest": 59.33000183105469,
       "asOf": "2026-11-06",
       "n": 5931,
       "anchor": {
@@ -9132,35 +9132,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -1.720001220703125,
+          "delta": -1.7099990844726562,
           "dir": "down",
           "score": -1.5,
           "prior": 61.040000915527344,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -2.6899986267089844,
+          "delta": -2.6799964904785156,
           "dir": "down",
           "score": -1.5,
           "prior": 62.0099983215332,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -8.050003051757812,
+          "delta": -8.040000915527344,
           "dir": "down",
           "score": -1.5,
           "prior": 67.37000274658203,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -6.319999694824219,
+          "delta": -6.30999755859375,
           "dir": "down",
           "score": -1.5,
           "prior": 65.63999938964844,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -8.268692016601562,
+          "delta": -8.258689880371094,
           "dir": "down",
           "score": -1.5,
           "prior": 67.58869171142578,
@@ -9168,7 +9168,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "FXI": {
       "id": "FXI",
@@ -9190,7 +9190,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/FXI",
-      "latest": 34.900001525878906,
+      "latest": 34.95000076293945,
       "asOf": "2026-11-06",
       "n": 5556,
       "anchor": {
@@ -9201,35 +9201,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 1.8199996948242188,
+          "delta": 1.8699989318847656,
           "dir": "up",
           "score": 1.5,
           "prior": 33.08000183105469,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 2.5900001525878906,
+          "delta": 2.6399993896484375,
           "dir": "up",
           "score": 1.5,
           "prior": 32.310001373291016,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 1.4800033569335938,
+          "delta": 1.5300025939941406,
           "dir": "up",
           "score": 1.5,
           "prior": 33.41999816894531,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -1.2699966430664062,
+          "delta": -1.2199974060058594,
           "dir": "down",
           "score": -1.5,
           "prior": 36.16999816894531,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2.0624656677246094,
+          "delta": -2.0124664306640625,
           "dir": "down",
           "score": -1.5,
           "prior": 36.962467193603516,
@@ -9237,7 +9237,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "JNK": {
       "id": "JNK",
@@ -9259,7 +9259,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/JNK",
-      "latest": 92.72010040283203,
+      "latest": 92.69999694824219,
       "asOf": "2026-11-06",
       "n": 4762,
       "anchor": {
@@ -9270,43 +9270,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.2599029541015625,
+          "delta": -0.28000640869140625,
           "dir": "flat",
-          "score": -0.17519323815196713,
+          "score": -0.18878534109320422,
           "prior": 92.9800033569336,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.200103759765625,
+          "delta": 0.18000030517578125,
           "dir": "flat",
-          "score": 0.13488429079580208,
+          "score": 0.12135943305119662,
           "prior": 92.5199966430664,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.0399017333984375,
+          "delta": -0.06000518798828125,
           "dir": "flat",
-          "score": -0.026896631114154527,
+          "score": -0.04045657360012128,
           "prior": 92.76000213623047,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -2.5592803955078125,
+          "delta": -2.033905029296875,
           "dir": "down",
-          "score": -1.5,
-          "prior": 95.27938079833984,
+          "score": -1.3712952374963931,
+          "prior": 94.73390197753906,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.6976318359375,
+          "delta": -1.1771926879882812,
           "dir": "down",
-          "score": -1.1443256563045416,
-          "prior": 94.41773223876953,
+          "score": -0.7936844166278338,
+          "prior": 93.87718963623047,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "IEF": {
       "id": "IEF",
@@ -9328,7 +9328,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/IEF",
-      "latest": 91.88500213623047,
+      "latest": 91.86000061035156,
       "asOf": "2026-11-06",
       "n": 6109,
       "anchor": {
@@ -9339,43 +9339,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.125,
+          "delta": 0.09999847412109375,
           "dir": "flat",
-          "score": 0.08502475723314494,
+          "score": 0.06803728054693772,
           "prior": 91.76000213623047,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.8349990844726562,
+          "delta": 0.80999755859375,
           "dir": "up",
-          "score": 0.567964755577487,
+          "score": 0.5511087206154943,
           "prior": 91.05000305175781,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 2.7750015258789062,
+          "delta": 2.75,
           "dir": "up",
           "score": 1.5,
           "prior": 89.11000061035156,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.9514541625976562,
+          "delta": -0.9764556884765625,
           "dir": "down",
-          "score": -0.6471772735466476,
+          "score": -0.6643640335759801,
           "prior": 92.83645629882812,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.7864532470703125,
+          "delta": -1.81146240234375,
           "dir": "down",
-          "score": -1.2151420291241346,
-          "prior": 93.67145538330078,
+          "score": -1.2324885629679192,
+          "prior": 93.67146301269531,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "SHY": {
       "id": "SHY",
@@ -9397,7 +9397,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SHY",
-      "latest": 81.61499786376953,
+      "latest": 81.62999725341797,
       "asOf": "2026-11-06",
       "n": 6109,
       "anchor": {
@@ -9408,43 +9408,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.08499908447265625,
+          "delta": -0.06999969482421875,
           "dir": "flat",
-          "score": -0.06509150179000753,
+          "score": -0.053595259998988724,
           "prior": 81.69999694824219,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.11499786376953125,
+          "delta": 0.12999725341796875,
           "dir": "flat",
-          "score": 0.08806428565485895,
+          "score": 0.09953238529948434,
           "prior": 81.5,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 0.45499420166015625,
+          "delta": 0.46999359130859375,
           "dir": "up",
-          "score": 0.3484302928148891,
+          "score": 0.35985055059593485,
           "prior": 81.16000366210938,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.06090545654296875,
+          "delta": 0.196502685546875,
           "dir": "flat",
-          "score": -0.046640827465185365,
-          "prior": 81.6759033203125,
+          "score": 0.15045226338244724,
+          "prior": 81.4334945678711,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 0.289337158203125,
-          "dir": "flat",
-          "score": 0.2215716824238619,
-          "prior": 81.3256607055664,
+          "delta": 0.54571533203125,
+          "dir": "up",
+          "score": 0.41782689451854665,
+          "prior": 81.08428192138672,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "TIP": {
       "id": "TIP",
@@ -9466,7 +9466,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TIP",
-      "latest": 106.30999755859375,
+      "latest": 106.2699966430664,
       "asOf": "2026-11-06",
       "n": 5767,
       "anchor": {
@@ -9477,43 +9477,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.3800048828125,
+          "delta": -0.42000579833984375,
           "dir": "flat",
-          "score": -0.22340613038478385,
+          "score": -0.2470157450405165,
           "prior": 106.69000244140625,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.06999969482421875,
+          "delta": 0.029998779296875,
           "dir": "flat",
-          "score": 0.041153052647775294,
+          "score": 0.017643020281181282,
           "prior": 106.23999786376953,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 2.0699996948242188,
+          "delta": 2.029998779296875,
           "dir": "up",
-          "score": 1.2169596829800267,
+          "score": 1.1938922340629683,
           "prior": 104.23999786376953,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.7700042724609375,
+          "delta": -0.8100051879882812,
           "dir": "down",
-          "score": -0.4526880644718659,
+          "score": -0.47638398276519217,
           "prior": 107.08000183105469,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.9507675170898438,
+          "delta": -1.9907684326171875,
           "dir": "down",
-          "score": -1.1468626904155108,
+          "score": -1.1708199018437835,
           "prior": 108.2607650756836,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "PLAT": {
       "id": "PLAT",
@@ -9535,7 +9535,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/PL=F",
-      "latest": 1532.800048828125,
+      "latest": 1538.199951171875,
       "asOf": "2026-11-06",
       "n": 6600,
       "anchor": {
@@ -9546,35 +9546,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 94.800048828125,
+          "delta": 100.199951171875,
           "dir": "up",
           "score": 1.5,
           "prior": 1438,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -21.39990234375,
+          "delta": -16,
           "dir": "down",
-          "score": -0.8725821071749914,
+          "score": -0.6501105394250933,
           "prior": 1554.199951171875,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -100.39990234375,
+          "delta": -95,
           "dir": "down",
           "score": -1.5,
           "prior": 1633.199951171875,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -217.2999267578125,
+          "delta": -211.9000244140625,
           "dir": "down",
           "score": -1.5,
           "prior": 1750.0999755859375,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -514.39990234375,
+          "delta": -509,
           "dir": "down",
           "score": -1.5,
           "prior": 2047.199951171875,
@@ -9582,7 +9582,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "NATGAS": {
       "id": "NATGAS",
@@ -9604,7 +9604,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/NG=F",
-      "latest": 2.992000102996826,
+      "latest": 2.997999906539917,
       "asOf": "2026-11-06",
       "n": 6578,
       "anchor": {
@@ -9615,35 +9615,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.09400010108947754,
+          "delta": 0.09999990463256836,
           "dir": "up",
-          "score": 1.1750012636184692,
+          "score": 1.2499988079071045,
           "prior": 2.8980000019073486,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.35199999809265137,
+          "delta": 0.3579998016357422,
           "dir": "up",
           "score": 1.5,
           "prior": 2.640000104904175,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.2109999656677246,
+          "delta": -0.2050001621246338,
           "dir": "down",
           "score": -1.5,
           "prior": 3.203000068664551,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 0.3300001621246338,
+          "delta": 0.3359999656677246,
           "dir": "up",
           "score": 1.5,
           "prior": 2.6619999408721924,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 0.2350001335144043,
+          "delta": 0.24099993705749512,
           "dir": "up",
           "score": 1.5,
           "prior": 2.756999969482422,
@@ -9651,7 +9651,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "ETH": {
       "id": "ETH",
@@ -9673,9 +9673,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ETH-USD",
-      "latest": 2230.320068359375,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 2235.9599609375,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -9684,39 +9684,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -10.734375,
+          "delta": -16.787841796875,
           "dir": "down",
-          "score": -0.30080814274944556,
-          "prior": 2241.054443359375,
-          "priorDate": "2026-10-30"
+          "score": -0.46925711132356723,
+          "prior": 2252.747802734375,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -153.75732421875,
+          "delta": -119.99365234375,
           "dir": "down",
           "score": -1.5,
-          "prior": 2384.077392578125,
-          "priorDate": "2026-10-23"
+          "prior": 2355.95361328125,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -343.207275390625,
+          "delta": -235.95263671875,
           "dir": "down",
           "score": -1.5,
-          "prior": 2573.52734375,
-          "priorDate": "2026-10-07"
+          "prior": 2471.91259765625,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 317.0406494140625,
+          "delta": 320.427001953125,
           "dir": "up",
           "score": 1.5,
-          "prior": 1913.2794189453125,
-          "priorDate": "2026-08-07"
+          "prior": 1915.532958984375,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -76.652099609375,
+          "delta": -90.767333984375,
           "dir": "down",
           "score": -1.5,
-          "prior": 2306.97216796875,
-          "priorDate": "2026-05-08"
+          "prior": 2326.727294921875,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -9742,7 +9742,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/%5EDJI",
-      "latest": 51430.640625,
+      "latest": 51285.73046875,
       "asOf": "2026-11-06",
       "n": 8775,
       "anchor": {
@@ -9753,35 +9753,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -339.66796875,
+          "delta": -484.578125,
           "dir": "down",
-          "score": -0.41277432652774776,
+          "score": -0.590537222258232,
           "prior": 51770.30859375,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -784.51953125,
+          "delta": -929.4296875,
           "dir": "down",
-          "score": -0.9533707942827127,
+          "score": -1.1326611698383755,
           "prior": 52215.16015625,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 250.76953125,
-          "dir": "up",
-          "score": 0.3047423775527781,
+          "delta": 105.859375,
+          "dir": "flat",
+          "score": 0.12900685779510276,
           "prior": 51179.87109375,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -2606.2890625,
+          "delta": -2751.19921875,
           "dir": "down",
           "score": -1.5,
           "prior": 54036.9296875,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 1821.48046875,
+          "delta": 1676.5703125,
           "dir": "up",
           "score": 1.5,
           "prior": 49609.16015625,
@@ -9789,7 +9789,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EWY": {
       "id": "EWY",
@@ -9811,7 +9811,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EWY",
-      "latest": 136.81500244140625,
+      "latest": 137.00999450683594,
       "asOf": "2026-11-06",
       "n": 6662,
       "anchor": {
@@ -9822,35 +9822,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -16.074996948242188,
+          "delta": -15.8800048828125,
           "dir": "down",
           "score": -1.5,
           "prior": 152.88999938964844,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -14.444992065429688,
+          "delta": -14.25,
           "dir": "down",
           "score": -1.5,
           "prior": 151.25999450683594,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -46.875,
+          "delta": -46.68000793457031,
           "dir": "down",
           "score": -1.5,
           "prior": 183.69000244140625,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -29.274993896484375,
+          "delta": -29.080001831054688,
           "dir": "down",
           "score": -1.5,
           "prior": 166.08999633789062,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -53.38499450683594,
+          "delta": -53.19000244140625,
           "dir": "down",
           "score": -1.5,
           "prior": 190.1999969482422,
@@ -9858,7 +9858,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "INDA": {
       "id": "INDA",
@@ -9880,7 +9880,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/INDA",
-      "latest": 50.915000915527344,
+      "latest": 50.88999938964844,
       "asOf": "2026-11-06",
       "n": 3712,
       "anchor": {
@@ -9891,43 +9891,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 3.1949996948242188,
+          "delta": 3.1699981689453125,
           "dir": "up",
           "score": 1.5,
           "prior": 47.720001220703125,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 4.4550018310546875,
+          "delta": 4.430000305175781,
           "dir": "up",
           "score": 1.5,
           "prior": 46.459999084472656,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 4.805000305175781,
+          "delta": 4.779998779296875,
           "dir": "up",
           "score": 1.5,
           "prior": 46.11000061035156,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 0.5450019836425781,
+          "delta": 0.5200004577636719,
           "dir": "up",
-          "score": 0.6690095917738301,
+          "score": 0.6386329141289072,
           "prior": 50.369998931884766,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 1.0750007629394531,
+          "delta": 1.0499992370605469,
           "dir": "up",
-          "score": 1.3196022090854151,
+          "score": 1.2895451582503454,
           "prior": 49.84000015258789,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "EMB": {
       "id": "EMB",
@@ -9949,7 +9949,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/EMB",
-      "latest": 92.09989929199219,
+      "latest": 91.95999908447266,
       "asOf": "2026-11-06",
       "n": 4751,
       "anchor": {
@@ -9960,43 +9960,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.049896240234375,
+          "delta": -0.09000396728515625,
           "dir": "flat",
-          "score": 0.03386013490374775,
+          "score": -0.061170596034423874,
           "prior": 92.05000305175781,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.44989776611328125,
-          "dir": "up",
-          "score": 0.30530554971545887,
+          "delta": 0.30999755859375,
+          "dir": "flat",
+          "score": 0.2106877729991278,
           "prior": 91.6500015258789,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 1.3199005126953125,
+          "delta": 1.1800003051757812,
           "dir": "up",
-          "score": 0.8956989386266312,
+          "score": 0.8019793367520699,
           "prior": 90.77999877929688,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -2.7240447998046875,
+          "delta": -2.4004745483398438,
           "dir": "down",
           "score": -1.5,
-          "prior": 94.82394409179688,
+          "prior": 94.3604736328125,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -2.41546630859375,
+          "delta": -2.0934066772460938,
           "dir": "down",
-          "score": -1.5,
-          "prior": 94.51536560058594,
+          "score": -1.4227698850637842,
+          "prior": 94.05340576171875,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "AGG": {
       "id": "AGG",
@@ -10018,7 +10018,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/AGG",
-      "latest": 96.52999877929688,
+      "latest": 96.55000305175781,
       "asOf": "2026-11-06",
       "n": 5815,
       "anchor": {
@@ -10029,43 +10029,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.1699981689453125,
+          "delta": 0.19000244140625,
           "dir": "flat",
-          "score": 0.11006822431827054,
+          "score": 0.12299484425209889,
           "prior": 96.36000061035156,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": 0.5699996948242188,
+          "delta": 0.5900039672851562,
           "dir": "up",
-          "score": 0.3690560590181452,
+          "score": 0.38192901905507404,
           "prior": 95.95999908447266,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 2.220001220703125,
+          "delta": 2.2400054931640625,
           "dir": "up",
-          "score": 1.4373777897913276,
+          "score": 1.4500294033932195,
           "prior": 94.30999755859375,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.7323379516601562,
-          "dir": "down",
-          "score": -0.47416474212756804,
-          "prior": 97.26233673095703,
+          "delta": -0.36872100830078125,
+          "dir": "flat",
+          "score": -0.2386852645301834,
+          "prior": 96.9187240600586,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -1.306396484375,
+          "delta": -0.9407424926757812,
           "dir": "down",
-          "score": -0.8458487652125528,
-          "prior": 97.83639526367188,
+          "score": -0.6089736295577037,
+          "prior": 97.4907455444336,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "PALL": {
       "id": "PALL",
@@ -10087,7 +10087,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/PA=F",
-      "latest": 1019,
+      "latest": 1014.0999755859375,
       "asOf": "2026-11-06",
       "n": 6611,
       "anchor": {
@@ -10098,35 +10098,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": 34.4000244140625,
+          "delta": 29.5,
           "dir": "up",
           "score": 1.5,
           "prior": 984.5999755859375,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -27.5999755859375,
+          "delta": -32.5,
           "dir": "down",
           "score": -1.5,
           "prior": 1046.5999755859375,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -97.0999755859375,
+          "delta": -102,
           "dir": "down",
           "score": -1.5,
           "prior": 1116.0999755859375,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -355.0999755859375,
+          "delta": -360,
           "dir": "down",
           "score": -1.5,
           "prior": 1374.0999755859375,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -463.5999755859375,
+          "delta": -468.5,
           "dir": "down",
           "score": -1.5,
           "prior": 1482.5999755859375,
@@ -10134,7 +10134,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "GASOLINE": {
       "id": "GASOLINE",
@@ -10156,7 +10156,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/RB=F",
-      "latest": 2.782099962234497,
+      "latest": 2.776700019836426,
       "asOf": "2026-11-06",
       "n": 6536,
       "anchor": {
@@ -10167,35 +10167,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.529900074005127,
+          "delta": -0.5353000164031982,
           "dir": "down",
           "score": -1.5,
           "prior": 3.312000036239624,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.42950010299682617,
+          "delta": -0.43490004539489746,
           "dir": "down",
           "score": -1.5,
           "prior": 3.2116000652313232,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.4521000385284424,
+          "delta": -0.45749998092651367,
           "dir": "down",
           "score": -1.5,
           "prior": 3.2342000007629395,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.203200101852417,
+          "delta": -0.20860004425048828,
           "dir": "down",
           "score": -1.5,
           "prior": 2.985300064086914,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.7446000576019287,
+          "delta": -0.75,
           "dir": "down",
           "score": -1.5,
           "prior": 3.526700019836426,
@@ -10203,7 +10203,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "HEATOIL": {
       "id": "HEATOIL",
@@ -10225,7 +10225,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HO=F",
-      "latest": 4.3495001792907715,
+      "latest": 4.331699848175049,
       "asOf": "2026-11-06",
       "n": 6575,
       "anchor": {
@@ -10236,35 +10236,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.44099998474121094,
+          "delta": -0.4588003158569336,
           "dir": "down",
           "score": -1.5,
           "prior": 4.790500164031982,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.634699821472168,
+          "delta": -0.6525001525878906,
           "dir": "down",
           "score": -1.5,
           "prior": 4.9842000007629395,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.27320003509521484,
+          "delta": -0.2910003662109375,
           "dir": "down",
           "score": -1.5,
           "prior": 4.622700214385986,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 0.4471001625061035,
+          "delta": 0.42929983139038086,
           "dir": "up",
           "score": 1.5,
           "prior": 3.902400016784668,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 0.45040011405944824,
+          "delta": 0.4325997829437256,
           "dir": "up",
           "score": 1.5,
           "prior": 3.8991000652313232,
@@ -10272,7 +10272,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "TTF": {
       "id": "TTF",
@@ -10294,7 +10294,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TTF=F",
-      "latest": 85.9800033569336,
+      "latest": 85.58799743652344,
       "asOf": "2026-11-06",
       "n": 2275,
       "anchor": {
@@ -10305,35 +10305,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -17.96399688720703,
+          "delta": -18.356002807617188,
           "dir": "down",
           "score": -1.5,
           "prior": 103.94400024414062,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -7.872993469238281,
+          "delta": -8.264999389648438,
           "dir": "down",
           "score": -1.5,
           "prior": 93.85299682617188,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": 7.900001525878906,
+          "delta": 7.50799560546875,
           "dir": "up",
           "score": 1.5,
           "prior": 78.08000183105469,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 30.436004638671875,
+          "delta": 30.04399871826172,
           "dir": "up",
           "score": 1.5,
           "prior": 55.54399871826172,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 41.83700180053711,
+          "delta": 41.44499588012695,
           "dir": "up",
           "score": 1.5,
           "prior": 44.143001556396484,
@@ -10341,7 +10341,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "CORN": {
       "id": "CORN",
@@ -10363,7 +10363,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZC=F",
-      "latest": 442.25,
+      "latest": 441.5,
       "asOf": "2026-11-06",
       "n": 6584,
       "anchor": {
@@ -10374,35 +10374,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -5.5,
+          "delta": -6.25,
           "dir": "down",
-          "score": -0.7772752967778406,
+          "score": -0.8847678369195923,
           "prior": 447.75,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -13.75,
+          "delta": -14.5,
           "dir": "down",
           "score": -1.5,
           "prior": 456,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -59.75,
+          "delta": -60.5,
           "dir": "down",
           "score": -1.5,
           "prior": 502,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 3.25,
+          "delta": 2.5,
           "dir": "up",
-          "score": 0.45929903900508756,
+          "score": 0.3539071347678369,
           "prior": 439,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -14,
+          "delta": -14.75,
           "dir": "down",
           "score": -1.5,
           "prior": 456.25,
@@ -10410,7 +10410,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "WHEAT": {
       "id": "WHEAT",
@@ -10432,7 +10432,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZW=F",
-      "latest": 590.5,
+      "latest": 591.25,
       "asOf": "2026-11-06",
       "n": 6596,
       "anchor": {
@@ -10443,35 +10443,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -13,
+          "delta": -12.25,
           "dir": "down",
-          "score": -1.3759525825571548,
+          "score": -1.2949260042283297,
           "prior": 603.5,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -34.5,
+          "delta": -33.75,
           "dir": "down",
           "score": -1.5,
           "prior": 625,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -96,
+          "delta": -95.25,
           "dir": "down",
           "score": -1.5,
           "prior": 686.5,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -49.25,
+          "delta": -48.5,
           "dir": "down",
           "score": -1.5,
           "prior": 639.75,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -17,
+          "delta": -16.25,
           "dir": "down",
           "score": -1.5,
           "prior": 607.5,
@@ -10479,7 +10479,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "SOY": {
       "id": "SOY",
@@ -10501,7 +10501,7 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZS=F",
-      "latest": 1194.5,
+      "latest": 1189,
       "asOf": "2026-11-06",
       "n": 6576,
       "anchor": {
@@ -10512,43 +10512,43 @@
       },
       "impulse": {
         "1w": {
-          "delta": -27.75,
+          "delta": -33.25,
           "dir": "down",
-          "score": -1.4519673503557973,
+          "score": -1.5,
           "prior": 1222.25,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -62,
+          "delta": -67.5,
           "dir": "down",
           "score": -1.5,
           "prior": 1256.5,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -103,
+          "delta": -108.5,
           "dir": "down",
           "score": -1.5,
           "prior": 1297.5,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": 38,
+          "delta": 32.5,
           "dir": "up",
           "score": 1.5,
           "prior": 1156.5,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": 0.25,
-          "dir": "flat",
-          "score": 0.013080786940142317,
+          "delta": -5.25,
+          "dir": "down",
+          "score": -0.2759671993271657,
           "prior": 1194.25,
           "priorDate": "2026-05-08"
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "BNB": {
       "id": "BNB",
@@ -10570,9 +10570,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BNB-USD",
-      "latest": 693.02001953125,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 695.6699829101562,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10581,39 +10581,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -10.3341064453125,
+          "delta": -6.943359375,
           "dir": "down",
-          "score": -0.9319812337728677,
-          "prior": 703.3541259765625,
-          "priorDate": "2026-10-30"
+          "score": -0.6238014742595911,
+          "prior": 702.6133422851562,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -45.81744384765625,
+          "delta": -43.02978515625,
           "dir": "down",
           "score": -1.5,
-          "prior": 738.8374633789062,
-          "priorDate": "2026-10-23"
+          "prior": 738.6997680664062,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -79.28125,
+          "delta": -39.4609375,
           "dir": "down",
           "score": -1.5,
-          "prior": 772.30126953125,
-          "priorDate": "2026-10-07"
+          "prior": 735.1309204101562,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 100.8228759765625,
+          "delta": 95.2479248046875,
           "dir": "up",
           "score": 1.5,
-          "prior": 592.1971435546875,
-          "priorDate": "2026-08-07"
+          "prior": 600.4220581054688,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": 44.01068115234375,
+          "delta": 45.9326171875,
           "dir": "up",
           "score": 1.5,
-          "prior": 649.0093383789062,
-          "priorDate": "2026-05-08"
+          "prior": 649.7373657226562,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10639,9 +10639,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XRP-USD",
-      "latest": 1.1811000108718872,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 1.1607999801635742,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10650,39 +10650,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.07330894470214844,
+          "delta": -0.08931398391723633,
           "dir": "down",
-          "score": -0.9163618087768555,
-          "prior": 1.2544089555740356,
-          "priorDate": "2026-10-30"
+          "score": -1.116424798965454,
+          "prior": 1.2501139640808105,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.11284303665161133,
+          "delta": -0.13767504692077637,
           "dir": "down",
-          "score": -1.4105379581451416,
-          "prior": 1.2939430475234985,
-          "priorDate": "2026-10-23"
+          "score": -1.5,
+          "prior": 1.2984750270843506,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.24015796184539795,
+          "delta": -0.21820104122161865,
           "dir": "down",
           "score": -1.5,
-          "prior": 1.4212579727172852,
-          "priorDate": "2026-10-07"
+          "prior": 1.3790010213851929,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 0.15986299514770508,
+          "delta": 0.12218594551086426,
           "dir": "up",
           "score": 1.5,
-          "prior": 1.0212370157241821,
-          "priorDate": "2026-08-07"
+          "prior": 1.03861403465271,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.23718500137329102,
+          "delta": -0.25930702686309814,
           "dir": "down",
           "score": -1.5,
-          "prior": 1.4182850122451782,
-          "priorDate": "2026-05-08"
+          "prior": 1.4201070070266724,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10708,9 +10708,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/SOL-USD",
-      "latest": 90.22000122070312,
-      "asOf": "2026-11-06",
-      "n": 2402,
+      "latest": 89.80000305175781,
+      "asOf": "2026-11-07",
+      "n": 2403,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10719,39 +10719,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -5.998756408691406,
+          "delta": -5.548210144042969,
           "dir": "down",
           "score": -1.5,
-          "prior": 96.21875762939453,
-          "priorDate": "2026-10-30"
+          "prior": 95.34821319580078,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -12.559860229492188,
+          "delta": -12.471656799316406,
           "dir": "down",
           "score": -1.5,
-          "prior": 102.77986145019531,
-          "priorDate": "2026-10-23"
+          "prior": 102.27165985107422,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -26.002586364746094,
+          "delta": -19.642250061035156,
           "dir": "down",
           "score": -1.5,
-          "prior": 116.22258758544922,
-          "priorDate": "2026-10-07"
+          "prior": 109.44225311279297,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 16.577346801757812,
+          "delta": 13.827766418457031,
           "dir": "up",
           "score": 1.5,
-          "prior": 73.64265441894531,
-          "priorDate": "2026-08-07"
+          "prior": 75.97223663330078,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -1.7298202514648438,
+          "delta": -3.3455123901367188,
           "dir": "down",
-          "score": -1.1983347844573455,
-          "prior": 91.94982147216797,
-          "priorDate": "2026-05-08"
+          "score": -1.5,
+          "prior": 93.14551544189453,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10777,9 +10777,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/TRX-USD",
-      "latest": 0.31839117407798767,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 0.31966742873191833,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10788,39 +10788,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.00929182767868042,
+          "delta": 0.01729944348335266,
           "dir": "flat",
-          "score": -0.11614784598350525,
-          "prior": 0.3276830017566681,
-          "priorDate": "2026-10-30"
+          "score": 0.21624304354190826,
+          "prior": 0.3023679852485657,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.011175811290740967,
+          "delta": -0.00922057032585144,
           "dir": "flat",
-          "score": -0.13969764113426208,
-          "prior": 0.32956698536872864,
-          "priorDate": "2026-10-23"
+          "score": -0.115257129073143,
+          "prior": 0.3288879990577698,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.016791820526123047,
+          "delta": -0.012896567583084106,
           "dir": "flat",
-          "score": -0.20989775657653809,
-          "prior": 0.3351829946041107,
-          "priorDate": "2026-10-07"
+          "score": -0.16120709478855133,
+          "prior": 0.33256399631500244,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.009011834859848022,
+          "delta": -0.009092569351196289,
           "dir": "flat",
-          "score": -0.11264793574810028,
-          "prior": 0.3274030089378357,
-          "priorDate": "2026-08-07"
+          "score": -0.11365711688995361,
+          "prior": 0.3287599980831146,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.03222283720970154,
+          "delta": -0.03048756718635559,
           "dir": "down",
-          "score": -0.4027854651212692,
-          "prior": 0.3506140112876892,
-          "priorDate": "2026-05-08"
+          "score": -0.3810945898294449,
+          "prior": 0.3501549959182739,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10846,9 +10846,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/HYPE32196-USD",
-      "latest": 78.45999908447266,
-      "asOf": "2026-11-06",
-      "n": 707,
+      "latest": 77.72000122070312,
+      "asOf": "2026-11-07",
+      "n": 708,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10857,39 +10857,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -11.620185852050781,
+          "delta": -10.1243896484375,
           "dir": "down",
           "score": -1.5,
-          "prior": 90.08018493652344,
-          "priorDate": "2026-10-30"
+          "prior": 87.84439086914062,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 1.4537887573242188,
+          "delta": 1.11517333984375,
           "dir": "up",
-          "score": 1.1580652356997714,
-          "prior": 77.00621032714844,
-          "priorDate": "2026-10-23"
+          "score": 0.8967876048060079,
+          "prior": 76.60482788085938,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -10.007652282714844,
+          "delta": -6.4265899658203125,
           "dir": "down",
           "score": -1.5,
-          "prior": 88.4676513671875,
-          "priorDate": "2026-10-07"
+          "prior": 84.14659118652344,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 24.346302032470703,
+          "delta": 22.625869750976562,
           "dir": "up",
           "score": 1.5,
-          "prior": 54.11369705200195,
-          "priorDate": "2026-08-07"
+          "prior": 55.09413146972656,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": 35.260345458984375,
+          "delta": 34.779842376708984,
           "dir": "up",
           "score": 1.5,
-          "prior": 43.19965362548828,
-          "priorDate": "2026-05-08"
+          "prior": 42.94015884399414,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10915,9 +10915,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ZEC-USD",
-      "latest": 1344.4200439453125,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 1268.4100341796875,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10926,39 +10926,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 75.7830810546875,
+          "delta": 18.071533203125,
           "dir": "up",
-          "score": 1.5,
-          "prior": 1268.636962890625,
-          "priorDate": "2026-10-30"
+          "score": 0.8904619127566028,
+          "prior": 1250.3385009765625,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 163.170166015625,
+          "delta": 60.8382568359375,
           "dir": "up",
           "score": 1.5,
-          "prior": 1181.2498779296875,
-          "priorDate": "2026-10-23"
+          "prior": 1207.57177734375,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": 17.67529296875,
+          "delta": 82.6402587890625,
           "dir": "up",
-          "score": 0.8216969209303246,
-          "prior": 1326.7447509765625,
-          "priorDate": "2026-10-07"
+          "score": 1.5,
+          "prior": 1185.769775390625,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 832.9507751464844,
+          "delta": 760.6868591308594,
           "dir": "up",
           "score": 1.5,
-          "prior": 511.4692687988281,
-          "priorDate": "2026-08-07"
+          "prior": 507.7231750488281,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": 731.1836547851562,
+          "delta": 673.6320190429688,
           "dir": "up",
           "score": 1.5,
-          "prior": 613.2363891601562,
-          "priorDate": "2026-05-08"
+          "prior": 594.7780151367188,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -10984,9 +10984,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/DOGE-USD",
-      "latest": 0.07281000167131424,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 0.07187999784946442,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -10995,39 +10995,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.003072001039981842,
+          "delta": -0.0036659985780715942,
           "dir": "flat",
-          "score": -0.038400012999773026,
-          "prior": 0.07588200271129608,
-          "priorDate": "2026-10-30"
+          "score": -0.04582498222589493,
+          "prior": 0.07554599642753601,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.005727000534534454,
+          "delta": -0.005715005099773407,
           "dir": "flat",
-          "score": -0.07158750668168068,
-          "prior": 0.0785370022058487,
-          "priorDate": "2026-10-23"
+          "score": -0.07143756374716759,
+          "prior": 0.07759500294923782,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.01616499572992325,
+          "delta": -0.012151002883911133,
           "dir": "flat",
-          "score": -0.2020624466240406,
-          "prior": 0.08897499740123749,
-          "priorDate": "2026-10-07"
+          "score": -0.15188753604888916,
+          "prior": 0.08403100073337555,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 0.0031870007514953613,
+          "delta": 0.001488998532295227,
           "dir": "flat",
-          "score": 0.03983750939369202,
-          "prior": 0.06962300091981888,
-          "priorDate": "2026-08-07"
+          "score": 0.018612481653690338,
+          "prior": 0.07039099931716919,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.036646001040935516,
+          "delta": -0.036837004125118256,
           "dir": "down",
-          "score": -0.45807501301169395,
-          "prior": 0.10945600271224976,
-          "priorDate": "2026-05-08"
+          "score": -0.4604625515639782,
+          "prior": 0.10871700197458267,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11053,9 +11053,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XMR-USD",
-      "latest": 621.0841674804688,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 609.0067749023438,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11064,39 +11064,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 33.84259033203125,
+          "delta": 10.77435302734375,
           "dir": "up",
-          "score": 1.5,
-          "prior": 587.2415771484375,
-          "priorDate": "2026-10-30"
+          "score": 1.1057300049198397,
+          "prior": 598.232421875,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 37.1871337890625,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 583.8970336914062,
-          "priorDate": "2026-10-23"
+          "delta": -6.68505859375,
+          "dir": "down",
+          "score": -0.6860615995222273,
+          "prior": 615.6918334960938,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": 67.55731201171875,
+          "delta": 68.7867431640625,
           "dir": "up",
           "score": 1.5,
-          "prior": 553.52685546875,
-          "priorDate": "2026-10-07"
+          "prior": 540.2200317382812,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 243.18154907226562,
+          "delta": 231.94296264648438,
           "dir": "up",
           "score": 1.5,
-          "prior": 377.9026184082031,
-          "priorDate": "2026-08-07"
+          "prior": 377.0638122558594,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": 220.90625,
+          "delta": 198.81484985351562,
           "dir": "up",
           "score": 1.5,
-          "prior": 400.17791748046875,
-          "priorDate": "2026-05-08"
+          "prior": 410.1919250488281,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11122,9 +11122,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LEO-USD",
-      "latest": 9.308704376220703,
-      "asOf": "2026-11-06",
-      "n": 2727,
+      "latest": 9.330495834350586,
+      "asOf": "2026-11-07",
+      "n": 2728,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11133,39 +11133,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.11284160614013672,
+          "delta": -0.067169189453125,
           "dir": "down",
-          "score": -0.7576350154350774,
-          "prior": 9.42154598236084,
-          "priorDate": "2026-10-30"
+          "score": -0.4499304662207701,
+          "prior": 9.397665023803711,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": 0.2795581817626953,
+          "delta": 0.2950296401977539,
           "dir": "up",
           "score": 1.5,
-          "prior": 9.029146194458008,
-          "priorDate": "2026-10-23"
+          "prior": 9.035466194152832,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": 0.41821765899658203,
+          "delta": 0.4394969940185547,
           "dir": "up",
           "score": 1.5,
-          "prior": 8.890486717224121,
-          "priorDate": "2026-10-07"
+          "prior": 8.890998840332031,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.44426918029785156,
+          "delta": -0.37188053131103516,
           "dir": "down",
           "score": -1.5,
-          "prior": 9.752973556518555,
-          "priorDate": "2026-08-07"
+          "prior": 9.702376365661621,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.9914312362670898,
+          "delta": -0.9572916030883789,
           "dir": "down",
           "score": -1.5,
-          "prior": 10.300135612487793,
-          "priorDate": "2026-05-08"
+          "prior": 10.287787437438965,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11191,9 +11191,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LINK-USD",
-      "latest": 10.829999923706055,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 10.916999816894531,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11202,39 +11202,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.6071386337280273,
+          "delta": -0.7350358963012695,
           "dir": "down",
           "score": -1.5,
-          "prior": 11.437138557434082,
-          "priorDate": "2026-10-30"
+          "prior": 11.6520357131958,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.9842977523803711,
+          "delta": -0.6983394622802734,
           "dir": "down",
           "score": -1.5,
-          "prior": 11.814297676086426,
-          "priorDate": "2026-10-23"
+          "prior": 11.615339279174805,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -2.498969078063965,
+          "delta": -1.7788352966308594,
           "dir": "down",
           "score": -1.5,
-          "prior": 13.32896900177002,
-          "priorDate": "2026-10-07"
+          "prior": 12.69583511352539,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 2.6492271423339844,
+          "delta": 2.616330146789551,
           "dir": "up",
           "score": 1.5,
-          "prior": 8.18077278137207,
-          "priorDate": "2026-08-07"
+          "prior": 8.30066967010498,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": 0.4997901916503906,
+          "delta": 0.5450677871704102,
           "dir": "up",
           "score": 1.5,
-          "prior": 10.330209732055664,
-          "priorDate": "2026-05-08"
+          "prior": 10.371932029724121,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11260,9 +11260,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/ADA-USD",
-      "latest": 0.18630999326705933,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 0.18212999403476715,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11271,39 +11271,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.008795008063316345,
+          "delta": -0.010624006390571594,
           "dir": "flat",
-          "score": -0.10993760079145432,
-          "prior": 0.19510500133037567,
-          "priorDate": "2026-10-30"
+          "score": -0.13280007988214493,
+          "prior": 0.19275400042533875,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.024141013622283936,
+          "delta": -0.025769010186195374,
           "dir": "down",
-          "score": -0.3017626702785492,
-          "prior": 0.21045100688934326,
-          "priorDate": "2026-10-23"
+          "score": -0.32211262732744217,
+          "prior": 0.20789900422096252,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.06910499930381775,
+          "delta": -0.04981499910354614,
           "dir": "down",
-          "score": -0.8638124912977219,
-          "prior": 0.2554149925708771,
-          "priorDate": "2026-10-07"
+          "score": -0.6226874887943268,
+          "prior": 0.2319449931383133,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.014790013432502747,
+          "delta": -0.017085999250411987,
           "dir": "flat",
-          "score": -0.18487516790628433,
-          "prior": 0.20110000669956207,
-          "priorDate": "2026-08-07"
+          "score": -0.21357499063014984,
+          "prior": 0.19921599328517914,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.08695000410079956,
+          "delta": -0.08865900337696075,
           "dir": "down",
-          "score": -1.0868750512599945,
-          "prior": 0.2732599973678589,
-          "priorDate": "2026-05-08"
+          "score": -1.1082375422120094,
+          "prior": 0.2707889974117279,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11329,9 +11329,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/XLM-USD",
-      "latest": 0.15520699322223663,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 0.1516599953174591,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11340,39 +11340,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.015547007322311401,
+          "delta": -0.017792001366615295,
           "dir": "flat",
-          "score": -0.19433759152889252,
-          "prior": 0.17075400054454803,
-          "priorDate": "2026-10-30"
+          "score": -0.2224000170826912,
+          "prior": 0.1694519966840744,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -0.017962008714675903,
+          "delta": -0.01972299814224243,
           "dir": "flat",
-          "score": -0.2245251089334488,
-          "prior": 0.17316900193691254,
-          "priorDate": "2026-10-23"
+          "score": -0.2465374767780304,
+          "prior": 0.17138299345970154,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -0.04509700834751129,
+          "delta": -0.04036100208759308,
           "dir": "down",
-          "score": -0.5637126043438911,
-          "prior": 0.20030400156974792,
-          "priorDate": "2026-10-07"
+          "score": -0.5045125260949135,
+          "prior": 0.19202099740505219,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": -0.006050005555152893,
+          "delta": -0.012758001685142517,
           "dir": "flat",
-          "score": -0.07562506943941116,
-          "prior": 0.16125699877738953,
-          "priorDate": "2026-08-07"
+          "score": -0.15947502106428146,
+          "prior": 0.16441799700260162,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -0.008107006549835205,
+          "delta": -0.010933011770248413,
           "dir": "flat",
-          "score": -0.10133758187294006,
-          "prior": 0.16331399977207184,
-          "priorDate": "2026-05-08"
+          "score": -0.13666264712810516,
+          "prior": 0.16259300708770752,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11398,9 +11398,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/BCH-USD",
-      "latest": 264.8900146484375,
-      "asOf": "2026-11-06",
-      "n": 3285,
+      "latest": 257.8800048828125,
+      "asOf": "2026-11-07",
+      "n": 3286,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11409,39 +11409,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -28.867431640625,
+          "delta": -27.082275390625,
           "dir": "down",
           "score": -1.5,
-          "prior": 293.7574462890625,
-          "priorDate": "2026-10-30"
+          "prior": 284.9622802734375,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -17.23785400390625,
+          "delta": -19.76513671875,
           "dir": "down",
           "score": -1.5,
-          "prior": 282.12786865234375,
-          "priorDate": "2026-10-23"
+          "prior": 277.6451416015625,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -35.267547607421875,
+          "delta": -12.049530029296875,
           "dir": "down",
           "score": -1.5,
-          "prior": 300.1575622558594,
-          "priorDate": "2026-10-07"
+          "prior": 269.9295349121094,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 50.140289306640625,
+          "delta": 41.91297912597656,
           "dir": "up",
           "score": 1.5,
-          "prior": 214.74972534179688,
-          "priorDate": "2026-08-07"
+          "prior": 215.96702575683594,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -185.49130249023438,
+          "delta": -192.047607421875,
           "dir": "down",
           "score": -1.5,
-          "prior": 450.3813171386719,
-          "priorDate": "2026-05-08"
+          "prior": 449.9276123046875,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11467,9 +11467,9 @@
       "freshness": "live",
       "source": "Yahoo Finance",
       "sourceUrl": "https://finance.yahoo.com/quote/LTC-USD",
-      "latest": 52.72700119018555,
-      "asOf": "2026-11-06",
-      "n": 4434,
+      "latest": 52.231998443603516,
+      "asOf": "2026-11-07",
+      "n": 4435,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -11478,39 +11478,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -3.1892433166503906,
+          "delta": -3.467548370361328,
           "dir": "down",
           "score": -1.5,
-          "prior": 55.91624450683594,
-          "priorDate": "2026-10-30"
+          "prior": 55.699546813964844,
+          "priorDate": "2026-10-31"
         },
         "2w": {
-          "delta": -4.447010040283203,
+          "delta": -4.732612609863281,
           "dir": "down",
           "score": -1.5,
-          "prior": 57.17401123046875,
-          "priorDate": "2026-10-23"
+          "prior": 56.9646110534668,
+          "priorDate": "2026-10-24"
         },
         "1m": {
-          "delta": -13.314266204833984,
+          "delta": -10.872203826904297,
           "dir": "down",
           "score": -1.5,
-          "prior": 66.04126739501953,
-          "priorDate": "2026-10-07"
+          "prior": 63.10420227050781,
+          "priorDate": "2026-10-08"
         },
         "3m": {
-          "delta": 7.158916473388672,
+          "delta": 6.2519378662109375,
           "dir": "up",
           "score": 1.5,
-          "prior": 45.568084716796875,
-          "priorDate": "2026-08-07"
+          "prior": 45.98006057739258,
+          "priorDate": "2026-08-08"
         },
         "6m": {
-          "delta": -5.506156921386719,
+          "delta": -5.776905059814453,
           "dir": "down",
           "score": -1.5,
-          "prior": 58.233158111572266,
-          "priorDate": "2026-05-08"
+          "prior": 58.00890350341797,
+          "priorDate": "2026-05-09"
         }
       },
       "status": "ok",
@@ -11654,7 +11654,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 1
+      "staleDays": 2
     },
     "RESERVES_GDP": {
       "id": "RESERVES_GDP",
@@ -11728,7 +11728,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "NETLIQ_GDP": {
       "id": "NETLIQ_GDP",
@@ -11802,7 +11802,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "GLOBAL_CB": {
       "id": "GLOBAL_CB",
@@ -11871,7 +11871,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "GLOBAL_CB_YOY": {
       "id": "GLOBAL_CB_YOY",
@@ -11940,7 +11940,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 2
+      "staleDays": 3
     },
     "DOLLAR_YOY": {
       "id": "DOLLAR_YOY",
@@ -12009,7 +12009,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 7
+      "staleDays": 8
     },
     "G3_10Y": {
       "id": "G3_10Y",
@@ -12078,7 +12078,7 @@
         }
       },
       "status": "ok",
-      "staleDays": 0
+      "staleDays": 1
     },
     "STOCK_BOND_CORR": {
       "id": "STOCK_BOND_CORR",
@@ -12096,7 +12096,7 @@
       "freshness": "live",
       "source": "derived (SPX vs −ΔDGS10, 60d)",
       "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-      "latest": 0.0958152741721528,
+      "latest": -0.00010598060101219597,
       "asOf": "2026-11-06",
       "n": 9220,
       "anchor": {
@@ -12107,35 +12107,35 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.08753144912556973,
+          "delta": -0.18345270389873472,
           "dir": "down",
-          "score": -1.0941431140696216,
+          "score": -1.5,
           "prior": 0.18334672329772253,
           "priorDate": "2026-10-30"
         },
         "2w": {
-          "delta": -0.13967311965500803,
+          "delta": -0.23559437442817302,
           "dir": "down",
           "score": -1.5,
           "prior": 0.23548839382716083,
           "priorDate": "2026-10-23"
         },
         "1m": {
-          "delta": -0.3953944274718106,
+          "delta": -0.49131568224497557,
           "dir": "down",
           "score": -1.5,
           "prior": 0.4912097016439634,
           "priorDate": "2026-10-07"
         },
         "3m": {
-          "delta": -0.4351284452035549,
+          "delta": -0.5310496999767199,
           "dir": "down",
           "score": -1.5,
           "prior": 0.5309437193757077,
           "priorDate": "2026-08-07"
         },
         "6m": {
-          "delta": -0.33436250653061633,
+          "delta": -0.4302837613037813,
           "dir": "down",
           "score": -1.5,
           "prior": 0.43017778070276913,
@@ -12163,9 +12163,9 @@
       "freshness": "live",
       "source": "derived (Δ YoY TOTLL)",
       "sourceUrl": "https://fred.stlouisfed.org/series/TOTLL",
-      "latest": 2.711475853945032,
-      "asOf": "2026-10-21",
-      "n": 1815,
+      "latest": 2.694935843667479,
+      "asOf": "2026-10-28",
+      "n": 1816,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -12174,39 +12174,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": -0.30303820508562485,
-          "dir": "down",
-          "score": -1.5,
-          "prior": 3.014514059030657,
-          "priorDate": "2026-10-14"
+          "delta": -0.016022107333403035,
+          "dir": "flat",
+          "score": -0.20027634166753794,
+          "prior": 2.710957951000882,
+          "priorDate": "2026-10-21"
         },
         "2w": {
-          "delta": -0.12709524148895213,
+          "delta": -0.3192784264989985,
           "dir": "down",
           "score": -1.5,
-          "prior": 2.8385710954339842,
-          "priorDate": "2026-10-07"
+          "prior": 3.0142142701664776,
+          "priorDate": "2026-10-14"
         },
         "1m": {
-          "delta": -0.2169251763450788,
+          "delta": -0.14426137201436795,
           "dir": "down",
           "score": -1.5,
-          "prior": 2.928401030290111,
-          "priorDate": "2026-09-16"
+          "prior": 2.839197215681847,
+          "priorDate": "2026-09-23"
         },
         "3m": {
-          "delta": -0.1430227476272803,
+          "delta": -0.11930302577147334,
           "dir": "down",
-          "score": -1.5,
-          "prior": 2.8544986015723124,
-          "priorDate": "2026-07-22"
+          "score": -1.4912878221434167,
+          "prior": 2.8142388694389524,
+          "priorDate": "2026-07-29"
         },
         "6m": {
-          "delta": -0.8396554977280721,
+          "delta": -0.8036187551186655,
           "dir": "down",
           "score": -1.5,
-          "prior": 3.5511313516731042,
-          "priorDate": "2026-04-22"
+          "prior": 3.4985545987861446,
+          "priorDate": "2026-04-29"
         }
       },
       "status": "ok"
@@ -12362,9 +12362,9 @@
       "freshness": "live",
       "source": "derived (S&P earnings yield − 10y real)",
       "sourceUrl": "https://www.multpl.com/s-p-500-earnings-yield/table/by-month",
-      "latest": 1.35,
-      "asOf": "2026-11-05",
-      "n": 320,
+      "latest": 1.38,
+      "asOf": "2026-11-06",
+      "n": 321,
       "anchor": {
         "kind": "none",
         "score": null,
@@ -12373,39 +12373,39 @@
       },
       "impulse": {
         "1w": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1.17,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 1.3900000000000001,
+          "priorDate": "2026-11-05"
         },
         "2w": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1.17,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 1.3900000000000001,
+          "priorDate": "2026-11-05"
         },
         "1m": {
-          "delta": 0.18000000000000016,
-          "dir": "up",
-          "score": 1.5,
-          "prior": 1.17,
-          "priorDate": "2026-11-04"
+          "delta": -0.010000000000000231,
+          "dir": "flat",
+          "score": -0.1250000000000029,
+          "prior": 1.3900000000000001,
+          "priorDate": "2026-11-05"
         },
         "3m": {
-          "delta": 0.08000000000000007,
+          "delta": 0.08999999999999986,
           "dir": "up",
-          "score": 1.0000000000000009,
-          "prior": 1.27,
-          "priorDate": "2026-10-30"
+          "score": 1.1249999999999982,
+          "prior": 1.29,
+          "priorDate": "2026-11-01"
         },
         "6m": {
-          "delta": 0.1900000000000004,
+          "delta": 0.27,
           "dir": "up",
           "score": 1.5,
-          "prior": 1.1599999999999997,
-          "priorDate": "2026-10-27"
+          "prior": 1.1099999999999999,
+          "priorDate": "2026-10-28"
         }
       },
       "status": "ok",
@@ -12431,54 +12431,54 @@
       "freshness": "live",
       "source": "derived (CFTC gold NC % OI, 156w COT index via FuturesBench)",
       "sourceUrl": "https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm",
-      "latest": 59.681393356953386,
-      "asOf": "2026-10-27",
-      "n": 1785,
+      "latest": 52.10825985080879,
+      "asOf": "2026-11-03",
+      "n": 1786,
       "anchor": {
         "kind": "gold_cot",
-        "score": 0.18485792540103585,
-        "why": "gold speculative positioning 60 (156w index) — 93 is crowded long (p90)",
+        "score": 0.353149781093138,
+        "why": "gold speculative positioning 52 (156w index) — 93 is crowded long (p90)",
         "votes": true
       },
       "impulse": {
         "1w": {
-          "delta": -10.171339740179384,
+          "delta": -7.573133506144593,
+          "dir": "down",
+          "score": 1.5,
+          "prior": 59.681393356953386,
+          "priorDate": "2026-10-27"
+        },
+        "2w": {
+          "delta": -17.744473246323977,
           "dir": "down",
           "score": 1.5,
           "prior": 69.85273309713277,
           "priorDate": "2026-10-20"
         },
-        "2w": {
-          "delta": -20.607178837032926,
-          "dir": "down",
-          "score": 1.5,
-          "prior": 80.28857219398631,
-          "priorDate": "2026-10-13"
-        },
         "1m": {
-          "delta": -33.15148929802228,
+          "delta": -38.490920455232896,
           "dir": "down",
           "score": 1.5,
-          "prior": 92.83288265497566,
-          "priorDate": "2026-09-22"
+          "prior": 90.59918030604169,
+          "priorDate": "2026-09-29"
         },
         "3m": {
-          "delta": -15.303173834469128,
+          "delta": -37.04277832330234,
           "dir": "down",
           "score": 1.5,
-          "prior": 74.98456719142251,
-          "priorDate": "2026-07-28"
+          "prior": 89.15103817411114,
+          "priorDate": "2026-08-04"
         },
         "6m": {
-          "delta": -5.238561809224699,
+          "delta": -15.721052075907764,
           "dir": "down",
           "score": 1.5,
-          "prior": 64.91995516617808,
-          "priorDate": "2026-04-28"
+          "prior": 67.82931192671656,
+          "priorDate": "2026-05-05"
         }
       },
       "status": "ok",
-      "staleDays": 10
+      "staleDays": 4
     }
   },
   "errors": [],
@@ -12500,11 +12500,11 @@
     "DFII10": {
       "median": 1.07,
       "scale": 0.8,
-      "n": 5965,
+      "n": 5966,
       "source": "archive-median",
       "archiveMedian": 1.07,
       "sampleFrom": "2003-01-02",
-      "sampleTo": "2026-11-04"
+      "sampleTo": "2026-11-05"
     },
     "BAMLH0A0HYM2": {
       "median": 3.5,
@@ -12519,29 +12519,29 @@
     "BAA10Y": {
       "median": 2.24,
       "scale": 0.7,
-      "n": 5960,
+      "n": 5961,
       "source": "archive-median",
       "archiveMedian": 2.24,
       "sampleFrom": "2003-01-02",
-      "sampleTo": "2026-11-04"
+      "sampleTo": "2026-11-05"
     },
     "EQUITY_ERP": {
-      "median": 3.555,
+      "median": 3.55,
       "scale": 1.5,
-      "n": 320,
-      "source": "archive-median",
-      "archiveMedian": 3.555,
-      "sampleFrom": "2003-02-01",
-      "sampleTo": "2026-11-05"
-    },
-    "SPX_EY": {
-      "median": 4.38,
-      "scale": 1,
       "n": 321,
       "source": "archive-median",
-      "archiveMedian": 4.38,
+      "archiveMedian": 3.55,
+      "sampleFrom": "2003-02-01",
+      "sampleTo": "2026-11-06"
+    },
+    "SPX_EY": {
+      "median": 4.355,
+      "scale": 1,
+      "n": 322,
+      "source": "archive-median",
+      "archiveMedian": 4.355,
       "sampleFrom": "2003-01-01",
-      "sampleTo": "2026-11-05"
+      "sampleTo": "2026-11-06"
     }
   }
 }
