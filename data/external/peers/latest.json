@@ -1,7 +1,7 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-11-06",
+  "placed": "2026-11-09",
   "houses": [
     {
       "id": "apollo",
@@ -26,41 +26,41 @@
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-11-06",
-      "title": "Chip rout tests AI investment case",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-06112026.html",
+      "date": "2026-11-09",
+      "title": "Using structures to stay invested in stocks while limiting risk of loss",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-09112026.html",
       "liquidity": null,
       "rates": null,
       "growth": null,
       "inflation": null,
-      "risk": "Risk-off",
+      "risk": null,
       "assets": null,
-      "vs": "challenge",
-      "vsClause": "Their Risk is Risk-off; ours is Neutral.",
-      "quote": "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) Vi",
+      "vs": "quiet",
+      "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
+      "quote": "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) CI",
       "quotes": [
-        "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) Video: Allocating Assets | Adding FX carry, hedging oil risks, managing volatility (6 mins) Video: CIO Monthly | Mark Haefele on AI earnings, energy prices, interest rates (4 mins)",
-        "US technology stocks led broader markets lower on Thursday, as the post-election relief rally reversed and investors reassessed the implications of the Democratic gains, especially at the state level, for AI infrastructure and data centers."
+        "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) CIO Live Replay: CIO Asia equity strategists on the AI sell-off and opportunities (30 mins) Circle One Jumpstart: What next for tech volatility, quality bonds, and oil prices?",
+        "Asian stocks started the week on a stronger footing as concerns over artificial intelligence investment and Middle East risks eased."
       ]
     },
     {
       "id": "blackrock",
       "name": "BlackRock Investment Institute",
-      "date": "2026-11-02",
-      "title": "AI's rising bill of expectations",
-      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261102-ais-rising-bill-of-expectations.pdf",
+      "date": "2026-11-09",
+      "title": "Midterms and AI in focus at 2027 Forum",
+      "url": "https://www.blackrock.com/gls-download/literature/market-commentary/weekly-investment-commentary-en-us-20261109-midterms-and-ai-in-focus-at-2027-forum.pdf",
       "liquidity": "Leaning tight",
       "rates": null,
       "growth": null,
       "inflation": null,
       "risk": null,
       "assets": null,
-      "vs": "lean",
-      "vsClause": "Liquidity matches (Leaning tight).",
-      "quote": "Investor scrutiny of AI is intensifying this earnings season.",
+      "vs": "challenge",
+      "vsClause": "Their Liquidity is Leaning tight; ours is Neutral.",
+      "quote": "At our internal 2027 Forum last week, the U.S.",
       "quotes": [
-        "Investor scrutiny of AI is intensifying this earnings season.",
-        "How results hold up will be key to our broader medium-term conviction in the AI transformation."
+        "At our internal 2027 Forum last week, the U.S.",
+        "midterms, AI adoption and competition for capital ran through the debates among our portfolio managers."
       ]
     },
     {
@@ -186,20 +186,20 @@
   ],
   "scorecard": {
     "agrees": [
-      "Liquidity Tightening: BlackRock.",
       "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Strong: Citi, JPMorgan AM.",
       "Inflation Leaning hot: Citi."
     ],
     "challenged": [
+      "Liquidity is Neutral. BlackRock says Leaning tight.",
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Risk is Neutral. UBS says Risk-off; Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Risk is Neutral. Citi says Risk-on; JPMorgan AM says Risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
-      "name": "Citi",
-      "clause": "3 of the five match. The card is still their note, not our score."
+      "name": "Goldman Sachs AM",
+      "clause": "1 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
   },
