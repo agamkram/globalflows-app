@@ -1,7 +1,7 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-11-11",
+  "placed": "2026-11-12",
   "houses": [
     {
       "id": "apollo",
@@ -26,9 +26,9 @@
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-11-11",
-      "title": "Hotter US inflation keeps the Fed on course to hike",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-11112026.html",
+      "date": "2026-11-12",
+      "title": "The risks reshaping global AI investment",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-12112026.html",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -37,10 +37,10 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "Podcast: What next for tech after the sell-off?",
+      "quote": "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) CI",
       "quotes": [
-        "Podcast: What next for tech after the sell-off?",
-        "Plus the US midterms arrive (5 mins) Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) CIO Live Replay: CIO Asia equity strategists on the AI sell-off and opportunities (30 mins)"
+        "Video: The AI sell-off and US midterms: Live at the UBS Disruptive Tech Summit (6 mins) CIO Live Replay: CIO Asia equity strategists on the AI sell-off and opportunities (30 mins)",
+        "NVIDIA’s shares fell more than 8% in after-hours trading on Wednesday, helping to pull Nasdaq futures around 1% lower and putting pressure on technology-heavy markets in Taiwan and South Korea."
       ]
     },
     {
@@ -55,8 +55,8 @@
       "inflation": null,
       "risk": null,
       "assets": null,
-      "vs": "challenge",
-      "vsClause": "Their Liquidity is Leaning tight; ours is Neutral.",
+      "vs": "lean",
+      "vsClause": "Liquidity matches (Leaning tight).",
       "quote": "At our internal 2027 Forum last week, the U.S.",
       "quotes": [
         "At our internal 2027 Forum last week, the U.S.",
@@ -96,7 +96,7 @@
       "risk": "Risk-on",
       "assets": "Equities IN; duration underweight, front end preferred; up in credit quality. NFCI still loose.",
       "vs": "challenge",
-      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral.",
+      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral. They stay with equities, which are out.",
       "quote": "we maintain a risk-on bias and an underweight duration",
       "quotes": [
         "Against this backdrop, we maintain a risk-on bias and an underweight duration as policy rates move higher.",
@@ -176,7 +176,7 @@
       "risk": "Risk-on",
       "assets": null,
       "vs": "challenge",
-      "vsClause": "Growth matches (Leaning strong). Their Risk is Risk-on; ours is Neutral.",
+      "vsClause": "Growth matches (Leaning strong). Their Risk is Risk-on; ours is Neutral. They stay with equities, which are out.",
       "quote": "The global macro environment provides solid support for cyclical assets—our base case scen",
       "quotes": [
         "The global macro environment provides solid support for cyclical assets—our base case scenario envisions resilient growth and robust earnings—even as central banks have shown that they are less willing to be accommodative.",
@@ -186,19 +186,20 @@
   ],
   "scorecard": {
     "agrees": [
+      "Liquidity Leaning tight: BlackRock.",
       "Rates Tight: Goldman Sachs AM, Citi.",
       "Growth Strong: Citi, JPMorgan AM.",
       "Inflation Leaning hot: Citi."
     ],
     "challenged": [
-      "Liquidity is Neutral. BlackRock says Leaning tight.",
       "Rates is Tight. PIMCO says Neutral.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
       "Risk is Neutral. Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Equities are out. Citi, JPMorgan AM stay risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
-      "name": "Goldman Sachs AM",
+      "name": "BlackRock",
       "clause": "1 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
