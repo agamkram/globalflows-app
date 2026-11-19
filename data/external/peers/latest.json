@@ -1,14 +1,14 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-11-18",
+  "placed": "2026-11-19",
   "houses": [
     {
       "id": "apollo",
       "name": "Apollo / Torsten Sløk",
-      "date": "2026-11-18",
-      "title": "Half of Southern Europe’s Young Adults Still Live With Their Parents",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/half-of-southern-europes-young-adults-still-live-with-their-parents",
+      "date": "2026-11-19",
+      "title": "AI Spending Powers 65% of GDP Growth",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/ai-spending-powers-65-percent-of-gdp-growth",
       "liquidity": null,
       "rates": null,
       "growth": null,
@@ -17,30 +17,30 @@
       "assets": null,
       "vs": "quiet",
       "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "In Italy and Spain, half of 25-34-year-olds live with their parents.",
+      "quote": "AI investment added roughly 1.3 percentage points to real GDP growth over the last three q",
       "quotes": [
-        "In Italy and Spain, half of 25-34-year-olds live with their parents.",
-        "In the US, it’s about one in six, see chart below."
+        "AI investment added roughly 1.3 percentage points to real GDP growth over the last three quarters, or about 65% of the roughly 2% cumulative growth, led by software and computers, see chart below.",
+        "These are gross figures that do not net out imports, so the net boost in the national accounts is likely somewhat smaller."
       ]
     },
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-11-18",
-      "title": "Building resilience for 2027",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-18112026.html",
+      "date": "2026-11-19",
+      "title": "Treasury rally highlights the opportunity in bonds",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-19112026.html",
       "liquidity": null,
       "rates": null,
       "growth": null,
-      "inflation": "Leaning hot",
-      "risk": "Risk-on",
+      "inflation": null,
+      "risk": null,
       "assets": null,
-      "vs": "challenge",
-      "vsClause": "Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral.",
-      "quote": "Video: Year Ahead 2027 | CIO’s Mark Andersen on building portfolio resilience (5 mins)",
+      "vs": "quiet",
+      "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
+      "quote": "Video: Year Ahead 2027 | CIO’s Mark Andersen on building portfolio resilience (5 mins) Vid",
       "quotes": [
-        "Video: Year Ahead 2027 | CIO’s Mark Andersen on building portfolio resilience (5 mins)",
-        "Today, we launched our Year Ahead 2027 outlook, &#34;Sustaining resilience.&#34; Recent years have demonstrated the resilience of economies, corporate profits, and financial markets."
+        "Video: Year Ahead 2027 | CIO’s Mark Andersen on building portfolio resilience (5 mins) Video: Year Ahead 2027 | Equities: Industrials, health care, Eurozone, and quality AI (7 mins) Video: Year Ahead 2027 | Opportunities in high-quality bonds and select EM debt (5 mins)",
+        "The S&P 500 fell for a fifth consecutive trading day on Wednesday, while US Treasuries gained for the third straight session."
       ]
     },
     {
@@ -96,7 +96,7 @@
       "risk": "Risk-on",
       "assets": "Equities IN; duration underweight, front end preferred; up in credit quality. NFCI still loose.",
       "vs": "challenge",
-      "vsClause": "Rates matches (Leaning tight). Growth matches (Strong). Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Neutral.",
+      "vsClause": "Rates matches (Leaning tight). Their Growth is Strong; ours is Mid. Inflation matches (Leaning hot). Their Risk is Risk-on; ours is Leaning risk-off.",
       "quote": "we maintain a risk-on bias and an underweight duration",
       "quotes": [
         "Against this backdrop, we maintain a risk-on bias and an underweight duration as policy rates move higher.",
@@ -176,7 +176,7 @@
       "risk": "Risk-on",
       "assets": null,
       "vs": "challenge",
-      "vsClause": "Growth matches (Leaning strong). Their Risk is Risk-on; ours is Neutral.",
+      "vsClause": "Their Growth is Leaning strong; ours is Mid. Their Risk is Risk-on; ours is Leaning risk-off.",
       "quote": "The global macro environment provides solid support for cyclical assets—our base case scen",
       "quotes": [
         "The global macro environment provides solid support for cyclical assets—our base case scenario envisions resilient growth and robust earnings—even as central banks have shown that they are less willing to be accommodative.",
@@ -187,17 +187,17 @@
   "scorecard": {
     "agrees": [
       "Rates Tight: Goldman Sachs AM, Citi.",
-      "Growth Leaning strong: Citi, JPMorgan AM.",
-      "Inflation Leaning hot: UBS, Citi."
+      "Inflation Leaning hot: Citi."
     ],
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
+      "Growth is Mid. Citi says Strong; JPMorgan AM says Leaning strong.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Risk is Neutral. UBS says Risk-on; Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Risk is Leaning risk-off. Citi says Risk-on; JPMorgan AM says Risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
-      "name": "UBS",
+      "name": "Goldman Sachs AM",
       "clause": "1 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
