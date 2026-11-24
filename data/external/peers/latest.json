@@ -1,46 +1,46 @@
 {
   "title": "Peer desk check",
   "note": "Hand-placed. Each card uses the page’s date. Silent is —, not Neutral. Does not vote.",
-  "placed": "2026-11-23",
+  "placed": "2026-11-24",
   "houses": [
     {
       "id": "apollo",
       "name": "Apollo / Torsten Sløk",
-      "date": "2026-11-23",
-      "title": "&#34;Global Equities&#34; Is a US Tech Bet",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/global-equities-is-a-us-tech-bet",
+      "date": "2026-11-24",
+      "title": "The Distress in Software Is About To Get Worse",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/The-distress-in-software-is-about-to-get-worse",
       "liquidity": null,
-      "rates": null,
+      "rates": "Leaning tight",
       "growth": null,
       "inflation": null,
       "risk": null,
       "assets": null,
-      "vs": "quiet",
-      "vsClause": "They did not read Liquidity, Rates, Growth, Inflation, or Risk.",
-      "quote": "The US now makes up roughly 75% of developed-market equity value, up from about 50% in 200",
+      "vs": "lean",
+      "vsClause": "Rates matches (Leaning tight).",
+      "quote": "Torsten studied at University of Copenhagen and Princeton University.",
       "quotes": [
-        "The US now makes up roughly 75% of developed-market equity value, up from about 50% in 2008, while Europe’s share has roughly halved from over 30% to about 15%.",
-        "With much of that gain driven by a handful of AI-linked mega-caps, owning the global stock market by cap weight has quietly become a growing concentration bet on AI, see chart below."
+        "Torsten studied at University of Copenhagen and Princeton University.",
+        "He frequently appears in the media and has published numerous journal articles and reviews on economics and policy analysis, including in the Journal of International Economics, Journal of International Money and Finance, and The Econometric Journal."
       ]
     },
     {
       "id": "ubs",
       "name": "UBS CIO",
-      "date": "2026-11-23",
-      "title": "Tech pressures underline need for portfolio resilience",
-      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-23112026.html",
+      "date": "2026-11-24",
+      "title": "AI rebound provides opportunity to reduce concentrated exposures",
+      "url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2026/latest-24112026.html",
       "liquidity": null,
       "rates": null,
       "growth": null,
       "inflation": null,
-      "risk": "Risk-on",
+      "risk": "Risk-off",
       "assets": null,
-      "vs": "challenge",
-      "vsClause": "Their Risk is Risk-on; ours is Leaning risk-off.",
-      "quote": "US equity index futures rebounded ahead of the market open on Monday, following Friday’s s",
+      "vs": "lean",
+      "vsClause": "Risk matches (Risk-off).",
+      "quote": "Podcast: Signal over Noise | Bonds in the lead, Equities to Neutral, on Apple and Spotify ",
       "quotes": [
-        "US equity index futures rebounded ahead of the market open on Monday, following Friday’s sell-off led by technology shares.",
-        "Contracts for the S&P 500 were up 2.3% at the time of writing, and those for the Nasdaq advanced 3.1%."
+        "Podcast: Signal over Noise | Bonds in the lead, Equities to Neutral, on Apple and Spotify (6 mins) Video: Year Ahead 2027 | Navigate transformational innovation (6 mins) Video: Year Ahead 2027 | Broaden returns with commodities and currencies (7 mins) Video: Year Ahead 2027 | Diversify with alternatives (6 mins)",
+        "US stocks rebounded on Monday from the steep sell-off last week, with the bounce gaining further impetus from the reinstatement of Jensen Huang as NVIDIA's chief executive officer."
       ]
     },
     {
@@ -186,18 +186,19 @@
   ],
   "scorecard": {
     "agrees": [
-      "Rates Tight: Goldman Sachs AM, Citi.",
-      "Inflation Leaning hot: Citi."
+      "Rates Tight: Apollo, Goldman Sachs AM, Citi.",
+      "Inflation Leaning hot: Citi.",
+      "Risk Leaning risk-off: UBS."
     ],
     "challenged": [
       "Rates is Tight. PIMCO says Neutral.",
       "Growth is Mid. Citi says Strong; JPMorgan AM says Leaning strong.",
       "Inflation is Leaning hot. PIMCO says Leaning cold.",
-      "Risk is Leaning risk-off. UBS says Risk-on; Citi says Risk-on; JPMorgan AM says Risk-on.",
+      "Risk is Leaning risk-off. Citi says Risk-on; JPMorgan AM says Risk-on.",
       "The long end is in. A house that will not own it is a challenge, not a match."
     ],
     "closest": {
-      "name": "Goldman Sachs AM",
+      "name": "Apollo",
       "clause": "1 of the five match. The card is still their note, not our score."
     },
     "falsifier": "A cool inflation print that kills the next hike while stocks and the long end bid together — or a further jump in long yields that takes earnings with it."
